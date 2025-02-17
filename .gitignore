@@ -2,3 +2,5 @@ venv
 venv/*
 
 .idea
+build
+dist

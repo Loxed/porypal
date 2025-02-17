@@ -1,6 +1,6 @@
 # Porypal
 
-Porypal is a specialized tool for converting sprites into Gen 3-compatible 16-color tilesheets, designed for Pokémon ROM hacking and decompilation (pokeemerald/pokefirered). It's originally made to automate overworld sprites, but can be used for other applications requiring usage of in-game palettes.
+Porypal is a specialized tool for converting sprites into Gen 3-compatible 16-color palettes sprites, designed for Pokémon ROM hacking and decompilation (pokeemerald/pokefirered). It's originally made to automate overworld sprites injection, but can be used for other graphics modifications.
 
 ![Porymap UI](image.png)
 
@@ -51,7 +51,7 @@ git clone https://github.com/Loxed/porypal.git
 2. Navigate to the project directory:
 
    ```bash
-   cd /path/to/decopm/tools/porypal
+   cd /path/to/decomp/tools/porypal
    ```
 
 3. Run the installer:

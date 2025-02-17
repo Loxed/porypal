@@ -1,10 +1,10 @@
 import sys
 import os
 from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QFileDialog,
-                            QVBoxLayout, QHBoxLayout, QGridLayout, QGraphicsScene, 
+                            QVBoxLayout, QHBoxLayout, QGridLayout, QGraphicsScene,
                             QGraphicsView, QLabel, QSizePolicy, QGroupBox)
-from PyQt5.QtGui import QColor, QFont, QPainter, QPen, QPixmap, QImage
-from PyQt5.QtCore import Qt, QSize, QEvent
+from PyQt5.QtGui import QColor, QPainter, QPixmap, QImage
+from PyQt5.QtCore import Qt, QEvent
 from PIL import Image
 
 import yaml
@@ -15,7 +15,7 @@ def set_dark_theme(app):
     dark = QColor(45, 45, 45)
     text = QColor(220, 220, 220)
     highlight = QColor(10, 32, 55)
-    
+
     palette.setColor(palette.Window, dark)
     palette.setColor(palette.WindowText, text)
     palette.setColor(palette.Base, QColor(30, 30, 30))
@@ -35,7 +35,7 @@ def set_light_theme(app):
     light = QColor(240, 240, 240)
     text = QColor(0, 0, 0)
     highlight = QColor(10, 32, 55)
-    
+
     palette.setColor(palette.Window, light)
     palette.setColor(palette.WindowText, text)
     palette.setColor(palette.Base, QColor(255, 255, 255))
@@ -71,48 +71,48 @@ class PoryPalettes(QWidget):
     def load_config(self):
         with open('config.yaml', 'r') as file:
             self.config = yaml.safe_load(file)
-    
+
     def initUI(self):
         self.setWindowTitle("PoryPalettes - Image Processor")
         self.setMinimumSize(1600, 900)
-        
+
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(15, 15, 15, 15)
         main_layout.setSpacing(15)
-        
+
         # Top controls
         control_layout = QHBoxLayout()
-        
+
         # Image Processing Group
         processing_group = QGroupBox("Image Processing")
         processing_layout = QHBoxLayout()
-        
+
         self.btn_tileset = QPushButton("⚙️ Load Overworld Tileset")
         self.btn_target = QPushButton("🎨 Load Target Sprite")
         self.btn_save = QPushButton("💾 Save Selected")
         self.btn_toggle_theme = QPushButton("💡")
-        
+
         for btn in [self.btn_tileset, self.btn_target, self.btn_save, self.btn_toggle_theme]:
             btn.setFixedHeight(40)
             btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        
+
         self.btn_tileset.clicked.connect(self.load_tileset)
         self.btn_target.clicked.connect(self.load_target_image)
         self.btn_save.clicked.connect(self.save_converted_image)
         self.btn_toggle_theme.clicked.connect(self.toggle_theme)
-        
+
         processing_layout.addWidget(self.btn_tileset)
         processing_layout.addWidget(self.btn_target)
         processing_layout.addWidget(self.btn_save)
         processing_layout.addWidget(self.btn_toggle_theme)
         processing_group.setLayout(processing_layout)
-        
+
         control_layout.addWidget(processing_group)
         main_layout.addLayout(control_layout)
-        
+
         # Main content
         content_layout = QVBoxLayout()
-        
+
         # Original preview
         original_box = QVBoxLayout()
         original_box.addWidget(QLabel("Original Sprite"))
@@ -122,12 +122,12 @@ class PoryPalettes(QWidget):
         self.original_view.setRenderHints(QPainter.Antialiasing)
         original_box.addWidget(self.original_view)
         content_layout.addLayout(original_box, 30)
-        
+
         # Converted previews
         converted_box = QGridLayout()
         converted_box.addWidget(QLabel("Click to select conversion (Green = Selected, Blue = Most Diverse)"), 0, 0, 1, 4)
         converted_box.setHorizontalSpacing(15)
-        
+
         self.result_views = []
         self.result_scenes = []
         self.result_labels = []
@@ -139,17 +139,17 @@ class PoryPalettes(QWidget):
             view.installEventFilter(self)
             label = QLabel("Loading...")
             label.setAlignment(Qt.AlignCenter)
-            
+
             converted_box.addWidget(label, 1+i, 1)
             converted_box.addWidget(view, 1+i, 2)
             self.result_views.append(view)
             self.result_scenes.append(scene)
             self.result_labels.append(label)
-        
+
         content_layout.addLayout(converted_box, 70)
         main_layout.addLayout(content_layout)
         self.setLayout(main_layout)
-    
+
     def toggle_theme(self):
         """Switch between light and dark theme"""
         if self.palette().color(self.palette().Window) == QColor(45, 45, 45):
@@ -170,11 +170,11 @@ class PoryPalettes(QWidget):
         """Load and process tileset image using only PyQt5"""
         # Read from config.yaml
         tileset_config = self.config['tileset']
-        
+
         file_path, _ = QFileDialog.getOpenFileName(
-            self, "Select Tileset Image", "", 
+            self, "Select Tileset Image", "",
             "Images (*.png *.jpg *.jpeg *.bmp *.gif)")
-        
+
         if not file_path:
             return
 
@@ -190,10 +190,10 @@ class PoryPalettes(QWidget):
                 if pixmap.width() == size['width'] and pixmap.height() == size['height']:
                     matched_size = size
                     break
-            
+
             if matched_size:
                 if matched_size['resize_to'] != pixmap.width():
-                    pixmap = pixmap.scaled(matched_size['resize_to'], matched_size['resize_to'], 
+                    pixmap = pixmap.scaled(matched_size['resize_to'], matched_size['resize_to'],
                                         Qt.IgnoreAspectRatio, Qt.FastTransformation)
             elif tileset_config['resize_tileset']:
                 pixmap = pixmap.scaled(tileset_config['resize_to'], tileset_config['resize_to'],
@@ -209,11 +209,11 @@ class PoryPalettes(QWidget):
 
             # Define sprite order (using config)
             ORDER = tileset_config['sprite_order']
-            
+
             # Create output image based on the output width/height in config
             output = QImage(self.config['output']['output_width'], self.config['output']['output_height'], QImage.Format_ARGB32)
             output.fill(Qt.transparent)
-            
+
             # Paint sprites in order
             painter = QPainter(output)
             for i, idx in enumerate(ORDER):
@@ -230,7 +230,7 @@ class PoryPalettes(QWidget):
             pixmap = QPixmap.fromImage(self.target_image)
             self.original_scene.addPixmap(pixmap)
             self.original_view.fitInView(self.original_scene.itemsBoundingRect(), Qt.KeepAspectRatio)
-            
+
             self.convert_all()
             print("Tileset processed successfully")
 
@@ -275,7 +275,7 @@ class PoryPalettes(QWidget):
             # If more_colors is False and npc_priority is True, only load the 4 NPC palettes
             if not more_colors and npc_priority and filename not in {"npc_1.pal", "npc_2.pal", "npc_3.pal", "npc_4.pal"}:
                 continue
-            
+
             try:
                 with open(os.path.join(palette_dir, filename), 'r') as f:
                     lines = [line.strip() for line in f.readlines()]
@@ -307,51 +307,51 @@ class PoryPalettes(QWidget):
         file_path, _ = QFileDialog.getOpenFileName(
             self, "Open Target Sprite", "",
             "Images (*.png *.jpg *.jpeg *.bmp *.gif)", options=options)
-        
+
         if not file_path:
             return
-        
+
         self.current_file_path = file_path
         self.target_image = QImage(file_path)
         if self.target_image.isNull():
             return
-        
+
         self.original_scene.clear()
         pixmap = QPixmap.fromImage(self.target_image)
         self.original_scene.addPixmap(pixmap)
         self.original_view.fitInView(self.original_scene.itemsBoundingRect(), Qt.KeepAspectRatio)
-        
+
         self.convert_all()
 
     def convert_all(self):
         if not self.palettes or self.target_image.isNull():
             return
-        
+
         self.converted_data = []
         max_colors = -1
         self.best_indices = []
-        
+
         for i, palette in enumerate(self.palettes[:self.num_palettes]):
             converted, used_colors = self.convert_image(palette)
             self.converted_data.append(converted)
-            
+
             self.result_labels[i].setText(
                 f"{palette['name']}\n({used_colors} colors used)"
             )
-            
+
             if used_colors > max_colors:
                 max_colors = used_colors
                 self.best_indices = [i]
             elif used_colors == max_colors:
                 self.best_indices.append(i)
-            
+
             pixmap = QPixmap.fromImage(converted)
             self.result_scenes[i].clear()
             self.result_scenes[i].addPixmap(pixmap)
             self.result_views[i].fitInView(
                 self.result_scenes[i].itemsBoundingRect(), Qt.KeepAspectRatio
             )
-        
+
         self.selected_index = self.best_indices[0] if self.best_indices else 0
         self.update_highlights()
 
@@ -362,49 +362,49 @@ class PoryPalettes(QWidget):
         transparent_color = palette['transparent']
         available_colors = palette['colors'][1:] if len(palette['colors']) > 1 else []
         used_colors = set()
-        
+
         for y in range(height):
             for x in range(width):
                 pixel_color = self.target_image.pixelColor(x, y)
-                
+
                 if pixel_color.alpha() < 255:
                     converted_color = transparent_color
                 else:
                     if available_colors:
-                        closest = min(available_colors, 
+                        closest = min(available_colors,
                                     key=lambda c: color_distance(pixel_color, c))
                         converted_color = closest
                     else:
                         converted_color = pixel_color
-                
+
                 converted.setPixelColor(x, y, converted_color)
                 used_colors.add((
                     converted_color.red(),
                     converted_color.green(),
                     converted_color.blue()
                 ))
-        
+
         return converted, len(used_colors)
 
     def save_converted_image(self):
         if not self.converted_data or not self.current_file_path:
             return
-        
+
         try:
             selected_idx = self.selected_index
             selected_palette = self.palettes[selected_idx]
             output_path = self.generate_output_path(selected_palette['name'])
-            
+
             # Convert QImage to index array
             qimage = self.converted_data[selected_idx]
             width = qimage.width()
             height = qimage.height()
-            
+
             # Create palette mapping
             palette_colors = selected_palette['colors']
             palette_order = [(c.red(), c.green(), c.blue()) for c in palette_colors]
             color_to_index = {rgb: idx for idx, rgb in enumerate(palette_order)}
-            
+
             # Build index data
             indices = []
             for y in range(height):
@@ -412,7 +412,7 @@ class PoryPalettes(QWidget):
                     color = qimage.pixelColor(x, y)
                     rgb = (color.red(), color.green(), color.blue())
                     indices.append(color_to_index[rgb])
-            
+
             # Create and save 4-bit PNG
             with Image.new("P", (width, height)) as im:
                 # Build palette data
@@ -422,14 +422,14 @@ class PoryPalettes(QWidget):
                 # Pad to 256 colors (768 entries)
                 palette_data += [0] * (768 - len(palette_data))
                 im.putpalette(palette_data)
-                
+
                 # Set transparency and pixel data
                 im.info["transparency"] = 0
                 im.putdata(indices)
-                
+
                 # Save directly with overwrite
                 im.save(output_path, format="PNG", bits=4, optimize=True)
-            
+
             print(f"Successfully saved to: {output_path}")
 
         except Exception as e:

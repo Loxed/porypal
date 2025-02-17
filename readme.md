@@ -61,9 +61,30 @@ git clone https://github.com/Loxed/porypal.git
 
 After installing the dependencies, you can run the `main.py` script.
 
+   ```bash
+   python3 main.py
+   ```
+
+### 4. Build from source
+
+To build the program, use the following command:
+
+#### Windows
+
 ```bash
-python3 main.py
+pyinstaller --onefile --windowed --hidden-import encodings --add-data "palettes;palettes" --icon="gui/porypal.ico" --add-data="gui/porypal.ico;." .\main.py
+
+# Copy additional resources
+cp config.yaml dist/config.yaml
+cp -r gui dist/gui
+cp -r palettes dist/palettes
+cp -r docs dist/docs
+cp -r example dist/example
 ```
+
+### MacOS
+
+#### Silicon
 
 ## Directory Structure
 

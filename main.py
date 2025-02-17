@@ -4,11 +4,22 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QFileDialog,
                             QVBoxLayout, QHBoxLayout, QGridLayout, QGraphicsScene,
                             QGraphicsView, QLabel, QSizePolicy, QGroupBox)
+import PyQt5.QtGui as QtGui
 from PyQt5.QtGui import QColor, QPainter, QPixmap, QImage
 from PyQt5.QtCore import Qt, QEvent
 from PIL import Image
 
 import yaml
+
+# icon
+basedir = os.path.dirname(__file__)
+
+try:
+    from ctypes import windll  # Only exists on Windows.
+    myappid = 'prisonlox.pokeemerald-expansion.porypal.1'
+    windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+except ImportError:
+    pass
 
 def set_dark_theme(app):
     app.setStyle("Fusion")
@@ -445,6 +456,7 @@ class PoryPalettes(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setWindowIcon(QtGui.QIcon('gui/porypal.ico'))
 
     # check config for theme
     with open('config.yaml', 'r') as file:

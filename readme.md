@@ -1,15 +1,18 @@
 # Porypal
 
-Porypal is a specialized tool for converting sprites into Gen 3-compatible 16-color palettes sprites, designed for Pokémon ROM hacking and decompilation (pokeemerald/pokefirered). It's originally made to automate overworld sprites injection, but can be used for other graphics modifications.
+Porypal is a specialized image processing tool designed for Pokémon Gen 3 ROM hacking and decompilation projects (pokeemerald/pokefirered). It automates sprite and tileset conversion while maintaining strict adherence to the Pokémon Gen 3's 16-color palette specifications.
 
-![Porymap UI](image.png)
+![Porymap UI](docs/img/ui.png)
 
-## Features
+## Key Features
 
-- Gen 3-Compatible Tilesheet Conversion: Automatically converts .PNG sprites into tilesheets with 16-color palettes suitable for use in Pokémon ROMs (such as Pokémon FireRed and Pokémon Emerald).
-- Color Replacement: Utilizes the in-game palettes for consistent sprite coloring and tilesheet creation.
-- Batch Sprite Replacement (TODO): Automates the process of replacing overworld sprites in the graphics/object_events/pics/people folder of your Pokémon ROM.
-- Customizable Configuration: Allows customization via a config.yaml file to tailor the behavior of the tool to your specific needs.
+  - Automatically convert every pixel from an input image to its closest color in a JASC-PAL file.
+  - Multi-palette preview interface for comparison and cherry-picking.
+  - Prioritizes conversions that maintain the highest number of distinct colors (up to 16)
+  - Configurable tileset transformation pipeline via YAML
+
+
+> **_Implementation Note_**: The default configuration targets conversion of 4x4 NPC overworld tilesets from modern Pokémon titles ([DiegoWT and UltimoSpriter's "Gen 5 Characters in Gen 4 OW style 2.0"](https://web.archive.org/web/20231001155146/https://reliccastle.com/resources/370/), [VanillaSunshine's "Gen 4 Characters (HGSS/DPPt)"](https://eeveeexpo.com/resources/404/)) to Gen 3 format (`graphics/object_events/pics/people`). The pipeline can be reconfigured for other asset conversion workflows in the [configuration](config.yaml) file.
 
 ## Installation
 
@@ -19,16 +22,11 @@ Ensure you have Python 3.6+ installed on your system. You can download Python fr
 ### 1. Clone the repository or download the code
 Download the repository to your local machine or clone it using Git:
 
-<details>
-    <summary><i>I recommend cloning the project inside your pokefirered/pokeemerald's `tools` folder:</i></summary>
-
->   porypal's key functionality is to automatically replace gba tilesets inside the `graphics/object_events/pics/people` folder. Placing it in the `tools` directory facilitates the path automation for the batch replacement feature.
-> 
-</details>
 
 ```bash
 git clone https://github.com/Loxed/porypal.git
 ```
+**Note**: _I recommend cloning the project inside your pokefirered/pokeemerald's `tools` folder._
 
 ### 2. Install dependencies
 
@@ -71,14 +69,12 @@ python3 main.py
 
 ```
 porypal/
-│
-├── example/            # Example data or files
-├── palettes/           # Palette files, containing .pal files
-├── config.yaml         # Configuration file
-├── LICENSE             # MIT License file
-├── main.py             # Main script
-├── requirements.txt    # Python Dependencies
-├── setup.sh            # MacOS/Linux install script
+├── example/            # Reference images to convert to tileset
+├── palettes/          # JASC-PAL color definitions
+├── config.yaml        # Pipeline configuration
+├── main.py           # Core application logic
+├── requirements.txt   # Dependency specifications
+└── setup.sh          # Unix installation script
 ```
 
 ## License
@@ -86,3 +82,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 For questions or support, reach out to `prison_lox` on Discord.
+
+## Credits
+
+The way the config is currently setup is specifically to import and convert these overworld sprites:
+
+- [Gen 5 Characters in Gen 4 OW style 2.0](https://web.archive.org/web/20231001155146/https://reliccastle.com/resources/370/) by DiegoWT and UltimoSpriter
+- [ALL Official Gen 4 Overworld Sprites v1.5](https://eeveeexpo.com/resources/404/) by VanillaSunshine

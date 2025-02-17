@@ -37,7 +37,9 @@ tileset:
   # 8 - walk left 1
   # 9 - walk left 2
 
-  sprite_size: 32
+  output_sprite_size:
+    width: 32
+    height: 32
 
   supported_sizes:
   - height: 256

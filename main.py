@@ -1,5 +1,6 @@
 import sys
 import os
+from PyQt5 import uic
 from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QFileDialog,
                             QVBoxLayout, QHBoxLayout, QGridLayout, QGraphicsScene,
                             QGraphicsView, QLabel, QSizePolicy, QGroupBox)
@@ -55,100 +56,103 @@ def color_distance(c1, c2):
 class PoryPalettes(QWidget):
     def __init__(self):
         super().__init__()
+        # Load the UI file
+        uic.loadUi("gui/porypalette.ui", self)
+        
+        # Initialize instance variables
         self.palettes = []
-        self.num_palettes = sum(f.endswith('.pal') for f in os.listdir('palettes') if os.path.exists('palettes')) if config['palettes']['more_colors'] else 4
+        self.num_palettes = self._calculate_num_palettes()
         self.target_image = QImage()
         self.converted_data = []
         self.best_indices = []
         self.selected_index = 0
         self.current_file_path = ""
 
+        # Load configuration and setup UI
         self.load_config()
-
-        self.initUI()
+        self.setup_ui_components()
+        self.connect_signals()
         self.load_palettes()
 
+    def _calculate_num_palettes(self):
+        """Calculate the number of palettes based on configuration."""
+        if config['palettes']['more_colors']:
+            return sum(f.endswith('.pal') for f in os.listdir('palettes') 
+                      if os.path.exists('palettes'))
+        return 4
+
     def load_config(self):
-        with open('config.yaml', 'r') as file:
-            self.config = yaml.safe_load(file)
+        """Load configuration from YAML file."""
+        try:
+            with open('config.yaml', 'r') as file:
+                self.config = yaml.safe_load(file)
+        except Exception as e:
+            logger.error(f"Failed to load config: {e}")
+            self.config = {}  # Provide default configuration
 
-    def initUI(self):
-        self.setWindowTitle("PoryPalettes - Image Processor")
-        self.setMinimumSize(1280, 720)
-        
-        main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(15, 15, 15, 15)
-        main_layout.setSpacing(15)
-
-        # Top controls
-        control_layout = QHBoxLayout()
-
-        # Image Processing Group
-        processing_group = QGroupBox("Image Processing")
-        processing_layout = QHBoxLayout()
-
-        self.btn_tileset = QPushButton("⚙️ Load Overworld Tileset")
-        self.btn_target = QPushButton("🎨 Load Target Sprite")
-        self.btn_save = QPushButton("💾 Save Selected")
-        self.btn_toggle_theme = QPushButton("💡")
-
-        for btn in [self.btn_tileset, self.btn_target, self.btn_save, self.btn_toggle_theme]:
-            btn.setFixedHeight(40)
-            btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-
-        self.btn_tileset.clicked.connect(self.load_tileset)
-        self.btn_target.clicked.connect(self.load_target_image)
-        self.btn_save.clicked.connect(self.save_converted_image)
-        self.btn_toggle_theme.clicked.connect(self.toggle_theme)
-
-        processing_layout.addWidget(self.btn_tileset)
-        processing_layout.addWidget(self.btn_target)
-        processing_layout.addWidget(self.btn_save)
-        processing_layout.addWidget(self.btn_toggle_theme)
-        processing_group.setLayout(processing_layout)
-
-        control_layout.addWidget(processing_group)
-        main_layout.addLayout(control_layout)
-
-        # Main content
-        content_layout = QVBoxLayout()
-
-        # Original preview
-        original_box = QVBoxLayout()
-        original_box.addWidget(QLabel("Original Sprite"))
+    def setup_ui_components(self):
+        """Setup additional UI components not defined in the .ui file."""
+        # Setup original preview components
         self.original_scene = QGraphicsScene()
-        self.original_view = QGraphicsView()
         self.original_view.setScene(self.original_scene)
         self.original_view.setRenderHints(QPainter.Antialiasing)
-        original_box.addWidget(self.original_view)
-        content_layout.addLayout(original_box, 30)
 
-        # Converted previews
-        converted_box = QGridLayout()
-        converted_box.addWidget(QLabel("Click to select conversion (Green = Selected, Blue = Most Diverse)"), 0, 0, 1, 4)
-        converted_box.setHorizontalSpacing(15)
+        # Setup result components
+        self.setup_result_components()
 
+        # Set button properties
+        self.setup_buttons()
+
+    def setup_result_components(self):
+        """Setup the dynamic result components."""
         self.result_views = []
         self.result_scenes = []
         self.result_labels = []
+        
+        converted_box = self.findChild(QGridLayout, "converted_box")
+        
         for i in range(self.num_palettes):
+            # Create and setup scene
             scene = QGraphicsScene()
+            
+            # Create and setup view
             view = QGraphicsView()
             view.setScene(scene)
             view.setRenderHints(QPainter.Antialiasing)
             view.installEventFilter(self)
+            
+            # Create and setup label
             label = QLabel("Loading...")
             label.setAlignment(Qt.AlignCenter)
 
+            # Add to layout
             converted_box.addWidget(label, 1+i, 1)
             converted_box.addWidget(view, 1+i, 2)
+            
+            # Store references
             self.result_views.append(view)
             self.result_scenes.append(scene)
             self.result_labels.append(label)
 
-        content_layout.addLayout(converted_box, 70)
-        main_layout.addLayout(content_layout)
-        self.setLayout(main_layout)
+    def setup_buttons(self):
+        """Setup button properties."""
+        buttons = [
+            self.btn_tileset,
+            self.btn_target,
+            self.btn_save,
+            self.btn_toggle_theme
+        ]
+        
+        for btn in buttons:
+            btn.setFixedHeight(40)
+            btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+
+    def connect_signals(self):
+        """Connect UI signals to their respective slots."""
+        self.btn_tileset.clicked.connect(self.load_tileset)
+        self.btn_target.clicked.connect(self.load_target_image)
+        self.btn_save.clicked.connect(self.save_converted_image)
+        self.btn_toggle_theme.clicked.connect(self.toggle_theme)
 
     def toggle_theme(self):
         """Switch between light and dark theme"""
@@ -165,11 +169,11 @@ class PoryPalettes(QWidget):
             with open('config.yaml', 'w') as file:
                 yaml.dump(self.config, file, default_flow_style=False)
 
-
     def load_tileset(self):
         """Load and process tileset image using only PyQt5"""
         # Read from config.yaml
         tileset_config = self.config['tileset']
+        output_sprite_size = self.config['tileset']['output_sprite_size']
 
         file_path, _ = QFileDialog.getOpenFileName(
             self, "Select Tileset Image", "",
@@ -201,9 +205,9 @@ class PoryPalettes(QWidget):
 
             # Extract 32x32 sprites based on the sprite size defined in config
             sprites = []
-            for y in range(0, pixmap.height(), tileset_config['sprite_size']):
-                for x in range(0, pixmap.width(), tileset_config['sprite_size']):
-                    sprite = pixmap.copy(x, y, tileset_config['sprite_size'], tileset_config['sprite_size'])
+            for y in range(0, pixmap.height(), output_sprite_size['height']):
+                for x in range(0, pixmap.width(), output_sprite_size['width']):
+                    sprite = pixmap.copy(x, y, output_sprite_size['width'], output_sprite_size['height'])
                     if not sprite.isNull():
                         sprites.append(sprite)
 
@@ -218,7 +222,7 @@ class PoryPalettes(QWidget):
             painter = QPainter(output)
             for i, idx in enumerate(ORDER):
                 if idx < len(sprites):
-                    painter.drawPixmap(i * tileset_config['sprite_size'], 0, sprites[idx])
+                    painter.drawPixmap(i * output_sprite_size['width'], 0, sprites[idx])
             painter.end()
 
             # Update application state
@@ -300,7 +304,6 @@ class PoryPalettes(QWidget):
         # Update labels for the loaded palettes
         for i, palette in enumerate(self.palettes[:self.num_palettes]):
             self.result_labels[i].setText(palette['name'])
-
 
     def load_target_image(self):
         options = QFileDialog.Options()

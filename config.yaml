@@ -1,0 +1,56 @@
+dark_mode: dark
+
+output:
+  output_format: PNG
+  output_height: 32
+  output_width: 288
+  transparent_bg: true
+
+palettes: 
+  more_colors: true
+  npc_priority: true
+
+
+sprite_size: 32
+
+supported_sizes:
+- height: 256
+  resize_to: 128
+  width: 256
+
+- height: 128
+  resize_to: 128
+  width: 128
+
+- height: 512
+  resize_to: 128
+  width: 512
+
+tileset:
+  default_width: 128
+  default_height: 128
+  resize_tileset: true
+  resize_to: 128
+  sprite_order:
+  - 0
+  - 12
+  - 4
+  - 1
+  - 3
+  - 13
+  - 15
+  - 5
+  - 7
+
+# overworld sprite order example:
+# 0 - look down
+# 1 - look up
+# 2 - look left
+# 3 - look right
+# 4 - walk down 1
+# 5 - walk down 2
+# 6 - walk up 1
+# 7 - walk up 2
+# 8 - walk left 1
+# 9 - walk left 2
+  

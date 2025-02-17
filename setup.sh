@@ -26,6 +26,9 @@ else
     echo "No requirements.txt file found."
 fi
 
-echo "Virtual environment created, activated, and requirements installed."
+echo ""
+echo "Virtual environment created and requirements installed."
 echo "You can now run your script using the Python interpreter in the virtual environment."
+echo ""
+echo "To launch the Python interpreter in the virtual environment, run: source $VENV_DIR/bin/activate"
 echo "To deactivate the virtual environment, run: deactivate"

@@ -7,7 +7,7 @@ output:
   transparent_bg: true
 
 palettes: 
-  more_colors: true
+  more_colors: false
   npc_priority: true
 
 tileset:

@@ -74,7 +74,7 @@ class PoryPalettes(QWidget):
     
     def initUI(self):
         self.setWindowTitle("PoryPalettes - Image Processor")
-        self.setMinimumSize(1600, 900)
+        self.setMinimumSize(1280, 720)
         
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(15, 15, 15, 15)

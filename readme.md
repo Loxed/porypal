@@ -1,6 +1,11 @@
-# Porypal
+# <span style="float: left; margin-right: 10px;"><img src="gui/porypal.ico" width="128" height="128"></span> Porypal
+
 
 Porypal is a specialized image processing tool designed for Pokémon Gen 3 ROM hacking and decompilation projects (pokeemerald/pokefirered). It automates sprite and tileset conversion while maintaining strict adherence to the Pokémon Gen 3's 16-color palette specifications.
+
+<br>
+<br>
+<br>
 
 ## Key Features
 
@@ -9,7 +14,7 @@ Porypal is a specialized image processing tool designed for Pokémon Gen 3 ROM h
   - Prioritizes conversions that maintain the highest number of distinct colors (up to 16)
   - Configurable tileset transformation pipeline via YAML
 
-![Porymap UI](docs/img/ui.png)
+![Porypal UI](docs/img/ui.png)
 
 
 > **_Implementation Note_**: The default configuration targets conversion of 4x4 NPC overworld tilesets from modern Pokémon titles ([DiegoWT and UltimoSpriter's "Gen 5 Characters in Gen 4 OW style 2.0"](https://web.archive.org/web/20231001155146/https://reliccastle.com/resources/370/), [VanillaSunshine's "Gen 4 Characters (HGSS/DPPt)"](https://eeveeexpo.com/resources/404/)) to Gen 3 format (`graphics/object_events/pics/people`). The pipeline can be reconfigured for other asset conversion workflows in the [configuration](config.yaml) file.

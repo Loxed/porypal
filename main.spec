@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('palettes', 'palettes'), ('gui/porypal.ico', '.')],
+    datas=[('palettes', 'palettes'), ('ressources/porypal.ico', '.')],
     hiddenimports=['encodings'],
     hookspath=[],
     hooksconfig={},

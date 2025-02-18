@@ -1,0 +1,132 @@
+@startuml
+
+package "App" {
+
+    package "View" as View {
+        class MainGui<Imports the view,\napplies a stylesheet and \ndefines interactions> {
+           -- Variables --
+            - screen_size
+            - is_fullscreen
+            - escape_pressed
+            - notification_timer
+           -- Import elements --
+            * maingui.ui (QML)
+            * stylesheet.qss (QSS)
+            * images (PNG)
+           -- Methods --
+            + keyPressEvent(event)
+            + resizeEvent(event)
+            + toggle_fullscreen()
+            + handle_escape_key()
+            + show_escape_warning()
+            + reset_escape()
+            + replace_checkboxes(widget)
+            + notify(message)
+            + warn(message, error=None)
+            + eventFilter(source, event)
+            + parseCustomProperties(stylesheet, customProperties)
+        }
+    }
+
+    package "Model" as Model {
+
+        class QNotificationWidget<Defines a dropdown notification \nbar for GUI feedback> {
+            + notify(message, error)
+            + show_notification(message)
+            + hide_notification()
+            - scroll_finished()
+        }
+
+        class QTaskBox<Overwrites QCheckBox to \nremove mouse interaction> {
+            - mousePressEvent(event)
+            - mouseReleaseEvent(event)
+            - mouseDoubleClickEvent(event)
+            - keyPressEvent(event)
+            - keyReleaseEvent(event)
+        }
+    }
+
+    package "Controller" as Controller {
+
+        class Worker <Handles the data acquisition \nand processing> {
+            -- Publisher (Signals) --
+            + plot_signal : pyqtSignal()
+            + refresh_signal(int) : pyqtSignal()
+            -- Subscriber (Slots) --
+            + stop_slot()
+            + return_previous_value_slot(previous_data_size)
+            -- Thread Functions --
+            + acquisition_thread_helper()
+            -- Thread Variables --
+            - stopped
+            - previous_data_size
+            - controller
+        }
+
+        class MainGuiController <Handles the main GUI \ninteractions and data> {
+            -- Publisher (Signals) --
+            + stop_signal : pyqtSignal()
+            + return_previous_value_signal(int) : pyqtSignal()
+            -- Constructor --
+            + __init__(main_gui, core)
+            -- Thread Functions --
+            + start_plotting()
+            + stop_plotting()
+            -- Thread Slots --
+            + close_slot()
+            + refresh_slot(previous_data_size)
+            -- Data Functions --
+            + downsample_binary_data(filename, start_index, end_index, downsampling_factor)
+            + plot_data(bin_path=DEFAULT_DATA_PATH, action="plot")
+            + update_bottom_graph(bin_path)
+            + update_top_view()
+            -- Interaction Functions --
+            + init_plot()
+            + resized()
+            + move_region()
+            -- Helper Functions --
+            + _get_number_of_integers(filename)
+            + _update_combo_box(component_name, component_list)
+            + _load_combo_boxes(core)
+            + _update_statistics(leftmost_index, rightmost_index)
+            + _prime_path()
+            + _set_tooltips(full_file_path)
+            + _remove_tooltips()
+            -- Variables (Reduced for readability) --
+            ' - zoom_factor
+            ' - hasRangeChanged
+            ' - max_scroll
+            ' - data
+            ' - num_points_to_display
+            ' - downsampling_factor
+            ' - downsampled_list
+            ' - previous_range
+            ' - auto_refresh
+            ' - left_visible
+            ' - right_visible
+            ' - visible_range
+            ' - leftmost_index
+            ' - rightmost_index
+            ' - acquisition_path
+            - load_path
+            - ADCMode
+            - region
+            - acquisition_thread : Thread
+            ...
+        }
+
+    }
+}
+
+
+Worker --* MainGuiController 
+
+QNotificationWidget -d-* MainGui
+QTaskBox -d-* MainGui
+
+MainGui -l-* MainGuiController
+
+Model -d[hidden]- MainGuiController
+
+
+@enduml

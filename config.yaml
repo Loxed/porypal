@@ -8,8 +8,8 @@ palettes:
   more_colors: false
   npc_priority: true
 tileset:
-  default_width: 128
   default_height: 128
+  default_width: 128
   output_sprite_size:
     height: 32
     width: 32

@@ -6,7 +6,7 @@ output:
   transparent_bg: true
 palettes:
   more_colors: false
-  npc_priority: true
+  npc_priority: false
 tileset:
   default_height: 128
   default_width: 128

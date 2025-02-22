@@ -4,4 +4,3 @@ venv/*
 .idea
 build
 dist
- **/__pycache__/

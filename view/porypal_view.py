@@ -1,127 +1,208 @@
-from PyQt5.QtCore import Qt, QRectF
-from PyQt5.QtGui import QImage, QPixmap, QMouseEvent
+from PyQt5.QtCore import Qt, QRectF, QEvent
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (
     QGraphicsScene, QGraphicsView, QLabel, QWidget, 
-    QMessageBox, QVBoxLayout, QHBoxLayout, QSizePolicy, QSpacerItem, QPushButton
+    QMessageBox, QVBoxLayout, QHBoxLayout, QSizePolicy, QSpacerItem
 )
 from PyQt5 import uic
 from model.palette_manager import Palette
+from model.QNotificationWidget import QNotificationWidget
+
 from view.palette_display import PaletteDisplay
 from view.zoomable_graphics_view import ZoomableGraphicsView
 
 class PorypalView(QWidget):
-    """Main application view."""
+    """Main application view with dynamic resizing support."""
 
     CONFIRM_ON_EXIT = False
+    MIN_WIDTH = 540
+    MIN_HEIGHT = 600
 
     def __init__(self, palettes: list[Palette]):
         super().__init__()
-        
-        # Load UI without showing it yet
         uic.loadUi("view/porypalette.ui", self)
 
-        # Initialize state
+        self.notification = QNotificationWidget(self)
+        
         self.selected_index = None
         self.best_indices = []
         self.dynamic_views = []
         self.dynamic_labels = []
 
-        # Set minimum size before showing
-        self.setMinimumSize(800, 600)
-
-        # Setup all views while window is hidden
+        self.setMinimumSize(self.MIN_WIDTH, self.MIN_HEIGHT)
+        # self.setFixedSize(self.MIN_WIDTH, self.MIN_HEIGHT)
         self._setup_original_view()
         self._setup_dynamic_views(palettes)
 
-        # Show the window only once everything is ready
+        self.content_layout.setStretch(0, 1)
+        self.content_layout.setStretch(1, 1)
+
+
         self.show()
 
     def _setup_original_view(self):
-        """Replace the original QGraphicsView with a ZoomableGraphicsView."""
+        """Replace original QGraphicsView with a ZoomableGraphicsView."""
         layout = self.original_image_layout
         index = layout.indexOf(self.original_view)
-        
-        # Remove old view without showing intermediate states
+
         layout.removeWidget(self.original_view)
-        self.original_view.hide()  # Hide before deletion
+        self.original_view.hide()
         self.original_view.deleteLater()
 
-        # Create new view
-        self.original_view = ZoomableGraphicsView(self)
-        self.original_view.setMinimumSize(320, 210)
-        layout.insertWidget(index, self.original_view)
+        self.original_view = ZoomableGraphicsView(view=self)
+        self.original_view.setMinimumWidth((int)(self.MIN_WIDTH*0.4))
+        self.original_view.setMinimumHeight((int)(self.MIN_HEIGHT*0.3))
+        self.original_view.setSizePolicy(
+            QSizePolicy.Expanding, QSizePolicy.Preferred
+        )
+
+        layout.insertWidget(index, self.original_view, 1)
 
     def _setup_dynamic_views(self, palettes: list[Palette]):
-        """Setup layout for dynamic content."""
-        # Clear existing widgets
+        """Setup dynamic content with proper resizing behavior."""
         while self.dynamic_layout.count():
             item = self.dynamic_layout.takeAt(0)
             if item.widget():
-                item.widget().hide()  # Hide before deletion
+                item.widget().hide()
                 item.widget().deleteLater()
 
-        # Create all widgets before adding them to layout
         for palette in palettes:
             container = QWidget(self)
+            container.setSizePolicy(
+                QSizePolicy.Expanding, QSizePolicy.MinimumExpanding
+            )
             container_layout = QHBoxLayout(container)
-            container_layout.setContentsMargins(0, 0, 0, 0)
+            container_layout.setContentsMargins(5, 5, 5, 5)
+            container_layout.setSpacing(10)
 
-            label = QLabel(f"{palette.get_name()} ({len(palette.get_colors())} colors)", container)
-            label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-            label.setMinimumWidth(150)
+            # Label: Only as wide as its text needs
+            text = f"{palette.get_name()} ({len(palette.get_colors())} colors)"
+            label = QLabel(text, container)
+            preferred_width = self._get_text_width(text, label)
+            label.setMaximumWidth(preferred_width)
+            label.setMinimumWidth(min(60, preferred_width))
+            label.setWordWrap(True)
+            label.setSizePolicy(
+                QSizePolicy.Preferred, QSizePolicy.Preferred
+            )
 
+            # Palette display: Square that maintains minimum size
             palette_4x4 = PaletteDisplay(palette.get_colors(), container)
-            
-            view = ZoomableGraphicsView(container)
-            view.setMinimumHeight(300)
+
+
+            # View: Takes remaining horizontal space
+            output_view = ZoomableGraphicsView(container, self, palettes.index(palette))
+            output_view.setMinimumWidth(int(self.MIN_HEIGHT * 0.2))
+            output_view.setMinimumHeight(int(self.MIN_HEIGHT * 0.2))
+            output_view.setSizePolicy(
+                QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding
+            )
+            # output_view.clicked.connect(lambda: self._handle_view_click(len(self.dynamic_views)))
 
             # Add widgets to layout
-            container_layout.addWidget(label)
-            container_layout.addWidget(palette_4x4)
-            container_layout.addWidget(view)
-            container_layout.setStretch(2, 1)  # Give stretch to the view
+            container_layout.addWidget(label, 0)       # No stretch
+            container_layout.addWidget(palette_4x4, 0) # No stretch
+            container_layout.addWidget(output_view, 1) # Takes remaining space
 
-            self.dynamic_views.append(view)
+            self.dynamic_views.append(output_view)
             self.dynamic_labels.append(label)
-
-            # Add container to main layout
             self.dynamic_layout.addWidget(container)
 
-        # Add spacer at the end
-        self.dynamic_layout.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.MinimumExpanding))
+    def _get_text_width(self, text: str, label: QLabel) -> int:
+        return label.fontMetrics().boundingRect(text).width()
 
     def update_original_image(self, image):
-        """Update main preview image."""
+        """Update the main preview image."""
         if image and not image.isNull():
             pixmap = QPixmap.fromImage(image)
-            self.original_view.set_scene_content(pixmap)
+            scene = QGraphicsScene(self.original_view)
+            self.original_view.setScene(scene)
+            scene.addPixmap(pixmap)
+            scene.setSceneRect(QRectF(pixmap.rect()))
+
+            self.original_view.resetTransform()
+            self.original_view.setTransformationAnchor(QGraphicsView.AnchorViewCenter)
+            self.original_view.fitInView(scene.sceneRect(), Qt.KeepAspectRatio)
 
     def update_dynamic_images(self, images, labels, palettes, highlights):
         """Update conversion results."""
-        self.best_indices = highlights.get('best_indices', [])
-        
-        if self.selected_index is None and self.best_indices:
-            self.selected_index = self.best_indices[0]
+        if not images:
+            return
 
+        max_colors = -1
+        self.best_indices = []
+
+        # Find images with most colors
+        for i, label in enumerate(labels):
+            color_count = int(label.split('(')[1].split(' ')[0])
+            if color_count > max_colors:
+                max_colors = color_count
+                self.best_indices = [i]
+            elif color_count == max_colors:
+                self.best_indices.append(i)
+
+        # Set selected index to first best index
+        self.selected_index = self.best_indices[0] if self.best_indices else None
+
+        # Update images and labels
         for i, (image, label, palette) in enumerate(zip(images, labels, palettes)):
             if i >= len(self.dynamic_views):
                 break
-                
+
+            view = self.dynamic_views[i]
             pixmap = QPixmap.fromImage(image)
-            self.dynamic_views[i].set_scene_content(pixmap, palette)
-            self.dynamic_labels[i].setText(label)
             
+            scene = QGraphicsScene(view)
+            view.setScene(scene)
+            scene.addPixmap(pixmap)
+            scene.setSceneRect(QRectF(pixmap.rect()))
+
+            view.resetTransform()
+            view.setTransformationAnchor(QGraphicsView.AnchorViewCenter)
+            view.fitInView(scene.sceneRect(), Qt.KeepAspectRatio)
+
+            self.dynamic_labels[i].setText(label)
+
+        # Update highlights
         self._update_highlights()
 
+    def _update_highlights(self):
+        """Update view highlighting."""
+        for i, view in enumerate(self.dynamic_views):
+            style = ""
+            if i == self.selected_index:
+                style = "border: 3px solid #4CAF50"  # Green for selection
+            elif i in self.best_indices:
+                style = "border: 2px solid #2196F3"  # Blue for best alternatives
+            view.setStyleSheet(f"QGraphicsView {{ {style} }}")
+
+    def _handle_view_click(self, index: int):
+        """Handle click on a view."""
+        self.selected_index = index
+        self._update_highlights()
+
+    # ------------ EVENT HANDLERS ------------ #
+    def eventFilter(self, source, event):
+        if event.type() == QEvent.MouseButtonPress:
+            print("Event filter triggered")
+            if source in self.dynamic_layout:
+                index = self.dynamic_layout.index(source)
+                print(f'View clicked: {index}')
+                self._handle_view_click(index)
+                return True
+        return super().eventFilter(source, event)
+    
     def keyPressEvent(self, event):
         """Handle key press events."""
         if event.key() == Qt.Key_Escape:
-            self._handle_exit()
+            # Instead of showing the dialog here, just call close()
+            # The confirmation will be handled by closeEvent
+            self.close()
         else:
             super().keyPressEvent(event)
 
-    def _handle_exit(self):
-        """Handle application exit with optional confirmation."""
+    def closeEvent(self, event):
+        """Handle window close events."""
         if self.CONFIRM_ON_EXIT:
             reply = QMessageBox.question(
                 self,
@@ -131,17 +212,26 @@ class PorypalView(QWidget):
                 QMessageBox.No
             )
             if reply == QMessageBox.Yes:
-                self.close()
+                event.accept()
+            else:
+                event.ignore()
         else:
-            self.close()
+            event.accept()
 
-    def _update_highlights(self):
-        """Update view highlighting."""
-        for i, view in enumerate(self.dynamic_views):
-            style = "border: 3px solid #4CAF50" if i == self.selected_index else ""
-            style = style or ("border: 2px solid #2196F3" if i in self.best_indices else "")
-            view.setStyleSheet(f"QGraphicsView {{ {style} }}")
+    def show_error(self, message: str):
+        """Show error message in dialog."""
+        self.notification.notify(message, error=True)
 
-    def show_error(self, title, message):
-        """Display error message."""
-        QMessageBox.critical(self, title, message)
+    def show_success(self, message: str):
+        """Show success message in dialog."""
+        self.notification.notify(message)
+
+    def show_warning(self, message: str):
+        """Show warning message in dialog."""
+        self.notification.notify("Warning: "+message, error=False)
+    # ------------ GETTERS ------------ #
+
+    def get_selected_index(self) -> int:
+        """Return currently selected view index."""
+        return self.selected_index
+

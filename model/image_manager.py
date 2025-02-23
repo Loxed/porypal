@@ -1,225 +1,243 @@
-"""
-ImageManager - Specialized image processor for pixel art palette conversion.
-Handles transparency detection and palette-based color mapping.
-"""
-
-from typing import List, Tuple, Optional, Dict
-import os
-import logging
-from dataclasses import dataclass
-from PyQt5.QtGui import QImage, QColor, QPainter
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QImage, QColor
+from pathlib import Path
+import logging, os
 from PIL import Image
 
-@dataclass
-class ColorCount:
-    """Track unique colors and their usage in converted images"""
-    colors: set
-    count: int
+from model.palette_manager import Palette
 
 class ImageManager:
     """
-    Manages pixel art image processing operations:
-    - Loads and validates input images
-    - Detects transparency in pixel art
-    - Converts images to target palettes
-    - Saves processed images in indexed color format
+    Handles image processing and palette conversion operations.
+    
+    Constants:
+        SUPPORTED_FORMATS (list): ['.png', '.jpg', '.jpeg', '.gif', '.bmp']
+    
+    Attributes:
+        config (dict): Configuration settings
+        _original_image (QImage): Currently loaded image
+        _color_distance_cache (dict): Cache for color distance calculations
+        _transparent_color (QColor): Detected transparent color of current image
+        converted_images (list): Stores converted images and their metrics
     """
     
-    def __init__(self, config: Dict):
-        self._config = config
-        self._input_image: Optional[QImage] = None
-        self._current_path: str = ""
-        self._transparent_color: Optional[QColor] = None
-        self.converted_images: List[Tuple[QImage, int]] = []
-        self.best_indices: List[int] = []
+    SUPPORTED_FORMATS = ['.png', '.jpg', '.jpeg', '.gif', '.bmp']
+    
+    def __init__(self, config: dict):
+        self.config = config
+        self._current_image_path = None
+        self._original_image = None
+        self._color_distance_cache = {}
+        self._transparent_color = None
+        self.converted_images = []
+        
+    # ------------ LOAD IMAGE ------------ #
+    def load_image(self, image_path: str) -> QImage:
+        """Load image and detect transparent color"""
+        self._current_image_path = Path(image_path)
+        if self._current_image_path.suffix.lower() not in self.SUPPORTED_FORMATS:
+            raise ValueError(f"Unsupported image format. Supported formats: {', '.join(self.SUPPORTED_FORMATS)}")
+            
+        # Load image in its original format
+        image = QImage(image_path)
+        if image.isNull():
+            raise ValueError("Failed to load image")
+            
+        logging.debug(f"Loaded image: {image_path} ({image.width()}x{image.height()})")
+        
+        self._original_image = image
+        self._detect_transparent_color(image)
+        return image
+        
+    def _detect_transparent_color(self, image: QImage) -> None:
+        """Detect transparent color using multiple methods"""
+        # First pass: look for any pixel with alpha < 255
+        for y in range(image.height()):
+            for x in range(image.width()):
+                color = QColor(image.pixel(x, y))
+                if color.alpha() < 255:
+                    # Store the exact RGB values found
+                    self._transparent_color = color
+                    logging.debug(f"Found transparent color (alpha): RGB({color.red()}, {color.green()}, {color.blue()})")
+                    return
 
-    def load_image(self, file_path: str) -> None:
-        """Load and prepare image for processing."""
-        try:
-            image = QImage(file_path)
-            if image.isNull():
-                raise ValueError(f"Failed to load image: {file_path}")
+        # Second pass: edge detection if no transparency found
+        edges = []
+        # Get colors from edges
+        for x in range(image.width()):
+            edges.append(QColor(image.pixel(x, 0)))
+            edges.append(QColor(image.pixel(x, image.height()-1)))
+        for y in range(image.height()):
+            edges.append(QColor(image.pixel(0, y)))
+            edges.append(QColor(image.pixel(image.width()-1, y)))
+            
+        # Find most common edge color
+        color_count = {}
+        for color in edges:
+            # Use the exact RGB values as key
+            rgb = (color.red(), color.green(), color.blue())
+            color_count[rgb] = color_count.get(rgb, 0) + 1
+            
+        if color_count:
+            most_common_rgb = max(color_count.items(), key=lambda x: x[1])[0]
+            self._transparent_color = QColor(*most_common_rgb)
+            logging.debug(f"Found transparent color (edges): RGB{most_common_rgb}")
+        
+    # ------------ PROCESS IMAGE ------------ #
+    def process_all_palettes(self, palettes: list[Palette]) -> dict:
+        """Process image with all palettes and return results dictionary"""
+        if not self._original_image:
+            raise ValueError("No image loaded")
+            
+        results = {
+            'images': [],
+            'labels': [],
+            'highlights': {'best_indices': []}
+        }
+        
+        max_colors = -1
+        best_indices = []
+        
+        for i, palette in enumerate(palettes):
+            converted, used_colors = self._convert_to_palette(self._original_image, palette)
+            results['images'].append(converted)
+            results['labels'].append(f"{palette.get_name()}\n({used_colors} colors used)")
+            
+            # Track best conversions based on color usage
+            if used_colors > max_colors:
+                max_colors = used_colors
+                best_indices = [i]
+            elif used_colors == max_colors:
+                best_indices.append(i)
                 
-            # Ensure consistent format
-            self._input_image = (image if image.format() == QImage.Format_ARGB32 
-                               else image.convertToFormat(QImage.Format_ARGB32))
-            self._current_path = file_path
-            
-            # Detect transparency
-            self._transparent_color = self._detect_transparency()
-            logging.debug(f"Detected transparent color: {self._transparent_color.rgba() if self._transparent_color else 'None'}")
-            
-            # Reset state
-            self.converted_images = []
-            self.best_indices = []
-            
-        except Exception as e:
-            logging.error(f"Image load failed: {e}")
-            raise
+        results['highlights']['best_indices'] = best_indices
 
-    def _detect_transparency(self) -> Optional[QColor]:
-        """
-        Detect transparency in pixel art using two methods:
-        1. Alpha channel transparency
-        2. Corner color analysis
-        """
-        if not self._input_image or self._input_image.isNull():
-            return None
-
-        width = self._input_image.width()
-        height = self._input_image.height()
-
-        # Check for alpha transparency
+        self.converted_images = results['images']
+        return results
+        
+    def _convert_to_palette(self, image: QImage, palette: Palette) -> tuple[QImage, int]:
+        """Convert image using palette colors"""
+        width = image.width()
+        height = image.height()
+        converted = QImage(width, height, QImage.Format_RGB32)
+        
+        # Get palette colors
+        transparent_color = palette.get_colors()[0]
+        available_colors = palette.get_colors()[1:] if len(palette.get_colors()) > 1 else []
+        used_colors = set()
+        
         for y in range(height):
             for x in range(width):
-                color = QColor(self._input_image.pixel(x, y))
-                if color.alpha() < 255:
-                    return QColor(0, 0, 0, 0)  # Use fully transparent
-
-        # Check corners for consistent color
-        corners = [
-            QColor(self._input_image.pixel(0, 0)),
-            QColor(self._input_image.pixel(width-1, 0)),
-            QColor(self._input_image.pixel(0, height-1)),
-            QColor(self._input_image.pixel(width-1, height-1))
-        ]
-
-        first_corner = corners[0]
-        matching_corners = sum(1 for c in corners if self._colors_match(c, first_corner))
+                pixel_color = image.pixelColor(x, y)
+                
+                if pixel_color.alpha() < 255:
+                    converted_color = transparent_color
+                else:
+                    if available_colors:
+                        closest = min(available_colors,
+                                    key=lambda c: self._color_distance(pixel_color, c))
+                        converted_color = closest
+                    else:
+                        converted_color = pixel_color
+                        
+                converted.setPixelColor(x, y, converted_color)
+                used_colors.add((
+                    converted_color.red(),
+                    converted_color.green(),
+                    converted_color.blue()
+                ))
+                
+        return converted, len(used_colors)
+    
+    # ------------ COLOR CONVERSIOn ------------ #
         
-        if matching_corners >= 3:
-            return first_corner
-
-        return None
-
-    def convert_all(self, palettes: List[Dict], max_palettes: int = 4) -> None:
-        """Convert input image using provided palettes."""
-        if not self._input_image or self._input_image.isNull():
-            logging.error("No valid input image for conversion")
-            return
-
-        self.converted_images = []
-        max_colors = -1
-        self.best_indices = []
-
-        for i, palette in enumerate(palettes[:max_palettes]):
-            result = self._convert_to_palette(palette)
-            self.converted_images.append(result)
+    def _find_closest_color(self, target_color: QColor, palette_colors: list[QColor]) -> QColor:
+        """Find closest matching color in palette using RGB distance"""
+        if not palette_colors:
+            return target_color
             
-            if result[1] > max_colors:
-                max_colors = result[1]
-                self.best_indices = [i]
-            elif result[1] == max_colors:
-                self.best_indices.append(i)
+        min_distance = float('inf')
+        closest_color = None
+        
+        target_rgb = (target_color.red(), target_color.green(), target_color.blue())
+        
+        for color in palette_colors:
+            cache_key = (target_color.rgb(), color.rgb())
+            if cache_key in self._color_distance_cache:
+                distance = self._color_distance_cache[cache_key]
+            else:
+                color_rgb = (color.red(), color.green(), color.blue())
+                distance = sum((a - b) ** 2 for a, b in zip(target_rgb, color_rgb))
+                self._color_distance_cache[cache_key] = distance
+                
+            if distance < min_distance:
+                min_distance = distance
+                closest_color = color
+                
+        return closest_color
 
-    def _convert_to_palette(self, palette: Dict) -> Tuple[QImage, int]:
-        """Convert image to target palette colors."""
-        width = self._input_image.width()
-        height = self._input_image.height()
-        
-        result = QImage(width, height, QImage.Format_ARGB32)
-        result.fill(Qt.transparent)
-        
-        # Setup palette colors
-        palette_transparent = QColor(*palette['colors'][0])
-        available_colors = [QColor(*rgb) for rgb in palette['colors'][1:]]
-        unique_colors = set()
-        
-        painter = QPainter(result)
+
+    def _color_distance(self, c1: QColor, c2: QColor) -> int:
+        """Calculate RGB distance between two colors"""
+        return (c1.red() - c2.red())**2 + (c1.green() - c2.green())**2 + (c1.blue() - c2.blue())**2
+     
+
+    # ------------ SAVE IMAGE ------------ #
+
+    def save_image(self, image: QImage, output_path: str, palette: Palette) -> bool:
+        logging.debug(f"Attempting to save image. Image is None: {image is None}")
+        if image is None:
+            return False
         try:
+            # Get palette colors in correct order
+            palette_colors = palette.get_colors()
+            palette_order = [(c.red(), c.green(), c.blue()) for c in palette_colors]
+            color_to_index = {rgb: idx for idx, rgb in enumerate(palette_order)}
+
+            # Convert QImage to indices
+            width = image.width()
+            height = image.height()
+            indices = []
             for y in range(height):
                 for x in range(width):
-                    src_color = QColor(self._input_image.pixel(x, y))
-                    
-                    # Apply transparency rules
-                    if (self._transparent_color and 
-                        self._colors_match(src_color, self._transparent_color)):
-                        target_color = palette_transparent
-                    else:
-                        idx = self._find_closest_color(src_color, available_colors)
-                        target_color = available_colors[idx]
-                    
-                    painter.setPen(target_color)
-                    painter.drawPoint(x, y)
-                    unique_colors.add(target_color.rgb())
-                    
-        finally:
-            painter.end()
-            
-        return result, len(unique_colors)
+                    color = image.pixelColor(x, y)
+                    rgb = (color.red(), color.green(), color.blue())
+                    indices.append(color_to_index[rgb])
 
-    def _colors_match(self, c1: QColor, c2: QColor) -> bool:
-        """Compare colors, considering alpha for transparency."""
-        if c1.alpha() < 255 or c2.alpha() < 255:
-            return c1.alpha() < 255 and c2.alpha() < 255
-        return c1.rgb() == c2.rgb()
-
-    def _find_closest_color(self, target: QColor, palette: List[QColor]) -> int:
-        """Find closest palette color using RGB distance."""
-        min_dist = float('inf')
-        best_idx = 0
-        
-        tr, tg, tb = target.red(), target.green(), target.blue()
-        
-        for i, color in enumerate(palette):
-            dr = tr - color.red()
-            dg = tg - color.green()
-            db = tb - color.blue()
-            dist = dr*dr + dg*dg + db*db
-            
-            if dist < min_dist:
-                min_dist = dist
-                best_idx = i
-                if dist == 0:  # Exact match
-                    break
-                    
-        return best_idx
-
-    def save_image(self, image: QImage, palette: Dict, suffix: str = "_converted") -> None:
-        """Save as indexed color PNG with palette."""
-        if image.isNull() or not self._current_path:
-            raise ValueError("Invalid image or path")
-
-        try:
-            output_path = f"{os.path.splitext(self._current_path)[0]}{suffix}.png"
-            
-            with Image.new("P", (image.width(), image.height())) as im:
-                # Setup palette
+            # Create indexed PNG
+            with Image.new("P", (width, height)) as im:
+                # Set up palette data (RGB triplets)
                 palette_data = []
-                for rgb in palette['colors']:
-                    palette_data.extend(rgb)
-                # Pad to 256 colors
+                for color in palette_colors:
+                    palette_data.extend([color.red(), color.green(), color.blue()])
+                # Pad to 256 colors (768 bytes)
                 palette_data.extend([0] * (768 - len(palette_data)))
+                
                 im.putpalette(palette_data)
+                im.info["transparency"] = 0  # First color is transparent
+                im.putdata(indices)
                 
-                # Convert pixels
-                pixels = []
-                for y in range(image.height()):
-                    for x in range(image.width()):
-                        color = QColor(image.pixel(x, y))
-                        idx = self._find_closest_color(
-                            color,
-                            [QColor(*rgb) for rgb in palette['colors']]
-                        )
-                        pixels.append(idx)
-                
-                im.putdata(pixels)
-                im.info["transparency"] = 0
+                # Save as 4-bit PNG
                 im.save(output_path, format="PNG", bits=4, optimize=True)
-            
-            logging.info(f"Saved to: {output_path}")
-            
+
+            return True
+
         except Exception as e:
-            logging.error(f"Save failed: {e}")
-            raise
+            logging.error(f"Failed to save image: {e}")
+            return False
 
-    # Getter methods
-    def get_input_image(self) -> Optional[QImage]:
-        return self._input_image
+    # ------------ GETTERS ------------ #
+    
+    def get_image_at_index(self, index: int) -> QImage:
+        logging.debug(f"Getting image at index {index}. Total images: {len(self.converted_images)}")
+        if 0 <= index < len(self.converted_images):
+            return self.converted_images[index]
+        logging.warning(f"No image found at index {index}")
+        return None
 
-    def get_converted_images(self) -> List[Tuple[QImage, int]]:
+    
+    def get_images(self) -> list[QImage]:
+        """Get all converted images."""
         return self.converted_images
-
-    def get_best_indices(self) -> List[int]:
-        return self.best_indices
+    
+    def get_current_image_path(self) -> str:
+        return self._current_image_path

@@ -2,6 +2,7 @@ from pathlib import Path
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor, QPalette
 from PyQt5.QtWidgets import QApplication
+import yaml
 
 class PorypalTheme:
     def __init__(self, app: QApplication, config: dict):
@@ -32,11 +33,16 @@ class PorypalTheme:
         if self._dark_mode:
             for item in dark_theme:
                 palette.setColor(item[0], self._hex_to_QColor(item[1]))
+            self.config['dark_mode'] = 'dark'
         else:
             for item in light_theme:
                 palette.setColor(item[0], self._hex_to_QColor(item[1]))
+            self.config['dark_mode'] = 'light'
         
         self.app.setPalette(palette)
+
+        with open('config.yaml', 'w') as file:
+            yaml.dump(self.config, file, default_flow_style=False)
 
 # ----- THEMES ----- #
 dark_theme = [

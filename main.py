@@ -20,7 +20,7 @@ APP_METADATA = {
     'version': "1.0.0",
     'debug': True,
     'config_path': Path("config.yaml"),
-    'icon_path': Path("gui/porypal.ico"),
+    'icon_path': Path("ressources/porypal.ico"),
     'org_name': "prisonlox",
     'org_domain': "porypal"
 }

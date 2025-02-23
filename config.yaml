@@ -5,7 +5,7 @@ output:
   output_width: 288
   transparent_bg: true
 palettes:
-  more_colors: false
+  more_colors: true
   npc_priority: false
 tileset:
   default_height: 128

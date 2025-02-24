@@ -1,8 +1,10 @@
+# view/porypal_view.py
 from PyQt5.QtCore import Qt, QRectF, QEvent
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QScreen
 from PyQt5.QtWidgets import (
     QGraphicsScene, QGraphicsView, QLabel, QWidget, 
-    QMessageBox, QVBoxLayout, QHBoxLayout, QSizePolicy, QSpacerItem
+    QMessageBox, QHBoxLayout, QSizePolicy, 
+    QApplication
 )
 from PyQt5 import uic
 from model.palette_manager import Palette
@@ -11,6 +13,8 @@ from model.QNotificationWidget import QNotificationWidget
 from view.palette_display import PaletteDisplay
 from view.zoomable_graphics_view import ZoomableGraphicsView
 
+import logging
+
 class PorypalView(QWidget):
     """Main application view with dynamic resizing support."""
 
@@ -18,9 +22,11 @@ class PorypalView(QWidget):
     MIN_WIDTH = 540
     MIN_HEIGHT = 600
 
-    def __init__(self, palettes: list[Palette]):
+    def __init__(self, parent, palettes: list[Palette]):
         super().__init__()
         uic.loadUi("view/porypalette.ui", self)
+
+        self.parent = parent
 
         self.notification = QNotificationWidget(self)
         
@@ -31,6 +37,12 @@ class PorypalView(QWidget):
 
         self.setMinimumSize(self.MIN_WIDTH, self.MIN_HEIGHT)
         # self.setFixedSize(self.MIN_WIDTH, self.MIN_HEIGHT)
+
+        # Get screen geometry and set the default size
+        screen = QApplication.primaryScreen()
+        screen_size = screen.availableGeometry()
+        self.setGeometry(screen_size)
+
         self._setup_original_view()
         self._setup_dynamic_views(palettes)
 
@@ -162,7 +174,7 @@ class PorypalView(QWidget):
             view.fitInView(scene.sceneRect(), Qt.KeepAspectRatio)
 
             self.dynamic_labels[i].setText(label)
-
+            
         # Update highlights
         self._update_highlights()
 
@@ -178,16 +190,17 @@ class PorypalView(QWidget):
 
     def _handle_view_click(self, index: int):
         """Handle click on a view."""
-        self.selected_index = index
-        self._update_highlights()
+        if index is not None and self.parent.image_manager.get_original_image() is not None:
+            self.selected_index = index
+            self._update_highlights()
 
     # ------------ EVENT HANDLERS ------------ #
     def eventFilter(self, source, event):
         if event.type() == QEvent.MouseButtonPress:
-            print("Event filter triggered")
+            logging.debug("Event filter triggered")
             if source in self.dynamic_layout:
                 index = self.dynamic_layout.index(source)
-                print(f'View clicked: {index}')
+                logging.debug(f'View clicked: {index}')
                 self._handle_view_click(index)
                 return True
         return super().eventFilter(source, event)

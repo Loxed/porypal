@@ -1,8 +1,4 @@
-"""
-PoryPal Controller - Manages application logic and state
-Coordinates interactions between view and model components.
-"""
-
+# controller/porypal_controller.py
 import logging, os
 
 from PyQt5.QtWidgets import QFileDialog, QApplication
@@ -49,7 +45,7 @@ class PorypalController(QObject):
         #              ', '.join(p.get_name() for p in self.palette_manager.get_palettes()))
         
         # Create and setup view
-        self.view = PorypalView(self.palette_manager.get_palettes())
+        self.view = PorypalView(self, self.palette_manager.get_palettes())
         self._connect_signals()
         
         logging.debug("Controller initialized")
@@ -59,7 +55,9 @@ class PorypalController(QObject):
         self.view.btn_load_image.clicked.connect(self.load_image)
         self.view.btn_load_tileset.clicked.connect(self.load_tileset)
         self.view.btn_save_image.clicked.connect(self.save_image)
+        self.view.btn_extract_palette.clicked.connect(self.extract_palette)
         self.view.btn_toggle_theme.clicked.connect(self.toggle_theme)
+
 
     def _image_file_dialog(self, save: bool = False) -> str:
         """Open image file dialog for loading or saving."""
@@ -81,6 +79,7 @@ class PorypalController(QObject):
             self.view.show_error("File Dialog Error", str(e))
         return ""
     
+    # ------------ LOAD IMAGE ------------ #
     @pyqtSlot()
     def load_image(self) -> None:
         """Load image and process with all palettes."""
@@ -108,12 +107,17 @@ class PorypalController(QObject):
                 results['highlights']
             )
 
+            # enable save and extract buttons:
+            self.view.btn_save_image.setEnabled(True)
+            self.view.btn_extract_palette.setEnabled(True)
+
             self.view.show_success("Image loaded successfully!")
             
         except Exception as e:
             logging.error(f"Error loading image: {e}")
             self.view.show_error("Image Loading Error"+ str(e))
 
+    # ------------ SAVE IMAGE ------------ #
     @pyqtSlot()
     def save_image(self) -> None:
         """Save currently selected converted image with auto-generated filename."""
@@ -160,11 +164,20 @@ class PorypalController(QObject):
             self.view.show_error(str(e))
 
 
+    # ------------ PALETTE EXTRACTION ------------ #
+    @pyqtSlot()
+    def extract_palette(self) -> None:
+        """Extract palette from the input image."""
+        self.image_manager.extract_palette()
+        self.view.show_success("Palette extracted successfully!")
+
+    # ------------ THEME TOGGLE ------------ #
     @pyqtSlot()
     def toggle_theme(self) -> None:
         """Toggle application theme."""
         self._theme.toggle_theme()
 
+    # ------------ TILESET LOADING ------------ #
     @pyqtSlot()
     def load_tileset(self) -> None:
         """Load tileset image (not implemented)."""

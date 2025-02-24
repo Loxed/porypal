@@ -17,8 +17,8 @@ from view.porypal_theme import PorypalTheme
 # Application metadata
 APP_METADATA = {
     'name': "PoryPal",
-    'version': "1.0.0",
-    'debug': True,
+    'version': "1.1.0",
+    'debug': False,
     'config_path': Path("config.yaml"),
     'icon_path': Path("ressources/porypal.ico"),
     'org_name': "prisonlox",

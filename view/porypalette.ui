@@ -37,6 +37,9 @@
    </property>
    <item>
     <layout class="QHBoxLayout" name="control_layout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="button_group">
        <property name="title">
@@ -45,6 +48,9 @@
        <layout class="QHBoxLayout" name="processing_layout">
         <item>
          <widget class="QPushButton" name="btn_load_tileset">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -58,7 +64,7 @@
            </size>
           </property>
           <property name="text">
-           <string>🧩 Load Tileset</string>
+           <string>🧩 Load Tileset...</string>
           </property>
          </widget>
         </item>
@@ -77,12 +83,15 @@
            </size>
           </property>
           <property name="text">
-           <string>🎨 Load Target Sprite</string>
+           <string>🖼️ Load Image</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="btn_save_image">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -96,7 +105,29 @@
            </size>
           </property>
           <property name="text">
-           <string>💾 Save Selected</string>
+           <string>💾 Save Converted Image</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btn_extract_palette">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>94</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>🎨 Extract palette from image</string>
           </property>
          </widget>
         </item>
@@ -115,7 +146,7 @@
            </size>
           </property>
           <property name="text">
-           <string>💡</string>
+           <string>💡 Toggle Theme</string>
           </property>
          </widget>
         </item>

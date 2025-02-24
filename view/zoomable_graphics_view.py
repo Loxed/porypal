@@ -68,7 +68,7 @@ class ZoomableGraphicsView(QGraphicsView):
         super().resizeEvent(event)
         button_x = self.width() - self.reset_button.width() - 10
         self.reset_button.move(button_x, 10)
-        self.reset_view()
+        # self.reset_view() # caused glitch due to false-positive with selection border
 
     def wheelEvent(self, event):
         if event.modifiers() == Qt.ControlModifier:

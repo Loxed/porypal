@@ -10,8 +10,8 @@ class PaletteDisplay(QWidget):
         self.colors = colors or []
         
         # Set minimum size and size policy for height-based scaling
-        self.setMinimumSize(40, 40)
-        self.setMaximumSize(80, 80)
+        # self.setMinimumSize(40, 40)
+        # self.setMaximumSize(80, 80)
         self.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Preferred)
         self.setVisible(bool(self.colors))
 
@@ -60,5 +60,5 @@ class PaletteDisplay(QWidget):
     def resizeEvent(self, event):
         # Keep the widget square
         size = min(event.size().width(), event.size().height())
-        self.setFixedSize(size, size)
+        self.setBaseSize(QSize(size, size))
         super().resizeEvent(event)  

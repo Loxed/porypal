@@ -1,4 +1,5 @@
 from PyQt5.QtGui import QImage, QColor
+from PyQt5.QtWidgets import QMessageBox
 from pathlib import Path
 import logging, os
 from PIL import Image
@@ -129,7 +130,7 @@ class ImageManager:
             for x in range(width):
                 pixel_color = image.pixelColor(x, y)
                 
-                if pixel_color.alpha() < 255:
+                if pixel_color.alpha() < 255 or pixel_color == transparent_color:
                     converted_color = transparent_color
                 else:
                     if available_colors:
@@ -148,7 +149,7 @@ class ImageManager:
                 
         return converted, len(used_colors)
     
-    # ------------ COLOR CONVERSIOn ------------ #
+    # ------------ COLOR CONVERSION ------------ #
         
     def _find_closest_color(self, target_color: QColor, palette_colors: list[QColor]) -> QColor:
         """Find closest matching color in palette using RGB distance"""
@@ -225,7 +226,67 @@ class ImageManager:
             logging.error(f"Failed to save image: {e}")
             return False
 
+    # ------------ EXTRACT PALETTE ------------ #
+    def extract_palette(self) -> None:
+        """ 
+        Takes the _original_ image and creates a palette (JASC-PAL) from it.
+        Warns if more than 16 colors are detected.
+        """
+        try:
+            # Convert QImage to PIL Image
+            buffer = self._original_image.constBits()
+            buffer.setsize(self._original_image.byteCount())
+            pil_img = Image.frombytes(
+                "RGBA" if self._original_image.hasAlphaChannel() else "RGB",
+                (self._original_image.width(), self._original_image.height()),
+                buffer,
+                'raw',
+                'BGRA' if self._original_image.hasAlphaChannel() else 'BGR'
+            )
+            
+            # Convert to RGB mode
+            pil_img = pil_img.convert("RGB")
+            
+            # Get the palette through PIL's quantization
+            quantized = pil_img.convert("P", palette=Image.ADAPTIVE, colors=16)
+            palette = quantized.getpalette()[:48]  # First 16 RGB triplets (16 * 3)
+            
+            # Convert to list of RGB tuples
+            colors = [(palette[i], palette[i+1], palette[i+2]) 
+                    for i in range(0, len(palette), 3)
+                    if palette[i] + palette[i+1] + palette[i+2] > 0]  # Skip black/empty colors
+
+            if len(colors) > 16:
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Warning)
+                msg.setText(f"Image contains {len(colors)} colors. Maximum allowed is 16.")
+                msg.setInformativeText("Please use an image with 16 or fewer colors.")
+                msg.setWindowTitle("Too Many Colors")
+                msg.exec_()
+                return
+
+            # Create palette filename using Path
+            palette_name = self._current_image_path.stem + ".pal"
+            palette_path = Path("palettes") / palette_name
+
+            # Ensure palettes directory exists
+            palette_path.parent.mkdir(exist_ok=True)
+
+            # Create palette file
+            with palette_path.open("w") as f:
+                f.write("JASC-PAL\n0100\n16\n")
+                for color in colors:
+                    f.write(f"{color[0]:3} {color[1]:3} {color[2]:3}\n")
+
+            logging.info(f"Palette created: {palette_path}")
+
+        except Exception as e:
+            logging.error(f"Error extracting palette: {e}")
+
     # ------------ GETTERS ------------ #
+
+    def get_original_image(self) -> QImage:
+        return self._original_image
     
     def get_image_at_index(self, index: int) -> QImage:
         logging.debug(f"Getting image at index {index}. Total images: {len(self.converted_images)}")

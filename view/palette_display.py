@@ -10,8 +10,8 @@ class PaletteDisplay(QWidget):
         self.colors = colors or []
         
         # Set minimum size and size policy for height-based scaling
-        # self.setMinimumSize(40, 40)
-        # self.setMaximumSize(80, 80)
+        self.setMinimumSize(40, 40)
+        self.setMaximumSize(80, 80)
         self.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Preferred)
         self.setVisible(bool(self.colors))
 
@@ -52,7 +52,7 @@ class PaletteDisplay(QWidget):
         self.update()
 
     def sizeHint(self) -> QSize:
-        return QSize(120, 120)  # preferred size
+        return QSize(80, 80)  # preferred size
 
     def minimumSizeHint(self) -> QSize:
         return QSize(40, 40)  # minimum size

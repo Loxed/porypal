@@ -1,7 +1,7 @@
 # controller/porypal_controller.py
 import logging, os
 
-from PyQt5.QtWidgets import QFileDialog, QApplication
+from PyQt5.QtWidgets import QFileDialog, QApplication, QPushButton
 from PyQt5.QtGui import QImage
 from PyQt5.QtCore import QObject, pyqtSlot
 
@@ -9,24 +9,11 @@ from view.porypal_view import PorypalView
 from model.palette_manager import PaletteManager
 from model.image_manager import ImageManager
 from view.porypal_theme import PorypalTheme
-
+from controller.tileset_editor_controller import TilesetEditorController
 class PorypalController(QObject):
     """
-    Main application controller coordinating UI actions with business logic.
-    
-    Attributes:
-        _config (dict): Application configuration
-        _app (QApplication): Qt application instance
-        _theme (PorypalTheme): Theme manager
-        palette_manager (PaletteManager): Handles palette loading and management
-        image_manager (ImageManager): Handles image processing and conversion
-        view (PorypalView): Main application view
-    
-    Public Methods:
-        load_image() -> None: Load and process image
-        save_image() -> None: Save currently selected converted image
-        toggle_theme() -> None: Switch application theme
-        load_tileset() -> None: (Not implemented) Load tileset image
+    Controller for the PoryPal application, handling user interactions, 
+    managing data between model and view, and coordinating application logic.
     """
     def __init__(self, theme: PorypalTheme, app: QApplication, config: dict):
         """Initialize controller with required dependencies."""
@@ -40,15 +27,11 @@ class PorypalController(QObject):
         self.palette_manager = PaletteManager(config)
         self.image_manager = ImageManager(config)
 
-        # logging.debug(f'\n\npalettes loaded (%d): %s\n\n', 
-        #              len(self.palette_manager.get_palettes()), 
-        #              ', '.join(p.get_name() for p in self.palette_manager.get_palettes()))
-        
         # Create and setup view
         self.view = PorypalView(self, self.palette_manager.get_palettes())
         self._connect_signals()
         
-        logging.debug("Controller initialized")
+        logging.info("Controller initialized")
 
     def _connect_signals(self) -> None:
         """Connect view buttons to controller methods."""
@@ -58,48 +41,34 @@ class PorypalController(QObject):
         self.view.btn_extract_palette.clicked.connect(self.extract_palette)
         self.view.btn_toggle_theme.clicked.connect(self.toggle_theme)
 
-
     def _image_file_dialog(self, save: bool = False) -> str:
         """Open image file dialog for loading or saving."""
-        try:
-            dialog = QFileDialog()
-            if save:
-                return dialog.getSaveFileName(
-                    self.view,
-                    "Save Image",
-                    "",
-                    "PNG Image (*.png)")[0]
-            else:
-                dialog.setFileMode(QFileDialog.ExistingFile)
-                dialog.setNameFilter("Images (*.png *.jpg *.jpeg *.gif)")
-                if dialog.exec_():
-                    return dialog.selectedFiles()[0]
-        except Exception as e:
-            logging.error(f"Image file dialog failed: {e}")
-            self.view.show_error("File Dialog Error", str(e))
+        dialog = QFileDialog()
+        if save:
+            return dialog.getSaveFileName(
+                self.view, "Save Image", "", "PNG Image (*.png)")[0]
+        dialog.setFileMode(QFileDialog.ExistingFile)
+        dialog.setNameFilter("Images (*.png *.jpg *.jpeg *.gif)")
+        if dialog.exec_():
+            return dialog.selectedFiles()[0]
         return ""
     
     # ------------ LOAD IMAGE ------------ #
     @pyqtSlot()
     def load_image(self) -> None:
         """Load image and process with all palettes."""
+        image_path = self._image_file_dialog()
+        if not image_path:
+            return
+
         try:
-            image_path = self._image_file_dialog()
-            if not image_path:
-                return
-                
-            logging.debug(f"Loading image: {image_path}")
-            
-            # Load and display original image
             loaded_image = self.image_manager.load_image(image_path)
             self.view.update_original_image(loaded_image)
-            
-            # Process with all palettes
+
             results = self.image_manager.process_all_palettes(
                 self.palette_manager.get_palettes()
             )
-            
-            # Update view with converted images
+
             self.view.update_dynamic_images(
                 results['images'],
                 results['labels'],
@@ -107,15 +76,14 @@ class PorypalController(QObject):
                 results['highlights']
             )
 
-            # enable save and extract buttons:
             self.view.btn_save_image.setEnabled(True)
             self.view.btn_extract_palette.setEnabled(True)
 
-            self.view.show_success("Image loaded successfully!")
-            
+            self.view.notification.show_success("Image loaded successfully!")
+
         except Exception as e:
             logging.error(f"Error loading image: {e}")
-            self.view.show_error("Image Loading Error"+ str(e))
+            self.view.notification.show_error(f"Image Loading Error: {e}")
 
     # ------------ SAVE IMAGE ------------ #
     @pyqtSlot()
@@ -126,42 +94,29 @@ class PorypalController(QObject):
             selected_index = self.view.get_selected_index()
             if selected_index is None:
                 raise ValueError("No image selected")
-                
-            logging.debug(f"Selected index for save: {selected_index}")
             
             # Get current image and palette
             current_image = self.image_manager.get_image_at_index(selected_index)
             current_palette = self.palette_manager.get_palette_by_index(selected_index)
             
-            if not current_image:
-                raise ValueError("No image data available")
-                
             # Generate output path from original image path and palette name
             original_path = self.image_manager.get_current_image_path()
-            if not original_path:
-                raise ValueError("No original image path available")
-                
-            # Create output path: same directory, original_name_palettename.png
             output_dir = os.path.dirname(original_path)
             original_name = os.path.splitext(os.path.basename(original_path))[0]
             palette_name = os.path.splitext(current_palette.get_name())[0]  # Remove .pal if present
             output_filename = f"{original_name}_{palette_name}.png"
             save_path = os.path.join(output_dir, output_filename)
-                
+            
             # Save image with palette data
             if not self.image_manager.save_image(current_image, save_path, current_palette):
                 raise RuntimeError("Failed to save image")
-                
-            # Calculate the relative path from the project's root directory
-            project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-            relative_path = os.path.relpath(save_path, project_root)
             
-            logging.debug(f"Image saved successfully: {relative_path}")
-            self.view.show_success(f"Image saved successfully as '{relative_path}'")
+            logging.debug(f"Image saved successfully: {save_path}")
+            self.view.notification.show_success(f"Image saved successfully as '{save_path}'")
 
         except Exception as e:
             logging.error(f"Error saving image: {e}")
-            self.view.show_error(str(e))
+            self.view.notification.show_error(str(e))
 
 
     # ------------ PALETTE EXTRACTION ------------ #
@@ -169,7 +124,7 @@ class PorypalController(QObject):
     def extract_palette(self) -> None:
         """Extract palette from the input image."""
         self.image_manager.extract_palette()
-        self.view.show_success("Palette extracted successfully!")
+        self.view.notification.show_success("Palette extracted successfully!")
 
     # ------------ THEME TOGGLE ------------ #
     @pyqtSlot()
@@ -178,8 +133,47 @@ class PorypalController(QObject):
         self._theme.toggle_theme()
 
     # ------------ TILESET LOADING ------------ #
+
     @pyqtSlot()
     def load_tileset(self) -> None:
-        """Load tileset image (not implemented)."""
-        logging.warning("Tileset loading not implemented")
-        pass
+        """Open the tileset editor by replacing the current view with the tileset editor view."""
+        try:
+            # Store reference to the main view for restoration later
+            self._main_view = self.view
+            
+            # Create tileset editor controller
+            self.tileset_editor = TilesetEditorController(self)
+            
+            # Set up view swapping mechanism
+            self.tileset_editor.view.btn_back = QPushButton("Return to Main View")
+            self.tileset_editor.view.btn_back.clicked.connect(self.restore_main_view)
+            self.tileset_editor.view.toolbar_layout.addWidget(self.tileset_editor.view.btn_back)
+            
+            # Replace the current central widget with the tileset editor view
+            self._app.setActiveWindow(self.tileset_editor.view)
+            self._main_view.hide()
+            self.tileset_editor.view.show()
+            
+            logging.info("Switched to tileset editor view")
+        except Exception as e:
+            logging.error(f"Error opening tileset editor: {e}")
+            self.view.notification.show_error(f"Failed to open tileset editor: {e}")
+
+    # Add a new method to restore the main view
+    @pyqtSlot()
+    def restore_main_view(self) -> None:
+        """Restore the main view after closing the tileset editor."""
+        try:
+            if hasattr(self, 'tileset_editor') and self.tileset_editor:
+                self.tileset_editor.view.hide()
+                
+            if hasattr(self, '_main_view') and self._main_view:
+                self._main_view.show()
+                self._app.setActiveWindow(self._main_view)
+                
+            logging.info("Restored main view")
+        except Exception as e:
+            logging.error(f"Error restoring main view: {e}")
+            # If error, force show main view as a fallback
+            if hasattr(self, '_main_view'):
+                self._main_view.show()

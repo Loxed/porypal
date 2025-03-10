@@ -18,7 +18,7 @@ import logging
 class PorypalView(QWidget):
     """Main application view with dynamic resizing support."""
 
-    CONFIRM_ON_EXIT = False
+    CONFIRM_ON_EXIT = True
     MIN_WIDTH = 540
     MIN_HEIGHT = 600
 
@@ -34,6 +34,7 @@ class PorypalView(QWidget):
         self.best_indices = []
         self.dynamic_views = []
         self.dynamic_labels = []
+        self.dynamic_frames = []
 
         self.setMinimumSize(self.MIN_WIDTH, self.MIN_HEIGHT)
         # self.setFixedSize(self.MIN_WIDTH, self.MIN_HEIGHT)
@@ -68,6 +69,8 @@ class PorypalView(QWidget):
             QSizePolicy.Expanding, QSizePolicy.Preferred
         )
 
+        # self.original_view.setBorder(Qt.black, 1)
+
         layout.insertWidget(index, self.original_view, 1)
 
     def _setup_dynamic_views(self, palettes: list[Palette]):
@@ -78,10 +81,17 @@ class PorypalView(QWidget):
                 item.widget().hide()
                 item.widget().deleteLater()
 
+        # # add label
+        # label_output = QLabel("Output Images", self)
+        # label_instruction = QLabel("🟢 = Selected Image\n🔵 = Recommended Image(s)",self)
+
+        # self.dynamic_layout.addWidget(label_output)
+        # self.dynamic_layout.addWidget(label_instruction)
+
         for palette in palettes:
             container = QWidget(self)
             container.setSizePolicy(
-                QSizePolicy.Expanding, QSizePolicy.MinimumExpanding
+                QSizePolicy.Minimum, QSizePolicy.Minimum
             )
             container_layout = QHBoxLayout(container)
             container_layout.setContentsMargins(5, 5, 5, 5)
@@ -95,27 +105,40 @@ class PorypalView(QWidget):
             label.setMinimumWidth(min(60, preferred_width))
             label.setWordWrap(True)
             label.setSizePolicy(
-                QSizePolicy.Preferred, QSizePolicy.Preferred
+                QSizePolicy.MinimumExpanding, QSizePolicy.Preferred
             )
 
             # Palette display: Square that maintains minimum size
             palette_4x4 = PaletteDisplay(palette.get_colors(), container)
 
-
+            
             # View: Takes remaining horizontal space
             output_view = ZoomableGraphicsView(container, self, palettes.index(palette))
-            output_view.setMinimumWidth(int(self.MIN_HEIGHT * 0.2))
-            output_view.setMinimumHeight(int(self.MIN_HEIGHT * 0.2))
-            output_view.setSizePolicy(
-                QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding
-            )
+            # output_view.setMinimumWidth(int(self.MIN_HEIGHT * 0.2))
+            # output_view.setMinimumHeight(int(self.MIN_HEIGHT * 0.2))
+            # output_view.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
             # output_view.clicked.connect(lambda: self._handle_view_click(len(self.dynamic_views)))
+
+            # Define frame to put view into
+            frame = QWidget(container)
+            frame.setStyleSheet("border: 1px solid transparent;")
+            frame.setMaximumWidth((int)(self.width() * 0.4)) if self.width() == self.MIN_WIDTH else frame.setMaximumWidth((int)(self.width() * 0.6))
+            frame.setMaximumHeight((int)(self.height()/len(palettes) * 0.6)) if self.height() == self.MIN_HEIGHT else frame.setMaximumHeight((int)(self.height() * 0.4))
+            frame.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+            frame_layout = QHBoxLayout(frame)
+            frame_layout.addWidget(output_view)
+            frame_layout.setContentsMargins(0, 0, 0, 0)
+            # set 1px transparent border
+            frame_layout.setSpacing(0)
+
 
             # Add widgets to layout
             container_layout.addWidget(label, 0)       # No stretch
             container_layout.addWidget(palette_4x4, 0) # No stretch
-            container_layout.addWidget(output_view, 1) # Takes remaining space
+            # container_layout.addWidget(output_view, 1) # Takes remaining space
+            container_layout.addWidget(frame, 1)
 
+            self.dynamic_frames.append(frame)
             self.dynamic_views.append(output_view)
             self.dynamic_labels.append(label)
             self.dynamic_layout.addWidget(container)
@@ -168,25 +191,28 @@ class PorypalView(QWidget):
             view.setScene(scene)
             scene.addPixmap(pixmap)
             scene.setSceneRect(QRectF(pixmap.rect()))
-
+            
             view.resetTransform()
             view.setTransformationAnchor(QGraphicsView.AnchorViewCenter)
             view.fitInView(scene.sceneRect(), Qt.KeepAspectRatio)
 
             self.dynamic_labels[i].setText(label)
-            
+
         # Update highlights
         self._update_highlights()
 
     def _update_highlights(self):
         """Update view highlighting."""
-        for i, view in enumerate(self.dynamic_views):
+        for i, view in enumerate(self.dynamic_frames):
             style = ""
             if i == self.selected_index:
-                style = "border: 3px solid #4CAF50"  # Green for selection
+                # style = "background-color: #458447; QGraphicsView {background-color: #22272e}" if self.parent._config.get('dark_mode') == "dark" \
+                # else    "background-color: #7ebc80; QGraphicsView {background-color: #f2f2f2}"
+                style = "border: 1px solid #458447"
             elif i in self.best_indices:
-                style = "border: 2px solid #2196F3"  # Blue for best alternatives
-            view.setStyleSheet(f"QGraphicsView {{ {style} }}")
+                style = "border: 1px solid #2196F3"  # Blue for best alternatives
+
+            view.setStyleSheet(style)
 
     def _handle_view_click(self, index: int):
         """Handle click on a view."""
@@ -230,18 +256,6 @@ class PorypalView(QWidget):
                 event.ignore()
         else:
             event.accept()
-
-    def show_error(self, message: str):
-        """Show error message in dialog."""
-        self.notification.notify(message, error=True)
-
-    def show_success(self, message: str):
-        """Show success message in dialog."""
-        self.notification.notify(message)
-
-    def show_warning(self, message: str):
-        """Show warning message in dialog."""
-        self.notification.notify("Warning: "+message, error=False)
     # ------------ GETTERS ------------ #
 
     def get_selected_index(self) -> int:

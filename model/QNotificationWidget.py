@@ -88,3 +88,16 @@ class QNotificationWidget(QDockWidget):
         self.show_notification(message)
         if error:
             warn(f'{message}, {error}')
+
+
+    def show_error(self, message: str):
+        """Show error message in dialog."""
+        self.notify(message, error=True)
+
+    def show_success(self, message: str):
+        """Show success message in dialog."""
+        self.notify(message)
+
+    def show_warning(self, message: str):
+        """Show warning message in dialog."""
+        self.notify("Warning: "+message, error=False)

@@ -9,7 +9,7 @@ class PorypalTheme:
         self.app = app
         self.config = config
         self.app.setStyle('Fusion')  # OS agnostic style
-        self._dark_mode = self.config.get('dark_mode', 'light') == 'dark'
+        self._dark_mode = self.config.get('dark_mode')
         self.apply_theme()
 
     def set_dark_theme(self):

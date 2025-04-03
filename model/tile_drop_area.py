@@ -1,9 +1,6 @@
 #model/tile_drop_area.py
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QImage, QPainter
 from PyQt5.QtWidgets import QGraphicsScene
-
-from model.draggable_tile import DraggableTile
 
 class TileDropArea(QGraphicsScene):
     """

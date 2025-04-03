@@ -1,10 +1,10 @@
 # view/tileset_editor_view.py
 from PyQt5.QtCore import Qt, QRectF
 from PyQt5.QtWidgets import QWidget, QGraphicsScene, QApplication, QMessageBox
-from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtGui import QPixmap
 from PyQt5 import uic
 import logging
-from model.draggable_tile import DraggableTile
+# from model.draggable_tile import DraggableTile
 from model.tile_drop_area import TileDropArea
 from model.QNotificationWidget import QNotificationWidget
 

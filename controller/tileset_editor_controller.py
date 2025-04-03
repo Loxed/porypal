@@ -4,10 +4,8 @@ from PyQt5.QtGui import QImage, QPixmap, QPen, QColor, QPainter, QBrush
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QGraphicsPixmapItem, QGraphicsRectItem, QApplication
 from PyQt5.QtCore import QObject, pyqtSlot, QRectF, Qt, QPoint
 import logging
-from pathlib import Path
 
 from view.tileset_editor_view import TilesetEditorView
-from model.tile_drop_area import TileDropArea
 
 class TilesetEditorController(QObject):
     """

@@ -1,7 +1,7 @@
 # view/tileset_editor_view.py
 from PyQt5.QtCore import Qt, QRectF
 from PyQt5.QtWidgets import QWidget, QGraphicsScene, QApplication, QMessageBox
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QCursor
 from PyQt5 import uic
 import logging
 # from model.draggable_tile import DraggableTile
@@ -25,10 +25,6 @@ class TilesetEditorView(QWidget):
         # Initialize scenes
         self.input_scene = QGraphicsScene(self)
         self.input_view.setScene(self.input_scene)
-
-        # Preview view 
-        self.preview_scene = QGraphicsScene(self)
-        self.preview_view.setScene(self.preview_scene)
         
         # Replace output view's scene with TileDropArea
         self.output_scene = TileDropArea(self)
@@ -47,10 +43,25 @@ class TilesetEditorView(QWidget):
         # Set window title
         self.setWindowTitle("PoryPal - Tileset Editor")
         
-        # Get screen geometry and set the default size
-        screen = QApplication.primaryScreen()
-        screen_size = screen.availableGeometry()
-        self.setGeometry(screen_size)
+        # Get the screen where the mouse cursor is located
+        cursor_pos = QCursor.pos()
+        cursor_screen = QApplication.screenAt(cursor_pos)
+        
+        if cursor_screen:
+            # Get the screen geometry
+            screen_geometry = cursor_screen.availableGeometry()
+            
+            # Set window geometry to match the screen
+            self.setGeometry(screen_geometry)
+            
+            # Position window at the top-left corner of the screen
+            self.move(screen_geometry.x(), screen_geometry.y())
+        else:
+            # Fallback to primary screen if cursor screen can't be determined
+            screen = QApplication.primaryScreen()
+            screen_size = screen.availableGeometry()
+            self.setGeometry(screen_size)
+            self.move(cursor_pos.x(), cursor_pos.y())
 
     # ------------ DISPLAY HELPERS ------------ #
     def show_image(self, image, scene, view):

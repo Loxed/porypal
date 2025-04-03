@@ -62,42 +62,42 @@ class TilesetEditorController(QObject):
                     item.setPen(QPen(QColor(0, 255, 0, 200)))
                     item.setBrush(QBrush(QColor(0, 255, 0, 50)))
                     self.selection_start = original_pos
-                    self.update_preview()
+                    # self.update_preview()
                     self.update_info_label()
                 return
 
     # ------------ PREVIEW WINDOW ------------ #
-    def update_preview(self):
-        """Update the preview scene with selected tiles."""
-        self.view.preview_scene.clear()
+    # def update_preview(self):
+    #     """Update the preview scene with selected tiles."""
+    #     self.view.preview_scene.clear()
 
-        if not self.selected_tiles:
-            return
+    #     if not self.selected_tiles:
+    #         return
 
-        # Calculate bounds of selected tiles
-        min_x = min(x for x, y in self.selected_tiles)
-        min_y = min(y for x, y in self.selected_tiles)
-        max_x = max(x + self.tile_width for x, y in self.selected_tiles)
-        max_y = max(y + self.tile_height for x, y in self.selected_tiles)
+    #     # Calculate bounds of selected tiles
+    #     min_x = min(x for x, y in self.selected_tiles)
+    #     min_y = min(y for x, y in self.selected_tiles)
+    #     max_x = max(x + self.tile_width for x, y in self.selected_tiles)
+    #     max_y = max(y + self.tile_height for x, y in self.selected_tiles)
 
-        # Create output image with the right dimensions
-        output_image = QImage(int(max_x - min_x), int(max_y - min_y), QImage.Format_RGBA8888)
-        output_image.fill(Qt.transparent)
+    #     # Create output image with the right dimensions
+    #     output_image = QImage(int(max_x - min_x), int(max_y - min_y), QImage.Format_RGBA8888)
+    #     output_image.fill(Qt.transparent)
 
-        # Draw selected tiles
-        painter = QPainter(output_image)
-        for x, y in self.selected_tiles:
-            # Copy the tile from the input image
-            tile = self.input_image.copy(int(x), int(y), self.tile_width, self.tile_height)
-            painter.drawImage(QRectF(x - min_x, y - min_y, self.tile_width, self.tile_height), tile)
-        painter.end()
+    #     # Draw selected tiles
+    #     painter = QPainter(output_image)
+    #     for x, y in self.selected_tiles:
+    #         # Copy the tile from the input image
+    #         tile = self.input_image.copy(int(x), int(y), self.tile_width, self.tile_height)
+    #         painter.drawImage(QRectF(x - min_x, y - min_y, self.tile_width, self.tile_height), tile)
+    #     painter.end()
 
-        # Add to preview scene
-        self.view.preview_scene.addPixmap(QPixmap.fromImage(output_image))
-        self.view.preview_view.centerOn(self.view.preview_scene.itemsBoundingRect().center())
+    #     # Add to preview scene
+    #     self.view.preview_scene.addPixmap(QPixmap.fromImage(output_image))
+    #     self.view.preview_view.centerOn(self.view.preview_scene.itemsBoundingRect().center())
 
-        # Update notification
-        # self.view.notification.show_notification(f"Selected {len(self.selected_tiles)} tiles")
+    #     # Update notification
+    #     # self.view.notification.show_notification(f"Selected {len(self.selected_tiles)} tiles")
 
     # ------------ OUTPUT WINDOW ------------ #
     def handle_output_click(self, pos: QPoint):
@@ -213,7 +213,7 @@ class TilesetEditorController(QObject):
                     item.setBrush(QBrush(Qt.NoBrush))
                     break
         self.selected_tiles.clear()
-        self.update_preview()
+        # self.update_preview()
 
     def select_rectangle(self, start_x, start_y, end_x, end_y):
         """Select all tiles within the rectangle defined by start and end points."""
@@ -522,12 +522,13 @@ class TilesetEditorController(QObject):
             QMessageBox.critical(self.view, "Error", f"Failed to save tileset: {e}")
 
     def update_info_label(self):
-        """Update the info label with current state information."""
-        info_text = []
+        """Update the info labels with current state information."""
+        input_text = []
+        output_text = []
         
         # Input image info
         if self.input_image:
-            info_text.append(f"Input Image: {self.input_image.width()}x{self.input_image.height()} pixels")
+            input_text.append(f"Input Image: {self.input_image.width()}x{self.input_image.height()} pixels")
             
             # Grid info - only show if grid exists
             if self.grid_items and len(self.grid_items) > 0:
@@ -536,14 +537,14 @@ class TilesetEditorController(QObject):
                     cols += 1 if self.input_image.width() % self.tile_width > 0 else 0
                     rows = self.input_image.height() // self.tile_height
                     rows += 1 if self.input_image.height() % self.tile_height > 0 else 0
-                    info_text.append(f"Grid: {cols}x{rows} tiles")
-                    info_text.append(f"Tile Size: {self.tile_width}x{self.tile_height} pixels")
+                    input_text.append(f"Grid: {cols}x{rows} tiles")
+                    input_text.append(f"Tile Size: {self.tile_width}x{self.tile_height} pixels")
                     
                     # Selected tile info - only show if tiles are selected
                     if self.selected_tiles and len(self.selected_tiles) > 0:
                         min_x = min(x for x, y in self.selected_tiles)
                         min_y = min(y for x, y in self.selected_tiles)
-                        info_text.append(f"Selected Tile: ({min_x//self.tile_width}, {min_y//self.tile_height})")
+                        input_text.append(f"Selected Tile: ({min_x//self.tile_width}, {min_y//self.tile_height})")
                 except Exception:
                     pass  # Skip grid info if there's an error
         
@@ -562,16 +563,17 @@ class TilesetEditorController(QObject):
                 scaled_width = columns * tile_width  # Use output scene tile width
                 scaled_height = rows * tile_height   # Use output scene tile height
                 
-                info_text.append(f"\nOutput Layout: {scaled_width}x{scaled_height} pixels")
-                info_text.append(f"Scale: {scale_factor*100}%")
-                info_text.append(f"Original Size: {original_width}x{original_height} pixels")
-                info_text.append(f"Grid Size: {columns}x{rows} tiles")
+                output_text.append(f"Output Layout: {scaled_width}x{scaled_height} pixels")
+                output_text.append(f"Scale: {scale_factor*100}%")
+                output_text.append(f"Original Size: {original_width}x{original_height} pixels")
+                output_text.append(f"Grid Size: {columns}x{rows} tiles")
                 
                 # Count placed tiles
                 placed_tiles = sum(1 for row in self.output_matrix for tile in row if tile is not None)
-                info_text.append(f"Placed Tiles: {placed_tiles}/{columns*rows}")
+                output_text.append(f"Placed Tiles: {placed_tiles}/{columns*rows}")
             except Exception:
                 pass  # Skip layout info if there's an error
         
-        # Update the label
-        self.view.text_info_label.setText("\n".join(info_text))
+        # Update the labels
+        self.view.text_info_label_input.setText("\n".join(input_text))
+        self.view.text_info_label_output.setText("\n".join(output_text))

@@ -4,3 +4,4 @@ venv/*
 .idea
 build
 dist
+*.pyc

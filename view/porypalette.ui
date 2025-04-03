@@ -70,7 +70,7 @@
            </size>
           </property>
           <property name="text">
-           <string>🧩 Load Tileset...</string>
+           <string>🧩 Tileset Editor</string>
           </property>
          </widget>
         </item>

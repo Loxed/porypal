@@ -4,7 +4,8 @@ from PyQt5.QtWidgets import QWidget, QGraphicsScene, QApplication, QMessageBox
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5 import uic
 import logging
-from model.draggable_tile import DraggableTile, TileDropArea
+from model.draggable_tile import DraggableTile
+from model.tile_drop_area import TileDropArea
 from model.QNotificationWidget import QNotificationWidget
 
 class TilesetEditorView(QWidget):
@@ -20,7 +21,6 @@ class TilesetEditorView(QWidget):
         uic.loadUi("view/tileset_editor.ui", self)
         
         self.controller = controller
-
 
         # Initialize scenes
         self.input_scene = QGraphicsScene(self)
@@ -75,7 +75,6 @@ class TilesetEditorView(QWidget):
             self.preview_scene.addPixmap(tile.pixmap()).setPos(tile.x(), tile.y())
     
     # ------------ EVENT HANDLERS ------------ #
-
     def resizeEvent(self, event):
         """Handle window resize."""
         super().resizeEvent(event)
@@ -110,26 +109,3 @@ class TilesetEditorView(QWidget):
                 super().keyPressEvent(event)
         else:
             super().keyPressEvent(event)
-
-
-    def mousePressEvent(self, event):
-            """Handles mouse press for single tile selection."""
-            if event.button() == Qt.LeftButton:
-                clicked_item = self.input_scene.itemAt(event.pos(), self.input_view.transform())
-                if isinstance(clicked_item, DraggableTile):
-                    # Toggle selection of clicked tile
-                    if clicked_item.isSelected():
-                        clicked_item.setSelected(False)
-                        self.controller.selected_tiles.remove(clicked_item)
-                    else:
-                        clicked_item.setSelected(True)
-                        self.controller.selected_tiles.append(clicked_item)
-
-                # Refresh preview scene with selected tiles
-                self.update_preview_scene()
-
-    def mouseReleaseEvent(self, event):
-            """Handles mouse release to select multiple tiles."""
-            if event.button() == Qt.LeftButton:
-                # Update the preview scene with selected tiles
-                self.update_preview_scene()

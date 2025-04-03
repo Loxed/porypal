@@ -97,7 +97,7 @@ class TilesetEditorController(QObject):
         self.view.preview_view.centerOn(self.view.preview_scene.itemsBoundingRect().center())
 
         # Update notification
-        self.view.notification.show_notification(f"Selected {len(self.selected_tiles)} tiles")
+        # self.view.notification.show_notification(f"Selected {len(self.selected_tiles)} tiles")
 
     # ------------ OUTPUT WINDOW ------------ #
     def handle_output_click(self, pos: QPoint):
@@ -144,7 +144,7 @@ class TilesetEditorController(QObject):
                         self.view.output_scene.removeItem(item)
                         # Clear the matrix entry
                         self.output_matrix[row][col] = None
-                        self.view.notification.show_notification(f"Cleared tile at position ({col}, {row})")
+                        # self.view.notification.show_notification(f"Cleared tile at position ({col}, {row})")
                         self.update_info_label()
                         return
             return  # Return early for right-click even if no tile was found
@@ -564,7 +564,7 @@ class TilesetEditorController(QObject):
                 
                 info_text.append(f"\nOutput Layout: {scaled_width}x{scaled_height} pixels")
                 info_text.append(f"Scale: {scale_factor*100}%")
-                info_text.append(f"Original Size: {original_width}x{original_width} pixels")
+                info_text.append(f"Original Size: {original_width}x{original_height} pixels")
                 info_text.append(f"Grid Size: {columns}x{rows} tiles")
                 
                 # Count placed tiles

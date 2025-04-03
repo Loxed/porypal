@@ -4,6 +4,8 @@ from PyQt5.QtGui import QImage, QPixmap, QPen, QColor, QPainter, QBrush
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QGraphicsPixmapItem, QGraphicsRectItem, QApplication
 from PyQt5.QtCore import QObject, pyqtSlot, QRectF, Qt, QPoint
 import logging
+import os
+import glob
 
 from view.tileset_editor_view import TilesetEditorView
 
@@ -145,6 +147,21 @@ class TilesetEditorController(QObject):
                         # Clear the matrix entry
                         self.output_matrix[row][col] = None
                         # self.view.notification.show_notification(f"Cleared tile at position ({col}, {row})")
+                        
+                        # Check if there are any tiles left in the output matrix
+                        has_tiles = False
+                        for r in self.output_matrix:
+                            for tile in r:
+                                if tile is not None:
+                                    has_tiles = True
+                                    break
+                            if has_tiles:
+                                break
+                                
+                        # Disable save preset button if no tiles are left
+                        if not has_tiles:
+                            self.view.btn_save_preset.setEnabled(False)
+                            
                         self.update_info_label()
                         return
             return  # Return early for right-click even if no tile was found
@@ -191,8 +208,12 @@ class TilesetEditorController(QObject):
             'image': temp_image,  # Store original image
             'scaled_image': scaled_image,  # Store scaled image
             'position': (x, y),
-            'size': (tile_width, tile_height)  # Store scaled size
+            'size': (tile_width, tile_height),  # Store scaled size
+            'original_pos': top_left_tile  # Store original position
         }
+
+        # Enable save preset button
+        self.view.btn_save_preset.setEnabled(True)
 
         # Update notification
         # self.view.notification.show_notification(f"Copied tile to position ({col}, {row})")
@@ -256,8 +277,10 @@ class TilesetEditorController(QObject):
             "<p><b>Loading a Tileset:</b> Click 'Load Tileset' to select an image file.</p>"
             "<p><b>Defining Tiles:</b> Set tile width and height, then click 'Apply Grid'.</p>"
             "<p><b>Creating Output Layout:</b> Set columns and rows, then click 'Create Layout'.</p>"
-            "<p><b>Arranging Tiles:</b> Drag tiles from the input view to the output view.</p>"
-            "<p><b>Saving:</b> Click 'Save Tileset' to save the arranged tiles as a new image.</p>"
+            "<p><b>Arranging Tiles:</b> Click on tiles in the input view to select them, then click in the output view to place them.</p>"
+            "<p><b>Saving Tileset:</b> Click 'Save Tileset' to save the arranged tiles as a new image.</p>"
+            "<p><b>Saving Layout:</b> Click 'Save Layout' to save the current layout configuration (tile positions) for use with other tilesets of the same dimensions. Layouts are saved in the 'presets' folder.</p>"
+            "<p><b>Loading Layout:</b> Click 'Load Layout' to apply a saved layout configuration to the current tileset. The tileset must have the same dimensions as the one used to create the layout.</p>"
         )
 
         QMessageBox.information(self.view, "Tileset Editor Help", help_text)
@@ -278,6 +301,10 @@ class TilesetEditorController(QObject):
         self.view.btn_clear_layout.clicked.connect(self.clear_output_layout)
         self.view.btn_help.clicked.connect(self.show_help)
         self.view.spin_scale.valueChanged.connect(self.handle_scale_change)
+        
+        # Connect config save/load buttons
+        self.view.btn_save_preset.clicked.connect(self.save_config)
+        self.view.btn_load_preset.clicked.connect(self.load_config)
         
         # Connect mouse click events
         self.view.input_view.mousePressEvent = lambda e: self.handle_grid_click(e.pos())
@@ -314,6 +341,9 @@ class TilesetEditorController(QObject):
                 self.view.notification.show_error("Failed to load image")
                 return
                 
+            # Store the input image path for config saving/loading
+            self.input_image_path = file_path
+                
             # Update view with the loaded image (no scaling for input)
             self.show_image(self.input_image, self.view.input_scene, self.view.input_view)
             
@@ -322,6 +352,10 @@ class TilesetEditorController(QObject):
             self.view.btn_create_layout.setEnabled(False)  # Disable until grid is applied
             self.view.btn_clear_layout.setEnabled(False)   # Disable until grid is applied
             self.view.btn_save_tileset.setEnabled(False)   # Disable until layout is created
+            
+            # Enable preset buttons
+            self.view.btn_save_preset.setEnabled(False)  # Disable until layout is created
+            self.view.btn_load_preset.setEnabled(True)   # Enable when image is loaded
             
             # Clear any existing grid and selection
             self.grid_items.clear()
@@ -441,6 +475,7 @@ class TilesetEditorController(QObject):
         # Update UI state
         self.view.btn_save_tileset.setEnabled(True)
         self.view.btn_clear_layout.setEnabled(True)
+        self.view.btn_save_preset.setEnabled(True)  # Enable save preset button
         
         # Update info label
         self.update_info_label()
@@ -466,6 +501,9 @@ class TilesetEditorController(QObject):
             self.view.output_scene.addLine(x, 0, x, height, pen)
         for y in range(0, height + 1, tile_height):
             self.view.output_scene.addLine(0, y, width, y, pen)
+
+        # Update UI state
+        self.view.btn_save_preset.setEnabled(False)  # Disable save preset button
 
         self.view.notification.show_notification("Output layout cleared")
         self.update_info_label()
@@ -577,3 +615,291 @@ class TilesetEditorController(QObject):
         # Update the labels
         self.view.text_info_label_input.setText("\n".join(input_text))
         self.view.text_info_label_output.setText("\n".join(output_text))
+
+    # ------------ CONFIG SAVE/LOAD ------------ #
+    def ensure_preset_folder_exists(self):
+        """Ensure the preset folder exists, create it if it doesn't."""
+        # Create preset folder in the application directory
+        preset_folder = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "presets")
+        
+        if not os.path.exists(preset_folder):
+            os.makedirs(preset_folder)
+            logging.info(f"Created preset folder at {preset_folder}")
+            
+        return preset_folder
+    
+    @pyqtSlot()
+    def save_config(self):
+        """Save the current configuration to a file."""
+        if not self.input_image:
+            self.view.notification.show_error("Please load a tileset first")
+            return
+            
+        if not self.output_matrix:
+            self.view.notification.show_error("Please create a layout first")
+            return
+            
+        # Check if there are any tiles placed in the output matrix
+        has_tiles = False
+        for row in self.output_matrix:
+            for tile in row:
+                if tile is not None:
+                    has_tiles = True
+                    break
+            if has_tiles:
+                break
+                
+        if not has_tiles:
+            self.view.notification.show_error("Please place at least one tile in the layout before saving")
+            self.view.btn_save_preset.setEnabled(False)  # Disable save preset button
+            return
+            
+        # Get the preset folder
+        preset_folder = self.ensure_preset_folder_exists()
+            
+        file_path, _ = QFileDialog.getSaveFileName(
+            self.view, "Save Configuration", preset_folder, "JSON Files (*.json)"
+        )
+        
+        if not file_path:
+            return
+            
+        # Ensure the file has a .json extension
+        if not file_path.endswith(".json"):
+            file_path += ".json"
+            
+        try:
+            import json
+            
+            # Create config dictionary with only layout information
+            config = {
+                "tile_width": self.view.spin_tile_width.value(),
+                "tile_height": self.view.spin_tile_height.value(),
+                "columns": self.view.spin_columns.value(),
+                "rows": self.view.spin_rows.value(),
+                "scale": self.view.spin_scale.value(),
+                "input_width": self.input_image.width(),
+                "input_height": self.input_image.height(),
+                "output_matrix": []
+            }
+            
+            # Save only the positions from output matrix
+            if self.output_matrix:
+                for row in range(len(self.output_matrix)):
+                    for col in range(len(self.output_matrix[row])):
+                        tile_data = self.output_matrix[row][col]
+                        if tile_data:
+                            # Get the original position from the tile data
+                            original_pos = tile_data.get('original_pos', (0, 0))
+                            config["output_matrix"].append({
+                                "row": row,
+                                "col": col,
+                                "original_x": original_pos[0],
+                                "original_y": original_pos[1]
+                            })
+            
+            # Write to file
+            with open(file_path, 'w') as f:
+                json.dump(config, f, indent=4)
+                
+            self.view.notification.show_notification(f"Configuration saved to {file_path}")
+            
+        except Exception as e:
+            logging.error(f"Failed to save configuration: {e}")
+            QMessageBox.critical(self.view, "Error", f"Failed to save configuration: {e}")
+    
+    @pyqtSlot()
+    def load_config(self):
+        """Load a configuration from a file."""
+        # Get the preset folder
+        preset_folder = self.ensure_preset_folder_exists()
+        
+        file_path, _ = QFileDialog.getOpenFileName(
+            self.view, "Load Configuration", preset_folder, "JSON Files (*.json)"
+        )
+        
+        if not file_path:
+            return
+            
+        try:
+            # Extract preset name from file path
+            import os
+            preset_name = os.path.basename(file_path)
+            if preset_name.endswith(".json"):
+                preset_name = preset_name[:-5]  # Remove .json extension
+                
+            # Load the preset
+            self.load_preset_by_name(preset_name)
+            
+        except Exception as e:
+            logging.error(f"Failed to load configuration: {e}")
+            QMessageBox.critical(self.view, "Error", f"Failed to load configuration: {e}")
+    
+    def place_tile_in_output(self, row, col):
+        """Place the currently selected tile in the output matrix at the specified position."""
+        if not self.selected_tiles or not self.output_matrix:
+            return
+            
+        # Get the top-left tile from selection
+        min_x = min(x for x, y in self.selected_tiles)
+        min_y = min(y for x, y in self.selected_tiles)
+        top_left_tile = (min_x, min_y)
+        
+        # Get tile dimensions from output scene
+        tile_width, tile_height = self.view.output_scene.tile_size
+        
+        # Create a new image for the single tile at original size
+        temp_image = QImage(self.tile_width, self.tile_height, QImage.Format_RGBA8888)
+        temp_image.fill(Qt.transparent)
+        
+        # Draw the single tile to temporary image
+        painter = QPainter(temp_image)
+        tile = self.input_image.copy(int(top_left_tile[0]), int(top_left_tile[1]), self.tile_width, self.tile_height)
+        painter.drawImage(QRectF(0, 0, self.tile_width, self.tile_height), tile)
+        painter.end()
+        
+        # Create scaled version of the tile for display using nearest neighbor
+        scaled_image = temp_image.scaled(tile_width, tile_height, Qt.KeepAspectRatio, Qt.FastTransformation)
+        
+        # Calculate position in the output scene
+        x = col * tile_width
+        y = row * tile_height
+        
+        # Remove any existing tile at this position from the scene
+        for item in self.view.output_scene.items():
+            if isinstance(item, QGraphicsPixmapItem):
+                if item.pos().x() == x and item.pos().y() == y:
+                    self.view.output_scene.removeItem(item)
+                    break
+        
+        # Add the new tile to the scene
+        pixmap = QPixmap.fromImage(scaled_image)
+        item = QGraphicsPixmapItem(pixmap)
+        item.setPos(x, y)
+        self.view.output_scene.addItem(item)
+        
+        # Update the matrix with both original and scaled images
+        self.output_matrix[row][col] = {
+            'image': temp_image,  # Store original image
+            'scaled_image': scaled_image,  # Store scaled image
+            'position': (x, y),
+            'size': (tile_width, tile_height),  # Store scaled size
+            'original_pos': top_left_tile  # Store original position
+        }
+        
+        # Update the output scene and info label
+        self.view.output_scene.update()
+        self.update_info_label()
+
+    def list_available_presets(self):
+        """List all available presets in the preset folder."""
+        import os
+        import glob
+        
+        preset_folder = self.ensure_preset_folder_exists()
+        preset_files = glob.glob(os.path.join(preset_folder, "*.json"))
+        
+        presets = []
+        for file_path in preset_files:
+            try:
+                import json
+                with open(file_path, 'r') as f:
+                    config = json.load(f)
+                    
+                # Extract preset name from filename
+                preset_name = os.path.basename(file_path)
+                if preset_name.endswith(".json"):
+                    preset_name = preset_name[:-5]  # Remove .json extension
+                    
+                # Get dimensions from config
+                input_width = config.get("input_width", 0)
+                input_height = config.get("input_height", 0)
+                tile_width = config.get("tile_width", 32)
+                tile_height = config.get("tile_height", 32)
+                
+                presets.append({
+                    "name": preset_name,
+                    "path": file_path,
+                    "dimensions": f"{input_width}x{input_height}",
+                    "tile_size": f"{tile_width}x{tile_height}"
+                })
+            except Exception as e:
+                logging.error(f"Failed to load preset {file_path}: {e}")
+                
+        return presets
+
+    def load_preset_by_name(self, preset_name):
+        """Load a preset by its name."""
+        import os
+        
+        preset_folder = self.ensure_preset_folder_exists()
+        file_path = os.path.join(preset_folder, f"{preset_name}.json")
+        
+        if not os.path.exists(file_path):
+            self.view.notification.show_error(f"Preset '{preset_name}' not found")
+            return False
+            
+        try:
+            import json
+            
+            # Read from file
+            with open(file_path, 'r') as f:
+                config = json.load(f)
+            
+            # Check if a tileset is loaded
+            if not self.input_image:
+                self.view.notification.show_error("Please load a tileset first")
+                return False
+                
+            # Validate input dimensions
+            input_width = config.get("input_width", 0)
+            input_height = config.get("input_height", 0)
+            
+            if input_width != self.input_image.width() or input_height != self.input_image.height():
+                QMessageBox.critical(
+                    self.view, 
+                    "Dimension Mismatch", 
+                    f"Cannot apply this preset. The input tileset dimensions don't match.\n\n"
+                    f"Preset requires: {input_width}x{input_height}\n"
+                    f"Current tileset: {self.input_image.width()}x{self.input_image.height()}"
+                )
+                return False
+            
+            # Set spin box values
+            self.view.spin_tile_width.setValue(config.get("tile_width", 32))
+            self.view.spin_tile_height.setValue(config.get("tile_height", 32))
+            self.view.spin_columns.setValue(config.get("columns", 1))
+            self.view.spin_rows.setValue(config.get("rows", 1))
+            self.view.spin_scale.setValue(config.get("scale", 100))
+            
+            # Apply grid and create layout
+            self.apply_grid()
+            self.create_output_layout()
+            
+            # Restore tile positions
+            for tile_data in config.get("output_matrix", []):
+                row = tile_data.get("row", 0)
+                col = tile_data.get("col", 0)
+                original_x = tile_data.get("original_x", 0)
+                original_y = tile_data.get("original_y", 0)
+                
+                # Find the tile in the input image
+                for item in self.grid_items:
+                    item_pos = item.data(0)  # Get stored position
+                    if item_pos == (original_x, original_y):
+                        # Select this tile
+                        self.selected_tiles = [(original_x, original_y)]
+                        item.setPen(QPen(QColor(0, 255, 0, 200)))
+                        item.setBrush(QBrush(QColor(0, 255, 0, 50)))
+                        
+                        # Place it in the output matrix
+                        self.place_tile_in_output(row, col)
+                        break
+            
+            self.view.notification.show_notification(f"Preset '{preset_name}' loaded successfully")
+            return True
+            
+        except Exception as e:
+            logging.error(f"Failed to load preset '{preset_name}': {e}")
+            QMessageBox.critical(self.view, "Error", f"Failed to load preset '{preset_name}': {e}")
+            return False

@@ -1,14 +1,5 @@
-# <span style="float: left; margin-right: 10px;"><img src="ressources/porypal.ico" width="128" height="128"></span> Porypal
+# <span style="float: left; margin-right: 10px;"><img src="gui/porypal.ico" width="128" height="128"></span> Porypal
 
-<h1 align="center">
-   <picture>
-      <img src="ressources/porypal.ico" width="128" height="128">
-   </picture>
-  <br>
-</h1>
-<p align="center">
-  <em><b>Porypal</b> is a specialized image processing tool designed for Pokémon Gen 3 ROM hacking and decompilation projects (pokeemerald/pokefirered). It automates sprite and tileset conversion while maintaining strict adherence to the Pokémon Gen 3's 16-color palette specifications.</em>
-</p>
 
 Porypal is a specialized image processing tool designed for Pokémon Gen 3 ROM hacking and decompilation projects (pokeemerald/pokefirered). It automates sprite and tileset conversion while maintaining strict adherence to the Pokémon Gen 3's 16-color palette specifications.
 
@@ -86,7 +77,7 @@ To build the program, use the following command:
 #### Windows
 
 ```bash
-pyinstaller --onefile --windowed --hidden-import encodings --add-data "palettes;palettes" --icon="ressources/porypal.ico" --add-data="ressources/porypal.ico;." .\main.py
+pyinstaller --onefile --windowed --hidden-import encodings --add-data "palettes;palettes" --icon="gui/porypal.ico" --add-data="gui/porypal.ico;." .\main.py
 
 # Copy additional resources
 cp config.yaml dist/config.yaml
@@ -104,12 +95,23 @@ cp -r example dist/example
 
 ```
 porypal/
-├── example/            # Reference images to convert to tileset
-├── palettes/          # JASC-PAL color definitions
-├── config.yaml        # Pipeline configuration
+├── controller/        # Controller components (MVC pattern)
+├── model/            # Model components (MVC pattern)
+├── view/             # View components (MVC pattern)
+├── gui/              # GUI assets and resources
+│   ├── porypal.ico   # Application icon
+│   └── porypalette.ui # Qt UI definition file
+├── example/          # Example files and reference images
+├── palettes/         # JASC-PAL color definitions
+├── docs/             # Documentation and guides
+├── build/            # Build output directory
+├── .venv/            # Python virtual environment
+├── config.yaml       # Pipeline configuration
 ├── main.py           # Core application logic
-├── requirements.txt   # Dependency specifications
-└── setup.sh          # Unix installation script
+├── main.spec         # PyInstaller specification file
+├── requirements.txt  # Python dependencies
+├── setup.sh          # Unix installation script
+└── LICENSE           # MIT License file
 ```
 
 ## License

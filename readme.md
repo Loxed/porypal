@@ -77,19 +77,28 @@ To build the program, use the following command:
 #### Windows
 
 ```bash
-pyinstaller --onefile --windowed --hidden-import encodings --add-data "palettes;palettes" --icon="gui/porypal.ico" --add-data="gui/porypal.ico;." .\main.py
+pyinstaller --onefile --windowed --hidden-import encodings --add-data "palettes;palettes" --icon="ressources/porypal.ico" --add-data="ressources/porypal.ico;." .\main.py
 
 # Copy additional resources
 cp config.yaml dist/config.yaml
-cp -r gui dist/gui
+cp -r ressources dist/ressources
 cp -r palettes dist/palettes
 cp -r docs dist/docs
 cp -r example dist/example
 ```
 
-### MacOS
+#### macOS / Linux
 
-#### Silicon
+```bash
+pyinstaller --onefile --windowed --hidden-import encodings --add-data "palettes:palettes" --icon="ressources/porypal.ico" --add-data="ressources/porypal.ico:." ./main.py
+
+# Copy additional resources
+cp config.yaml dist/config.yaml
+cp -r ressources dist/ressources
+cp -r palettes dist/palettes
+cp -r docs dist/docs
+cp -r example dist/example
+```
 
 ## Directory Structure
 
@@ -98,17 +107,20 @@ porypal/
 ├── controller/        # Controller components (MVC pattern)
 ├── model/            # Model components (MVC pattern)
 ├── view/             # View components (MVC pattern)
-├── gui/              # GUI assets and resources
-│   ├── porypal.ico   # Application icon
-│   └── porypalette.ui # Qt UI definition file
+├── ressources/       # Application resources
+│   └── porypal.ico   # Application icon
+├── presets/          # Preset configurations
+│   └── ow_sprite.json # Overworld sprite preset
 ├── example/          # Example files and reference images
 ├── palettes/         # JASC-PAL color definitions
 ├── docs/             # Documentation and guides
+│   └── img/          # Documentation images
 ├── build/            # Build output directory
 ├── .venv/            # Python virtual environment
 ├── config.yaml       # Pipeline configuration
 ├── main.py           # Core application logic
 ├── main.spec         # PyInstaller specification file
+├── class.puml        # UML class diagram
 ├── requirements.txt  # Python dependencies
 ├── setup.sh          # Unix installation script
 └── LICENSE           # MIT License file

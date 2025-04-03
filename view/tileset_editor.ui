@@ -17,86 +17,13 @@
    <item>
     <layout class="QHBoxLayout" name="toolbar_layout">
      <item>
-      <widget class="QGroupBox" name="groupBox">
-       <property name="title">
-        <string>Tileset Processing</string>
+      <widget class="QPushButton" name="btn_load_tileset">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <widget class="QPushButton" name="btn_load_tileset">
-        <property name="geometry">
-         <rect>
-          <x>-20</x>
-          <y>10</y>
-          <width>136</width>
-          <height>40</height>
-         </rect>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>136</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>🧩 Load Tileset</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="btn_save_tileset">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="geometry">
-         <rect>
-          <x>40</x>
-          <y>0</y>
-          <width>136</width>
-          <height>40</height>
-         </rect>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>136</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>💾 Save Tileset</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="btn_help">
-        <property name="geometry">
-         <rect>
-          <x>80</x>
-          <y>0</y>
-          <width>236</width>
-          <height>40</height>
-         </rect>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>136</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>❔ Help</string>
-        </property>
-       </widget>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btn_automate">
        <property name="minimumSize">
         <size>
          <width>136</width>
@@ -104,7 +31,51 @@
         </size>
        </property>
        <property name="text">
-        <string>⚙️ Automate</string>
+        <string>🧩 Load Tileset</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_save_tileset">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>136</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>💾 Save Tileset</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_load_preset">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>136</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>💽 Load Preset</string>
        </property>
       </widget>
      </item>
@@ -131,16 +102,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="btn_load_preset">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
+      <widget class="QPushButton" name="btn_automate">
        <property name="minimumSize">
         <size>
          <width>136</width>
@@ -148,7 +110,33 @@
         </size>
        </property>
        <property name="text">
-        <string>💽 Load Preset</string>
+        <string>⚙️ Automate</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_help">
+       <property name="minimumSize">
+        <size>
+         <width>136</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>❔ Help</string>
        </property>
       </widget>
      </item>
@@ -191,7 +179,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>947</width>
+             <width>958</width>
              <height>276</height>
             </rect>
            </property>
@@ -327,7 +315,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>947</width>
+             <width>946</width>
              <height>276</height>
             </rect>
            </property>

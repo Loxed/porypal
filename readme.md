@@ -18,10 +18,15 @@ Porypal is a specialized image processing tool designed for Pokémon Gen 3 ROM h
   - Zoom and pan controls for detailed tile inspection
   - Save and load layout presets for consistent tile arrangements
 
-![Porypal UI](docs/img/ui.png)
+![Porypal UI](docs/img/main_ui.png)
+*Palette editor GUI for palette conversion*
 
+![Tileset UI](docs/img/tileset_editor_ui.png)
+*Tileset conversion interface for the tilesheet modification*
 
-> **_Implementation Note_**: The default configuration targets conversion of 4x4 NPC overworld tilesets from modern Pokémon titles ([DiegoWT and UltimoSpriter's "Gen 5 Characters in Gen 4 OW style 2.0"](https://web.archive.org/web/20231001155146/https://reliccastle.com/resources/370/), [VanillaSunshine's "Gen 4 Characters (HGSS/DPPt)"](https://eeveeexpo.com/resources/404/)) to Gen 3 format (`graphics/object_events/pics/people`). The pipeline can be reconfigured for other asset conversion workflows in the [configuration](config.yaml) file.
+![Automation UI](docs/img/automation_ui.png)
+*Automation interface to apply the same layout to an entire folder*
+
 
 ## Installation
 
@@ -76,29 +81,17 @@ After installing the dependencies, you can run the `main.py` script.
 
 ### 4. Build from source
 
-To build the program, use the following command:
+To build the program, use the following commands:
 
-#### Windows
 
+-  Build the executable with PyInstaller
 ```bash
-# Build the executable with PyInstaller
 pip install pyinstaller
 pyinstaller main.spec
-
-# Copy additional resources to the dist folder
-cp config.yaml dist/config.yaml
-cp -r ressources dist/ressources
-cp -r palettes dist/palettes
-cp -r docs dist/docs
-cp -r example dist/example
 ```
 
-#### macOS / Linux
-
+- Copy additional resources to the dist folder
 ```bash
-pip install pyinstaller
-pyinstaller main.spec
-# Copy additional resources
 cp config.yaml dist/config.yaml
 cp -r ressources dist/ressources
 cp -r palettes dist/palettes
@@ -107,7 +100,6 @@ cp -r example dist/example
 ```
 
 ## Directory Structure
-
 ```
 porypal/
 ├── controller/        # Controller components (MVC pattern)

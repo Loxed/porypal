@@ -4,7 +4,7 @@ from PyQt5.QtGui import QPixmap, QScreen, QCursor
 from PyQt5.QtWidgets import (
     QGraphicsScene, QGraphicsView, QLabel, QWidget, 
     QMessageBox, QHBoxLayout, QSizePolicy, 
-    QApplication
+    QApplication, QPushButton
 )
 from PyQt5 import uic
 from model.palette_manager import Palette
@@ -29,6 +29,12 @@ class PorypalView(QWidget):
         self.parent = parent
 
         self.notification = QNotificationWidget(self)
+        
+        # Add automation button
+        self.btn_automate = QPushButton("⚙️ Automate", self)
+        self.btn_automate.setMinimumSize(136, 40)
+        self.btn_automate.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.processing_layout.addWidget(self.btn_automate)
         
         self.selected_index = None
         self.best_indices = []

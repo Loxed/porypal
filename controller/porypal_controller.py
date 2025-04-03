@@ -10,6 +10,9 @@ from model.palette_manager import PaletteManager
 from model.image_manager import ImageManager
 from view.porypal_theme import PorypalTheme
 from controller.tileset_editor_controller import TilesetEditorController
+from controller.palette_automation_controller import PaletteAutomationController
+from view.palette_automation_view import PaletteAutomationView
+
 class PorypalController(QObject):
     """
     Controller for the PoryPal application, handling user interactions, 
@@ -40,6 +43,7 @@ class PorypalController(QObject):
         self.view.btn_save_image.clicked.connect(self.save_image)
         self.view.btn_extract_palette.clicked.connect(self.extract_palette)
         self.view.btn_toggle_theme.clicked.connect(self.toggle_theme)
+        self.view.btn_automate.clicked.connect(self.open_automation)
 
     def _image_file_dialog(self, save: bool = False) -> str:
         """Open image file dialog for loading or saving."""
@@ -175,6 +179,25 @@ class PorypalController(QObject):
             logging.info("Restored main view")
         except Exception as e:
             logging.error(f"Error restoring main view: {e}")
-            # If error, force show main view as a fallback
-            if hasattr(self, '_main_view'):
-                self._main_view.show()
+            self.view.notification.show_error(f"Failed to restore main view: {e}")
+
+    # ------------ AUTOMATION ------------ #
+    
+    @pyqtSlot()
+    def open_automation(self) -> None:
+        """Open the palette automation view."""
+        try:
+            # Create automation controller and view
+            self.automation_controller = PaletteAutomationController(self)
+            self.automation_view = PaletteAutomationView(self.automation_controller)
+            
+            # Set the view in the controller
+            self.automation_controller.set_view(self.automation_view)
+            
+            # Show the automation view as a separate window
+            self.automation_view.show()
+            
+            logging.info("Opened automation view")
+        except Exception as e:
+            logging.error(f"Error opening automation view: {e}")
+            self.view.notification.show_error(f"Failed to open automation view: {e}")

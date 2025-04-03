@@ -145,7 +145,8 @@ class PorypalController(QObject):
             self.tileset_editor = TilesetEditorController(self)
             
             # Set up view swapping mechanism
-            self.tileset_editor.view.btn_back = QPushButton("Return to Main View")
+            self.tileset_editor.view.btn_back = QPushButton("↩️ Return to Main View")
+            self.tileset_editor.view.btn_back.setMinimumSize(136, 40)  # Set minimum size to 136x40px
             self.tileset_editor.view.btn_back.clicked.connect(self.restore_main_view)
             self.tileset_editor.view.toolbar_layout.addWidget(self.tileset_editor.view.btn_back)
             

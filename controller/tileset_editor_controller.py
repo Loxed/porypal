@@ -8,6 +8,8 @@ import os
 import glob
 
 from view.tileset_editor_view import TilesetEditorView
+from controller.automation_controller import AutomationController
+from view.automation_view import AutomationView
 
 class TilesetEditorController(QObject):
     """
@@ -305,6 +307,9 @@ class TilesetEditorController(QObject):
         # Connect config save/load buttons
         self.view.btn_save_preset.clicked.connect(self.save_config)
         self.view.btn_load_preset.clicked.connect(self.load_config)
+        
+        # Connect automation button
+        self.view.btn_automate.clicked.connect(self.automate_preset_application)
         
         # Connect mouse click events
         self.view.input_view.mousePressEvent = lambda e: self.handle_grid_click(e.pos())
@@ -903,3 +908,14 @@ class TilesetEditorController(QObject):
             logging.error(f"Failed to load preset '{preset_name}': {e}")
             QMessageBox.critical(self.view, "Error", f"Failed to load preset '{preset_name}': {e}")
             return False
+
+    @pyqtSlot()
+    def automate_preset_application(self):
+        """Open the automation view to apply a preset to multiple images."""
+        # Create automation controller and view
+        self.automation_controller = AutomationController(self)
+        self.automation_view = AutomationView(self.automation_controller)
+        self.automation_controller.set_view(self.automation_view)
+        
+        # Show the automation view
+        self.automation_view.show()

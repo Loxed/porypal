@@ -132,7 +132,6 @@ For questions or support, reach out to `prison_lox` on Discord.
 
 ## Credits
 
-The way the config is currently setup is specifically to import and convert these overworld sprites:
-
+The examples used in the documentation come from:
 - [Gen 5 Characters in Gen 4 OW style 2.0](https://web.archive.org/web/20231001155146/https://reliccastle.com/resources/370/) by DiegoWT and UltimoSpriter
 - [ALL Official Gen 4 Overworld Sprites v1.5](https://eeveeexpo.com/resources/404/) by VanillaSunshine

@@ -81,9 +81,11 @@ To build the program, use the following command:
 #### Windows
 
 ```bash
-pyinstaller --onefile --windowed --hidden-import encodings --add-data "palettes;palettes" --icon="ressources/porypal.ico" --add-data="ressources/porypal.ico;." .\main.py
+# Build the executable with PyInstaller
+pip install pyinstaller
+pyinstaller main.spec
 
-# Copy additional resources
+# Copy additional resources to the dist folder
 cp config.yaml dist/config.yaml
 cp -r ressources dist/ressources
 cp -r palettes dist/palettes
@@ -94,8 +96,8 @@ cp -r example dist/example
 #### macOS / Linux
 
 ```bash
-pyinstaller --onefile --windowed --hidden-import encodings --add-data "palettes:palettes" --icon="ressources/porypal.ico" --add-data="ressources/porypal.ico:." ./main.py
-
+pip install pyinstaller
+pyinstaller main.spec
 # Copy additional resources
 cp config.yaml dist/config.yaml
 cp -r ressources dist/ressources

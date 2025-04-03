@@ -14,6 +14,17 @@ from view.palette_display import PaletteDisplay
 from view.zoomable_graphics_view import ZoomableGraphicsView
 
 import logging
+import os
+import sys
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 class PorypalView(QWidget):
     """Main application view with dynamic resizing support."""
@@ -24,7 +35,8 @@ class PorypalView(QWidget):
 
     def __init__(self, parent, palettes: list[Palette]):
         super().__init__()
-        uic.loadUi("view/porypalette.ui", self)
+        ui_file = resource_path("view/porypalette.ui")
+        uic.loadUi(ui_file, self)
 
         self.parent = parent
 

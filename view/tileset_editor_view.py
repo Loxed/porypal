@@ -4,9 +4,20 @@ from PyQt5.QtWidgets import QWidget, QGraphicsScene, QApplication, QMessageBox
 from PyQt5.QtGui import QPixmap, QCursor
 from PyQt5 import uic
 import logging
+import os
+import sys
 # from model.draggable_tile import DraggableTile
 from model.tile_drop_area import TileDropArea
 from model.QNotificationWidget import QNotificationWidget
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 class TilesetEditorView(QWidget):
     """
@@ -18,7 +29,8 @@ class TilesetEditorView(QWidget):
         super().__init__()
         
         # Load UI from file
-        uic.loadUi("view/tileset_editor.ui", self)
+        ui_file = resource_path("view/tileset_editor.ui")
+        uic.loadUi(ui_file, self)
         
         self.controller = controller
 

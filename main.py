@@ -6,6 +6,7 @@ Main application entry point.
 
 import sys
 import logging
+import os
 from pathlib import Path
 import yaml
 from PyQt5.QtWidgets import QApplication
@@ -13,6 +14,15 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from controller.porypal_controller import PorypalController
 from view.porypal_theme import PorypalTheme
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 # Application metadata
 APP_METADATA = {

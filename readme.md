@@ -1,4 +1,4 @@
-# <span style="float: left; margin-right: 10px;"><img src="gui/porypal.ico" width="128" height="128"></span> Porypal
+# <span style="float: left; margin-right: 10px;"><img src="ressources/porypal.ico" width="128" height="128"></span> Porypal
 
 
 Porypal is a specialized image processing tool designed for Pokémon Gen 3 ROM hacking and decompilation projects (pokeemerald/pokefirered). It automates sprite and tileset conversion while maintaining strict adherence to the Pokémon Gen 3's 16-color palette specifications.
@@ -13,11 +13,20 @@ Porypal is a specialized image processing tool designed for Pokémon Gen 3 ROM h
   - Multi-palette preview interface for comparison and cherry-picking.
   - Prioritizes conversions that maintain the highest number of distinct colors (up to 16)
   - Configurable tileset transformation pipeline via YAML
+  - Interactive tileset editor for precise tile arrangement and manipulation
+  - Automation tools for batch processing and preset application
+  - Zoom and pan controls for detailed tile inspection
+  - Save and load layout presets for consistent tile arrangements
 
-![Porypal UI](docs/img/ui.png)
+![Porypal UI](docs/img/main_ui.png)
+*Palette editor GUI for palette conversion*
 
+![Tileset UI](docs/img/tileset_editor_ui.png)
+*Tileset conversion interface for the tilesheet modification*
 
-> **_Implementation Note_**: The default configuration targets conversion of 4x4 NPC overworld tilesets from modern Pokémon titles ([DiegoWT and UltimoSpriter's "Gen 5 Characters in Gen 4 OW style 2.0"](https://web.archive.org/web/20231001155146/https://reliccastle.com/resources/370/), [VanillaSunshine's "Gen 4 Characters (HGSS/DPPt)"](https://eeveeexpo.com/resources/404/)) to Gen 3 format (`graphics/object_events/pics/people`). The pipeline can be reconfigured for other asset conversion workflows in the [configuration](config.yaml) file.
+![Automation UI](docs/img/automation_ui.png)
+*Automation interface to apply the same layout to an entire folder*
+
 
 ## Installation
 
@@ -72,35 +81,47 @@ After installing the dependencies, you can run the `main.py` script.
 
 ### 4. Build from source
 
-To build the program, use the following command:
+To build the program, use the following commands:
 
-#### Windows
 
+-  Build the executable with PyInstaller
 ```bash
-pyinstaller --onefile --windowed --hidden-import encodings --add-data "palettes;palettes" --icon="gui/porypal.ico" --add-data="gui/porypal.ico;." .\main.py
+pip install pyinstaller
+pyinstaller main.spec
+```
 
-# Copy additional resources
+- Copy additional resources to the dist folder
+```bash
 cp config.yaml dist/config.yaml
-cp -r gui dist/gui
+cp -r ressources dist/ressources
 cp -r palettes dist/palettes
 cp -r docs dist/docs
 cp -r example dist/example
 ```
 
-### MacOS
-
-#### Silicon
-
 ## Directory Structure
-
 ```
 porypal/
-├── example/            # Reference images to convert to tileset
-├── palettes/          # JASC-PAL color definitions
-├── config.yaml        # Pipeline configuration
+├── controller/        # Controller components (MVC pattern)
+├── model/            # Model components (MVC pattern)
+├── view/             # View components (MVC pattern)
+├── ressources/       # Application resources
+│   └── porypal.ico   # Application icon
+├── presets/          # Preset configurations
+│   └── ow_sprite.json # Overworld sprite preset
+├── example/          # Example files and reference images
+├── palettes/         # JASC-PAL color definitions
+├── docs/             # Documentation and guides
+│   └── img/          # Documentation images
+├── build/            # Build output directory
+├── .venv/            # Python virtual environment
+├── config.yaml       # Pipeline configuration
 ├── main.py           # Core application logic
-├── requirements.txt   # Dependency specifications
-└── setup.sh          # Unix installation script
+├── main.spec         # PyInstaller specification file
+├── class.puml        # UML class diagram
+├── requirements.txt  # Python dependencies
+├── setup.sh          # Unix installation script
+└── LICENSE           # MIT License file
 ```
 
 ## License
@@ -111,7 +132,6 @@ For questions or support, reach out to `prison_lox` on Discord.
 
 ## Credits
 
-The way the config is currently setup is specifically to import and convert these overworld sprites:
-
+The examples used in the documentation come from:
 - [Gen 5 Characters in Gen 4 OW style 2.0](https://web.archive.org/web/20231001155146/https://reliccastle.com/resources/370/) by DiegoWT and UltimoSpriter
 - [ALL Official Gen 4 Overworld Sprites v1.5](https://eeveeexpo.com/resources/404/) by VanillaSunshine

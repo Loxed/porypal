@@ -1,0 +1,11 @@
+.walk-animation { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.walk-canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  /* JS sets width/height style to DISPLAY_SIZE px — keeps it square */
+  background: repeating-conic-gradient(#1c2330 0% 25%, #161b22 0% 50%) 0 0/14px 14px;
+  border-radius: 4px;
+  display: block;
+  flex-shrink: 0;
+}
+.walk-loading { width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }

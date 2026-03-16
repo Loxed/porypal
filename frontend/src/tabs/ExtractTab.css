@@ -1,0 +1,8 @@
+.extract-layout { display: grid; grid-template-columns: 260px 1fr; gap: 28px; align-items: start; }
+.extract-left { display: flex; flex-direction: column; gap: 14px; }
+.extract-right { min-height: 300px; }
+.extract-result { display: flex; flex-direction: column; gap: 16px; }
+.palette-large { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.swatch-large { aspect-ratio: 1; border-radius: 4px; position: relative; cursor: default; }
+.swatch-label { position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); font-family: var(--mono); font-size: 9px; background: rgba(0,0,0,0.75); color: #fff; padding: 1px 4px; border-radius: 3px; white-space: nowrap; opacity: 0; transition: opacity 0.1s; pointer-events: none; }
+.swatch-large:hover .swatch-label { opacity: 1; }

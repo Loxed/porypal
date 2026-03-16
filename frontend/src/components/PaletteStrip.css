@@ -1,0 +1,78 @@
+.palette-strip {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 2px;
+  width: 100%;
+  overflow: visible;
+}
+
+.palette-swatch {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.08);
+  cursor: pointer;
+  min-width: 0;
+  position: relative;
+}
+
+.palette-swatch.used {
+  opacity: 0.8;
+}
+
+.palette-swatch.used:hover {
+  opacity: 1;
+}
+
+.palette-swatch.unused {
+  opacity: 0.2;
+}
+
+.palette-swatch.unused::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-conic-gradient(rgba(0,0,0,0.35) 0% 25%, transparent 0% 50%);
+  background-size: var(--check-size, 25%) var(--check-size, 25%);
+  pointer-events: none;
+  border-radius: inherit;
+  transition: opacity 0.15s;
+}
+
+.palette-swatch.unused:hover {
+  opacity: 1;
+}
+
+.palette-swatch.unused:hover::before {
+  opacity: 0.2;
+}
+
+.swatch-tooltip {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.swatch-hex {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text);
+}
+
+.swatch-icon {
+  color: var(--muted);
+}
+
+.swatch-icon.copied {
+  color: var(--best);
+}

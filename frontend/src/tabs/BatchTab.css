@@ -1,0 +1,3 @@
+.batch-layout { display: flex; flex-direction: column; gap: 18px; max-width: 480px; }
+.file-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.file-chip { font-family: var(--mono); font-size: 11px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 3px 8px; border-radius: 4px; }

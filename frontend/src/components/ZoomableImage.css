@@ -1,0 +1,6 @@
+.zoomable-wrap { background: repeating-conic-gradient(#1c2330 0% 25%, #161b22 0% 50%) 0 0/14px 14px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.zoom-controls { display: flex; align-items: center; gap: 4px; padding: 4px 6px; background: rgba(14,17,23,0.85); border-bottom: 1px solid var(--border); }
+.zoom-btn { width: 22px; height: 22px; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--mono); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color 0.1s; padding: 0; }
+.zoom-btn:hover { border-color: var(--accent); color: var(--accent); }
+.zoom-label { font-family: var(--mono); font-size: 11px; color: var(--muted); min-width: 24px; text-align: center; }
+.zoomable-scroll { overflow: auto; max-height: 220px; }

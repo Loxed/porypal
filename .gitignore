@@ -1,9 +1,0 @@
-venv
-venv/*
-
-.idea
-build
-dist
-
-*.pyc
-*/__pycache__

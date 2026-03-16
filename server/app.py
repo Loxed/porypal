@@ -306,56 +306,89 @@ if frontend_dist.exists():
     app.mount("/", StaticFiles(directory=str(frontend_dist), html=True), name="frontend")
 
 
+
 # ---------- tileset routes ----------
 
 from model.tileset_manager import TilesetManager
+from server.presets import list_presets, load_preset, save_preset, delete_preset
+from pydantic import BaseModel
+from typing import Optional
 
-@app.post("/api/tileset/process")
-async def tileset_process(
+# -- presets --
+
+@app.get("/api/presets")
+def get_presets():
+    return list_presets()
+
+@app.get("/api/presets/{preset_id}")
+def get_preset(preset_id: str):
+    p = load_preset(preset_id)
+    if not p:
+        raise HTTPException(404, f"Preset '{preset_id}' not found")
+    return p
+
+class PresetBody(BaseModel):
+    name: str
+    tile_w: int = 32
+    tile_h: int = 32
+    cols: int = 9
+    rows: int = 1
+    slots: list
+    slot_labels: Optional[list] = None
+
+@app.post("/api/presets/{preset_id}")
+def upsert_preset(preset_id: str, body: PresetBody):
+    return save_preset(preset_id, body.model_dump())
+
+@app.delete("/api/presets/{preset_id}")
+def remove_preset(preset_id: str):
+    p = load_preset(preset_id)
+    if not p:
+        raise HTTPException(404, f"Preset '{preset_id}' not found")
+    if p.get("is_default", False):
+        raise HTTPException(403, f"Preset '{preset_id}' is a default preset and cannot be deleted")
+    if not delete_preset(preset_id):
+        raise HTTPException(500, "Failed to delete preset")
+    return {"deleted": preset_id}
+
+
+# -- tileset --
+
+@app.post("/api/tileset/slice")
+async def tileset_slice(
     file: UploadFile = File(...),
     tile_width: int = Form(default=32),
     tile_height: int = Form(default=32),
-    output_width: int = Form(default=288),
-    output_height: int = Form(default=32),
-    sprite_order: str = Form(default="0,12,4,1,3,13,15,5,7"),
 ):
-    """
-    Slice a tileset image into tiles and return:
-    - all individual tile images as base64
-    - the arranged output image as base64
-    """
+    """Slice a tileset into individual tiles. Returns source image + all tile images as base64."""
     data = await file.read()
     with tempfile.NamedTemporaryFile(suffix=Path(file.filename).suffix, delete=False) as tmp:
         tmp.write(data); tmp_path = tmp.name
-
     try:
-        order = [int(x.strip()) for x in sprite_order.split(",") if x.strip()]
         config = {
             "tileset": {
                 "output_sprite_size": {"width": tile_width, "height": tile_height},
-                "sprite_order": order,
+                "sprite_order": [0],
                 "resize_tileset": False,
                 "resize_to": 128,
                 "supported_sizes": [],
             },
-            "output": {
-                "output_width": output_width,
-                "output_height": output_height,
-            },
+            "output": {"output_width": tile_width, "output_height": tile_height},
         }
+        from PIL import Image as PILImage
+        source_img = PILImage.open(tmp_path).convert("RGBA")
+        source_w, source_h = source_img.size
+
         mgr = TilesetManager(config)
         if not mgr.load(tmp_path):
-            raise HTTPException(400, "Failed to process tileset")
-
-        tiles_b64 = [pil_to_b64(t) for t in mgr.get_tiles()]
-        processed_b64 = pil_to_b64(mgr.get_processed())
-        source_b64 = pil_to_b64(mgr.get_source())
+            raise HTTPException(400, "Failed to slice tileset")
 
         return {
-            "source": source_b64,
-            "tiles": tiles_b64,
-            "processed": processed_b64,
-            "tile_count": len(tiles_b64),
+            "source": pil_to_b64(mgr.get_source()),
+            "source_w": source_w,
+            "source_h": source_h,
+            "tiles": [pil_to_b64(t) for t in mgr.get_tiles()],
+            "tile_count": len(mgr.get_tiles()),
             "tile_width": tile_width,
             "tile_height": tile_height,
         }
@@ -368,15 +401,14 @@ async def tileset_arrange(
     file: UploadFile = File(...),
     tile_width: int = Form(default=32),
     tile_height: int = Form(default=32),
-    output_width: int = Form(default=288),
-    output_height: int = Form(default=32),
+    cols: int = Form(default=9),
+    rows: int = Form(default=1),
     sprite_order: str = Form(...),
 ):
-    """Re-arrange tiles with a custom order and return the output image."""
+    """Arrange tiles by order string and return a downloadable PNG."""
     data = await file.read()
     with tempfile.NamedTemporaryFile(suffix=Path(file.filename).suffix, delete=False) as tmp:
         tmp.write(data); tmp_path = tmp.name
-
     try:
         order = [int(x.strip()) for x in sprite_order.split(",") if x.strip()]
         config = {
@@ -388,8 +420,8 @@ async def tileset_arrange(
                 "supported_sizes": [],
             },
             "output": {
-                "output_width": output_width,
-                "output_height": output_height,
+                "output_width": cols * tile_width,
+                "output_height": rows * tile_height,
             },
         }
         mgr = TilesetManager(config)
@@ -406,3 +438,15 @@ async def tileset_arrange(
         )
     finally:
         os.unlink(tmp_path)
+
+
+# ---------- serve static ----------
+
+example_dir = Path(__file__).parent.parent / "example"
+frontend_dist = Path(__file__).parent.parent / "frontend" / "dist"
+
+if example_dir.exists():
+    app.mount("/example", StaticFiles(directory=str(example_dir)), name="example")
+
+if frontend_dist.exists():
+    app.mount("/", StaticFiles(directory=str(frontend_dist), html=True), name="frontend")

@@ -1,65 +1,30 @@
 {
-    "tile_width": 64,
-    "tile_height": 64,
-    "columns": 9,
-    "rows": 1,
-    "scale": 50,
-    "input_width": 256,
-    "input_height": 256,
-    "output_matrix": [
-        {
-            "row": 0,
-            "col": 0,
-            "original_x": 0,
-            "original_y": 0
-        },
-        {
-            "row": 0,
-            "col": 1,
-            "original_x": 0,
-            "original_y": 192
-        },
-        {
-            "row": 0,
-            "col": 2,
-            "original_x": 0,
-            "original_y": 64
-        },
-        {
-            "row": 0,
-            "col": 3,
-            "original_x": 64,
-            "original_y": 0
-        },
-        {
-            "row": 0,
-            "col": 4,
-            "original_x": 192,
-            "original_y": 0
-        },
-        {
-            "row": 0,
-            "col": 5,
-            "original_x": 64,
-            "original_y": 192
-        },
-        {
-            "row": 0,
-            "col": 6,
-            "original_x": 192,
-            "original_y": 192
-        },
-        {
-            "row": 0,
-            "col": 7,
-            "original_x": 64,
-            "original_y": 64
-        },
-        {
-            "row": 0,
-            "col": 8,
-            "original_x": 192,
-            "original_y": 64
-        }
-    ]
+  "name": "Overworld sprite (9x1)",
+  "tile_w": 32,
+  "tile_h": 32,
+  "cols": 9,
+  "rows": 1,
+  "slots": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "slot_labels": [
+    "down idle",
+    "up idle",
+    "left idle",
+    "down walk 1",
+    "down walk 2",
+    "up walk 1",
+    "up walk 2",
+    "left walk 1",
+    "left walk 2"
+  ],
+  "is_default": true
 }

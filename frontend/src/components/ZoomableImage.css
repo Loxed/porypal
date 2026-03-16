@@ -4,3 +4,9 @@
 .zoom-btn:hover { border-color: var(--accent); color: var(--accent); }
 .zoom-label { font-family: var(--mono); font-size: 11px; color: var(--muted); min-width: 24px; text-align: center; }
 .zoomable-scroll { overflow: auto; max-height: 220px; }
+
+/* picking mode */
+.zoomable-picking .zoomable-scroll { cursor: crosshair; }
+
+/* hidden canvas used only for getImageData sampling — never visible */
+.zoomable-sample-canvas { display: none; }

@@ -1,14 +1,74 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import './ExtractTab.css'
 import { DropZone } from '../components/DropZone'
 import { ZoomableImage } from '../components/ZoomableImage'
 import { PaletteStrip } from '../components/PaletteStrip'
 import { useFetch } from '../hooks/useFetch'
+import { Info, X } from 'lucide-react'
+import { ColorSwatch } from '../components/ColorSwatch'
 
 const API = '/api'
 const GBA_TRANSPARENT = '#73C5A4'
 const MAX_COLORS = 16
 const MAX_EXTRA_COLORS = MAX_COLORS - 1
+
+function HelpModal({ onClose }) {
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-box" onClick={e => e.stopPropagation()}>
+        <div className="modal-header">
+          <span className="modal-title">palette extraction</span>
+          <button className="modal-close" onClick={onClose}><X size={16}/></button>
+        </div>
+        <div className="modal-body">
+          <p className="modal-desc">
+            Extracts a GBA-compatible 16-color palette from any sprite using k-means clustering.
+          </p>
+
+          <div className="help-steps">
+            <div className="help-step">
+              <span className="help-step-num">1</span>
+              <div>
+                <strong>drop a sprite</strong>
+                <p>Any PNG or image with the colors you want to extract.</p>
+              </div>
+            </div>
+            <div className="help-step">
+              <span className="help-step-num">2</span>
+              <div>
+                <strong>set the transparent color (slot 0)</strong>
+                <p>This color will always be first in the palette. The GBA uses slot 0 as the background/transparent color.</p>
+                <ul className="help-list">
+                  <li><span className="help-tag">default</span> uses <code><ColorSwatch hex="#73C5A4" />#73C5A4</code>, the standard GBA transparent green</li>
+                  <li><span className="help-tag">custom</span> lets you type any hex value</li>
+                  <li><span className="help-tag">pipette</span> click any pixel on your sprite to sample it directly</li>
+                </ul>
+              </div>
+            </div>
+            <div className="help-step">
+              <span className="help-step-num">3</span>
+              <div>
+                <strong>choose color count</strong>
+                <p>Max 15 sprite colors + 1 transparent = 16 total. GBA palettes are hard-limited to 16 colors per palette bank.</p>
+              </div>
+            </div>
+            <div className="help-step">
+              <span className="help-step-num">4</span>
+              <div>
+                <strong>extract & download</strong>
+                <p>The <em>palette applied</em> preview shows how your sprite will look remapped to the extracted palette. Download the <code>.pal</code> file to load it into Porypal or any JASC-PAL compatible tool.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="help-note">
+            <strong>JASC-PAL format</strong> — the output is compatible with Porypal, Usenti, and most GBA sprite editors.
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function hexToRgb(hex) {
   const h = hex.replace('#', '')
@@ -58,10 +118,8 @@ export function ExtractTab() {
   const [result, setResult] = useState(null)
   const [previewB64, setPreviewB64] = useState(null)
   const [picking, setPicking] = useState(false)
-  const [hoverColor, setHoverColor] = useState(null)
-  const [hoverPos, setHoverPos] = useState(null)
+  const [showHelp, setShowHelp] = useState(false)
   const [imageSize, setImageSize] = useState(null)
-  const canvasRef = useRef()
   const { loading, error, run } = useFetch()
 
   useEffect(() => {
@@ -70,19 +128,6 @@ export function ExtractTab() {
     img.onload = () => setImageSize({ w: img.naturalWidth, h: img.naturalHeight })
     img.src = `data:image/png;base64,${originalB64}`
   }, [originalB64])
-
-  // Ref callback: fires whenever the canvas mounts (including when picking toggles on)
-  const canvasRefCallback = (canvas) => {
-    canvasRef.current = canvas
-    if (!canvas || !originalB64) return
-    const img = new window.Image()
-    img.onload = () => {
-      canvas.width = img.naturalWidth
-      canvas.height = img.naturalHeight
-      canvas.getContext('2d').drawImage(img, 0, 0)
-    }
-    img.src = `data:image/png;base64,${originalB64}`
-  }
 
   useEffect(() => {
     if (!result || !originalB64 || result.colors.length < 2) { setPreviewB64(null); return }
@@ -110,39 +155,10 @@ export function ExtractTab() {
     if (data) setResult(data)
   }
 
-  const getCanvasColor = (e) => {
-    const canvas = canvasRef.current
-    if (!canvas) return null
-    const rect = canvas.getBoundingClientRect()
-    const scaleX = canvas.width / rect.width
-    const scaleY = canvas.height / rect.height
-    const x = Math.floor((e.clientX - rect.left) * scaleX)
-    const y = Math.floor((e.clientY - rect.top) * scaleY)
-    if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return null
-    const [r, g, b] = canvas.getContext('2d').getImageData(x, y, 1, 1).data
-    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`.toUpperCase()
-  }
-
-  const handleCanvasMove = (e) => {
-    if (!picking) return
-    setHoverPos({ x: e.clientX, y: e.clientY })
-    setHoverColor(getCanvasColor(e))
-  }
-
-  const handleCanvasLeave = () => {
-    setHoverPos(null)
-    setHoverColor(null)
-  }
-
-  const handleCanvasClick = (e) => {
-    if (!picking) return
-    const hex = getCanvasColor(e)
-    if (!hex) return
+  const handlePick = (hex) => {
     setBgColor(hex)
     setBgMode('pick')
     setPicking(false)
-    setHoverPos(null)
-    setHoverColor(null)
   }
 
   const handleDownloadPal = () => {
@@ -158,6 +174,7 @@ export function ExtractTab() {
 
   return (
     <div className="tab-content">
+      {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
       <div className="extract-layout">
 
         <div className="extract-left">
@@ -218,18 +235,26 @@ export function ExtractTab() {
             )}
           </div>
 
-          <button
-            className="btn-primary"
-            disabled={!file || loading || tooMany}
-            onClick={handleExtract}
-          >
-            {loading ? 'extracting…' : 'extract palette'}
-          </button>
+          <div className="extract-actions">
+            <button
+              className="btn-primary"
+              disabled={!file || loading || tooMany}
+              onClick={handleExtract}
+            >
+              {loading ? 'extracting…' : 'extract palette'}
+            </button>
+          </div>
 
           {error && <p className="error-msg">{error}</p>}
         </div>
 
         <div className="extract-right">
+          <div className="extract-toolbar">
+            <span className="section-label">
+              {result ? `${result.name} — ${colorCount} colors` : 'preview'}
+            </span>
+            <button className="help-btn" onClick={() => setShowHelp(true)}><Info size={15}/></button>
+          </div>
           {!originalB64 && !result && (
             <div className="empty-state">
               <p>drop a sprite to extract a GBA-compatible palette</p>
@@ -243,27 +268,13 @@ export function ExtractTab() {
                   original{imageSize ? ` — ${imageSize.w}×${imageSize.h}px` : ''}
                   {picking && <span className="pick-hint"> · click to pick bg color</span>}
                 </p>
-                <div className={`extract-image-wrap ${picking ? 'picking' : ''}`}>
-                  {picking ? (
-                    // Plain img + canvas overlay: no zoom controls offset, pixel-perfect mapping
-                    <div className="pipette-image-wrap">
-                      <img
-                        src={`data:image/png;base64,${originalB64}`}
-                        alt="source sprite"
-                        className="pipette-image pixel-img"
-                        draggable={false}
-                      />
-                      <canvas
-                        ref={canvasRefCallback}
-                        className="pipette-canvas"
-                        onClick={handleCanvasClick}
-                        onMouseMove={handleCanvasMove}
-                        onMouseLeave={handleCanvasLeave}
-                      />
-                    </div>
-                  ) : (
-                    <ZoomableImage src={originalB64} alt="source sprite" />
-                  )}
+                <div className="extract-image-wrap">
+                  <ZoomableImage
+                    src={originalB64}
+                    alt="source sprite"
+                    picking={picking}
+                    onPick={handlePick}
+                  />
                 </div>
               </div>
 
@@ -281,7 +292,6 @@ export function ExtractTab() {
           {result && (
             <div className="extract-result-section">
               <div className="extract-result-header">
-                <p className="section-label">{result.name} — {colorCount} colors</p>
                 <button className="btn-primary-sm" onClick={handleDownloadPal}>download .pal</button>
               </div>
               <div className="palette-strip-wrap">
@@ -296,14 +306,6 @@ export function ExtractTab() {
         </div>
 
       </div>
-
-      {/* floating pipette color preview — follows cursor */}
-      {picking && hoverPos && hoverColor && (
-        <div className="pipette-preview" style={{ left: hoverPos.x + 16, top: hoverPos.y + 16 }}>
-          <div className="pipette-swatch" style={{ background: hoverColor }} />
-          <span className="pipette-hex">{hoverColor}</span>
-        </div>
-      )}
     </div>
   )
 }

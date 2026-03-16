@@ -216,7 +216,8 @@ async def download_all_converted(file: UploadFile = File(...)):
 @app.post("/api/extract")
 async def extract_palette(
     file: UploadFile = File(...),
-    n_colors: int = Form(default=16),
+    n_colors: int = Form(default=15),
+    bg_color: str | None = Form(default="#73C5A4"),
 ):
     """
     Extract a GBA palette from the uploaded sprite using k-means.
@@ -228,7 +229,11 @@ async def extract_palette(
         tmp_path = tmp.name
 
     try:
-        palette = state.extractor.extract(tmp_path, n_colors=n_colors)
+        palette = state.extractor.extract(tmp_path, n_colors=n_colors, bg_color=bg_color)
+
+        # bg_color is slot 0 — extractor must return it first
+        if len(palette.colors) > 16:
+            raise HTTPException(400, f"Image has too many colors ({len(palette.colors)}); max 16 for GBA")
 
         pal_buf = io.StringIO()
         pal_buf.write("JASC-PAL\n0100\n")

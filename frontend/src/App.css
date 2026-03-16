@@ -77,3 +77,23 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
   width: auto;
   object-fit: contain;
 }
+
+.star-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.star-btn:hover {
+  color: #e3b341;
+  border-color: #e3b341;
+}

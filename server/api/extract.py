@@ -17,37 +17,51 @@ from server.state import state
 router = APIRouter(prefix="/api/extract", tags=["extract"])
 
 
+def _make_pal_content(palette) -> str:
+    buf = io.StringIO()
+    buf.write("JASC-PAL\n0100\n")
+    buf.write(f"{len(palette.colors)}\n")
+    for c in palette.colors:
+        buf.write(f"{c.r} {c.g} {c.b}\n")
+    return buf.getvalue()
+
+
 @router.post("")
 async def extract_palette(
     file: UploadFile = File(...),
     n_colors: int = Form(default=15),
     bg_color: str | None = Form(default="#73C5A4"),
+    color_space: str = Form(default="oklab"),
 ):
     """
     Extract a GBA palette from the uploaded sprite using k-means.
-    Returns the palette as hex colors + a downloadable .pal file content.
+    color_space: 'oklab' (default, perceptually uniform) or 'rgb'.
+    Returns the palette as hex colors + JASC .pal content.
     """
+    if color_space not in ("oklab", "rgb"):
+        raise HTTPException(400, f"color_space must be 'oklab' or 'rgb', got {color_space!r}")
+
     data = await file.read()
     with tempfile.NamedTemporaryFile(suffix=Path(file.filename).suffix, delete=False) as tmp:
         tmp.write(data)
         tmp_path = tmp.name
 
     try:
-        palette = state.extractor.extract(tmp_path, n_colors=n_colors, bg_color=bg_color)
+        palette = state.extractor.extract(
+            tmp_path,
+            n_colors=n_colors,
+            bg_color=bg_color,
+            color_space=color_space,
+        )
 
         if len(palette.colors) > 16:
             raise HTTPException(400, f"Image has too many colors ({len(palette.colors)}); max 16 for GBA")
 
-        pal_buf = io.StringIO()
-        pal_buf.write("JASC-PAL\n0100\n")
-        pal_buf.write(f"{len(palette.colors)}\n")
-        for c in palette.colors:
-            pal_buf.write(f"{c.r} {c.g} {c.b}\n")
-
         return {
             "name": palette.name,
             "colors": [c.to_hex() for c in palette.colors],
-            "pal_content": pal_buf.getvalue(),
+            "pal_content": _make_pal_content(palette),
+            "color_space": color_space,
         }
     finally:
         os.unlink(tmp_path)

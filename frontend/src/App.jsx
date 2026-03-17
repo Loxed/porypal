@@ -11,28 +11,12 @@ const TABS = ['convert', 'extract', 'batch', 'tileset', 'palettes']
 
 export default function App() {
   const [tab, setTab] = useState('convert')
-  const [palettes, setPalettes] = useState([])
-
-  const fetchPalettes = () => {
-    fetch(`${API}/palettes`)
-      .then(r => r.json())
-      .then(setPalettes)
-      .catch(() => {})
-  }
-
-  useEffect(() => { fetchPalettes() }, [])
-
-  const handleTabChange = (t) => {
-    setTab(t)
-    // Re-sync palette list when switching to tabs that use it
-    if (t === 'convert' || t === 'batch') fetchPalettes()
-  }
 
   return (
     <div className="app">
       <header className="header">
         <div className="header-inner">
-          <a className="logo" href='#' onClick={() => handleTabChange('convert')}>
+          <a className="logo" href='#' onClick={() => setTab('convert')}>
             <img src="/porypal.ico" alt="Porypal" className="logo-icon" />
           </a>
           <nav className="nav">
@@ -40,7 +24,7 @@ export default function App() {
               <button
                 key={t}
                 className={`nav-tab ${tab === t ? 'active' : ''}`}
-                onClick={() => handleTabChange(t)}
+                onClick={() => setTab(t)}
               >
                 {t}
               </button>
@@ -64,7 +48,7 @@ export default function App() {
       <main className="main">
         {tab === 'convert'  && <ConvertTab />}
         {tab === 'extract'  && <ExtractTab />}
-        {tab === 'batch'    && <BatchTab palettes={palettes} />}
+        {tab === 'batch'    && <BatchTab />}
         {tab === 'tileset'  && <TilesetTab />}
         {tab === 'palettes' && <PalettesTab />}
       </main>

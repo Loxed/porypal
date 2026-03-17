@@ -488,3 +488,244 @@ async def download_all_item_palettes(
         media_type="application/zip",
         headers={"Content-Disposition": 'attachment; filename="item_palettes.zip"'},
     )
+
+# ---------------------------------------------------------------------------
+# Variant extraction — N sprites share the same pixel layout, different hues
+# ---------------------------------------------------------------------------
+
+def _extract_variants(
+    sprites: list[dict],   # [{name, px, input_bg}]
+    n_colors: int,
+    output_bg: Color,
+) -> list[dict]:
+    """
+    Given N sprites that are recolor variants of the same base sprite:
+    1. Extract the reference palette from sprite[0] (k-means if needed)
+    2. For every other sprite, build a matched palette slot-by-slot:
+       for each reference color, find what color occupies those same pixels
+       in the variant → that becomes the variant's color at that slot.
+    3. Render each sprite with its matched palette.
+
+    Returns a list of results (one per sprite) each with:
+      name, colors, pal_content, preview, slot_index (1-based slot in reference)
+    """
+    if not sprites:
+        return []
+
+    ref = sprites[0]
+    ref_bg_rgb = np.array(_parse_hex(ref["input_bg"]).to_tuple(), dtype=np.uint8)
+
+    # ── Step 1: extract reference palette ──────────────────────────────────
+    ref_colors = _extract_sprite_colors(ref["px"], ref_bg_rgb, n_colors)
+    # ref_colors is sorted by pixel frequency, index 0 = most frequent
+
+    # Build slot map for reference: color_tuple -> 1-based slot
+    ref_slot_map: dict[tuple, int] = {c: i + 1 for i, c in enumerate(ref_colors)}
+
+    # Full reference palette (slot 0 = output_bg)
+    ref_palette = [output_bg] + [Color(c[0], c[1], c[2]) for c in ref_colors]
+    # Pad to 16 slots
+    while len(ref_palette) < n_colors + 1:
+        ref_palette.append(output_bg)
+
+    # ── Step 2: build pixel→ref_slot map from reference image ──────────────
+    h, w = ref["px"].shape[:2]
+    ref_rgb   = ref["px"][:, :, :3]
+    ref_alpha = ref["px"][:, :, 3]
+
+    # For each pixel, store which slot it belongs to (0 = transparent/bg)
+    ref_slot_image = np.zeros((h, w), dtype=np.int32)
+    for row in range(h):
+        for col in range(w):
+            a = ref_alpha[row, col]
+            px_rgb = tuple(ref_rgb[row, col].tolist())
+            if a < 255 or px_rgb == tuple(ref_bg_rgb.tolist()):
+                ref_slot_image[row, col] = 0
+            elif px_rgb in ref_slot_map:
+                ref_slot_image[row, col] = ref_slot_map[px_rgb]
+            else:
+                # Nearest ref color (handles k-means reduced refs)
+                best_slot, best_dist = 1, float('inf')
+                r, g, b = px_rgb
+                for rc, slot in ref_slot_map.items():
+                    d = (r-rc[0])**2 + (g-rc[1])**2 + (b-rc[2])**2
+                    if d < best_dist:
+                        best_dist, best_slot = d, slot
+                ref_slot_image[row, col] = best_slot
+
+    # ── Step 3: for each variant, find color-per-slot via pixel sampling ───
+    results = []
+
+    for sprite in sprites:
+        sp_bg_rgb = np.array(_parse_hex(sprite["input_bg"]).to_tuple(), dtype=np.uint8)
+        sp_rgb    = sprite["px"][:, :, :3]
+        sp_alpha  = sprite["px"][:, :, 3]
+
+        # For each slot (1..n_colors), collect all variant pixel colors at
+        # positions where the reference had that slot → take the most common one
+        slot_colors: dict[int, dict[tuple, int]] = {i: {} for i in range(1, len(ref_colors) + 1)}
+
+        for row in range(h):
+            for col in range(w):
+                slot = ref_slot_image[row, col]
+                if slot == 0:
+                    continue
+                a = sp_alpha[row, col]
+                if a < 255:
+                    continue
+                c = tuple(sp_rgb[row, col].tolist())
+                if c == tuple(sp_bg_rgb.tolist()):
+                    continue
+                slot_colors[slot][c] = slot_colors[slot].get(c, 0) + 1
+
+        # Pick the most frequent color for each slot; fall back to ref color if empty
+        variant_palette: list[Color] = [output_bg]
+        for slot_i in range(1, len(ref_colors) + 1):
+            freq = slot_colors[slot_i]
+            if freq:
+                best_color = max(freq, key=freq.get)
+                variant_palette.append(Color(best_color[0], best_color[1], best_color[2]))
+            else:
+                # No pixels found for this slot — keep reference color
+                rc = ref_colors[slot_i - 1]
+                variant_palette.append(Color(rc[0], rc[1], rc[2]))
+
+        # Pad to 16 slots
+        while len(variant_palette) < n_colors + 1:
+            variant_palette.append(output_bg)
+
+        # Build slot map for rendering this variant
+        # Map: variant_color -> slot_i (invert variant_palette)
+        # We use ref_slot_image directly — same pixel layout, same slots
+        out_img = Image.new("P", (w, h))
+        pal_data = list(output_bg.to_tuple())
+        for c in variant_palette[1:]:
+            pal_data += list(c.to_tuple())
+        pal_data += [0] * (768 - len(pal_data))
+        out_img.putpalette(pal_data)
+        out_img.putdata(ref_slot_image.flatten().tolist())
+
+        results.append({
+            "name":        sprite["name"],
+            "colors":      [c.to_hex() for c in variant_palette],
+            "pal_content": _make_pal_content(variant_palette),
+            "preview":     pil_to_b64(out_img.convert("RGBA")),
+        })
+
+    results.sort(key=lambda r: r["name"].lower())
+    return results
+
+
+@router.post("/extract-variants")
+async def extract_variants(
+    files: list[UploadFile] = File(...),
+    n_colors: int           = Form(default=15),
+    input_bg_colors: str    = Form(default="[]"),
+    output_bg_color: str    = Form(default=DEFAULT_BG),
+    reference_index: int    = Form(default=0),
+):
+    """
+    Extract index-compatible palettes from N recolor variants of the same sprite.
+
+    All sprites must have the same dimensions. The sprite at reference_index
+    establishes the palette slot order; all others are matched to it pixel-by-pixel.
+
+    Returns: { reference, results: [{name, colors, pal_content, preview}] }
+    """
+    if not files:
+        raise HTTPException(400, "At least one file required")
+
+    try:
+        input_bgs = json.loads(input_bg_colors)
+    except Exception:
+        input_bgs = []
+
+    output_bg = _parse_hex(output_bg_color)
+
+    sprites = []
+    for i, f in enumerate(files):
+        data = await f.read()
+        sprites.append({
+            "name":     Path(f.filename).stem,
+            "px":       _load_rgba(data),
+            "input_bg": input_bgs[i] if i < len(input_bgs) else DEFAULT_BG,
+        })
+
+    # Validate all same dimensions
+    h0, w0 = sprites[0]["px"].shape[:2]
+    for s in sprites[1:]:
+        h, w = s["px"].shape[:2]
+        if h != h0 or w != w0:
+            raise HTTPException(
+                400,
+                f"All sprites must have the same dimensions. "
+                f"'{sprites[0]['name']}' is {w0}×{h0} but '{s['name']}' is {w}×{h}."
+            )
+
+    # Put reference first
+    ref_idx = max(0, min(reference_index, len(sprites) - 1))
+    if ref_idx != 0:
+        sprites.insert(0, sprites.pop(ref_idx))
+
+    try:
+        results = _extract_variants(sprites, n_colors, output_bg)
+    except Exception as e:
+        raise HTTPException(400, str(e))
+
+    return {
+        "reference": sprites[0]["name"],
+        "results":   results,
+    }
+
+
+@router.post("/extract-variants/download")
+async def download_variants(
+    files: list[UploadFile] = File(...),
+    n_colors: int           = Form(default=15),
+    input_bg_colors: str    = Form(default="[]"),
+    output_bg_color: str    = Form(default=DEFAULT_BG),
+    reference_index: int    = Form(default=0),
+):
+    """Download all variant palettes as a zip."""
+    if not files:
+        raise HTTPException(400, "At least one file required")
+
+    try:
+        input_bgs = json.loads(input_bg_colors)
+    except Exception:
+        input_bgs = []
+
+    output_bg = _parse_hex(output_bg_color)
+
+    sprites = []
+    for i, f in enumerate(files):
+        data = await f.read()
+        sprites.append({
+            "name":     Path(f.filename).stem,
+            "px":       _load_rgba(data),
+            "input_bg": input_bgs[i] if i < len(input_bgs) else DEFAULT_BG,
+        })
+
+    h0, w0 = sprites[0]["px"].shape[:2]
+    for s in sprites[1:]:
+        h, w = s["px"].shape[:2]
+        if h != h0 or w != w0:
+            raise HTTPException(400, f"Dimension mismatch: '{s['name']}' is {w}×{h}, expected {w0}×{h0}.")
+
+    ref_idx = max(0, min(reference_index, len(sprites) - 1))
+    if ref_idx != 0:
+        sprites.insert(0, sprites.pop(ref_idx))
+
+    results = _extract_variants(sprites, n_colors, output_bg)
+
+    zip_buf = io.BytesIO()
+    with zipfile.ZipFile(zip_buf, "w", zipfile.ZIP_DEFLATED) as zf:
+        for r in results:
+            zf.writestr(f"{r['name']}.pal", r["pal_content"])
+    zip_buf.seek(0)
+
+    return StreamingResponse(
+        zip_buf,
+        media_type="application/zip",
+        headers={"Content-Disposition": 'attachment; filename="variant_palettes.zip"'},
+    )

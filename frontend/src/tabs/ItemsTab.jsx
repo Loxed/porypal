@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react'
 import './ItemsTab.css'
 import { BgColorCell } from '../components/BgColorCell'
 import { GroupSection } from '../components/GroupSection'
+import { VariantsPanel } from '../components/VariantsPanel'
 import { downloadBlob, detectBgColor } from '../utils'
 import { X, Download, Grid, List, Eclipse, PaintBucket } from 'lucide-react'
 
@@ -46,6 +47,7 @@ function ThresholdSlider({ value, onChange }) {
 // ItemsTab
 // ---------------------------------------------------------------------------
 export function ItemsTab() {
+  const [mode, setMode]                         = useState('group') // 'group' | 'variants'
   const [sprites, setSprites]                   = useState([])
   const [nColors, setNColors]                   = useState(15)
   const [outputBg, setOutputBg]                 = useState(GBA_TRANSPARENT)
@@ -225,9 +227,34 @@ export function ItemsTab() {
   // ---------------------------------------------------------------------------
   return (
     <div className="tab-content">
-      <div className="items-layout">
+      {/* ── Mode switcher ── */}
+      <div className="items-mode-switcher">
+        <button
+          className={`items-mode-btn ${mode === 'group' ? 'active' : ''}`}
+          onClick={() => setMode('group')}
+        >
+          extract groups 
+        </button>
+        <button
+          className={`items-mode-btn ${mode === 'variants' ? 'active' : ''}`}
+          onClick={() => setMode('variants')}
+        >
+          item variants
+        </button>
+      </div>
 
-        {/* ── Left ── */}
+      {mode === 'variants' && (
+        <VariantsPanel
+          nColors={nColors}
+          outputBg={outputBg}
+          outputBgMode={outputBgMode}
+          setOutputBg={setOutputBg}
+          setOutputBgMode={setOutputBgMode}
+        />
+      )}
+
+      {mode === 'group' && (
+        <div className="items-layout">
         <div className="items-left">
 
           <div
@@ -329,7 +356,6 @@ export function ItemsTab() {
           {error && <p className="error-msg">{error}</p>}
         </div>
 
-        {/* ── Right ── */}
         <div className="items-right">
           <div className="items-toolbar">
             <span className="items-count">
@@ -381,8 +407,9 @@ export function ItemsTab() {
             </div>
           )}
         </div>
+        </div>
+      )}
 
-      </div>
     </div>
   )
 }

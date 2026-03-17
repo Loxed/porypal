@@ -1,12 +1,16 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import './ItemsTab.css'
 import { ZoomableImage } from '../components/ZoomableImage'
 import { PaletteStrip } from '../components/PaletteStrip'
 import { downloadBlob, detectBgColor } from '../utils'
-import { X, Download, Grid, List, Eclipse, PaintBucket, ChevronDown, ChevronRight, Pencil, GripVertical, RefreshCw } from 'lucide-react'
+import {
+  X, Download, Grid, List, Eclipse, PaintBucket,
+  ChevronDown, ChevronRight, Pencil, GripVertical, Merge
+} from 'lucide-react'
 
 const API = '/api'
 const GBA_TRANSPARENT = '#73C5A4'
+const AUTO_EXTRACT_DELAY_MS = 900
 
 function GridIcon() { return <Grid size={12} fill="currentColor" /> }
 function ListIcon()  { return <List size={12} fill="currentColor" /> }
@@ -28,7 +32,7 @@ function downloadPal(palContent, filename) {
 }
 
 // ---------------------------------------------------------------------------
-// Inline bg color swatch + input
+// BgColorCell
 // ---------------------------------------------------------------------------
 function BgColorCell({ color, onChange }) {
   const [editing, setEditing] = useState(false)
@@ -42,69 +46,92 @@ function BgColorCell({ color, onChange }) {
 
   return (
     <div className="sprite-bg-cell" title="input bg — click to override">
-      <div
-        className="sprite-bg-swatch"
-        style={{ background: color }}
-        onClick={() => { setVal(color); setEditing(e => !e) }}
-      />
+      <div className="sprite-bg-swatch" style={{ background: color }}
+        onClick={() => { setVal(color); setEditing(e => !e) }} />
       {editing && (
-        <input
-          className="sprite-bg-input"
-          value={val}
-          onChange={e => setVal(e.target.value)}
-          onBlur={commit}
+        <input className="sprite-bg-input" value={val}
+          onChange={e => setVal(e.target.value)} onBlur={commit}
           onKeyDown={e => {
             if (e.key === 'Enter') commit()
             if (e.key === 'Escape') { setVal(color); setEditing(false) }
           }}
-          maxLength={7}
-          autoFocus
-          spellCheck={false}
-        />
+          maxLength={7} autoFocus spellCheck={false} />
       )}
     </div>
   )
 }
 
 // ---------------------------------------------------------------------------
-// Threshold slider
+// ThresholdSlider
 // ---------------------------------------------------------------------------
 function ThresholdSlider({ value, onChange }) {
-  const pct = Math.round(value * 100)
-  const label =
-    value <= 0.1 ? 'any shared' :
-    value <= 0.4 ? 'loose'      :
-    value <= 0.6 ? 'majority'   :
-    value <= 0.85 ? 'strict'    : 'all sprites'
-
+  const pct   = Math.round(value * 100)
+  const label = value <= 0.1 ? 'any shared' : value <= 0.4 ? 'loose' :
+                value <= 0.6 ? 'majority'   : value <= 0.85 ? 'strict' : 'all sprites'
   return (
     <div className="field">
       <div className="threshold-header">
         <label className="field-label">shared color threshold</label>
         <span className="threshold-value">{pct}% · {label}</span>
       </div>
-      <input
-        type="range"
-        className="threshold-slider"
-        min={0} max={100} step={5}
-        value={pct}
-        onChange={e => onChange(Number(e.target.value) / 100)}
-      />
+      <input type="range" className="threshold-slider" min={0} max={100} step={5}
+        value={pct} onChange={e => onChange(Number(e.target.value) / 100)} />
       <p className="threshold-hint">
-        A color must appear in ≥{pct}% of a group's sprites to get a fixed shared slot index.
+        A color must appear in ≥{pct}% of a group to earn a fixed shared slot.
       </p>
     </div>
   )
 }
 
 // ---------------------------------------------------------------------------
-// Item result card — draggable
+// MergeDropdown — lists other groups to merge this whole group into
 // ---------------------------------------------------------------------------
-function ItemCard({ result, isReference, listMode, groupId, onDragStart }) {
+function MergeDropdown({ thisGroupId, allGroups, groupNames, onMerge }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef()
+
+  useEffect(() => {
+    if (!open) return
+    const handler = (e) => { if (!ref.current?.contains(e.target)) setOpen(false) }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
+
+  const others = allGroups.filter(g => g.group_id !== thisGroupId)
+  if (others.length === 0) return null
+
+  return (
+    <div className="merge-dropdown" ref={ref}>
+      <button
+        className="group-action-btn"
+        title="merge entire group into another"
+        onClick={e => { e.stopPropagation(); setOpen(o => !o) }}
+      >
+        <Merge size={11} />
+      </button>
+      {open && (
+        <div className="merge-menu">
+          <p className="merge-menu-label">merge into…</p>
+          {others.map(g => (
+            <button key={g.group_id} className="merge-menu-item"
+              onClick={e => { e.stopPropagation(); setOpen(false); onMerge(thisGroupId, g.group_id) }}>
+              {groupNames[g.group_id] ?? g.group_id}
+              <span className="merge-menu-meta">{g.results.length} sprites</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// ItemCard — draggable
+// ---------------------------------------------------------------------------
+function ItemCard({ result, isReference, listMode, groupId }) {
   const handleDragStart = (e) => {
     e.dataTransfer.effectAllowed = 'move'
     e.dataTransfer.setData('text/plain', JSON.stringify({ spriteName: result.name, fromGroupId: groupId }))
-    onDragStart && onDragStart()
   }
 
   return (
@@ -113,7 +140,6 @@ function ItemCard({ result, isReference, listMode, groupId, onDragStart }) {
       draggable
       onDragStart={handleDragStart}
     >
-      {/* drag handle */}
       <div className="item-drag-handle" title="drag to move to another group">
         <GripVertical size={12} />
       </div>
@@ -127,7 +153,8 @@ function ItemCard({ result, isReference, listMode, groupId, onDragStart }) {
             <div className="item-card-header">
               <span className="item-card-name">{result.name}</span>
               {isReference && <span className="item-card-ref-badge">ref</span>}
-              <button className="sprite-queue-btn" onClick={() => downloadPal(result.pal_content, result.name)}>
+              <button className="sprite-queue-btn"
+                onClick={() => downloadPal(result.pal_content, result.name)}>
                 <Download size={11} />
               </button>
             </div>
@@ -151,14 +178,70 @@ function ItemCard({ result, isReference, listMode, groupId, onDragStart }) {
   )
 }
 
+
 // ---------------------------------------------------------------------------
-// Group section — drop target, collapsible, renameable
+// SharedSlotsStrip — shows all palette slots for a group, marking shared vs local
 // ---------------------------------------------------------------------------
-function GroupSection({ group, groupName, onRename, onDropSprite, viewMode, exact, nUnique, dirty }) {
+function SharedSlotsStrip({ sharedSlots, nShared }) {
+  const [hoveredIdx, setHoveredIdx] = useState(null)
+
+  if (!sharedSlots || sharedSlots.length === 0) return null
+
+  return (
+    <div className="shared-slots-wrap">
+      <div className="shared-slots-header">
+        <span className="shared-slots-label">shared indices</span>
+        <span className="shared-slots-count">
+          {nShared + 1} shared (0–{nShared}) · {sharedSlots.length - nShared - 1} local
+        </span>
+      </div>
+      <div className="shared-slots-strip">
+        {sharedSlots.map((slot, i) => (
+          <div
+            key={i}
+            className={`shared-slot ${slot.shared ? 'is-shared' : 'is-local'}`}
+            style={{ background: slot.hex }}
+            onMouseEnter={() => setHoveredIdx(i)}
+            onMouseLeave={() => setHoveredIdx(null)}
+          >
+            {hoveredIdx === i && (
+              <div className="shared-slot-tooltip">
+                <span className="shared-slot-idx">{i}</span>
+                <span className="shared-slot-hex">{slot.hex}</span>
+                <span className={`shared-slot-tag ${slot.shared ? 'tag-shared' : 'tag-local'}`}>
+                  {slot.shared ? 'shared' : 'local'}
+                </span>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      {/* Shared indicator bar below the strip */}
+      <div className="shared-slots-bar">
+        {sharedSlots.map((slot, i) => (
+          <div key={i} className={`shared-bar-tick ${slot.shared ? 'tick-shared' : 'tick-local'}`} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// GroupSection
+// ---------------------------------------------------------------------------
+function GroupSection({
+  group, groupName, onRename, onDropSprite, onMergeGroup,
+  allGroups, groupNames,
+  viewMode, exact, nUnique,
+  sharedSlots, nShared,
+}) {
   const [open, setOpen]         = useState(true)
   const [editing, setEditing]   = useState(false)
   const [nameVal, setNameVal]   = useState(groupName)
   const [dragOver, setDragOver] = useState(false)
+
+  // Keep nameVal in sync if groupName changes externally
+  useEffect(() => { setNameVal(groupName) }, [groupName])
 
   const commitRename = () => {
     if (nameVal.trim()) onRename(nameVal.trim())
@@ -171,12 +254,9 @@ function GroupSection({ group, groupName, onRename, onDropSprite, viewMode, exac
     e.dataTransfer.dropEffect = 'move'
     setDragOver(true)
   }
-
   const handleDragLeave = (e) => {
-    // Only clear if leaving the group header area, not a child
     if (!e.currentTarget.contains(e.relatedTarget)) setDragOver(false)
   }
-
   const handleDrop = (e) => {
     e.preventDefault()
     setDragOver(false)
@@ -189,12 +269,8 @@ function GroupSection({ group, groupName, onRename, onDropSprite, viewMode, exac
   }
 
   return (
-    <div
-      className={`group-section ${dragOver ? 'group-drop-target' : ''} ${dirty ? 'group-dirty' : ''}`}
-    >
-      {/* Drop zone overlay on the header */}
-      <div
-        className="group-header"
+    <div className={`group-section ${dragOver ? 'group-drop-target' : ''}`}>
+      <div className="group-header"
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
@@ -204,17 +280,12 @@ function GroupSection({ group, groupName, onRename, onDropSprite, viewMode, exac
         </button>
 
         {editing ? (
-          <input
-            className="group-name-input"
-            value={nameVal}
-            onChange={e => setNameVal(e.target.value)}
-            onBlur={commitRename}
+          <input className="group-name-input" value={nameVal}
+            onChange={e => setNameVal(e.target.value)} onBlur={commitRename}
             onKeyDown={e => {
               if (e.key === 'Enter') commitRename()
               if (e.key === 'Escape') { setNameVal(groupName); setEditing(false) }
-            }}
-            autoFocus
-          />
+            }} autoFocus />
         ) : (
           <span className="group-name" onClick={() => setEditing(true)}>{groupName}</span>
         )}
@@ -226,18 +297,30 @@ function GroupSection({ group, groupName, onRename, onDropSprite, viewMode, exac
             ? <span style={{ color: 'var(--best)' }}>{nUnique} colors · exact</span>
             : <span style={{ color: '#e3b341' }}>{nUnique} → {group.results[0]?.colors.length - 1} colors · clustered</span>
           }
-          {dirty && <span className="group-dirty-badge"> · pending re-extract</span>}
         </span>
 
-        <button className="sprite-queue-btn" title="rename group" onClick={() => setEditing(true)}>
-          <Pencil size={10} />
-        </button>
+        {/* Actions row */}
+        <div className="group-actions">
+          {/* Rename */}
+          <button className="group-action-btn" title="rename" onClick={() => setEditing(true)}>
+            <Pencil size={11} />
+          </button>
 
-        {/* Drop hint */}
-        {dragOver && (
-          <span className="group-drop-hint">drop here to merge</span>
-        )}
+          {/* Merge into another group */}
+          <MergeDropdown
+            thisGroupId={group.group_id}
+            allGroups={allGroups}
+            groupNames={groupNames}
+            onMerge={onMergeGroup}
+          />
+        </div>
+
+        {dragOver && <span className="group-drop-hint">drop to merge</span>}
       </div>
+
+      {open && sharedSlots && sharedSlots.length > 0 && (
+        <SharedSlotsStrip sharedSlots={sharedSlots} nShared={nShared ?? 0} />
+      )}
 
       {open && (
         <div className={viewMode === 'grid' ? 'items-results-grid' : 'items-results-list'}>
@@ -257,39 +340,121 @@ function GroupSection({ group, groupName, onRename, onDropSprite, viewMode, exac
 }
 
 // ---------------------------------------------------------------------------
-// Main tab
+// Main Tab
 // ---------------------------------------------------------------------------
 export function ItemsTab() {
-  const [sprites, setSprites]               = useState([])
-  const [nColors, setNColors]               = useState(15)
-  const [outputBg, setOutputBg]             = useState(GBA_TRANSPARENT)
-  const [outputBgMode, setOutputBgMode]     = useState('default')
-  const [sharedThreshold, setSharedThreshold] = useState(0.6)
-  const [results, setResults]               = useState(null)
-  const [groupNames, setGroupNames]         = useState({})
-  // groupAssignments: spriteName -> groupId (manual overrides)
+  const [sprites, setSprites]                   = useState([])
+  const [nColors, setNColors]                   = useState(15)
+  const [outputBg, setOutputBg]                 = useState(GBA_TRANSPARENT)
+  const [outputBgMode, setOutputBgMode]         = useState('default')
+  const [sharedThreshold, setSharedThreshold]   = useState(0.6)
+  const [results, setResults]                   = useState(null)
+  const [groupNames, setGroupNames]             = useState({})
+  // groupAssignments: spriteName -> groupId (manual overrides, used on re-extract)
   const [groupAssignments, setGroupAssignments] = useState({})
-  // dirtyGroups: set of group_ids that have pending manual moves not yet re-extracted
-  const [dirtyGroups, setDirtyGroups]       = useState(new Set())
-  const [loading, setLoading]               = useState(false)
-  const [error, setError]                   = useState(null)
-  const [viewMode, setViewMode]             = useState('grid')
-  const inputRef = useRef()
+  const [loading, setLoading]                   = useState(false)
+  const [error, setError]                       = useState(null)
+  const [viewMode, setViewMode]                 = useState('grid')
+  const [groupingEnabled, setGroupingEnabled]   = useState(true)
 
+  const inputRef        = useRef()
+  const autoExtractTimer = useRef(null)
+// ---------------------------------------------------------------------------
+  // Helpers
+  // ---------------------------------------------------------------------------
+
+  // Build group_assignments from the current displayed groups
+  const buildAssignments = useCallback((displayedGroups) => {
+    const assignments = {}
+    displayedGroups.forEach(group => {
+      group.results.forEach(r => {
+        assignments[r.name] = group.group_id
+      })
+    })
+    return assignments
+  }, [])
+
+  // ---------------------------------------------------------------------------
+  // Extract
+  // ---------------------------------------------------------------------------
+  const doExtract = useCallback(async (displayedGroups, currentGrouping) => {
+    if (sprites.length === 0) return
+    setLoading(true)
+    setError(null)
+
+    // When grouping is disabled, give every sprite a unique solo key
+    const assignments = currentGrouping
+      ? buildAssignments(displayedGroups)
+      : Object.fromEntries(sprites.map(s => [s.name, `solo_${s.name}`]))
+    setGroupAssignments(assignments)
+
+    try {
+      const fd = new FormData()
+      sprites.forEach(s => fd.append('files', s.file))
+      fd.append('n_colors', nColors)
+      fd.append('input_bg_colors', JSON.stringify(sprites.map(s => s.inputBg)))
+      fd.append('output_bg_color', outputBg)
+      fd.append('shared_threshold', sharedThreshold)
+      fd.append('group_assignments', JSON.stringify(assignments))
+
+      const res = await fetch(`${API}/items/extract`, { method: 'POST', body: fd })
+      if (!res.ok) throw new Error(await res.text())
+      const data = await res.json()
+
+      setResults(data)
+
+      // Carry over group names for groups that still exist
+      setGroupNames(prev => {
+        const next = {}
+        data.groups.forEach(g => {
+          next[g.group_id] = prev[g.group_id] ?? g.group_id
+        })
+        return next
+      })
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setLoading(false)
+    }
+  }, [sprites, nColors, outputBg, sharedThreshold, buildAssignments])
+
+  // Initial extract (no prior groups)
+  const handleExtract = () => {
+    clearTimeout(autoExtractTimer.current)
+    doExtract([], groupingEnabled)
+    setGroupAssignments({})
+  }
+
+  // ---------------------------------------------------------------------------
+  // Auto-extract after group edits (debounced)
+  // ---------------------------------------------------------------------------
+  const scheduleAutoExtract = useCallback((newGroups) => {
+    clearTimeout(autoExtractTimer.current)
+    autoExtractTimer.current = setTimeout(() => {
+      doExtract(newGroups, groupingEnabled)
+    }, AUTO_EXTRACT_DELAY_MS)
+  }, [doExtract, groupingEnabled])
+
+  // ---------------------------------------------------------------------------
+  // File import — sorted alphabetically
+  // ---------------------------------------------------------------------------
   const handleFiles = async (fileList) => {
-    const incoming = Array.from(fileList)
-    const loaded = await Promise.all(incoming.map(async f => {
+    const sorted = Array.from(fileList).sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+    )
+    const loaded = await Promise.all(sorted.map(async f => {
       const b64     = await fileToB64(f)
       const inputBg = await detectBgColor(b64)
       return { file: f, name: f.name.replace(/\.[^.]+$/, ''), b64, inputBg }
     }))
     setSprites(prev => {
       const names = new Set(prev.map(s => s.name))
-      return [...prev, ...loaded.filter(s => !names.has(s.name))]
+      // Merge new sorted sprites, then re-sort the full list
+      const merged = [...prev, ...loaded.filter(s => !names.has(s.name))]
+      return merged.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
     })
     setResults(null)
     setGroupAssignments({})
-    setDirtyGroups(new Set())
   }
 
   const updateInputBg = (idx, color) =>
@@ -309,51 +474,12 @@ export function ItemsTab() {
     }
   }
 
-  // Build FormData and call /extract
-  const handleExtract = async (assignmentsOverride) => {
-    if (sprites.length === 0) return
-    setLoading(true); setError(null)
+  // ---------------------------------------------------------------------------
+  // Group editing operations — all trigger auto-extract
+  // ---------------------------------------------------------------------------
 
-    const assignments = assignmentsOverride ?? groupAssignments
-
-    try {
-      const fd = new FormData()
-      sprites.forEach(s => fd.append('files', s.file))
-      fd.append('n_colors', nColors)
-      fd.append('input_bg_colors', JSON.stringify(sprites.map(s => s.inputBg)))
-      fd.append('output_bg_color', outputBg)
-      fd.append('shared_threshold', sharedThreshold)
-      fd.append('group_assignments', JSON.stringify(assignments))
-
-      const res = await fetch(`${API}/items/extract`, { method: 'POST', body: fd })
-      if (!res.ok) throw new Error(await res.text())
-      const data = await res.json()
-      setResults(data)
-      setDirtyGroups(new Set())
-      const names = {}
-      data.groups.forEach(g => { names[g.group_id] = g.group_id })
-      setGroupNames(names)
-    } catch (e) {
-      setError(e.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  // Drag-to-regroup: move spriteName from fromGroupId to toGroupId
-  // This updates groupAssignments so the next extraction respects the override,
-  // and also optimistically rearranges the results display so the user sees
-  // the move immediately without waiting for a re-extract.
+  // Move a single sprite card from one group to another
   const handleDropSprite = useCallback((spriteName, fromGroupId, toGroupId) => {
-    // Update group assignments
-    setGroupAssignments(prev => {
-      const next = { ...prev }
-      // Find the canonical group_id that toGroupId maps to in results
-      next[spriteName] = toGroupId
-      return next
-    })
-
-    // Optimistically move the card in the displayed results
     setResults(prev => {
       if (!prev) return prev
       const fromGroup = prev.groups.find(g => g.group_id === fromGroupId)
@@ -364,42 +490,58 @@ export function ItemsTab() {
       if (!moved) return prev
 
       const newGroups = prev.groups.map(g => {
-        if (g.group_id === fromGroupId) {
-          const remaining = g.results.filter(r => r.name !== spriteName)
-          return { ...g, results: remaining }
-        }
-        if (g.group_id === toGroupId) {
-          return { ...g, results: [...g.results, moved] }
-        }
+        if (g.group_id === fromGroupId) return { ...g, results: g.results.filter(r => r.name !== spriteName) }
+        if (g.group_id === toGroupId)   return { ...g, results: [...g.results, moved] }
         return g
-      // Remove groups that have become empty
       }).filter(g => g.results.length > 0)
 
+      scheduleAutoExtract(newGroups)
       return { ...prev, groups: newGroups }
     })
+  }, [scheduleAutoExtract])
 
-    // Mark both affected groups as dirty (need re-extract)
-    setDirtyGroups(prev => new Set([...prev, fromGroupId, toGroupId]))
-  }, [])
+  // Merge ALL sprites from fromGroupId into toGroupId
+  const handleMergeGroup = useCallback((fromGroupId, toGroupId) => {
+    setResults(prev => {
+      if (!prev) return prev
 
-  const handleReExtract = () => handleExtract(groupAssignments)
+      const fromGroup = prev.groups.find(g => g.group_id === fromGroupId)
+      const toGroup   = prev.groups.find(g => g.group_id === toGroupId)
+      if (!fromGroup || !toGroup) return prev
 
+      const newGroups = prev.groups.map(g => {
+        if (g.group_id === toGroupId) return { ...g, results: [...g.results, ...fromGroup.results] }
+        return g
+      }).filter(g => g.group_id !== fromGroupId)
+
+      scheduleAutoExtract(newGroups)
+      return { ...prev, groups: newGroups }
+    })
+  }, [scheduleAutoExtract])
+
+  // ---------------------------------------------------------------------------
+  // Download
+  // ---------------------------------------------------------------------------
   const handleDownloadAll = async () => {
+    const currentGroups = results?.groups ?? []
+    const assignments   = groupingEnabled ? buildAssignments(currentGroups) : Object.fromEntries(sprites.map(s => [s.name, `solo_${s.name}`]))
+
     const fd = new FormData()
     sprites.forEach(s => fd.append('files', s.file))
     fd.append('n_colors', nColors)
     fd.append('input_bg_colors', JSON.stringify(sprites.map(s => s.inputBg)))
     fd.append('output_bg_color', outputBg)
     fd.append('shared_threshold', sharedThreshold)
-    fd.append('group_assignments', JSON.stringify(groupAssignments))
+    fd.append('group_assignments', JSON.stringify(assignments))
     fd.append('group_names', JSON.stringify(groupNames))
     const res = await fetch(`${API}/items/download-all`, { method: 'POST', body: fd })
     if (!res.ok) return
     downloadBlob(await res.blob(), 'item_palettes.zip')
   }
 
-  const hasDirty = dirtyGroups.size > 0
-
+  // ---------------------------------------------------------------------------
+  // Render
+  // ---------------------------------------------------------------------------
   return (
     <div className="tab-content">
       <div className="items-layout">
@@ -418,16 +560,10 @@ export function ItemsTab() {
                 <line x1="12" y1="3" x2="12" y2="15"/>
               </svg>
               <p className="dropzone-label">Drop sprites here</p>
-              <p className="dropzone-hint">PNG · click or drag · multiple files</p>
+              <p className="dropzone-hint">PNG, JPG, BMP · click or drag</p>
             </div>
-            <input
-              ref={inputRef}
-              type="file"
-              accept="image/*"
-              multiple
-              style={{ display: 'none' }}
-              onChange={e => { if (e.target.files.length) handleFiles(e.target.files); e.target.value = '' }}
-            />
+            <input ref={inputRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
+              onChange={e => { if (e.target.files.length) handleFiles(e.target.files); e.target.value = '' }} />
           </div>
 
           {sprites.length > 0 && (
@@ -446,7 +582,6 @@ export function ItemsTab() {
                   </div>
                 ))}
               </div>
-
               <div className="field">
                 <label className="field-label">input bg — set all</label>
                 <div className="bg-mode-row">
@@ -469,12 +604,11 @@ export function ItemsTab() {
             </div>
             <div className="bg-color-row">
               <div className="bg-swatch" style={{ background: outputBg }} />
-              {outputBgMode === 'custom' ? (
-                <input className="field-input field-mono" value={outputBg}
-                  onChange={e => setOutputBg(e.target.value)} maxLength={7} placeholder="#73C5A4" />
-              ) : (
-                <span className="field-hint">{outputBg} <span className="bg-mode-tag">GBA default</span></span>
-              )}
+              {outputBgMode === 'custom'
+                ? <input className="field-input field-mono" value={outputBg}
+                    onChange={e => setOutputBg(e.target.value)} maxLength={7} placeholder="#73C5A4" />
+                : <span className="field-hint">{outputBg} <span className="bg-mode-tag">GBA default</span></span>
+              }
             </div>
           </div>
 
@@ -484,24 +618,34 @@ export function ItemsTab() {
               onChange={e => setNColors(Number(e.target.value))} />
           </div>
 
-          <ThresholdSlider value={sharedThreshold} onChange={setSharedThreshold} />
+          {/* Grouping toggle */}
+          <div className="grouping-toggle-row">
+            <span className="field-label">group by silhouette</span>
+            <button
+              className={`grouping-toggle-btn ${groupingEnabled ? 'on' : 'off'}`}
+              onClick={() => {
+                const next = !groupingEnabled
+                setGroupingEnabled(next)
+                // Re-extract immediately with new grouping mode using current groups
+                clearTimeout(autoExtractTimer.current)
+                if (results) doExtract(results.groups, next)
+              }}
+            >
+              {groupingEnabled ? 'on' : 'off'}
+            </button>
+          </div>
 
-          <button className="btn-primary" disabled={sprites.length === 0 || loading} onClick={() => handleExtract()}>
+          {groupingEnabled && <ThresholdSlider value={sharedThreshold} onChange={setSharedThreshold} />}
+
+          <button className="btn-primary" disabled={sprites.length === 0 || loading}
+            onClick={handleExtract}>
             {loading ? 'extracting…' : `extract ${sprites.length > 0 ? `${sprites.length} sprite${sprites.length > 1 ? 's' : ''}` : ''}`}
           </button>
 
           {results && (
-            <>
-              {hasDirty && (
-                <button className="btn-reextract" onClick={handleReExtract} disabled={loading}>
-                  <RefreshCw size={12} className={loading ? 'spinning' : ''} />
-                  re-extract with new groups
-                </button>
-              )}
-              <button className="btn-secondary" onClick={handleDownloadAll}>
-                <Download size={11} /> download all as zip
-              </button>
-            </>
+            <button className="btn-secondary" onClick={handleDownloadAll}>
+              <Download size={11} /> download all as zip
+            </button>
           )}
 
           {error && <p className="error-msg">{error}</p>}
@@ -518,11 +662,7 @@ export function ItemsTab() {
             </span>
             {results && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                {hasDirty && (
-                  <span className="dirty-indicator">
-                    {dirtyGroups.size} group{dirtyGroups.size > 1 ? 's' : ''} modified · drag cards between groups
-                  </span>
-                )}
+                {loading && <span className="auto-extract-indicator">re-extracting…</span>}
                 <div className="view-toggle">
                   <button className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`} onClick={() => setViewMode('grid')}><GridIcon /></button>
                   <button className={`view-btn ${viewMode === 'list' ? 'active' : ''}`} onClick={() => setViewMode('list')}><ListIcon /></button>
@@ -533,13 +673,13 @@ export function ItemsTab() {
 
           {!results && !loading && (
             <div className="empty-state">
-              <p>drop sprites — they'll be auto-grouped by silhouette</p>
+              <p>drop sprites — auto-grouped by silhouette</p>
               <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 6 }}>
-                drag cards between groups after extraction to manually regroup outliers
+                drag cards or use merge/unlink buttons to reorganise · re-extracts automatically
               </p>
             </div>
           )}
-          {loading && <div className="empty-state"><div className="spinner" /><p>grouping and extracting…</p></div>}
+          {loading && !results && <div className="empty-state"><div className="spinner" /><p>grouping and extracting…</p></div>}
 
           {results && (
             <div className="groups-list">
@@ -550,10 +690,14 @@ export function ItemsTab() {
                   groupName={groupNames[group.group_id] ?? group.group_id}
                   onRename={name => setGroupNames(prev => ({ ...prev, [group.group_id]: name }))}
                   onDropSprite={handleDropSprite}
+                  onMergeGroup={handleMergeGroup}
+                  allGroups={results.groups}
+                  groupNames={groupNames}
                   viewMode={viewMode}
                   exact={group.exact}
                   nUnique={group.n_unique}
-                  dirty={dirtyGroups.has(group.group_id)}
+                  sharedSlots={group.shared_slots}
+                  nShared={group.n_shared}
                 />
               ))}
             </div>

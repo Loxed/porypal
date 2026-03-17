@@ -134,7 +134,9 @@ def _build_aligned_palette(
       Each sprite independently fills remaining slots with its own unique
       colors sorted by pixel frequency. No cross-sprite influence.
 
-    Returns: list of dicts mapping rgb_tuple -> 1-based slot index, one per sprite.
+    Returns: (per_sprite_slot_maps, shared_indices)
+      per_sprite_slot_maps: list of dicts mapping rgb_tuple -> 1-based slot index
+      shared_indices: sorted list of 1-based slot indices that are shared (Phase 1)
     """
     n         = len(per_sprite_colors)
     threshold = max(2, round(shared_threshold * n)) if n > 1 else 1
@@ -189,7 +191,7 @@ def _build_aligned_palette(
 
         per_sprite_slot_maps.append(slot_map)
 
-    return per_sprite_slot_maps
+    return per_sprite_slot_maps, sorted(shared_slot_map.values())
 
 
 def _render_sprite(
@@ -262,9 +264,11 @@ def _extract_group(
         colors = _extract_sprite_colors(sprite["px"], bg_rgb, n_colors)
         per_sprite_colors.append(colors)
 
-    per_sprite_slot_maps = _build_aligned_palette(
+    per_sprite_slot_maps, shared_indices = _build_aligned_palette(
         per_sprite_colors, n_colors, output_bg, shared_threshold
     )
+    # Slot 0 (transparent) is always shared
+    shared_indices_set = {0} | set(shared_indices)
 
     all_colors: set[tuple] = set()
     for colors in per_sprite_colors:
@@ -299,12 +303,26 @@ def _extract_group(
             "exact":       len(sprite_colors) <= n_colors,
         })
 
+    results.sort(key=lambda r: r["name"].lower())
+
+    # Build the shared palette strip: for each of the 16 slots, provide the hex color
+    # from the first result (shared slots are identical across sprites; local slots vary).
+    # Also report which slot indices are shared vs local.
+    representative_colors = results[0]["colors"] if results else []
+    shared_slot_colors = [
+        {"hex": representative_colors[i] if i < len(representative_colors) else "#000000",
+         "shared": i in shared_indices_set}
+        for i in range(n_colors + 1)  # slot 0 + n_colors slots
+    ]
+
     return {
-        "reference":  sprites[0]["name"],
-        "dimensions": f"{w}×{h}",
-        "n_unique":   n_unique,
-        "exact":      exact,
-        "results":    results,
+        "reference":     sprites[0]["name"],
+        "dimensions":    f"{w}\u00d7{h}",
+        "n_unique":      n_unique,
+        "exact":         exact,
+        "results":       results,
+        "shared_slots":  shared_slot_colors,   # [{hex, shared}, ...] len = n_colors+1
+        "n_shared":      len(shared_indices),  # excludes slot 0
     }
 
 
@@ -338,9 +356,16 @@ def _build_groups(
 
         groups.setdefault(gid, []).append(sprite)
 
+    unsorted = []
+    for gid, group_sprites in groups.items():
+        group_data = _extract_group(group_sprites, n_colors, output_bg, shared_threshold)
+        unsorted.append(group_data)
+
+    # Sort groups: most sprites first
+    unsorted.sort(key=lambda g: -len(g["results"]))
+
     result_groups = []
-    for i, (gid, group_sprites) in enumerate(groups.items()):
-        group_data          = _extract_group(group_sprites, n_colors, output_bg, shared_threshold)
+    for i, group_data in enumerate(unsorted):
         group_data["group_id"] = f"shape_{i + 1}"
         result_groups.append(group_data)
 

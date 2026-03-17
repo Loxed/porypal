@@ -339,12 +339,12 @@ function ExtractMatchedMode() {
         {result && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <ExportPalBtn
-              label="download normal .pal"
+              label="download normal.pal"
               palContent={result.normal.pal_content}
               filename={result.normal.name}
             />
             <ExportPalBtn
-              label="download shiny .pal"
+              label="download shiny.pal"
               palContent={result.shiny.pal_content}
               filename={`${result.shiny.name}_shiny`}
             />
@@ -407,18 +407,18 @@ export function ShinyTab() {
             className={`mode-btn ${mode === 'apply' ? 'active' : ''}`}
             onClick={() => setMode('apply')}
           >
-            apply shiny palette
+            Create shiny sprite
             <div style={{ fontSize: 9, opacity: 0.8, marginTop: 2 }}>
-              sprite + normal pal + shiny pal → preview
+              sprite.png + normal.pal + shiny.pal = shiny_sprite.png
             </div>
           </button>
           <button
             className={`mode-btn ${mode === 'extract' ? 'active' : ''}`}
             onClick={() => setMode('extract')}
           >
-            extract matched palettes
+            Create palette pair
             <div style={{ fontSize: 9, opacity: 0.8, marginTop: 2 }}>
-              normal sprite + shiny sprite → two index-matched .pal files
+                normal.png + shiny.png = normal.pal + shiny.pal
             </div>
           </button>
         </div>

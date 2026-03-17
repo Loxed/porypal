@@ -1,0 +1,34 @@
+.item-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 10px;
+  display: flex; flex-direction: column; gap: 8px;
+  transition: border-color 0.15s; position: relative; cursor: grab;
+}
+.item-card:hover        { border-color: var(--border2); }
+.item-card.is-reference { border-color: var(--accent); }
+.item-card:active       { cursor: grabbing; }
+
+.item-drag-handle {
+  position: absolute; top: 6px; right: 6px;
+  color: var(--border2); opacity: 0; transition: opacity 0.15s; pointer-events: none;
+}
+.item-card:hover .item-drag-handle { opacity: 1; }
+
+.item-card-header { display: flex; align-items: center; gap: 6px; }
+.item-card-name {
+  font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--text);
+  flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.item-card-ref-badge {
+  font-family: var(--mono); font-size: 9px; color: var(--accent);
+  background: rgba(88,166,255,0.12); border: 1px solid var(--accent);
+  border-radius: 3px; padding: 1px 5px; flex-shrink: 0;
+}
+
+/* list mode */
+.item-card.list-mode { flex-direction: row; align-items: center; gap: 12px; }
+.item-card.list-mode .item-card-preview  { width: 80px; flex-shrink: 0; }
+.item-card.list-mode .item-card-body     { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.item-card.list-mode .item-card-header   { margin-bottom: 0; }
+
+/* sprite-queue-btn used inline here — defined in ItemsTab.css */

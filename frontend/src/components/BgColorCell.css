@@ -1,0 +1,13 @@
+.sprite-bg-cell { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.sprite-bg-swatch {
+  width: 14px; height: 14px; border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.15); cursor: pointer; flex-shrink: 0;
+  transition: border-color 0.1s;
+}
+.sprite-bg-swatch:hover { border-color: var(--accent); }
+.sprite-bg-input {
+  width: 70px; background: var(--surface);
+  border: 1px solid var(--accent); border-radius: var(--radius);
+  color: var(--text); font-family: var(--mono); font-size: 10px; padding: 2px 5px;
+}
+.sprite-bg-input:focus { outline: none; }

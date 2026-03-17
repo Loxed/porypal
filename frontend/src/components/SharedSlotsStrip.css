@@ -1,0 +1,47 @@
+.shared-slots-wrap {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 8px 10px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+}
+.shared-slots-header {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.shared-slots-label {
+  font-family: var(--mono); font-size: 10px; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.shared-slots-count { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+.shared-slots-strip {
+  display: grid; grid-template-columns: repeat(16, 1fr); gap: 2px; width: 100%;
+}
+.shared-slot {
+  aspect-ratio: 1; border-radius: 3px; position: relative;
+  cursor: default; transition: transform 0.1s;
+}
+.shared-slot:hover { transform: scale(1.15); z-index: 10; }
+.shared-slot.is-shared { border: 1px solid rgba(255,255,255,0.25); opacity: 1; }
+.shared-slot.is-local  { border: 1px solid rgba(255,255,255,0.08); opacity: 0.35; }
+
+.shared-slots-bar {
+  display: grid; grid-template-columns: repeat(16, 1fr); gap: 2px; height: 3px;
+}
+.shared-bar-tick { border-radius: 1px; height: 100%; }
+.shared-bar-tick.tick-shared { background: var(--accent); }
+.shared-bar-tick.tick-local  { background: var(--border); }
+
+.shared-slot-tooltip {
+  position: absolute; bottom: calc(100% + 5px); left: 50%; transform: translateX(-50%);
+  background: var(--surface); border: 1px solid var(--border2); border-radius: 4px;
+  padding: 4px 7px; display: flex; flex-direction: column; align-items: center; gap: 1px;
+  white-space: nowrap; z-index: 100; pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.shared-slot-idx  { font-family: var(--mono); font-size: 9px; color: var(--muted); }
+.shared-slot-hex  { font-family: var(--mono); font-size: 10px; color: var(--text); }
+.shared-slot-tag  {
+  font-family: var(--mono); font-size: 9px;
+  padding: 1px 4px; border-radius: 2px; font-weight: 600;
+}
+.shared-slot-tag.tag-shared { background: rgba(88,166,255,0.15); color: var(--accent); }
+.shared-slot-tag.tag-local  { background: var(--surface2); color: var(--muted); }

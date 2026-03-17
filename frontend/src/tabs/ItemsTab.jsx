@@ -1,12 +1,9 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import './ItemsTab.css'
-import { ZoomableImage } from '../components/ZoomableImage'
-import { PaletteStrip } from '../components/PaletteStrip'
+import { BgColorCell } from '../components/BgColorCell'
+import { GroupSection } from '../components/GroupSection'
 import { downloadBlob, detectBgColor } from '../utils'
-import {
-  X, Download, Grid, List, Eclipse, PaintBucket,
-  ChevronDown, ChevronRight, Pencil, GripVertical, Merge
-} from 'lucide-react'
+import { X, Download, Grid, List, Eclipse, PaintBucket } from 'lucide-react'
 
 const API = '/api'
 const GBA_TRANSPARENT = '#73C5A4'
@@ -23,46 +20,8 @@ function fileToB64(file) {
   })
 }
 
-function downloadPal(palContent, filename) {
-  const blob = new Blob([palContent], { type: 'text/plain' })
-  const a = document.createElement('a')
-  a.href = URL.createObjectURL(blob)
-  a.download = filename.endsWith('.pal') ? filename : `${filename}.pal`
-  a.click()
-}
-
 // ---------------------------------------------------------------------------
-// BgColorCell
-// ---------------------------------------------------------------------------
-function BgColorCell({ color, onChange }) {
-  const [editing, setEditing] = useState(false)
-  const [val, setVal]         = useState(color)
-
-  const commit = () => {
-    if (/^#[0-9a-fA-F]{6}$/.test(val)) onChange(val)
-    else setVal(color)
-    setEditing(false)
-  }
-
-  return (
-    <div className="sprite-bg-cell" title="input bg — click to override">
-      <div className="sprite-bg-swatch" style={{ background: color }}
-        onClick={() => { setVal(color); setEditing(e => !e) }} />
-      {editing && (
-        <input className="sprite-bg-input" value={val}
-          onChange={e => setVal(e.target.value)} onBlur={commit}
-          onKeyDown={e => {
-            if (e.key === 'Enter') commit()
-            if (e.key === 'Escape') { setVal(color); setEditing(false) }
-          }}
-          maxLength={7} autoFocus spellCheck={false} />
-      )}
-    </div>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// ThresholdSlider
+// ThresholdSlider — items-specific, stays in tab
 // ---------------------------------------------------------------------------
 function ThresholdSlider({ value, onChange }) {
   const pct   = Math.round(value * 100)
@@ -84,263 +43,7 @@ function ThresholdSlider({ value, onChange }) {
 }
 
 // ---------------------------------------------------------------------------
-// MergeDropdown — lists other groups to merge this whole group into
-// ---------------------------------------------------------------------------
-function MergeDropdown({ thisGroupId, allGroups, groupNames, onMerge }) {
-  const [open, setOpen] = useState(false)
-  const ref = useRef()
-
-  useEffect(() => {
-    if (!open) return
-    const handler = (e) => { if (!ref.current?.contains(e.target)) setOpen(false) }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [open])
-
-  const others = allGroups.filter(g => g.group_id !== thisGroupId)
-  if (others.length === 0) return null
-
-  return (
-    <div className="merge-dropdown" ref={ref}>
-      <button
-        className="group-action-btn"
-        title="merge entire group into another"
-        onClick={e => { e.stopPropagation(); setOpen(o => !o) }}
-      >
-        <Merge size={11} />
-      </button>
-      {open && (
-        <div className="merge-menu">
-          <p className="merge-menu-label">merge into…</p>
-          {others.map(g => (
-            <button key={g.group_id} className="merge-menu-item"
-              onClick={e => { e.stopPropagation(); setOpen(false); onMerge(thisGroupId, g.group_id) }}>
-              {groupNames[g.group_id] ?? g.group_id}
-              <span className="merge-menu-meta">{g.results.length} sprites</span>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// ItemCard — draggable
-// ---------------------------------------------------------------------------
-function ItemCard({ result, isReference, listMode, groupId }) {
-  const handleDragStart = (e) => {
-    e.dataTransfer.effectAllowed = 'move'
-    e.dataTransfer.setData('text/plain', JSON.stringify({ spriteName: result.name, fromGroupId: groupId }))
-  }
-
-  return (
-    <div
-      className={`item-card ${isReference ? 'is-reference' : ''} ${listMode ? 'list-mode' : ''}`}
-      draggable
-      onDragStart={handleDragStart}
-    >
-      <div className="item-drag-handle" title="drag to move to another group">
-        <GripVertical size={12} />
-      </div>
-
-      {listMode ? (
-        <>
-          <div className="item-card-preview">
-            <ZoomableImage src={result.preview} alt={result.name} />
-          </div>
-          <div className="item-card-body">
-            <div className="item-card-header">
-              <span className="item-card-name">{result.name}</span>
-              {isReference && <span className="item-card-ref-badge">ref</span>}
-              <button className="sprite-queue-btn"
-                onClick={() => downloadPal(result.pal_content, result.name)}>
-                <Download size={11} />
-              </button>
-            </div>
-            <PaletteStrip colors={result.colors} usedIndices={result.colors.map((_, i) => i)} checkSize="50%" />
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="item-card-header">
-            <span className="item-card-name">{result.name}</span>
-            {isReference && <span className="item-card-ref-badge">ref</span>}
-          </div>
-          <PaletteStrip colors={result.colors} usedIndices={result.colors.map((_, i) => i)} checkSize="100%" />
-          <ZoomableImage src={result.preview} alt={result.name} />
-          <button className="btn-secondary" onClick={() => downloadPal(result.pal_content, result.name)}>
-            <Download size={11} /> download .pal
-          </button>
-        </>
-      )}
-    </div>
-  )
-}
-
-
-// ---------------------------------------------------------------------------
-// SharedSlotsStrip — shows all palette slots for a group, marking shared vs local
-// ---------------------------------------------------------------------------
-function SharedSlotsStrip({ sharedSlots, nShared }) {
-  const [hoveredIdx, setHoveredIdx] = useState(null)
-
-  if (!sharedSlots || sharedSlots.length === 0) return null
-
-  return (
-    <div className="shared-slots-wrap">
-      <div className="shared-slots-header">
-        <span className="shared-slots-label">shared indices</span>
-        <span className="shared-slots-count">
-          {nShared + 1} shared (0–{nShared}) · {sharedSlots.length - nShared - 1} local
-        </span>
-      </div>
-      <div className="shared-slots-strip">
-        {sharedSlots.map((slot, i) => (
-          <div
-            key={i}
-            className={`shared-slot ${slot.shared ? 'is-shared' : 'is-local'}`}
-            style={{ background: slot.hex }}
-            onMouseEnter={() => setHoveredIdx(i)}
-            onMouseLeave={() => setHoveredIdx(null)}
-          >
-            {hoveredIdx === i && (
-              <div className="shared-slot-tooltip">
-                <span className="shared-slot-idx">{i}</span>
-                <span className="shared-slot-hex">{slot.hex}</span>
-                <span className={`shared-slot-tag ${slot.shared ? 'tag-shared' : 'tag-local'}`}>
-                  {slot.shared ? 'shared' : 'local'}
-                </span>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-      {/* Shared indicator bar below the strip */}
-      <div className="shared-slots-bar">
-        {sharedSlots.map((slot, i) => (
-          <div key={i} className={`shared-bar-tick ${slot.shared ? 'tick-shared' : 'tick-local'}`} />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// GroupSection
-// ---------------------------------------------------------------------------
-function GroupSection({
-  group, groupName, onRename, onDropSprite, onMergeGroup,
-  allGroups, groupNames,
-  viewMode, exact, nUnique,
-  sharedSlots, nShared,
-}) {
-  const [open, setOpen]         = useState(true)
-  const [editing, setEditing]   = useState(false)
-  const [nameVal, setNameVal]   = useState(groupName)
-  const [dragOver, setDragOver] = useState(false)
-
-  // Keep nameVal in sync if groupName changes externally
-  useEffect(() => { setNameVal(groupName) }, [groupName])
-
-  const commitRename = () => {
-    if (nameVal.trim()) onRename(nameVal.trim())
-    else setNameVal(groupName)
-    setEditing(false)
-  }
-
-  const handleDragOver = (e) => {
-    e.preventDefault()
-    e.dataTransfer.dropEffect = 'move'
-    setDragOver(true)
-  }
-  const handleDragLeave = (e) => {
-    if (!e.currentTarget.contains(e.relatedTarget)) setDragOver(false)
-  }
-  const handleDrop = (e) => {
-    e.preventDefault()
-    setDragOver(false)
-    try {
-      const data = JSON.parse(e.dataTransfer.getData('text/plain'))
-      if (data.fromGroupId !== group.group_id) {
-        onDropSprite(data.spriteName, data.fromGroupId, group.group_id)
-      }
-    } catch { /* ignore */ }
-  }
-
-  return (
-    <div className={`group-section ${dragOver ? 'group-drop-target' : ''}`}>
-      <div className="group-header"
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-      >
-        <button className="group-collapse-btn" onClick={() => setOpen(o => !o)}>
-          {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
-        </button>
-
-        {editing ? (
-          <input className="group-name-input" value={nameVal}
-            onChange={e => setNameVal(e.target.value)} onBlur={commitRename}
-            onKeyDown={e => {
-              if (e.key === 'Enter') commitRename()
-              if (e.key === 'Escape') { setNameVal(groupName); setEditing(false) }
-            }} autoFocus />
-        ) : (
-          <span className="group-name" onClick={() => setEditing(true)}>{groupName}</span>
-        )}
-
-        <span className="group-meta">
-          {group.dimensions} · {group.results.length} sprite{group.results.length !== 1 ? 's' : ''}
-          {' · '}
-          {exact
-            ? <span style={{ color: 'var(--best)' }}>{nUnique} colors · exact</span>
-            : <span style={{ color: '#e3b341' }}>{nUnique} → {group.results[0]?.colors.length - 1} colors · clustered</span>
-          }
-        </span>
-
-        {/* Actions row */}
-        <div className="group-actions">
-          {/* Rename */}
-          <button className="group-action-btn" title="rename" onClick={() => setEditing(true)}>
-            <Pencil size={11} />
-          </button>
-
-          {/* Merge into another group */}
-          <MergeDropdown
-            thisGroupId={group.group_id}
-            allGroups={allGroups}
-            groupNames={groupNames}
-            onMerge={onMergeGroup}
-          />
-        </div>
-
-        {dragOver && <span className="group-drop-hint">drop to merge</span>}
-      </div>
-
-      {open && sharedSlots && sharedSlots.length > 0 && (
-        <SharedSlotsStrip sharedSlots={sharedSlots} nShared={nShared ?? 0} />
-      )}
-
-      {open && (
-        <div className={viewMode === 'grid' ? 'items-results-grid' : 'items-results-list'}>
-          {group.results.map(r => (
-            <ItemCard
-              key={r.name}
-              result={r}
-              isReference={r.name === group.reference}
-              listMode={viewMode === 'list'}
-              groupId={group.group_id}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// Main Tab
+// ItemsTab
 // ---------------------------------------------------------------------------
 export function ItemsTab() {
   const [sprites, setSprites]                   = useState([])
@@ -348,28 +51,24 @@ export function ItemsTab() {
   const [outputBg, setOutputBg]                 = useState(GBA_TRANSPARENT)
   const [outputBgMode, setOutputBgMode]         = useState('default')
   const [sharedThreshold, setSharedThreshold]   = useState(0.6)
+  const [groupingEnabled, setGroupingEnabled]   = useState(true)
   const [results, setResults]                   = useState(null)
   const [groupNames, setGroupNames]             = useState({})
-  // groupAssignments: spriteName -> groupId (manual overrides, used on re-extract)
   const [groupAssignments, setGroupAssignments] = useState({})
   const [loading, setLoading]                   = useState(false)
   const [error, setError]                       = useState(null)
   const [viewMode, setViewMode]                 = useState('grid')
-  const [groupingEnabled, setGroupingEnabled]   = useState(true)
 
-  const inputRef        = useRef()
+  const inputRef         = useRef()
   const autoExtractTimer = useRef(null)
-// ---------------------------------------------------------------------------
+
+  // ---------------------------------------------------------------------------
   // Helpers
   // ---------------------------------------------------------------------------
-
-  // Build group_assignments from the current displayed groups
   const buildAssignments = useCallback((displayedGroups) => {
     const assignments = {}
     displayedGroups.forEach(group => {
-      group.results.forEach(r => {
-        assignments[r.name] = group.group_id
-      })
+      group.results.forEach(r => { assignments[r.name] = group.group_id })
     })
     return assignments
   }, [])
@@ -382,10 +81,9 @@ export function ItemsTab() {
     setLoading(true)
     setError(null)
 
-    // When grouping is disabled, give every sprite a unique solo key
     const assignments = currentGrouping
       ? buildAssignments(displayedGroups)
-      : Object.fromEntries(sprites.map(s => [s.name, `solo_${s.name}`]))
+      : Object.fromEntries(sprites.map(s => [s.name, 'all']))
     setGroupAssignments(assignments)
 
     try {
@@ -402,13 +100,9 @@ export function ItemsTab() {
       const data = await res.json()
 
       setResults(data)
-
-      // Carry over group names for groups that still exist
       setGroupNames(prev => {
         const next = {}
-        data.groups.forEach(g => {
-          next[g.group_id] = prev[g.group_id] ?? g.group_id
-        })
+        data.groups.forEach(g => { next[g.group_id] = prev[g.group_id] ?? g.group_id })
         return next
       })
     } catch (e) {
@@ -418,16 +112,12 @@ export function ItemsTab() {
     }
   }, [sprites, nColors, outputBg, sharedThreshold, buildAssignments])
 
-  // Initial extract (no prior groups)
   const handleExtract = () => {
     clearTimeout(autoExtractTimer.current)
     doExtract([], groupingEnabled)
     setGroupAssignments({})
   }
 
-  // ---------------------------------------------------------------------------
-  // Auto-extract after group edits (debounced)
-  // ---------------------------------------------------------------------------
   const scheduleAutoExtract = useCallback((newGroups) => {
     clearTimeout(autoExtractTimer.current)
     autoExtractTimer.current = setTimeout(() => {
@@ -448,8 +138,7 @@ export function ItemsTab() {
       return { file: f, name: f.name.replace(/\.[^.]+$/, ''), b64, inputBg }
     }))
     setSprites(prev => {
-      const names = new Set(prev.map(s => s.name))
-      // Merge new sorted sprites, then re-sort the full list
+      const names  = new Set(prev.map(s => s.name))
       const merged = [...prev, ...loaded.filter(s => !names.has(s.name))]
       return merged.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
     })
@@ -475,45 +164,35 @@ export function ItemsTab() {
   }
 
   // ---------------------------------------------------------------------------
-  // Group editing operations — all trigger auto-extract
+  // Group editing — all trigger auto-extract
   // ---------------------------------------------------------------------------
-
-  // Move a single sprite card from one group to another
   const handleDropSprite = useCallback((spriteName, fromGroupId, toGroupId) => {
     setResults(prev => {
       if (!prev) return prev
       const fromGroup = prev.groups.find(g => g.group_id === fromGroupId)
       const toGroup   = prev.groups.find(g => g.group_id === toGroupId)
       if (!fromGroup || !toGroup) return prev
-
       const moved = fromGroup.results.find(r => r.name === spriteName)
       if (!moved) return prev
-
       const newGroups = prev.groups.map(g => {
         if (g.group_id === fromGroupId) return { ...g, results: g.results.filter(r => r.name !== spriteName) }
         if (g.group_id === toGroupId)   return { ...g, results: [...g.results, moved] }
         return g
       }).filter(g => g.results.length > 0)
-
       scheduleAutoExtract(newGroups)
       return { ...prev, groups: newGroups }
     })
   }, [scheduleAutoExtract])
 
-  // Merge ALL sprites from fromGroupId into toGroupId
   const handleMergeGroup = useCallback((fromGroupId, toGroupId) => {
     setResults(prev => {
       if (!prev) return prev
-
       const fromGroup = prev.groups.find(g => g.group_id === fromGroupId)
-      const toGroup   = prev.groups.find(g => g.group_id === toGroupId)
-      if (!fromGroup || !toGroup) return prev
-
+      if (!fromGroup) return prev
       const newGroups = prev.groups.map(g => {
         if (g.group_id === toGroupId) return { ...g, results: [...g.results, ...fromGroup.results] }
         return g
       }).filter(g => g.group_id !== fromGroupId)
-
       scheduleAutoExtract(newGroups)
       return { ...prev, groups: newGroups }
     })
@@ -524,7 +203,9 @@ export function ItemsTab() {
   // ---------------------------------------------------------------------------
   const handleDownloadAll = async () => {
     const currentGroups = results?.groups ?? []
-    const assignments   = groupingEnabled ? buildAssignments(currentGroups) : Object.fromEntries(sprites.map(s => [s.name, `solo_${s.name}`]))
+    const assignments   = groupingEnabled
+      ? buildAssignments(currentGroups)
+      : Object.fromEntries(sprites.map(s => [s.name, 'all']))
 
     const fd = new FormData()
     sprites.forEach(s => fd.append('files', s.file))
@@ -560,7 +241,7 @@ export function ItemsTab() {
                 <line x1="12" y1="3" x2="12" y2="15"/>
               </svg>
               <p className="dropzone-label">Drop sprites here</p>
-              <p className="dropzone-hint">PNG, JPG, BMP · click or drag</p>
+              <p className="dropzone-hint">PNG · click or drag · sorted A–Z</p>
             </div>
             <input ref={inputRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
               onChange={e => { if (e.target.files.length) handleFiles(e.target.files); e.target.value = '' }} />
@@ -618,7 +299,6 @@ export function ItemsTab() {
               onChange={e => setNColors(Number(e.target.value))} />
           </div>
 
-          {/* Grouping toggle */}
           <div className="grouping-toggle-row">
             <span className="field-label">group by silhouette</span>
             <button
@@ -626,7 +306,6 @@ export function ItemsTab() {
               onClick={() => {
                 const next = !groupingEnabled
                 setGroupingEnabled(next)
-                // Re-extract immediately with new grouping mode using current groups
                 clearTimeout(autoExtractTimer.current)
                 if (results) doExtract(results.groups, next)
               }}
@@ -635,10 +314,9 @@ export function ItemsTab() {
             </button>
           </div>
 
-          {groupingEnabled && <ThresholdSlider value={sharedThreshold} onChange={setSharedThreshold} />}
+          <ThresholdSlider value={sharedThreshold} onChange={setSharedThreshold} />
 
-          <button className="btn-primary" disabled={sprites.length === 0 || loading}
-            onClick={handleExtract}>
+          <button className="btn-primary" disabled={sprites.length === 0 || loading} onClick={handleExtract}>
             {loading ? 'extracting…' : `extract ${sprites.length > 0 ? `${sprites.length} sprite${sprites.length > 1 ? 's' : ''}` : ''}`}
           </button>
 
@@ -675,7 +353,7 @@ export function ItemsTab() {
             <div className="empty-state">
               <p>drop sprites — auto-grouped by silhouette</p>
               <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 6 }}>
-                drag cards or use merge/unlink buttons to reorganise · re-extracts automatically
+                drag cards or use merge button to reorganise · re-extracts automatically
               </p>
             </div>
           )}

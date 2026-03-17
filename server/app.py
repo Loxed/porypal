@@ -13,7 +13,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from server.api import palettes, convert, extract, batch, tileset, presets, health, library, pipeline
+from server.api import palettes, convert, extract, batch, tileset, presets, health, library, pipeline, shiny
 
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
@@ -37,6 +37,7 @@ app.include_router(presets.router)
 app.include_router(health.router)
 app.include_router(library.router)
 app.include_router(pipeline.router)
+app.include_router(shiny.router)
 
 # ---------- static files ----------
 

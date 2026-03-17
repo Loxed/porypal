@@ -25,6 +25,7 @@ router = APIRouter(prefix="/api/convert", tags=["convert"])
 async def convert(
     file: UploadFile = File(...),
     palette_name: str | None = Form(default=None),
+    bg_color: str | None = Form(default=None),
 ):
     """
     Convert an uploaded sprite against all (or one specific) palette(s).
@@ -41,7 +42,7 @@ async def convert(
         tmp_path = tmp.name
 
     try:
-        state.image_manager.load_image(tmp_path)
+        state.image_manager.load_image(tmp_path, bg_color=bg_color)
 
         palettes = state.palette_manager.get_palettes()
         if palette_name:
@@ -74,6 +75,7 @@ async def convert(
 async def download_converted(
     file: UploadFile = File(...),
     palette_name: str = Form(...),
+    bg_color: str | None = Form(default=None),
 ):
     """Convert and return a single GBA-compatible indexed PNG for download."""
     data = await file.read()
@@ -82,7 +84,7 @@ async def download_converted(
         tmp_path = tmp.name
 
     try:
-        state.image_manager.load_image(tmp_path)
+        state.image_manager.load_image(tmp_path, bg_color=bg_color)
         palette = state.palette_manager.get_palette_by_name(palette_name)
         if not palette:
             raise HTTPException(404, f"Palette '{palette_name}' not found")
@@ -108,7 +110,10 @@ async def download_converted(
 
 
 @router.post("/download-all")
-async def download_all_converted(file: UploadFile = File(...)):
+async def download_all_converted(
+    file: UploadFile = File(...),
+    bg_color: str | None = Form(default=None),
+):
     """Convert against all palettes and return a zip of all results."""
     data = await file.read()
     with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
@@ -116,7 +121,7 @@ async def download_all_converted(file: UploadFile = File(...)):
         tmp_path = tmp.name
 
     try:
-        state.image_manager.load_image(tmp_path)
+        state.image_manager.load_image(tmp_path, bg_color=bg_color)
         results = state.image_manager.process_all_palettes(
             state.palette_manager.get_palettes()
         )

@@ -6,45 +6,13 @@ import { PaletteStrip } from '../components/PaletteStrip'
 import { useFetch } from '../hooks/useFetch'
 import { Info, Pipette, PaintBucket, X, Eclipse, Palette, Scan, ChevronDown, Download, Save, Check } from 'lucide-react'
 import { ColorSwatch } from '../components/ColorSwatch'
+import {detectBgColor } from '../utils'
 
 const API = '/api'
 const GBA_TRANSPARENT = '#73C5A4'
 const MAX_COLORS = 16
 const MAX_EXTRA_COLORS = MAX_COLORS - 1
 
-// ---------------------------------------------------------------------------
-// Corner-based background color detection
-// ---------------------------------------------------------------------------
-function detectBgColor(imageB64) {
-  return new Promise(resolve => {
-    const img = new window.Image()
-    img.onload = () => {
-      const canvas = document.createElement('canvas')
-      canvas.width = img.naturalWidth
-      canvas.height = img.naturalHeight
-      const ctx = canvas.getContext('2d')
-      ctx.drawImage(img, 0, 0)
-      const w = canvas.width - 1
-      const h = canvas.height - 1
-      const corners = [
-        ctx.getImageData(0, 0, 1, 1).data,
-        ctx.getImageData(w, 0, 1, 1).data,
-        ctx.getImageData(0, h, 1, 1).data,
-        ctx.getImageData(w, h, 1, 1).data,
-      ].map(d => {
-        if (d[3] < 128) return null
-        return `#${d[0].toString(16).padStart(2,'0')}${d[1].toString(16).padStart(2,'0')}${d[2].toString(16).padStart(2,'0')}`
-      })
-      const counts = {}
-      for (const c of corners) {
-        if (c) counts[c] = (counts[c] || 0) + 1
-      }
-      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1])
-      resolve(sorted.length > 0 ? sorted[0][0] : GBA_TRANSPARENT)
-    }
-    img.src = `data:image/png;base64,${imageB64}`
-  })
-}
 
 // ---------------------------------------------------------------------------
 // Export dropdown — download .pal or save to app with optional rename

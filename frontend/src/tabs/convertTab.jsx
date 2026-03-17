@@ -6,30 +6,19 @@ import { WalkAnimation } from '../components/WalkAnimation'
 import { ResultCard } from '../components/ResultCard'
 import { PaletteStrip } from '../components/PaletteStrip'
 import { useFetch } from '../hooks/useFetch'
-import { downloadBlob } from '../utils'
-import { X, Upload, Trash2, RefreshCw, Layers } from 'lucide-react'
+import { downloadBlob, detectBgColor} from '../utils'
+import { X, Upload, Trash2, RefreshCw, Layers, Grid, List, Scan, Eclipse, PaintBucket } from 'lucide-react'
+
 
 const API = '/api'
+const GBA_TRANSPARENT = '#73C5A4'
 
 function GridIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-      <rect x="0" y="0" width="6" height="6" rx="1"/>
-      <rect x="8" y="0" width="6" height="6" rx="1"/>
-      <rect x="0" y="8" width="6" height="6" rx="1"/>
-      <rect x="8" y="8" width="6" height="6" rx="1"/>
-    </svg>
-  )
+  return <Grid size={12} fill="currentColor" />
 }
 
 function ListIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-      <rect x="0" y="1" width="14" height="3" rx="1"/>
-      <rect x="0" y="6" width="14" height="3" rx="1"/>
-      <rect x="0" y="11" width="14" height="3" rx="1"/>
-    </svg>
-  )
+  return <List size={12} fill="currentColor" />
 }
 
 // ---- Palette Management Modal ----
@@ -40,23 +29,13 @@ function PaletteModal({ palettes, selected, onToggle, onSelectAll, onDeselectAll
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-box modal-palettes" onClick={e => e.stopPropagation()}>
-
         <div className="modal-header">
           <span className="modal-title">manage palettes</span>
           <div className="modal-header-actions">
-            <button
-              className="icon-btn"
-              title="reload from disk"
-              onClick={onReload}
-              disabled={reloading}
-            >
+            <button className="icon-btn" title="reload from disk" onClick={onReload} disabled={reloading}>
               <RefreshCw size={12} className={reloading ? 'spinning' : ''} />
             </button>
-            <button
-              className="icon-btn"
-              title="upload .pal files"
-              onClick={() => fileRef.current?.click()}
-            >
+            <button className="icon-btn" title="upload .pal files" onClick={() => fileRef.current?.click()}>
               <Upload size={12} />
             </button>
             <input
@@ -89,7 +68,6 @@ function PaletteModal({ palettes, selected, onToggle, onSelectAll, onDeselectAll
                   <span className="palette-count-badge">{selected.size}/{palettes.length} active</span>
                 </label>
               </div>
-
               <div className="palette-list">
                 {palettes.map(p => (
                   <div key={p.name} className={`palette-row ${selected.has(p.name) ? 'active' : ''}`}>
@@ -117,7 +95,6 @@ function PaletteModal({ palettes, selected, onToggle, onSelectAll, onDeselectAll
             </>
           )}
         </div>
-
       </div>
     </div>
   )
@@ -130,7 +107,9 @@ export function ConvertTab() {
   const [results, setResults] = useState([])
   const [selected, setSelected] = useState(null)
   const [viewMode, setViewMode] = useState('grid')
-  const [isOWSprite, setIsOWSprite] = useState(false)
+
+  const [bgColor, setBgColor] = useState(GBA_TRANSPARENT)
+  const [bgMode, setBgMode]   = useState('auto')
 
   const [palettes, setPalettes] = useState([])
   const [selectedPalettes, setSelectedPalettes] = useState(new Set())
@@ -142,7 +121,6 @@ export function ConvertTab() {
   const fetchPalettes = async () => {
     const data = await fetch(`${API}/palettes`).then(r => r.json()).catch(() => [])
     setPalettes(data)
-    // Auto-select any newly discovered palettes
     setSelectedPalettes(prev => {
       const next = new Set(prev)
       data.forEach(p => { if (!next.has(p.name)) next.add(p.name) })
@@ -152,17 +130,12 @@ export function ConvertTab() {
 
   useEffect(() => { fetchPalettes() }, [])
 
-  useEffect(() => {
-    if (!originalB64) { setIsOWSprite(false); return }
-    const img = new window.Image()
-    img.onload = () => setIsOWSprite(img.width / img.height >= 7.5 && img.width / img.height <= 10.5)
-    img.src = `data:image/png;base64,${originalB64}`
-  }, [originalB64])
-
-  const convert = async (f) => {
+  const convert = async (f, overrideBg) => {
     if (selectedPalettes.size === 0) return
+    const activeBg = overrideBg ?? bgColor
     const fd = new FormData()
     fd.append('file', f)
+    if (activeBg) fd.append('bg_color', activeBg)
     const data = await run(async () => {
       const res = await fetch(`${API}/convert`, { method: 'POST', body: fd })
       if (!res.ok) throw new Error(await res.text())
@@ -178,7 +151,17 @@ export function ConvertTab() {
 
   const handleFile = (f) => {
     setFile(f); setResults([]); setSelected(null); setOriginalB64(null)
-    convert(f)
+    // Auto-detect bg color from the file before converting
+    const reader = new FileReader()
+    reader.onload = e => {
+      const b64 = e.target.result.split(',')[1]
+      detectBgColor(b64).then(detected => {
+        setBgColor(detected)
+        setBgMode('auto')
+        convert(f, detected)
+      })
+    }
+    reader.readAsDataURL(f)
   }
 
   const handleReload = async () => {
@@ -213,7 +196,9 @@ export function ConvertTab() {
 
   const handleDownload = async (paletteName) => {
     const fd = new FormData()
-    fd.append('file', file); fd.append('palette_name', paletteName)
+    fd.append('file', file)
+    fd.append('palette_name', paletteName)
+    if (bgColor) fd.append('bg_color', bgColor)
     const res = await fetch(`${API}/convert/download`, { method: 'POST', body: fd })
     if (!res.ok) return
     downloadBlob(await res.blob(), `${file.name.replace(/\.[^.]+$/, '')}_${paletteName.replace('.pal', '')}.png`)
@@ -222,6 +207,7 @@ export function ConvertTab() {
   const handleDownloadAll = async () => {
     const fd = new FormData()
     fd.append('file', file)
+    if (bgColor) fd.append('bg_color', bgColor)
     const res = await fetch(`${API}/convert/download-all`, { method: 'POST', body: fd })
     if (!res.ok) return
     downloadBlob(await res.blob(), `${file.name.replace(/\.[^.]+$/, '')}_all_palettes.zip`)
@@ -250,11 +236,54 @@ export function ConvertTab() {
           <DropZone onFile={handleFile} label="Drop your sprite" />
 
           {originalB64 && (
-            <div className="original-preview">
-              <p className="section-label">original</p>
-              <ZoomableImage src={originalB64} alt="original" />
-              {isOWSprite && <WalkAnimation spriteB64={originalB64} />}
-            </div>
+            <>
+              {/* ── Transparent color picker ── */}
+              <div className="field">
+                <label className="field-label">transparent color (slot 0)</label>
+                <div className="bg-mode-row">
+                  <button
+                    className={`bg-mode-btn ${bgMode === 'auto' ? 'active' : ''}`}
+                    onClick={() => detectBgColor(originalB64).then(d => {
+                      setBgColor(d); setBgMode('auto'); convert(file, d)
+                    })}
+                    title="detect from image corners"
+                  >auto <Scan size={8} /></button>
+                  <button
+                    className={`bg-mode-btn ${bgMode === 'default' ? 'active' : ''}`}
+                    onClick={() => { setBgColor(GBA_TRANSPARENT); setBgMode('default'); convert(file, GBA_TRANSPARENT) }}
+                  >default <Eclipse size={8} /></button>
+                  <button
+                    className={`bg-mode-btn ${bgMode === 'custom' ? 'active' : ''}`}
+                    onClick={() => setBgMode('custom')}
+                  >custom <PaintBucket size={8} /></button>
+                </div>
+                <div className="bg-color-row">
+                  <div className="bg-swatch" style={{ background: bgColor }} />
+                  {bgMode === 'custom' ? (
+                    <input
+                      className="field-input field-mono"
+                      value={bgColor}
+                      onChange={e => setBgColor(e.target.value)}
+                      onBlur={() => bgColor?.length === 7 && convert(file)}
+                      placeholder="#73C5A4"
+                      maxLength={7}
+                    />
+                  ) : (
+                    <span className="field-hint">
+                      {bgColor}
+                      {bgMode === 'auto'    && <span className="bg-mode-tag"> auto-detected</span>}
+                      {bgMode === 'default' && <span className="bg-mode-tag"> GBA default</span>}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* ── Original preview ── */}
+              <div className="original-preview">
+                <p className="section-label">original</p>
+                <ZoomableImage src={originalB64} alt="original" />
+              </div>
+            </>
           )}
 
           {results.length > 0 && (
@@ -262,7 +291,11 @@ export function ConvertTab() {
               download all as zip
             </button>
           )}
-          <button className="btn-ghost-subtle" disabled={!file || loading || selectedPalettes.size === 0} onClick={() => convert(file)}>
+          <button
+            className="btn-ghost-subtle"
+            disabled={!file || loading || selectedPalettes.size === 0}
+            onClick={() => convert(file)}
+          >
             {loading ? 'converting…' : '↺ re-process'}
           </button>
           {error && <p className="error-msg">{error}</p>}
@@ -285,10 +318,16 @@ export function ConvertTab() {
               </button>
               {results.length > 0 && (
                 <div className="view-toggle">
-                  <button className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
-                    onClick={() => setViewMode('grid')} title="grid view"><GridIcon /></button>
-                  <button className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
-                    onClick={() => setViewMode('list')} title="list view"><ListIcon /></button>
+                  <button
+                    className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                    onClick={() => setViewMode('grid')}
+                    title="grid view"
+                  ><GridIcon /></button>
+                  <button
+                    className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
+                    onClick={() => setViewMode('list')}
+                    title="list view"
+                  ><ListIcon /></button>
                 </div>
               )}
             </div>

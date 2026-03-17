@@ -1,14 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { ConvertTab } from './tabs/ConvertTab'
 import { ExtractTab } from './tabs/ExtractTab'
 import { BatchTab } from './tabs/BatchTab'
 import { TilesetTab } from './tabs/TilesetTab'
 import { PalettesTab } from './tabs/PalettesTab'
-import { ShinyTab } from './tabs/ShinyTab'
+import { ItemsTab } from './tabs/ItemsTab'
 import './App.css'
 
-const API = '/api'
-const TABS = ['convert', 'extract', 'batch', 'tileset', 'palettes', 'shiny']
+const TABS = ['convert', 'extract', 'batch', 'tileset', 'palettes', 'items']
 
 export default function App() {
   const [tab, setTab] = useState('convert')
@@ -52,7 +51,7 @@ export default function App() {
         {tab === 'batch'    && <BatchTab />}
         {tab === 'tileset'  && <TilesetTab />}
         {tab === 'palettes' && <PalettesTab />}
-        {tab === 'shiny'    && <ShinyTab />}
+        {tab === 'items'    && <ItemsTab />}
       </main>
     </div>
   )

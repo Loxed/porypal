@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './ExtractTab.css'
 import { DropZone } from '../components/DropZone'
 import { ZoomableImage } from '../components/ZoomableImage'
 import { PaletteStrip } from '../components/PaletteStrip'
 import { useFetch } from '../hooks/useFetch'
-import { Info, Pipette, PaintBucket, X, Eclipse, Palette, Scan } from 'lucide-react'
+import { Info, Pipette, PaintBucket, X, Eclipse, Palette, Scan, ChevronDown, Download, Save, Check } from 'lucide-react'
 import { ColorSwatch } from '../components/ColorSwatch'
 
 const API = '/api'
@@ -14,8 +14,6 @@ const MAX_EXTRA_COLORS = MAX_COLORS - 1
 
 // ---------------------------------------------------------------------------
 // Corner-based background color detection
-// Samples the 4 corners, returns the majority color.
-// Falls back to top-left if all 4 differ.
 // ---------------------------------------------------------------------------
 function detectBgColor(imageB64) {
   return new Promise(resolve => {
@@ -34,7 +32,7 @@ function detectBgColor(imageB64) {
         ctx.getImageData(0, h, 1, 1).data,
         ctx.getImageData(w, h, 1, 1).data,
       ].map(d => {
-        if (d[3] < 128) return null  // skip transparent corners
+        if (d[3] < 128) return null
         return `#${d[0].toString(16).padStart(2,'0')}${d[1].toString(16).padStart(2,'0')}${d[2].toString(16).padStart(2,'0')}`
       })
       const counts = {}
@@ -46,6 +44,102 @@ function detectBgColor(imageB64) {
     }
     img.src = `data:image/png;base64,${imageB64}`
   })
+}
+
+// ---------------------------------------------------------------------------
+// Export dropdown — download .pal or save to app with optional rename
+// ---------------------------------------------------------------------------
+function ExportDropdown({ result }) {
+  const [open, setOpen] = useState(false)
+  const [saveName, setSaveName] = useState('')
+  const [saveState, setSaveState] = useState('idle') // idle | saving | saved | error
+  const ref = useRef()
+
+  // Pre-fill name when result arrives
+  useEffect(() => {
+    if (result) setSaveName(`${result.name}_${result.color_space}`)
+  }, [result?.name, result?.color_space])
+
+  // Close on outside click
+  useEffect(() => {
+    if (!open) return
+    const handler = (e) => { if (!ref.current?.contains(e.target)) setOpen(false) }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
+
+  const handleDownload = () => {
+    const blob = new Blob([result.pal_content], { type: 'text/plain' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `${saveName || result.name}.pal`
+    a.click()
+    setOpen(false)
+  }
+
+  const handleSave = async () => {
+    if (saveState === 'saving') return
+    setSaveState('saving')
+    try {
+      const fd = new FormData()
+      fd.append('name', saveName || `${result.name}_${result.color_space}`)
+      fd.append('pal_content', result.pal_content)
+      const res = await fetch(`${API}/extract/save`, { method: 'POST', body: fd })
+      if (!res.ok) throw new Error()
+      setSaveState('saved')
+      setTimeout(() => { setSaveState('idle'); setOpen(false) }, 1200)
+    } catch {
+      setSaveState('error')
+      setTimeout(() => setSaveState('idle'), 2000)
+    }
+  }
+
+  return (
+    <div className="export-dropdown" ref={ref}>
+      <button
+        className={`btn-export ${open ? 'open' : ''}`}
+        onClick={() => setOpen(o => !o)}
+      >
+        export <ChevronDown size={10} />
+      </button>
+
+      {open && (
+        <div className="export-menu">
+          <div className="export-rename">
+            <label className="export-rename-label">name</label>
+            <input
+              className="export-rename-input"
+              value={saveName}
+              onChange={e => setSaveName(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSave()}
+              spellCheck={false}
+              autoFocus
+            />
+          </div>
+
+          <div className="export-divider" />
+
+          <button className="export-item" onClick={handleDownload}>
+            <Download size={12} />
+            download .pal
+          </button>
+
+          <button
+            className={`export-item export-item--save ${saveState}`}
+            onClick={handleSave}
+            disabled={saveState === 'saving'}
+          >
+            {saveState === 'saved'
+              ? <><Check size={12} /> saved to library</>
+              : saveState === 'error'
+              ? <><X size={12} /> failed</>
+              : <><Save size={12} /> save to library</>
+            }
+          </button>
+        </div>
+      )}
+    </div>
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -186,12 +280,10 @@ export function ExtractTab() {
     if (!originalB64) return
     if (resultOklab?.colors?.length > 1)
       remapToPalette(originalB64, resultOklab.colors).then(setPreviewOklab)
-    else
-      setPreviewOklab(null)
+    else setPreviewOklab(null)
     if (resultRgb?.colors?.length > 1)
       remapToPalette(originalB64, resultRgb.colors).then(setPreviewRgb)
-    else
-      setPreviewRgb(null)
+    else setPreviewRgb(null)
   }, [resultOklab, resultRgb, originalB64])
 
   const handleFile = (f) => {
@@ -202,10 +294,8 @@ export function ExtractTab() {
     reader.onload = e => {
       const b64 = e.target.result.split(',')[1]
       setOriginalB64(b64)
-      // Auto-detect bg color from corners on every new file
       detectBgColor(b64).then(detected => {
-        setBgColor(detected)
-        setBgMode('auto')
+        setBgColor(detected); setBgMode('auto')
       })
     }
     reader.readAsDataURL(f)
@@ -231,18 +321,8 @@ export function ExtractTab() {
     })
   }
 
-  const downloadPal = (result) => {
-    const blob = new Blob([result.pal_content], { type: 'text/plain' })
-    const a = document.createElement('a')
-    a.href = URL.createObjectURL(blob)
-    a.download = `${result.name}_${result.color_space}.pal`
-    a.click()
-  }
-
   const handlePick = (hex) => {
-    setBgColor(hex)
-    setBgMode('pick')
-    setPicking(false)
+    setBgColor(hex); setBgMode('pick'); setPicking(false)
   }
 
   const tooMany = nColors > MAX_EXTRA_COLORS
@@ -253,7 +333,7 @@ export function ExtractTab() {
 
       <div className="extract-layout">
 
-        {/* ── Left: controls ── */}
+        {/* ── Left ── */}
         <div className="extract-left">
           <DropZone onFile={handleFile} label="Drop sprite to extract palette" />
 
@@ -279,11 +359,7 @@ export function ExtractTab() {
               {originalB64 && (
                 <button
                   className={`bg-mode-btn ${bgMode === 'auto' ? 'active' : ''}`}
-                  onClick={() =>
-                    detectBgColor(originalB64).then(detected => {
-                      setBgColor(detected); setBgMode('auto')
-                    })
-                  }
+                  onClick={() => detectBgColor(originalB64).then(d => { setBgColor(d); setBgMode('auto') })}
                   title="detect from image corners"
                 >auto <Scan size={8} /></button>
               )}
@@ -303,7 +379,6 @@ export function ExtractTab() {
                 >pipette <Pipette size={8} /></button>
               )}
             </div>
-
             <div className="bg-color-row">
               <div className="bg-swatch" style={{ background: bgColor }} />
               {bgMode === 'custom' || bgMode === 'pick' ? (
@@ -338,14 +413,12 @@ export function ExtractTab() {
           {error && <p className="error-msg">{error}</p>}
         </div>
 
-        {/* ── Right: stacked previews ── */}
+        {/* ── Right ── */}
         <div className="extract-right">
 
           <div className="extract-toolbar">
             <span className="section-label">
-              {resultOklab
-                ? `${resultOklab.name} — ${resultOklab.colors.length} colors`
-                : 'preview'}
+              {resultOklab ? `${resultOklab.name} — ${resultOklab.colors.length} colors` : 'preview'}
             </span>
             <button className="help-btn" onClick={() => setShowHelp(true)} title="Help">
               <Info size={15}/>
@@ -353,9 +426,7 @@ export function ExtractTab() {
           </div>
 
           {!originalB64 && (
-            <div className="empty-state">
-              drop a sprite to extract a GBA-compatible palette
-            </div>
+            <div className="empty-state">drop a sprite to extract a GBA-compatible palette</div>
           )}
 
           {originalB64 && (
@@ -366,26 +437,18 @@ export function ExtractTab() {
                   original{imageSize ? ` — ${imageSize.w}×${imageSize.h}px` : ''}
                   {picking && <span className="pick-hint"> · click to pick bg color</span>}
                 </p>
-                <ZoomableImage
-                  src={originalB64}
-                  alt="source sprite"
-                  picking={picking}
-                  onPick={handlePick}
-                />
+                <ZoomableImage src={originalB64} alt="source sprite" picking={picking} onPick={handlePick} />
               </div>
 
               {previewOklab && resultOklab && (
                 <div className="extract-preview-section">
                   <div className="extract-section-header">
                     <p className="section-label">oklab — recommended</p>
-                    <button className="btn-dl" onClick={() => downloadPal(resultOklab)}>↓ .pal</button>
+                    <ExportDropdown result={resultOklab} />
                   </div>
                   <ZoomableImage src={previewOklab} alt="oklab preview" />
                   <div className="palette-strip-wrap">
-                    <PaletteStrip
-                      colors={resultOklab.colors}
-                      usedIndices={resultOklab.colors.map((_, i) => i)}
-                    />
+                    <PaletteStrip colors={resultOklab.colors} usedIndices={resultOklab.colors.map((_, i) => i)} />
                   </div>
                 </div>
               )}
@@ -394,14 +457,11 @@ export function ExtractTab() {
                 <div className="extract-preview-section">
                   <div className="extract-section-header">
                     <p className="section-label">rgb</p>
-                    <button className="btn-dl" onClick={() => downloadPal(resultRgb)}>↓ .pal</button>
+                    <ExportDropdown result={resultRgb} />
                   </div>
                   <ZoomableImage src={previewRgb} alt="rgb preview" />
                   <div className="palette-strip-wrap">
-                    <PaletteStrip
-                      colors={resultRgb.colors}
-                      usedIndices={resultRgb.colors.map((_, i) => i)}
-                    />
+                    <PaletteStrip colors={resultRgb.colors} usedIndices={resultRgb.colors.map((_, i) => i)} />
                   </div>
                 </div>
               )}

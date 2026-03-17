@@ -1,0 +1,217 @@
+/* ── Layout ── */
+.palettes-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.palettes-left {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.palettes-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 400px;
+}
+
+/* ── Left panel ── */
+.palettes-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.palettes-stat-row {
+  display: flex;
+  gap: 16px;
+}
+
+.palettes-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.palettes-stat-num {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1;
+}
+
+.palettes-stat-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.palettes-left-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Override btn-secondary to be smaller + flex */
+.palettes-left-actions .btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 7px 12px;
+}
+
+.palettes-left-hint {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.palettes-left-hint p {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.palettes-left-hint code {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 10px;
+  color: var(--text);
+}
+
+/* ── Toolbar ── */
+.palettes-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Groups ── */
+.palettes-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.palettes-group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.palettes-group-count {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1px 7px;
+}
+
+.palettes-group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* ── Palette row ── */
+.pal-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color 0.1s;
+}
+
+.pal-row:hover { border-color: var(--border2); }
+
+.pal-row--confirm { border-color: var(--danger); }
+
+.pal-row-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex-shrink: 0;
+  width: 140px;
+  min-width: 0;
+}
+
+.pal-row-name {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pal-row-count {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.pal-row-strip {
+  flex: 1;
+  min-width: 0;
+}
+
+.pal-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* ── Icon buttons ── */
+.pal-icon-btn {
+  width: 26px;
+  height: 26px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.1s, border-color 0.1s;
+  flex-shrink: 0;
+}
+
+.pal-icon-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.pal-icon-btn--danger:hover,
+.pal-icon-btn--danger.confirming {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* ── Spinner ── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinning { animation: spin 0.7s linear infinite; }

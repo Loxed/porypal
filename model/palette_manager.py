@@ -2,6 +2,11 @@
 model/palette_manager.py
 
 Loads and manages .pal palette files. Pure Python, no Qt.
+
+Folder layout (searched in order, duplicates skipped):
+  palettes/defaults/*.pal   — shipped palettes, cannot be deleted
+  palettes/user/*.pal       — user-uploaded or extracted palettes
+  palettes/*.pal            — legacy flat files (still supported)
 """
 
 from __future__ import annotations
@@ -17,34 +22,54 @@ class PaletteManager:
     def __init__(self, config: dict):
         self.config = config
         self._palettes: list[Palette] = []
+        self._meta: dict[str, dict] = {}  # name → {path, is_default, source}
         self._load_palettes()
 
     def _load_palettes(self) -> None:
         palette_dir = Path("palettes")
         if not palette_dir.exists():
-            logging.error("Missing palettes directory")
-            return
+            logging.warning("palettes/ directory not found — creating it")
+            palette_dir.mkdir(parents=True, exist_ok=True)
 
-        more_colors = self.config.get("palettes", {}).get("more_colors", False)
-        npc_priority = self.config.get("palettes", {}).get("npc_priority", False)
+        # Gather candidates in priority order: defaults → user → legacy root
+        candidates: list[tuple[Path, bool, str]] = []
 
-        palette_files = sorted(palette_dir.glob("*.pal"))
+        defaults_dir = palette_dir / "defaults"
+        if defaults_dir.exists():
+            for f in sorted(defaults_dir.glob("*.pal")):
+                candidates.append((f, True, "default"))
 
-        if npc_priority:
-            palette_files = [p for p in palette_files if p.name.startswith("npc_")]
+        user_dir = palette_dir / "user"
+        if user_dir.exists():
+            for f in sorted(user_dir.glob("*.pal")):
+                candidates.append((f, False, "user"))
 
-        if not more_colors:
-            palette_files = palette_files[:4]
+        for f in sorted(palette_dir.glob("*.pal")):
+            candidates.append((f, False, "legacy"))
 
         self._palettes = []
-        for pal_file in palette_files:
+        self._meta = {}
+        seen: set[str] = set()
+
+        for path, is_default, source in candidates:
+            if path.name in seen:
+                continue  # first occurrence wins (default > user > legacy)
+            seen.add(path.name)
             try:
-                self._palettes.append(Palette.from_jasc_pal(pal_file))
-                logging.debug(f"Loaded palette: {pal_file.name}")
+                p = Palette.from_jasc_pal(path)
+                self._palettes.append(p)
+                self._meta[p.name] = {
+                    "path": path,
+                    "is_default": is_default,
+                    "source": source,
+                }
+                logging.debug(f"Loaded palette [{source}]: {path.name}")
             except Exception as e:
-                logging.error(f"Failed to load palette {pal_file.name}: {e}")
+                logging.error(f"Failed to load palette {path}: {e}")
 
         logging.info(f"Loaded {len(self._palettes)} palettes")
+
+    # ---------- public getters ----------
 
     def get_palettes(self) -> list[Palette]:
         return self._palettes
@@ -55,6 +80,18 @@ class PaletteManager:
     def get_palette_by_name(self, name: str) -> Palette | None:
         return next((p for p in self._palettes if p.name == name), None)
 
+    def get_meta(self, name: str) -> dict | None:
+        """Return {path, is_default, source} for a palette by name."""
+        return self._meta.get(name)
+
+    def is_default(self, name: str) -> bool:
+        meta = self._meta.get(name)
+        return meta["is_default"] if meta else False
+
+    def get_path(self, name: str) -> Path | None:
+        meta = self._meta.get(name)
+        return meta["path"] if meta else None
+
     def reload(self) -> None:
-        """Reload palettes from disk — useful when user adds new .pal files."""
+        """Reload palettes from disk."""
         self._load_palettes()

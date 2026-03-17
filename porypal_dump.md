@@ -1699,9385 +1699,6 @@ class TilesetEditorController(QObject):
 
 ----
 
-# frontend/node_modules/.package-lock.json
-```json
-{
-  "name": "porypal-frontend",
-  "version": "3.0.0",
-  "lockfileVersion": 3,
-  "requires": true,
-  "packages": {
-    "node_modules/@babel/code-frame": {
-      "version": "7.29.0",
-      "resolved": "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.29.0.tgz",
-      "integrity": "sha512-9NhCeYjq9+3uxgdtp20LSiJXJvN0FeCtNGpJxuMFZ1Kv3cWUNb6DOhJwUvcVCzKGR66cw4njwM6hrJLqgOwbcw==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/helper-validator-identifier": "^7.28.5",
-        "js-tokens": "^4.0.0",
-        "picocolors": "^1.1.1"
-      },
-      "engines": {
-        "node": ">=6.9.0"
-      }
-    },
-    "node_modules/@babel/compat-data": {
-      "version": "7.29.0",
-      "resolved": "https://registry.npmjs.org/@babel/compat-data/-/compat-data-7.29.0.tgz",
-      "integrity": "sha512-T1NCJqT/j9+cn8fvkt7jtwbLBfLC/1y1c7NtCeXFRgzGTsafi68MRv8yzkYSapBnFA6L3U2VSc02ciDzoAJhJg==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">=6.9.0"
-      }
-    },
-    "node_modules/@babel/core": {
-      "version": "7.29.0",
-      "resolved": "https://registry.npmjs.org/@babel/core/-/core-7.29.0.tgz",
-      "integrity": "sha512-CGOfOJqWjg2qW/Mb6zNsDm+u5vFQ8DxXfbM09z69p5Z6+mE1ikP2jUXw+j42Pf1XTYED2Rni5f95npYeuwMDQA==",
-      "dev": true,
-      "license": "MIT",
-      "peer": true,
-      "dependencies": {
-        "@babel/code-frame": "^7.29.0",
-        "@babel/generator": "^7.29.0",
-        "@babel/helper-compilation-targets": "^7.28.6",
-        "@babel/helper-module-transforms": "^7.28.6",
-        "@babel/helpers": "^7.28.6",
-        "@babel/parser": "^7.29.0",
-        "@babel/template": "^7.28.6",
-        "@babel/traverse": "^7.29.0",
-        "@babel/types": "^7.29.0",
-        "@jridgewell/remapping": "^2.3.5",
-        "convert-source-map": "^2.0.0",
-        "debug": "^4.1.0",
-        "gensync": "^1.0.0-beta.2",
-        "json5": "^2.2.3",
-        "semver": "^6.3.1"
-      },
-      "engines": {
-        "node": ">=6.9.0"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/babel"
-      }
-    },
-    "node_modules/@babel/generator": {
-      "version": "7.29.1",
-      "resolved": "https://registry.npmjs.org/@babel/generator/-/generator-7.29.1.tgz",
-      "integrity": "sha512-qsaF+9Qcm2Qv8SRIMMscAvG4O3lJ0F1GuMo5HR/Bp02LopNgnZBC/EkbevHFeGs4ls/oPz9v+Bsmzbkbe+0dUw==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/parser": "^7.29.0",
-        "@babel/types": "^7.29.0",
-        "@jridgewell/gen-mapping": "^0.3.12",
-        "@jridgewell/trace-mapping": "^0.3.28",
-        "jsesc": "^3.0.2"
-      },
-      "engines": {
-        "node": ">=6.9.0"
-      }
-    },
-    "node_modules/@babel/helper-compilation-targets": {
-      "version": "7.28.6",
-      "resolved": "https://registry.npmjs.org/@babel/helper-compilation-targets/-/helper-compilation-targets-7.28.6.tgz",
-      "integrity": "sha512-JYtls3hqi15fcx5GaSNL7SCTJ2MNmjrkHXg4FSpOA/grxK8KwyZ5bubHsCq8FXCkua6xhuaaBit+3b7+VZRfcA==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/compat-data": "^7.28.6",
-        "@babel/helper-validator-option": "^7.27.1",
-        "browserslist": "^4.24.0",
-        "lru-cache": "^5.1.1",
-        "semver": "^6.3.1"
-      },
-      "engines": {
-        "node": ">=6.9.0"
-      }
-    },
-    "node_modules/@babel/helper-globals": {
-      "version": "7.28.0",
-      "resolved": "https://registry.npmjs.org/@babel/helper-globals/-/helper-globals-7.28.0.tgz",
-      "integrity": "sha512-+W6cISkXFa1jXsDEdYA8HeevQT/FULhxzR99pxphltZcVaugps53THCeiWA8SguxxpSp3gKPiuYfSWopkLQ4hw==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">=6.9.0"
-      }
-    },
-    "node_modules/@babel/helper-module-imports": {
-      "version": "7.28.6",
-      "resolved": "https://registry.npmjs.org/@babel/helper-module-imports/-/helper-module-imports-7.28.6.tgz",
-      "integrity": "sha512-l5XkZK7r7wa9LucGw9LwZyyCUscb4x37JWTPz7swwFE/0FMQAGpiWUZn8u9DzkSBWEcK25jmvubfpw2dnAMdbw==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/traverse": "^7.28.6",
-        "@babel/types": "^7.28.6"
-      },
-      "engines": {
-        "node": ">=6.9.0"
-      }
-    },
-    "node_modules/@babel/helper-module-transforms": {
-      "version": "7.28.6",
-      "resolved": "https://registry.npmjs.org/@babel/helper-module-transforms/-/helper-module-transforms-7.28.6.tgz",
-      "integrity": "sha512-67oXFAYr2cDLDVGLXTEABjdBJZ6drElUSI7WKp70NrpyISso3plG9SAGEF6y7zbha/wOzUByWWTJvEDVNIUGcA==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/helper-module-imports": "^7.28.6",
-        "@babel/helper-validator-identifier": "^7.28.5",
-        "@babel/traverse": "^7.28.6"
-      },
-      "engines": {
-        "node": ">=6.9.0"
-      },
-      "peerDependencies": {
-        "@babel/core": "^7.0.0"
-      }
-    },
-    "node_modules/@babel/helper-plugin-utils": {
-      "version": "7.28.6",
-      "resolved": "https://registry.npmjs.org/@babel/helper-plugin-utils/-/helper-plugin-utils-7.28.6.tgz",
-      "integrity": "sha512-S9gzZ/bz83GRysI7gAD4wPT/AI3uCnY+9xn+Mx/KPs2JwHJIz1W8PZkg2cqyt3RNOBM8ejcXhV6y8Og7ly/Dug==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">=6.9.0"
-      }
-    },
-    "node_modules/@babel/helper-string-parser": {
-      "version": "7.27.1",
-      "resolved": "https://registry.npmjs.org/@babel/helper-string-parser/-/helper-string-parser-7.27.1.tgz",
-      "integrity": "sha512-qMlSxKbpRlAridDExk92nSobyDdpPijUq2DW6oDnUqd0iOGxmQjyqhMIihI9+zv4LPyZdRje2cavWPbCbWm3eA==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">=6.9.0"
-      }
-    },
-    "node_modules/@babel/helper-validator-identifier": {
-      "version": "7.28.5",
-      "resolved": "https://registry.npmjs.org/@babel/helper-validator-identifier/-/helper-validator-identifier-7.28.5.tgz",
-      "integrity": "sha512-qSs4ifwzKJSV39ucNjsvc6WVHs6b7S03sOh2OcHF9UHfVPqWWALUsNUVzhSBiItjRZoLHx7nIarVjqKVusUZ1Q==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">=6.9.0"
-      }
-    },
-    "node_modules/@babel/helper-validator-option": {
-      "version": "7.27.1",
-      "resolved": "https://registry.npmjs.org/@babel/helper-validator-option/-/helper-validator-option-7.27.1.tgz",
-      "integrity": "sha512-YvjJow9FxbhFFKDSuFnVCe2WxXk1zWc22fFePVNEaWJEu8IrZVlda6N0uHwzZrUM1il7NC9Mlp4MaJYbYd9JSg==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">=6.9.0"
-      }
-    },
-    "node_modules/@babel/helpers": {
-      "version": "7.28.6",
-      "resolved": "https://registry.npmjs.org/@babel/helpers/-/helpers-7.28.6.tgz",
-      "integrity": "sha512-xOBvwq86HHdB7WUDTfKfT/Vuxh7gElQ+Sfti2Cy6yIWNW05P8iUslOVcZ4/sKbE+/jQaukQAdz/gf3724kYdqw==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/template": "^7.28.6",
-        "@babel/types": "^7.28.6"
-      },
-      "engines": {
-        "node": ">=6.9.0"
-      }
-    },
-    "node_modules/@babel/parser": {
-      "version": "7.29.0",
-      "resolved": "https://registry.npmjs.org/@babel/parser/-/parser-7.29.0.tgz",
-      "integrity": "sha512-IyDgFV5GeDUVX4YdF/3CPULtVGSXXMLh1xVIgdCgxApktqnQV0r7/8Nqthg+8YLGaAtdyIlo2qIdZrbCv4+7ww==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/types": "^7.29.0"
-      },
-      "bin": {
-        "parser": "bin/babel-parser.js"
-      },
-      "engines": {
-        "node": ">=6.0.0"
-      }
-    },
-    "node_modules/@babel/plugin-transform-react-jsx-self": {
-      "version": "7.27.1",
-      "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-jsx-self/-/plugin-transform-react-jsx-self-7.27.1.tgz",
-      "integrity": "sha512-6UzkCs+ejGdZ5mFFC/OCUrv028ab2fp1znZmCZjAOBKiBK2jXD1O+BPSfX8X2qjJ75fZBMSnQn3Rq2mrBJK2mw==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/helper-plugin-utils": "^7.27.1"
-      },
-      "engines": {
-        "node": ">=6.9.0"
-      },
-      "peerDependencies": {
-        "@babel/core": "^7.0.0-0"
-      }
-    },
-    "node_modules/@babel/plugin-transform-react-jsx-source": {
-      "version": "7.27.1",
-      "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-jsx-source/-/plugin-transform-react-jsx-source-7.27.1.tgz",
-      "integrity": "sha512-zbwoTsBruTeKB9hSq73ha66iFeJHuaFkUbwvqElnygoNbj/jHRsSeokowZFN3CZ64IvEqcmmkVe89OPXc7ldAw==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/helper-plugin-utils": "^7.27.1"
-      },
-      "engines": {
-        "node": ">=6.9.0"
-      },
-      "peerDependencies": {
-        "@babel/core": "^7.0.0-0"
-      }
-    },
-    "node_modules/@babel/template": {
-      "version": "7.28.6",
-      "resolved": "https://registry.npmjs.org/@babel/template/-/template-7.28.6.tgz",
-      "integrity": "sha512-YA6Ma2KsCdGb+WC6UpBVFJGXL58MDA6oyONbjyF/+5sBgxY/dwkhLogbMT2GXXyU84/IhRw/2D1Os1B/giz+BQ==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/code-frame": "^7.28.6",
-        "@babel/parser": "^7.28.6",
-        "@babel/types": "^7.28.6"
-      },
-      "engines": {
-        "node": ">=6.9.0"
-      }
-    },
-    "node_modules/@babel/traverse": {
-      "version": "7.29.0",
-      "resolved": "https://registry.npmjs.org/@babel/traverse/-/traverse-7.29.0.tgz",
-      "integrity": "sha512-4HPiQr0X7+waHfyXPZpWPfWL/J7dcN1mx9gL6WdQVMbPnF3+ZhSMs8tCxN7oHddJE9fhNE7+lxdnlyemKfJRuA==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/code-frame": "^7.29.0",
-        "@babel/generator": "^7.29.0",
-        "@babel/helper-globals": "^7.28.0",
-        "@babel/parser": "^7.29.0",
-        "@babel/template": "^7.28.6",
-        "@babel/types": "^7.29.0",
-        "debug": "^4.3.1"
-      },
-      "engines": {
-        "node": ">=6.9.0"
-      }
-    },
-    "node_modules/@babel/types": {
-      "version": "7.29.0",
-      "resolved": "https://registry.npmjs.org/@babel/types/-/types-7.29.0.tgz",
-      "integrity": "sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/helper-string-parser": "^7.27.1",
-        "@babel/helper-validator-identifier": "^7.28.5"
-      },
-      "engines": {
-        "node": ">=6.9.0"
-      }
-    },
-    "node_modules/@esbuild/win32-x64": {
-      "version": "0.21.5",
-      "resolved": "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.21.5.tgz",
-      "integrity": "sha512-tQd/1efJuzPC6rCFwEvLtci/xNFcTZknmXs98FYDfGE4wP9ClFV98nyKrzJKVPMhdDnjzLhdUyMX4PsQAPjwIw==",
-      "cpu": [
-        "x64"
-      ],
-      "dev": true,
-      "license": "MIT",
-      "optional": true,
-      "os": [
-        "win32"
-      ],
-      "engines": {
-        "node": ">=12"
-      }
-    },
-    "node_modules/@jridgewell/gen-mapping": {
-      "version": "0.3.13",
-      "resolved": "https://registry.npmjs.org/@jridgewell/gen-mapping/-/gen-mapping-0.3.13.tgz",
-      "integrity": "sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@jridgewell/sourcemap-codec": "^1.5.0",
-        "@jridgewell/trace-mapping": "^0.3.24"
-      }
-    },
-    "node_modules/@jridgewell/remapping": {
-      "version": "2.3.5",
-      "resolved": "https://registry.npmjs.org/@jridgewell/remapping/-/remapping-2.3.5.tgz",
-      "integrity": "sha512-LI9u/+laYG4Ds1TDKSJW2YPrIlcVYOwi2fUC6xB43lueCjgxV4lffOCZCtYFiH6TNOX+tQKXx97T4IKHbhyHEQ==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@jridgewell/gen-mapping": "^0.3.5",
-        "@jridgewell/trace-mapping": "^0.3.24"
-      }
-    },
-    "node_modules/@jridgewell/resolve-uri": {
-      "version": "3.1.2",
-      "resolved": "https://registry.npmjs.org/@jridgewell/resolve-uri/-/resolve-uri-3.1.2.tgz",
-      "integrity": "sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">=6.0.0"
-      }
-    },
-    "node_modules/@jridgewell/sourcemap-codec": {
-      "version": "1.5.5",
-      "resolved": "https://registry.npmjs.org/@jridgewell/sourcemap-codec/-/sourcemap-codec-1.5.5.tgz",
-      "integrity": "sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og==",
-      "dev": true,
-      "license": "MIT"
-    },
-    "node_modules/@jridgewell/trace-mapping": {
-      "version": "0.3.31",
-      "resolved": "https://registry.npmjs.org/@jridgewell/trace-mapping/-/trace-mapping-0.3.31.tgz",
-      "integrity": "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@jridgewell/resolve-uri": "^3.1.0",
-        "@jridgewell/sourcemap-codec": "^1.4.14"
-      }
-    },
-    "node_modules/@rolldown/pluginutils": {
-      "version": "1.0.0-beta.27",
-      "resolved": "https://registry.npmjs.org/@rolldown/pluginutils/-/pluginutils-1.0.0-beta.27.tgz",
-      "integrity": "sha512-+d0F4MKMCbeVUJwG96uQ4SgAznZNSq93I3V+9NHA4OpvqG8mRCpGdKmK8l/dl02h2CCDHwW2FqilnTyDcAnqjA==",
-      "dev": true,
-      "license": "MIT"
-    },
-    "node_modules/@rollup/rollup-win32-x64-gnu": {
-      "version": "4.59.0",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-win32-x64-gnu/-/rollup-win32-x64-gnu-4.59.0.tgz",
-      "integrity": "sha512-laBkYlSS1n2L8fSo1thDNGrCTQMmxjYY5G0WFWjFFYZkKPjsMBsgJfGf4TLxXrF6RyhI60L8TMOjBMvXiTcxeA==",
-      "cpu": [
-        "x64"
-      ],
-      "dev": true,
-      "license": "MIT",
-      "optional": true,
-      "os": [
-        "win32"
-      ]
-    },
-    "node_modules/@rollup/rollup-win32-x64-msvc": {
-      "version": "4.59.0",
-      "resolved": "https://registry.npmjs.org/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.59.0.tgz",
-      "integrity": "sha512-2HRCml6OztYXyJXAvdDXPKcawukWY2GpR5/nxKp4iBgiO3wcoEGkAaqctIbZcNB6KlUQBIqt8VYkNSj2397EfA==",
-      "cpu": [
-        "x64"
-      ],
-      "dev": true,
-      "license": "MIT",
-      "optional": true,
-      "os": [
-        "win32"
-      ]
-    },
-    "node_modules/@types/babel__core": {
-      "version": "7.20.5",
-      "resolved": "https://registry.npmjs.org/@types/babel__core/-/babel__core-7.20.5.tgz",
-      "integrity": "sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/parser": "^7.20.7",
-        "@babel/types": "^7.20.7",
-        "@types/babel__generator": "*",
-        "@types/babel__template": "*",
-        "@types/babel__traverse": "*"
-      }
-    },
-    "node_modules/@types/babel__generator": {
-      "version": "7.27.0",
-      "resolved": "https://registry.npmjs.org/@types/babel__generator/-/babel__generator-7.27.0.tgz",
-      "integrity": "sha512-ufFd2Xi92OAVPYsy+P4n7/U7e68fex0+Ee8gSG9KX7eo084CWiQ4sdxktvdl0bOPupXtVJPY19zk6EwWqUQ8lg==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/types": "^7.0.0"
-      }
-    },
-    "node_modules/@types/babel__template": {
-      "version": "7.4.4",
-      "resolved": "https://registry.npmjs.org/@types/babel__template/-/babel__template-7.4.4.tgz",
-      "integrity": "sha512-h/NUaSyG5EyxBIp8YRxo4RMe2/qQgvyowRwVMzhYhBCONbW8PUsg4lkFMrhgZhUe5z3L3MiLDuvyJ/CaPa2A8A==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/parser": "^7.1.0",
-        "@babel/types": "^7.0.0"
-      }
-    },
-    "node_modules/@types/babel__traverse": {
-      "version": "7.28.0",
-      "resolved": "https://registry.npmjs.org/@types/babel__traverse/-/babel__traverse-7.28.0.tgz",
-      "integrity": "sha512-8PvcXf70gTDZBgt9ptxJ8elBeBjcLOAcOtoO/mPJjtji1+CdGbHgm77om1GrsPxsiE+uXIpNSK64UYaIwQXd4Q==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/types": "^7.28.2"
-      }
-    },
-    "node_modules/@types/estree": {
-      "version": "1.0.8",
-      "resolved": "https://registry.npmjs.org/@types/estree/-/estree-1.0.8.tgz",
-      "integrity": "sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==",
-      "dev": true,
-      "license": "MIT"
-    },
-    "node_modules/@types/prop-types": {
-      "version": "15.7.15",
-      "resolved": "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.15.tgz",
-      "integrity": "sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==",
-      "dev": true,
-      "license": "MIT"
-    },
-    "node_modules/@types/react": {
-      "version": "18.3.28",
-      "resolved": "https://registry.npmjs.org/@types/react/-/react-18.3.28.tgz",
-      "integrity": "sha512-z9VXpC7MWrhfWipitjNdgCauoMLRdIILQsAEV+ZesIzBq/oUlxk0m3ApZuMFCXdnS4U7KrI+l3WRUEGQ8K1QKw==",
-      "dev": true,
-      "license": "MIT",
-      "peer": true,
-      "dependencies": {
-        "@types/prop-types": "*",
-        "csstype": "^3.2.2"
-      }
-    },
-    "node_modules/@types/react-dom": {
-      "version": "18.3.7",
-      "resolved": "https://registry.npmjs.org/@types/react-dom/-/react-dom-18.3.7.tgz",
-      "integrity": "sha512-MEe3UeoENYVFXzoXEWsvcpg6ZvlrFNlOQ7EOsvhI3CfAXwzPfO8Qwuxd40nepsYKqyyVQnTdEfv68q91yLcKrQ==",
-      "dev": true,
-      "license": "MIT",
-      "peerDependencies": {
-        "@types/react": "^18.0.0"
-      }
-    },
-    "node_modules/@vitejs/plugin-react": {
-      "version": "4.7.0",
-      "resolved": "https://registry.npmjs.org/@vitejs/plugin-react/-/plugin-react-4.7.0.tgz",
-      "integrity": "sha512-gUu9hwfWvvEDBBmgtAowQCojwZmJ5mcLn3aufeCsitijs3+f2NsrPtlAWIR6OPiqljl96GVCUbLe0HyqIpVaoA==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@babel/core": "^7.28.0",
-        "@babel/plugin-transform-react-jsx-self": "^7.27.1",
-        "@babel/plugin-transform-react-jsx-source": "^7.27.1",
-        "@rolldown/pluginutils": "1.0.0-beta.27",
-        "@types/babel__core": "^7.20.5",
-        "react-refresh": "^0.17.0"
-      },
-      "engines": {
-        "node": "^14.18.0 || >=16.0.0"
-      },
-      "peerDependencies": {
-        "vite": "^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0"
-      }
-    },
-    "node_modules/baseline-browser-mapping": {
-      "version": "2.10.8",
-      "resolved": "https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.10.8.tgz",
-      "integrity": "sha512-PCLz/LXGBsNTErbtB6i5u4eLpHeMfi93aUv5duMmj6caNu6IphS4q6UevDnL36sZQv9lrP11dbPKGMaXPwMKfQ==",
-      "dev": true,
-      "license": "Apache-2.0",
-      "bin": {
-        "baseline-browser-mapping": "dist/cli.cjs"
-      },
-      "engines": {
-        "node": ">=6.0.0"
-      }
-    },
-    "node_modules/browserslist": {
-      "version": "4.28.1",
-      "resolved": "https://registry.npmjs.org/browserslist/-/browserslist-4.28.1.tgz",
-      "integrity": "sha512-ZC5Bd0LgJXgwGqUknZY/vkUQ04r8NXnJZ3yYi4vDmSiZmC/pdSN0NbNRPxZpbtO4uAfDUAFffO8IZoM3Gj8IkA==",
-      "dev": true,
-      "funding": [
-        {
-          "type": "opencollective",
-          "url": "https://opencollective.com/browserslist"
-        },
-        {
-          "type": "tidelift",
-          "url": "https://tidelift.com/funding/github/npm/browserslist"
-        },
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/ai"
-        }
-      ],
-      "license": "MIT",
-      "peer": true,
-      "dependencies": {
-        "baseline-browser-mapping": "^2.9.0",
-        "caniuse-lite": "^1.0.30001759",
-        "electron-to-chromium": "^1.5.263",
-        "node-releases": "^2.0.27",
-        "update-browserslist-db": "^1.2.0"
-      },
-      "bin": {
-        "browserslist": "cli.js"
-      },
-      "engines": {
-        "node": "^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7"
-      }
-    },
-    "node_modules/caniuse-lite": {
-      "version": "1.0.30001779",
-      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001779.tgz",
-      "integrity": "sha512-U5og2PN7V4DMgF50YPNtnZJGWVLFjjsN3zb6uMT5VGYIewieDj1upwfuVNXf4Kor+89c3iCRJnSzMD5LmTvsfA==",
-      "dev": true,
-      "funding": [
-        {
-          "type": "opencollective",
-          "url": "https://opencollective.com/browserslist"
-        },
-        {
-          "type": "tidelift",
-          "url": "https://tidelift.com/funding/github/npm/caniuse-lite"
-        },
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/ai"
-        }
-      ],
-      "license": "CC-BY-4.0"
-    },
-    "node_modules/convert-source-map": {
-      "version": "2.0.0",
-      "resolved": "https://registry.npmjs.org/convert-source-map/-/convert-source-map-2.0.0.tgz",
-      "integrity": "sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==",
-      "dev": true,
-      "license": "MIT"
-    },
-    "node_modules/csstype": {
-      "version": "3.2.3",
-      "resolved": "https://registry.npmjs.org/csstype/-/csstype-3.2.3.tgz",
-      "integrity": "sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==",
-      "dev": true,
-      "license": "MIT"
-    },
-    "node_modules/debug": {
-      "version": "4.4.3",
-      "resolved": "https://registry.npmjs.org/debug/-/debug-4.4.3.tgz",
-      "integrity": "sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "ms": "^2.1.3"
-      },
-      "engines": {
-        "node": ">=6.0"
-      },
-      "peerDependenciesMeta": {
-        "supports-color": {
-          "optional": true
-        }
-      }
-    },
-    "node_modules/electron-to-chromium": {
-      "version": "1.5.313",
-      "resolved": "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.5.313.tgz",
-      "integrity": "sha512-QBMrTWEf00GXZmJyx2lbYD45jpI3TUFnNIzJ5BBc8piGUDwMPa1GV6HJWTZVvY/eiN3fSopl7NRbgGp9sZ9LTA==",
-      "dev": true,
-      "license": "ISC"
-    },
-    "node_modules/esbuild": {
-      "version": "0.21.5",
-      "resolved": "https://registry.npmjs.org/esbuild/-/esbuild-0.21.5.tgz",
-      "integrity": "sha512-mg3OPMV4hXywwpoDxu3Qda5xCKQi+vCTZq8S9J/EpkhB2HzKXq4SNFZE3+NK93JYxc8VMSep+lOUSC/RVKaBqw==",
-      "dev": true,
-      "hasInstallScript": true,
-      "license": "MIT",
-      "bin": {
-        "esbuild": "bin/esbuild"
-      },
-      "engines": {
-        "node": ">=12"
-      },
-      "optionalDependencies": {
-        "@esbuild/aix-ppc64": "0.21.5",
-        "@esbuild/android-arm": "0.21.5",
-        "@esbuild/android-arm64": "0.21.5",
-        "@esbuild/android-x64": "0.21.5",
-        "@esbuild/darwin-arm64": "0.21.5",
-        "@esbuild/darwin-x64": "0.21.5",
-        "@esbuild/freebsd-arm64": "0.21.5",
-        "@esbuild/freebsd-x64": "0.21.5",
-        "@esbuild/linux-arm": "0.21.5",
-        "@esbuild/linux-arm64": "0.21.5",
-        "@esbuild/linux-ia32": "0.21.5",
-        "@esbuild/linux-loong64": "0.21.5",
-        "@esbuild/linux-mips64el": "0.21.5",
-        "@esbuild/linux-ppc64": "0.21.5",
-        "@esbuild/linux-riscv64": "0.21.5",
-        "@esbuild/linux-s390x": "0.21.5",
-        "@esbuild/linux-x64": "0.21.5",
-        "@esbuild/netbsd-x64": "0.21.5",
-        "@esbuild/openbsd-x64": "0.21.5",
-        "@esbuild/sunos-x64": "0.21.5",
-        "@esbuild/win32-arm64": "0.21.5",
-        "@esbuild/win32-ia32": "0.21.5",
-        "@esbuild/win32-x64": "0.21.5"
-      }
-    },
-    "node_modules/escalade": {
-      "version": "3.2.0",
-      "resolved": "https://registry.npmjs.org/escalade/-/escalade-3.2.0.tgz",
-      "integrity": "sha512-WUj2qlxaQtO4g6Pq5c29GTcWGDyd8itL8zTlipgECz3JesAiiOKotd8JU6otB3PACgG6xkJUyVhboMS+bje/jA==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">=6"
-      }
-    },
-    "node_modules/gensync": {
-      "version": "1.0.0-beta.2",
-      "resolved": "https://registry.npmjs.org/gensync/-/gensync-1.0.0-beta.2.tgz",
-      "integrity": "sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">=6.9.0"
-      }
-    },
-    "node_modules/js-tokens": {
-      "version": "4.0.0",
-      "resolved": "https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz",
-      "integrity": "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==",
-      "license": "MIT"
-    },
-    "node_modules/jsesc": {
-      "version": "3.1.0",
-      "resolved": "https://registry.npmjs.org/jsesc/-/jsesc-3.1.0.tgz",
-      "integrity": "sha512-/sM3dO2FOzXjKQhJuo0Q173wf2KOo8t4I8vHy6lF9poUp7bKT0/NHE8fPX23PwfhnykfqnC2xRxOnVw5XuGIaA==",
-      "dev": true,
-      "license": "MIT",
-      "bin": {
-        "jsesc": "bin/jsesc"
-      },
-      "engines": {
-        "node": ">=6"
-      }
-    },
-    "node_modules/json5": {
-      "version": "2.2.3",
-      "resolved": "https://registry.npmjs.org/json5/-/json5-2.2.3.tgz",
-      "integrity": "sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==",
-      "dev": true,
-      "license": "MIT",
-      "bin": {
-        "json5": "lib/cli.js"
-      },
-      "engines": {
-        "node": ">=6"
-      }
-    },
-    "node_modules/loose-envify": {
-      "version": "1.4.0",
-      "resolved": "https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz",
-      "integrity": "sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==",
-      "license": "MIT",
-      "dependencies": {
-        "js-tokens": "^3.0.0 || ^4.0.0"
-      },
-      "bin": {
-        "loose-envify": "cli.js"
-      }
-    },
-    "node_modules/lru-cache": {
-      "version": "5.1.1",
-      "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-5.1.1.tgz",
-      "integrity": "sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==",
-      "dev": true,
-      "license": "ISC",
-      "dependencies": {
-        "yallist": "^3.0.2"
-      }
-    },
-    "node_modules/lucide-react": {
-      "version": "0.577.0",
-      "resolved": "https://registry.npmjs.org/lucide-react/-/lucide-react-0.577.0.tgz",
-      "integrity": "sha512-4LjoFv2eEPwYDPg/CUdBJQSDfPyzXCRrVW1X7jrx/trgxnxkHFjnVZINbzvzxjN70dxychOfg+FTYwBiS3pQ5A==",
-      "license": "ISC",
-      "peerDependencies": {
-        "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0"
-      }
-    },
-    "node_modules/ms": {
-      "version": "2.1.3",
-      "resolved": "https://registry.npmjs.org/ms/-/ms-2.1.3.tgz",
-      "integrity": "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==",
-      "dev": true,
-      "license": "MIT"
-    },
-    "node_modules/nanoid": {
-      "version": "3.3.11",
-      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.11.tgz",
-      "integrity": "sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==",
-      "dev": true,
-      "funding": [
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/ai"
-        }
-      ],
-      "license": "MIT",
-      "bin": {
-        "nanoid": "bin/nanoid.cjs"
-      },
-      "engines": {
-        "node": "^10 || ^12 || ^13.7 || ^14 || >=15.0.1"
-      }
-    },
-    "node_modules/node-releases": {
-      "version": "2.0.36",
-      "resolved": "https://registry.npmjs.org/node-releases/-/node-releases-2.0.36.tgz",
-      "integrity": "sha512-TdC8FSgHz8Mwtw9g5L4gR/Sh9XhSP/0DEkQxfEFXOpiul5IiHgHan2VhYYb6agDSfp4KuvltmGApc8HMgUrIkA==",
-      "dev": true,
-      "license": "MIT"
-    },
-    "node_modules/picocolors": {
-      "version": "1.1.1",
-      "resolved": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
-      "integrity": "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==",
-      "dev": true,
-      "license": "ISC"
-    },
-    "node_modules/postcss": {
-      "version": "8.5.8",
-      "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.8.tgz",
-      "integrity": "sha512-OW/rX8O/jXnm82Ey1k44pObPtdblfiuWnrd8X7GJ7emImCOstunGbXUpp7HdBrFQX6rJzn3sPT397Wp5aCwCHg==",
-      "dev": true,
-      "funding": [
-        {
-          "type": "opencollective",
-          "url": "https://opencollective.com/postcss/"
-        },
-        {
-          "type": "tidelift",
-          "url": "https://tidelift.com/funding/github/npm/postcss"
-        },
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/ai"
-        }
-      ],
-      "license": "MIT",
-      "dependencies": {
-        "nanoid": "^3.3.11",
-        "picocolors": "^1.1.1",
-        "source-map-js": "^1.2.1"
-      },
-      "engines": {
-        "node": "^10 || ^12 || >=14"
-      }
-    },
-    "node_modules/react": {
-      "version": "18.3.1",
-      "resolved": "https://registry.npmjs.org/react/-/react-18.3.1.tgz",
-      "integrity": "sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==",
-      "license": "MIT",
-      "peer": true,
-      "dependencies": {
-        "loose-envify": "^1.1.0"
-      },
-      "engines": {
-        "node": ">=0.10.0"
-      }
-    },
-    "node_modules/react-dom": {
-      "version": "18.3.1",
-      "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-18.3.1.tgz",
-      "integrity": "sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==",
-      "license": "MIT",
-      "dependencies": {
-        "loose-envify": "^1.1.0",
-        "scheduler": "^0.23.2"
-      },
-      "peerDependencies": {
-        "react": "^18.3.1"
-      }
-    },
-    "node_modules/react-refresh": {
-      "version": "0.17.0",
-      "resolved": "https://registry.npmjs.org/react-refresh/-/react-refresh-0.17.0.tgz",
-      "integrity": "sha512-z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">=0.10.0"
-      }
-    },
-    "node_modules/rollup": {
-      "version": "4.59.0",
-      "resolved": "https://registry.npmjs.org/rollup/-/rollup-4.59.0.tgz",
-      "integrity": "sha512-2oMpl67a3zCH9H79LeMcbDhXW/UmWG/y2zuqnF2jQq5uq9TbM9TVyXvA4+t+ne2IIkBdrLpAaRQAvo7YI/Yyeg==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "@types/estree": "1.0.8"
-      },
-      "bin": {
-        "rollup": "dist/bin/rollup"
-      },
-      "engines": {
-        "node": ">=18.0.0",
-        "npm": ">=8.0.0"
-      },
-      "optionalDependencies": {
-        "@rollup/rollup-android-arm-eabi": "4.59.0",
-        "@rollup/rollup-android-arm64": "4.59.0",
-        "@rollup/rollup-darwin-arm64": "4.59.0",
-        "@rollup/rollup-darwin-x64": "4.59.0",
-        "@rollup/rollup-freebsd-arm64": "4.59.0",
-        "@rollup/rollup-freebsd-x64": "4.59.0",
-        "@rollup/rollup-linux-arm-gnueabihf": "4.59.0",
-        "@rollup/rollup-linux-arm-musleabihf": "4.59.0",
-        "@rollup/rollup-linux-arm64-gnu": "4.59.0",
-        "@rollup/rollup-linux-arm64-musl": "4.59.0",
-        "@rollup/rollup-linux-loong64-gnu": "4.59.0",
-        "@rollup/rollup-linux-loong64-musl": "4.59.0",
-        "@rollup/rollup-linux-ppc64-gnu": "4.59.0",
-        "@rollup/rollup-linux-ppc64-musl": "4.59.0",
-        "@rollup/rollup-linux-riscv64-gnu": "4.59.0",
-        "@rollup/rollup-linux-riscv64-musl": "4.59.0",
-        "@rollup/rollup-linux-s390x-gnu": "4.59.0",
-        "@rollup/rollup-linux-x64-gnu": "4.59.0",
-        "@rollup/rollup-linux-x64-musl": "4.59.0",
-        "@rollup/rollup-openbsd-x64": "4.59.0",
-        "@rollup/rollup-openharmony-arm64": "4.59.0",
-        "@rollup/rollup-win32-arm64-msvc": "4.59.0",
-        "@rollup/rollup-win32-ia32-msvc": "4.59.0",
-        "@rollup/rollup-win32-x64-gnu": "4.59.0",
-        "@rollup/rollup-win32-x64-msvc": "4.59.0",
-        "fsevents": "~2.3.2"
-      }
-    },
-    "node_modules/scheduler": {
-      "version": "0.23.2",
-      "resolved": "https://registry.npmjs.org/scheduler/-/scheduler-0.23.2.tgz",
-      "integrity": "sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==",
-      "license": "MIT",
-      "dependencies": {
-        "loose-envify": "^1.1.0"
-      }
-    },
-    "node_modules/semver": {
-      "version": "6.3.1",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-6.3.1.tgz",
-      "integrity": "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==",
-      "dev": true,
-      "license": "ISC",
-      "bin": {
-        "semver": "bin/semver.js"
-      }
-    },
-    "node_modules/source-map-js": {
-      "version": "1.2.1",
-      "resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz",
-      "integrity": "sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==",
-      "dev": true,
-      "license": "BSD-3-Clause",
-      "engines": {
-        "node": ">=0.10.0"
-      }
-    },
-    "node_modules/update-browserslist-db": {
-      "version": "1.2.3",
-      "resolved": "https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.2.3.tgz",
-      "integrity": "sha512-Js0m9cx+qOgDxo0eMiFGEueWztz+d4+M3rGlmKPT+T4IS/jP4ylw3Nwpu6cpTTP8R1MAC1kF4VbdLt3ARf209w==",
-      "dev": true,
-      "funding": [
-        {
-          "type": "opencollective",
-          "url": "https://opencollective.com/browserslist"
-        },
-        {
-          "type": "tidelift",
-          "url": "https://tidelift.com/funding/github/npm/browserslist"
-        },
-        {
-          "type": "github",
-          "url": "https://github.com/sponsors/ai"
-        }
-      ],
-      "license": "MIT",
-      "dependencies": {
-        "escalade": "^3.2.0",
-        "picocolors": "^1.1.1"
-      },
-      "bin": {
-        "update-browserslist-db": "cli.js"
-      },
-      "peerDependencies": {
-        "browserslist": ">= 4.21.0"
-      }
-    },
-    "node_modules/vite": {
-      "version": "5.4.21",
-      "resolved": "https://registry.npmjs.org/vite/-/vite-5.4.21.tgz",
-      "integrity": "sha512-o5a9xKjbtuhY6Bi5S3+HvbRERmouabWbyUcpXXUA1u+GNUKoROi9byOJ8M0nHbHYHkYICiMlqxkg1KkYmm25Sw==",
-      "dev": true,
-      "license": "MIT",
-      "peer": true,
-      "dependencies": {
-        "esbuild": "^0.21.3",
-        "postcss": "^8.4.43",
-        "rollup": "^4.20.0"
-      },
-      "bin": {
-        "vite": "bin/vite.js"
-      },
-      "engines": {
-        "node": "^18.0.0 || >=20.0.0"
-      },
-      "funding": {
-        "url": "https://github.com/vitejs/vite?sponsor=1"
-      },
-      "optionalDependencies": {
-        "fsevents": "~2.3.3"
-      },
-      "peerDependencies": {
-        "@types/node": "^18.0.0 || >=20.0.0",
-        "less": "*",
-        "lightningcss": "^1.21.0",
-        "sass": "*",
-        "sass-embedded": "*",
-        "stylus": "*",
-        "sugarss": "*",
-        "terser": "^5.4.0"
-      },
-      "peerDependenciesMeta": {
-        "@types/node": {
-          "optional": true
-        },
-        "less": {
-          "optional": true
-        },
-        "lightningcss": {
-          "optional": true
-        },
-        "sass": {
-          "optional": true
-        },
-        "sass-embedded": {
-          "optional": true
-        },
-        "stylus": {
-          "optional": true
-        },
-        "sugarss": {
-          "optional": true
-        },
-        "terser": {
-          "optional": true
-        }
-      }
-    },
-    "node_modules/yallist": {
-      "version": "3.1.1",
-      "resolved": "https://registry.npmjs.org/yallist/-/yallist-3.1.1.tgz",
-      "integrity": "sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==",
-      "dev": true,
-      "license": "ISC"
-    }
-  }
-}
-```
-
-----
-
-# frontend/node_modules/.vite/deps/_metadata.json
-```json
-{
-  "hash": "9b32e4bb",
-  "configHash": "491ba9fa",
-  "lockfileHash": "6265b5aa",
-  "browserHash": "d4bbff97",
-  "optimized": {
-    "react": {
-      "src": "../../react/index.js",
-      "file": "react.js",
-      "fileHash": "ede471c1",
-      "needsInterop": true
-    },
-    "react-dom": {
-      "src": "../../react-dom/index.js",
-      "file": "react-dom.js",
-      "fileHash": "6a46a16c",
-      "needsInterop": true
-    },
-    "react/jsx-dev-runtime": {
-      "src": "../../react/jsx-dev-runtime.js",
-      "file": "react_jsx-dev-runtime.js",
-      "fileHash": "35a6f313",
-      "needsInterop": true
-    },
-    "react/jsx-runtime": {
-      "src": "../../react/jsx-runtime.js",
-      "file": "react_jsx-runtime.js",
-      "fileHash": "3a50951b",
-      "needsInterop": true
-    },
-    "lucide-react": {
-      "src": "../../lucide-react/dist/esm/lucide-react.js",
-      "file": "lucide-react.js",
-      "fileHash": "7ddb15e0",
-      "needsInterop": false
-    },
-    "react-dom/client": {
-      "src": "../../react-dom/client.js",
-      "file": "react-dom_client.js",
-      "fileHash": "d148a8de",
-      "needsInterop": true
-    }
-  },
-  "chunks": {
-    "chunk-BCXODTBQ": {
-      "file": "chunk-BCXODTBQ.js"
-    },
-    "chunk-2YIMICFJ": {
-      "file": "chunk-2YIMICFJ.js"
-    }
-  }
-}```
-
-----
-
-# frontend/node_modules/.vite/deps/package.json
-```json
-{
-  "type": "module"
-}
-```
-
-----
-
-# frontend/node_modules/@babel/code-frame/package.json
-```json
-{
-  "name": "@babel/code-frame",
-  "version": "7.29.0",
-  "description": "Generate errors that contain a code frame that point to source locations.",
-  "author": "The Babel Team (https://babel.dev/team)",
-  "homepage": "https://babel.dev/docs/en/next/babel-code-frame",
-  "bugs": "https://github.com/babel/babel/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-code-frame"
-  },
-  "main": "./lib/index.js",
-  "dependencies": {
-    "@babel/helper-validator-identifier": "^7.28.5",
-    "js-tokens": "^4.0.0",
-    "picocolors": "^1.1.1"
-  },
-  "devDependencies": {
-    "charcodes": "^0.2.0",
-    "import-meta-resolve": "^4.1.0",
-    "strip-ansi": "^4.0.0"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/compat-data/data/corejs2-built-ins.json
-```json
-{
-  "es6.array.copy-within": {
-    "chrome": "45",
-    "opera": "32",
-    "edge": "12",
-    "firefox": "32",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "5",
-    "rhino": "1.7.13",
-    "opera_mobile": "32",
-    "electron": "0.31"
-  },
-  "es6.array.every": {
-    "chrome": "5",
-    "opera": "10.10",
-    "edge": "12",
-    "firefox": "2",
-    "safari": "3.1",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "10.1",
-    "electron": "0.20"
-  },
-  "es6.array.fill": {
-    "chrome": "45",
-    "opera": "32",
-    "edge": "12",
-    "firefox": "31",
-    "safari": "7.1",
-    "node": "4",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "5",
-    "rhino": "1.7.13",
-    "opera_mobile": "32",
-    "electron": "0.31"
-  },
-  "es6.array.filter": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "13",
-    "firefox": "48",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.array.find": {
-    "chrome": "45",
-    "opera": "32",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "7.1",
-    "node": "4",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "5",
-    "rhino": "1.7.13",
-    "opera_mobile": "32",
-    "electron": "0.31"
-  },
-  "es6.array.find-index": {
-    "chrome": "45",
-    "opera": "32",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "7.1",
-    "node": "4",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "5",
-    "rhino": "1.7.13",
-    "opera_mobile": "32",
-    "electron": "0.31"
-  },
-  "es7.array.flat-map": {
-    "chrome": "69",
-    "opera": "56",
-    "edge": "79",
-    "firefox": "62",
-    "safari": "12",
-    "node": "11",
-    "deno": "1",
-    "ios": "12",
-    "samsung": "10",
-    "rhino": "1.7.15",
-    "opera_mobile": "48",
-    "electron": "4.0"
-  },
-  "es6.array.for-each": {
-    "chrome": "5",
-    "opera": "10.10",
-    "edge": "12",
-    "firefox": "2",
-    "safari": "3.1",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "10.1",
-    "electron": "0.20"
-  },
-  "es6.array.from": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "15",
-    "firefox": "36",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.7.15",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es7.array.includes": {
-    "chrome": "47",
-    "opera": "34",
-    "edge": "14",
-    "firefox": "102",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.8",
-    "opera_mobile": "34",
-    "electron": "0.36"
-  },
-  "es6.array.index-of": {
-    "chrome": "5",
-    "opera": "10.10",
-    "edge": "12",
-    "firefox": "2",
-    "safari": "3.1",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "10.1",
-    "electron": "0.20"
-  },
-  "es6.array.is-array": {
-    "chrome": "5",
-    "opera": "10.50",
-    "edge": "12",
-    "firefox": "4",
-    "safari": "4",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "10.1",
-    "electron": "0.20"
-  },
-  "es6.array.iterator": {
-    "chrome": "66",
-    "opera": "53",
-    "edge": "12",
-    "firefox": "60",
-    "safari": "9",
-    "node": "10",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "9",
-    "rhino": "1.7.13",
-    "opera_mobile": "47",
-    "electron": "3.0"
-  },
-  "es6.array.last-index-of": {
-    "chrome": "5",
-    "opera": "10.10",
-    "edge": "12",
-    "firefox": "2",
-    "safari": "3.1",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "10.1",
-    "electron": "0.20"
-  },
-  "es6.array.map": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "13",
-    "firefox": "48",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.array.of": {
-    "chrome": "45",
-    "opera": "32",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "5",
-    "rhino": "1.7.13",
-    "opera_mobile": "32",
-    "electron": "0.31"
-  },
-  "es6.array.reduce": {
-    "chrome": "5",
-    "opera": "10.50",
-    "edge": "12",
-    "firefox": "3",
-    "safari": "4",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "10.1",
-    "electron": "0.20"
-  },
-  "es6.array.reduce-right": {
-    "chrome": "5",
-    "opera": "10.50",
-    "edge": "12",
-    "firefox": "3",
-    "safari": "4",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "10.1",
-    "electron": "0.20"
-  },
-  "es6.array.slice": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "13",
-    "firefox": "48",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.array.some": {
-    "chrome": "5",
-    "opera": "10.10",
-    "edge": "12",
-    "firefox": "2",
-    "safari": "3.1",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "10.1",
-    "electron": "0.20"
-  },
-  "es6.array.sort": {
-    "chrome": "63",
-    "opera": "50",
-    "edge": "12",
-    "firefox": "5",
-    "safari": "12",
-    "node": "10",
-    "deno": "1",
-    "ie": "9",
-    "ios": "12",
-    "samsung": "8",
-    "rhino": "1.7.13",
-    "opera_mobile": "46",
-    "electron": "3.0"
-  },
-  "es6.array.species": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "13",
-    "firefox": "48",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.7.15",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.date.now": {
-    "chrome": "5",
-    "opera": "10.50",
-    "edge": "12",
-    "firefox": "2",
-    "safari": "4",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "10.1",
-    "electron": "0.20"
-  },
-  "es6.date.to-iso-string": {
-    "chrome": "5",
-    "opera": "10.50",
-    "edge": "12",
-    "firefox": "3.5",
-    "safari": "4",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "10.1",
-    "electron": "0.20"
-  },
-  "es6.date.to-json": {
-    "chrome": "5",
-    "opera": "12.10",
-    "edge": "12",
-    "firefox": "4",
-    "safari": "10",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "10",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "12.1",
-    "electron": "0.20"
-  },
-  "es6.date.to-primitive": {
-    "chrome": "47",
-    "opera": "34",
-    "edge": "15",
-    "firefox": "44",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.8",
-    "opera_mobile": "34",
-    "electron": "0.36"
-  },
-  "es6.date.to-string": {
-    "chrome": "5",
-    "opera": "10.50",
-    "edge": "12",
-    "firefox": "2",
-    "safari": "3.1",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "10",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "10.1",
-    "electron": "0.20"
-  },
-  "es6.function.bind": {
-    "chrome": "7",
-    "opera": "12",
-    "edge": "12",
-    "firefox": "4",
-    "safari": "5.1",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "12",
-    "electron": "0.20"
-  },
-  "es6.function.has-instance": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "15",
-    "firefox": "50",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.function.name": {
-    "chrome": "5",
-    "opera": "10.50",
-    "edge": "14",
-    "firefox": "2",
-    "safari": "4",
-    "node": "0.4",
-    "deno": "1",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "10.1",
-    "electron": "0.20"
-  },
-  "es6.map": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "15",
-    "firefox": "53",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.math.acosh": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "7.1",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.math.asinh": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "7.1",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.math.atanh": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "7.1",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.math.cbrt": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "7.1",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.math.clz32": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "31",
-    "safari": "9",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.math.cosh": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "7.1",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.math.expm1": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "7.1",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.math.fround": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "26",
-    "safari": "7.1",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.math.hypot": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "27",
-    "safari": "7.1",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.math.imul": {
-    "chrome": "30",
-    "opera": "17",
-    "edge": "12",
-    "firefox": "23",
-    "safari": "7",
-    "node": "0.12",
-    "deno": "1",
-    "android": "4.4",
-    "ios": "7",
-    "samsung": "2",
-    "rhino": "1.7.13",
-    "opera_mobile": "18",
-    "electron": "0.20"
-  },
-  "es6.math.log1p": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "7.1",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.math.log10": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "7.1",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.math.log2": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "7.1",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.math.sign": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "9",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.math.sinh": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "7.1",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.math.tanh": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "7.1",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.math.trunc": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "7.1",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.number.constructor": {
-    "chrome": "41",
-    "opera": "28",
-    "edge": "12",
-    "firefox": "36",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "3.4",
-    "rhino": "1.7.13",
-    "opera_mobile": "28",
-    "electron": "0.21"
-  },
-  "es6.number.epsilon": {
-    "chrome": "34",
-    "opera": "21",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "9",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "2",
-    "rhino": "1.7.14",
-    "opera_mobile": "21",
-    "electron": "0.20"
-  },
-  "es6.number.is-finite": {
-    "chrome": "19",
-    "opera": "15",
-    "edge": "12",
-    "firefox": "16",
-    "safari": "9",
-    "node": "0.8",
-    "deno": "1",
-    "android": "4.1",
-    "ios": "9",
-    "samsung": "1.5",
-    "rhino": "1.7.13",
-    "opera_mobile": "14",
-    "electron": "0.20"
-  },
-  "es6.number.is-integer": {
-    "chrome": "34",
-    "opera": "21",
-    "edge": "12",
-    "firefox": "16",
-    "safari": "9",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "2",
-    "rhino": "1.7.13",
-    "opera_mobile": "21",
-    "electron": "0.20"
-  },
-  "es6.number.is-nan": {
-    "chrome": "19",
-    "opera": "15",
-    "edge": "12",
-    "firefox": "15",
-    "safari": "9",
-    "node": "0.8",
-    "deno": "1",
-    "android": "4.1",
-    "ios": "9",
-    "samsung": "1.5",
-    "rhino": "1.7.13",
-    "opera_mobile": "14",
-    "electron": "0.20"
-  },
-  "es6.number.is-safe-integer": {
-    "chrome": "34",
-    "opera": "21",
-    "edge": "12",
-    "firefox": "32",
-    "safari": "9",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "2",
-    "rhino": "1.7.13",
-    "opera_mobile": "21",
-    "electron": "0.20"
-  },
-  "es6.number.max-safe-integer": {
-    "chrome": "34",
-    "opera": "21",
-    "edge": "12",
-    "firefox": "31",
-    "safari": "9",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "2",
-    "rhino": "1.7.13",
-    "opera_mobile": "21",
-    "electron": "0.20"
-  },
-  "es6.number.min-safe-integer": {
-    "chrome": "34",
-    "opera": "21",
-    "edge": "12",
-    "firefox": "31",
-    "safari": "9",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "2",
-    "rhino": "1.7.13",
-    "opera_mobile": "21",
-    "electron": "0.20"
-  },
-  "es6.number.parse-float": {
-    "chrome": "34",
-    "opera": "21",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "9",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "2",
-    "rhino": "1.7.14",
-    "opera_mobile": "21",
-    "electron": "0.20"
-  },
-  "es6.number.parse-int": {
-    "chrome": "34",
-    "opera": "21",
-    "edge": "12",
-    "firefox": "25",
-    "safari": "9",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "2",
-    "rhino": "1.7.14",
-    "opera_mobile": "21",
-    "electron": "0.20"
-  },
-  "es6.object.assign": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "13",
-    "firefox": "36",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.8",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "es6.object.create": {
-    "chrome": "5",
-    "opera": "12",
-    "edge": "12",
-    "firefox": "4",
-    "safari": "4",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "12",
-    "electron": "0.20"
-  },
-  "es7.object.define-getter": {
-    "chrome": "62",
-    "opera": "49",
-    "edge": "16",
-    "firefox": "48",
-    "safari": "9",
-    "node": "8.10",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "8",
-    "opera_mobile": "46",
-    "electron": "3.0"
-  },
-  "es7.object.define-setter": {
-    "chrome": "62",
-    "opera": "49",
-    "edge": "16",
-    "firefox": "48",
-    "safari": "9",
-    "node": "8.10",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "8",
-    "opera_mobile": "46",
-    "electron": "3.0"
-  },
-  "es6.object.define-property": {
-    "chrome": "5",
-    "opera": "12",
-    "edge": "12",
-    "firefox": "4",
-    "safari": "5.1",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "12",
-    "electron": "0.20"
-  },
-  "es6.object.define-properties": {
-    "chrome": "5",
-    "opera": "12",
-    "edge": "12",
-    "firefox": "4",
-    "safari": "4",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "12",
-    "electron": "0.20"
-  },
-  "es7.object.entries": {
-    "chrome": "54",
-    "opera": "41",
-    "edge": "14",
-    "firefox": "47",
-    "safari": "10.1",
-    "node": "7",
-    "deno": "1",
-    "ios": "10.3",
-    "samsung": "6",
-    "rhino": "1.7.14",
-    "opera_mobile": "41",
-    "electron": "1.4"
-  },
-  "es6.object.freeze": {
-    "chrome": "44",
-    "opera": "31",
-    "edge": "12",
-    "firefox": "35",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "4",
-    "rhino": "1.7.13",
-    "opera_mobile": "32",
-    "electron": "0.30"
-  },
-  "es6.object.get-own-property-descriptor": {
-    "chrome": "44",
-    "opera": "31",
-    "edge": "12",
-    "firefox": "35",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "4",
-    "rhino": "1.7.13",
-    "opera_mobile": "32",
-    "electron": "0.30"
-  },
-  "es7.object.get-own-property-descriptors": {
-    "chrome": "54",
-    "opera": "41",
-    "edge": "15",
-    "firefox": "50",
-    "safari": "10.1",
-    "node": "7",
-    "deno": "1",
-    "ios": "10.3",
-    "samsung": "6",
-    "rhino": "1.8",
-    "opera_mobile": "41",
-    "electron": "1.4"
-  },
-  "es6.object.get-own-property-names": {
-    "chrome": "40",
-    "opera": "27",
-    "edge": "12",
-    "firefox": "33",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "3.4",
-    "rhino": "1.7.13",
-    "opera_mobile": "27",
-    "electron": "0.21"
-  },
-  "es6.object.get-prototype-of": {
-    "chrome": "44",
-    "opera": "31",
-    "edge": "12",
-    "firefox": "35",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "4",
-    "rhino": "1.7.13",
-    "opera_mobile": "32",
-    "electron": "0.30"
-  },
-  "es7.object.lookup-getter": {
-    "chrome": "62",
-    "opera": "49",
-    "edge": "79",
-    "firefox": "36",
-    "safari": "9",
-    "node": "8.10",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "8",
-    "opera_mobile": "46",
-    "electron": "3.0"
-  },
-  "es7.object.lookup-setter": {
-    "chrome": "62",
-    "opera": "49",
-    "edge": "79",
-    "firefox": "36",
-    "safari": "9",
-    "node": "8.10",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "8",
-    "opera_mobile": "46",
-    "electron": "3.0"
-  },
-  "es6.object.prevent-extensions": {
-    "chrome": "44",
-    "opera": "31",
-    "edge": "12",
-    "firefox": "35",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "4",
-    "rhino": "1.7.13",
-    "opera_mobile": "32",
-    "electron": "0.30"
-  },
-  "es6.object.to-string": {
-    "chrome": "57",
-    "opera": "44",
-    "edge": "15",
-    "firefox": "51",
-    "safari": "10",
-    "node": "8",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "7",
-    "opera_mobile": "43",
-    "electron": "1.7"
-  },
-  "es6.object.is": {
-    "chrome": "19",
-    "opera": "15",
-    "edge": "12",
-    "firefox": "22",
-    "safari": "9",
-    "node": "0.8",
-    "deno": "1",
-    "android": "4.1",
-    "ios": "9",
-    "samsung": "1.5",
-    "rhino": "1.7.13",
-    "opera_mobile": "14",
-    "electron": "0.20"
-  },
-  "es6.object.is-frozen": {
-    "chrome": "44",
-    "opera": "31",
-    "edge": "12",
-    "firefox": "35",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "4",
-    "rhino": "1.7.13",
-    "opera_mobile": "32",
-    "electron": "0.30"
-  },
-  "es6.object.is-sealed": {
-    "chrome": "44",
-    "opera": "31",
-    "edge": "12",
-    "firefox": "35",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "4",
-    "rhino": "1.7.13",
-    "opera_mobile": "32",
-    "electron": "0.30"
-  },
-  "es6.object.is-extensible": {
-    "chrome": "44",
-    "opera": "31",
-    "edge": "12",
-    "firefox": "35",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "4",
-    "rhino": "1.7.13",
-    "opera_mobile": "32",
-    "electron": "0.30"
-  },
-  "es6.object.keys": {
-    "chrome": "40",
-    "opera": "27",
-    "edge": "12",
-    "firefox": "35",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "3.4",
-    "rhino": "1.7.13",
-    "opera_mobile": "27",
-    "electron": "0.21"
-  },
-  "es6.object.seal": {
-    "chrome": "44",
-    "opera": "31",
-    "edge": "12",
-    "firefox": "35",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "4",
-    "rhino": "1.7.13",
-    "opera_mobile": "32",
-    "electron": "0.30"
-  },
-  "es6.object.set-prototype-of": {
-    "chrome": "34",
-    "opera": "21",
-    "edge": "12",
-    "firefox": "31",
-    "safari": "9",
-    "node": "0.12",
-    "deno": "1",
-    "ie": "11",
-    "ios": "9",
-    "samsung": "2",
-    "rhino": "1.7.13",
-    "opera_mobile": "21",
-    "electron": "0.20"
-  },
-  "es7.object.values": {
-    "chrome": "54",
-    "opera": "41",
-    "edge": "14",
-    "firefox": "47",
-    "safari": "10.1",
-    "node": "7",
-    "deno": "1",
-    "ios": "10.3",
-    "samsung": "6",
-    "rhino": "1.7.14",
-    "opera_mobile": "41",
-    "electron": "1.4"
-  },
-  "es6.promise": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "14",
-    "firefox": "45",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.7.15",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es7.promise.finally": {
-    "chrome": "63",
-    "opera": "50",
-    "edge": "18",
-    "firefox": "58",
-    "safari": "11.1",
-    "node": "10",
-    "deno": "1",
-    "ios": "11.3",
-    "samsung": "8",
-    "rhino": "1.7.15",
-    "opera_mobile": "46",
-    "electron": "3.0"
-  },
-  "es6.reflect.apply": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "12",
-    "firefox": "42",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.8",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "es6.reflect.construct": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "13",
-    "firefox": "49",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "es6.reflect.define-property": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "13",
-    "firefox": "42",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.8",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "es6.reflect.delete-property": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "12",
-    "firefox": "42",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.8",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "es6.reflect.get": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "12",
-    "firefox": "42",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.8",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "es6.reflect.get-own-property-descriptor": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "12",
-    "firefox": "42",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.8",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "es6.reflect.get-prototype-of": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "12",
-    "firefox": "42",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.8",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "es6.reflect.has": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "12",
-    "firefox": "42",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.8",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "es6.reflect.is-extensible": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "12",
-    "firefox": "42",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.8",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "es6.reflect.own-keys": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "12",
-    "firefox": "42",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.8",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "es6.reflect.prevent-extensions": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "12",
-    "firefox": "42",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.8",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "es6.reflect.set": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "12",
-    "firefox": "42",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.8",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "es6.reflect.set-prototype-of": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "12",
-    "firefox": "42",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.8",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "es6.regexp.constructor": {
-    "chrome": "50",
-    "opera": "37",
-    "edge": "79",
-    "firefox": "40",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "37",
-    "electron": "1.1"
-  },
-  "es6.regexp.flags": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "79",
-    "firefox": "37",
-    "safari": "9",
-    "node": "6",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "5",
-    "rhino": "1.7.15",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "es6.regexp.match": {
-    "chrome": "50",
-    "opera": "37",
-    "edge": "79",
-    "firefox": "49",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.7.13",
-    "opera_mobile": "37",
-    "electron": "1.1"
-  },
-  "es6.regexp.replace": {
-    "chrome": "50",
-    "opera": "37",
-    "edge": "79",
-    "firefox": "49",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "37",
-    "electron": "1.1"
-  },
-  "es6.regexp.split": {
-    "chrome": "50",
-    "opera": "37",
-    "edge": "79",
-    "firefox": "49",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "37",
-    "electron": "1.1"
-  },
-  "es6.regexp.search": {
-    "chrome": "50",
-    "opera": "37",
-    "edge": "79",
-    "firefox": "49",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.7.13",
-    "opera_mobile": "37",
-    "electron": "1.1"
-  },
-  "es6.regexp.to-string": {
-    "chrome": "50",
-    "opera": "37",
-    "edge": "79",
-    "firefox": "39",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.7.15",
-    "opera_mobile": "37",
-    "electron": "1.1"
-  },
-  "es6.set": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "15",
-    "firefox": "53",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.symbol": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "79",
-    "firefox": "51",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es7.symbol.async-iterator": {
-    "chrome": "63",
-    "opera": "50",
-    "edge": "79",
-    "firefox": "57",
-    "safari": "12",
-    "node": "10",
-    "deno": "1",
-    "ios": "12",
-    "samsung": "8",
-    "opera_mobile": "46",
-    "electron": "3.0"
-  },
-  "es6.string.anchor": {
-    "chrome": "5",
-    "opera": "15",
-    "edge": "12",
-    "firefox": "17",
-    "safari": "6",
-    "node": "0.4",
-    "deno": "1",
-    "android": "4",
-    "ios": "7",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.14",
-    "opera_mobile": "14",
-    "electron": "0.20"
-  },
-  "es6.string.big": {
-    "chrome": "5",
-    "opera": "15",
-    "edge": "12",
-    "firefox": "17",
-    "safari": "6",
-    "node": "0.4",
-    "deno": "1",
-    "android": "4",
-    "ios": "7",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.14",
-    "opera_mobile": "14",
-    "electron": "0.20"
-  },
-  "es6.string.blink": {
-    "chrome": "5",
-    "opera": "15",
-    "edge": "12",
-    "firefox": "17",
-    "safari": "6",
-    "node": "0.4",
-    "deno": "1",
-    "android": "4",
-    "ios": "7",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.14",
-    "opera_mobile": "14",
-    "electron": "0.20"
-  },
-  "es6.string.bold": {
-    "chrome": "5",
-    "opera": "15",
-    "edge": "12",
-    "firefox": "17",
-    "safari": "6",
-    "node": "0.4",
-    "deno": "1",
-    "android": "4",
-    "ios": "7",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.14",
-    "opera_mobile": "14",
-    "electron": "0.20"
-  },
-  "es6.string.code-point-at": {
-    "chrome": "41",
-    "opera": "28",
-    "edge": "12",
-    "firefox": "29",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "3.4",
-    "rhino": "1.7.13",
-    "opera_mobile": "28",
-    "electron": "0.21"
-  },
-  "es6.string.ends-with": {
-    "chrome": "41",
-    "opera": "28",
-    "edge": "12",
-    "firefox": "29",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "3.4",
-    "rhino": "1.7.13",
-    "opera_mobile": "28",
-    "electron": "0.21"
-  },
-  "es6.string.fixed": {
-    "chrome": "5",
-    "opera": "15",
-    "edge": "12",
-    "firefox": "17",
-    "safari": "6",
-    "node": "0.4",
-    "deno": "1",
-    "android": "4",
-    "ios": "7",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.14",
-    "opera_mobile": "14",
-    "electron": "0.20"
-  },
-  "es6.string.fontcolor": {
-    "chrome": "5",
-    "opera": "15",
-    "edge": "12",
-    "firefox": "17",
-    "safari": "6",
-    "node": "0.4",
-    "deno": "1",
-    "android": "4",
-    "ios": "7",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.14",
-    "opera_mobile": "14",
-    "electron": "0.20"
-  },
-  "es6.string.fontsize": {
-    "chrome": "5",
-    "opera": "15",
-    "edge": "12",
-    "firefox": "17",
-    "safari": "6",
-    "node": "0.4",
-    "deno": "1",
-    "android": "4",
-    "ios": "7",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.14",
-    "opera_mobile": "14",
-    "electron": "0.20"
-  },
-  "es6.string.from-code-point": {
-    "chrome": "41",
-    "opera": "28",
-    "edge": "12",
-    "firefox": "29",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "3.4",
-    "rhino": "1.7.13",
-    "opera_mobile": "28",
-    "electron": "0.21"
-  },
-  "es6.string.includes": {
-    "chrome": "41",
-    "opera": "28",
-    "edge": "12",
-    "firefox": "40",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "3.4",
-    "rhino": "1.7.13",
-    "opera_mobile": "28",
-    "electron": "0.21"
-  },
-  "es6.string.italics": {
-    "chrome": "5",
-    "opera": "15",
-    "edge": "12",
-    "firefox": "17",
-    "safari": "6",
-    "node": "0.4",
-    "deno": "1",
-    "android": "4",
-    "ios": "7",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.14",
-    "opera_mobile": "14",
-    "electron": "0.20"
-  },
-  "es6.string.iterator": {
-    "chrome": "38",
-    "opera": "25",
-    "edge": "12",
-    "firefox": "36",
-    "safari": "9",
-    "node": "0.12",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "3",
-    "rhino": "1.7.13",
-    "opera_mobile": "25",
-    "electron": "0.20"
-  },
-  "es6.string.link": {
-    "chrome": "5",
-    "opera": "15",
-    "edge": "12",
-    "firefox": "17",
-    "safari": "6",
-    "node": "0.4",
-    "deno": "1",
-    "android": "4",
-    "ios": "7",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.14",
-    "opera_mobile": "14",
-    "electron": "0.20"
-  },
-  "es7.string.pad-start": {
-    "chrome": "57",
-    "opera": "44",
-    "edge": "15",
-    "firefox": "48",
-    "safari": "10",
-    "node": "8",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "7",
-    "rhino": "1.7.13",
-    "opera_mobile": "43",
-    "electron": "1.7"
-  },
-  "es7.string.pad-end": {
-    "chrome": "57",
-    "opera": "44",
-    "edge": "15",
-    "firefox": "48",
-    "safari": "10",
-    "node": "8",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "7",
-    "rhino": "1.7.13",
-    "opera_mobile": "43",
-    "electron": "1.7"
-  },
-  "es6.string.raw": {
-    "chrome": "41",
-    "opera": "28",
-    "edge": "12",
-    "firefox": "34",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "3.4",
-    "rhino": "1.7.14",
-    "opera_mobile": "28",
-    "electron": "0.21"
-  },
-  "es6.string.repeat": {
-    "chrome": "41",
-    "opera": "28",
-    "edge": "12",
-    "firefox": "24",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "3.4",
-    "rhino": "1.7.13",
-    "opera_mobile": "28",
-    "electron": "0.21"
-  },
-  "es6.string.small": {
-    "chrome": "5",
-    "opera": "15",
-    "edge": "12",
-    "firefox": "17",
-    "safari": "6",
-    "node": "0.4",
-    "deno": "1",
-    "android": "4",
-    "ios": "7",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.14",
-    "opera_mobile": "14",
-    "electron": "0.20"
-  },
-  "es6.string.starts-with": {
-    "chrome": "41",
-    "opera": "28",
-    "edge": "12",
-    "firefox": "29",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "3.4",
-    "rhino": "1.7.13",
-    "opera_mobile": "28",
-    "electron": "0.21"
-  },
-  "es6.string.strike": {
-    "chrome": "5",
-    "opera": "15",
-    "edge": "12",
-    "firefox": "17",
-    "safari": "6",
-    "node": "0.4",
-    "deno": "1",
-    "android": "4",
-    "ios": "7",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.14",
-    "opera_mobile": "14",
-    "electron": "0.20"
-  },
-  "es6.string.sub": {
-    "chrome": "5",
-    "opera": "15",
-    "edge": "12",
-    "firefox": "17",
-    "safari": "6",
-    "node": "0.4",
-    "deno": "1",
-    "android": "4",
-    "ios": "7",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.14",
-    "opera_mobile": "14",
-    "electron": "0.20"
-  },
-  "es6.string.sup": {
-    "chrome": "5",
-    "opera": "15",
-    "edge": "12",
-    "firefox": "17",
-    "safari": "6",
-    "node": "0.4",
-    "deno": "1",
-    "android": "4",
-    "ios": "7",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.14",
-    "opera_mobile": "14",
-    "electron": "0.20"
-  },
-  "es6.string.trim": {
-    "chrome": "5",
-    "opera": "10.50",
-    "edge": "12",
-    "firefox": "3.5",
-    "safari": "4",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "10.1",
-    "electron": "0.20"
-  },
-  "es7.string.trim-left": {
-    "chrome": "66",
-    "opera": "53",
-    "edge": "79",
-    "firefox": "61",
-    "safari": "12",
-    "node": "10",
-    "deno": "1",
-    "ios": "12",
-    "samsung": "9",
-    "rhino": "1.7.13",
-    "opera_mobile": "47",
-    "electron": "3.0"
-  },
-  "es7.string.trim-right": {
-    "chrome": "66",
-    "opera": "53",
-    "edge": "79",
-    "firefox": "61",
-    "safari": "12",
-    "node": "10",
-    "deno": "1",
-    "ios": "12",
-    "samsung": "9",
-    "rhino": "1.7.13",
-    "opera_mobile": "47",
-    "electron": "3.0"
-  },
-  "es6.typed.array-buffer": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "13",
-    "firefox": "48",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.typed.data-view": {
-    "chrome": "5",
-    "opera": "12",
-    "edge": "12",
-    "firefox": "15",
-    "safari": "5.1",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "10",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "12",
-    "electron": "0.20"
-  },
-  "es6.typed.int8-array": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "13",
-    "firefox": "48",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.typed.uint8-array": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "13",
-    "firefox": "48",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.typed.uint8-clamped-array": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "13",
-    "firefox": "48",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.typed.int16-array": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "13",
-    "firefox": "48",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.typed.uint16-array": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "13",
-    "firefox": "48",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.typed.int32-array": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "13",
-    "firefox": "48",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.typed.uint32-array": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "13",
-    "firefox": "48",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.typed.float32-array": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "13",
-    "firefox": "48",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.typed.float64-array": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "13",
-    "firefox": "48",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.weak-map": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "15",
-    "firefox": "53",
-    "safari": "9",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "5",
-    "rhino": "1.7.15",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "es6.weak-set": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "15",
-    "firefox": "53",
-    "safari": "9",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "5",
-    "rhino": "1.7.15",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/@babel/compat-data/data/corejs3-shipped-proposals.json
-```json
-[
-  "esnext.promise.all-settled",
-  "esnext.string.match-all",
-  "esnext.global-this"
-]
-```
-
-----
-
-# frontend/node_modules/@babel/compat-data/data/native-modules.json
-```json
-{
-  "es6.module": {
-    "chrome": "61",
-    "and_chr": "61",
-    "edge": "16",
-    "firefox": "60",
-    "and_ff": "60",
-    "node": "13.2.0",
-    "opera": "48",
-    "op_mob": "45",
-    "safari": "10.1",
-    "ios": "10.3",
-    "samsung": "8.2",
-    "android": "61",
-    "electron": "2.0",
-    "ios_saf": "10.3"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/@babel/compat-data/data/overlapping-plugins.json
-```json
-{
-  "transform-async-to-generator": [
-    "bugfix/transform-async-arrows-in-class"
-  ],
-  "transform-parameters": [
-    "bugfix/transform-edge-default-parameters",
-    "bugfix/transform-safari-id-destructuring-collision-in-function-expression"
-  ],
-  "transform-function-name": [
-    "bugfix/transform-edge-function-name"
-  ],
-  "transform-block-scoping": [
-    "bugfix/transform-safari-block-shadowing",
-    "bugfix/transform-safari-for-shadowing"
-  ],
-  "transform-template-literals": [
-    "bugfix/transform-tagged-template-caching"
-  ],
-  "transform-optional-chaining": [
-    "bugfix/transform-v8-spread-parameters-in-optional-chaining"
-  ],
-  "proposal-optional-chaining": [
-    "bugfix/transform-v8-spread-parameters-in-optional-chaining"
-  ],
-  "transform-class-properties": [
-    "bugfix/transform-v8-static-class-fields-redefine-readonly",
-    "bugfix/transform-firefox-class-in-computed-class-key",
-    "bugfix/transform-safari-class-field-initializer-scope"
-  ],
-  "proposal-class-properties": [
-    "bugfix/transform-v8-static-class-fields-redefine-readonly",
-    "bugfix/transform-firefox-class-in-computed-class-key",
-    "bugfix/transform-safari-class-field-initializer-scope"
-  ]
-}
-```
-
-----
-
-# frontend/node_modules/@babel/compat-data/data/plugin-bugfixes.json
-```json
-{
-  "bugfix/transform-async-arrows-in-class": {
-    "chrome": "55",
-    "opera": "42",
-    "edge": "15",
-    "firefox": "52",
-    "safari": "11",
-    "node": "7.6",
-    "deno": "1",
-    "ios": "11",
-    "samsung": "6",
-    "opera_mobile": "42",
-    "electron": "1.6"
-  },
-  "bugfix/transform-edge-default-parameters": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "18",
-    "firefox": "52",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "bugfix/transform-edge-function-name": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "79",
-    "firefox": "53",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "bugfix/transform-safari-block-shadowing": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "12",
-    "firefox": "44",
-    "safari": "11",
-    "node": "6",
-    "deno": "1",
-    "ie": "11",
-    "ios": "11",
-    "samsung": "5",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "bugfix/transform-safari-for-shadowing": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "12",
-    "firefox": "4",
-    "safari": "11",
-    "node": "6",
-    "deno": "1",
-    "ie": "11",
-    "ios": "11",
-    "samsung": "5",
-    "rhino": "1.7.13",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "bugfix/transform-safari-id-destructuring-collision-in-function-expression": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "14",
-    "firefox": "2",
-    "safari": "16.3",
-    "node": "6",
-    "deno": "1",
-    "ios": "16.3",
-    "samsung": "5",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "bugfix/transform-tagged-template-caching": {
-    "chrome": "41",
-    "opera": "28",
-    "edge": "12",
-    "firefox": "34",
-    "safari": "13",
-    "node": "4",
-    "deno": "1",
-    "ios": "13",
-    "samsung": "3.4",
-    "rhino": "1.7.14",
-    "opera_mobile": "28",
-    "electron": "0.21"
-  },
-  "bugfix/transform-v8-spread-parameters-in-optional-chaining": {
-    "chrome": "91",
-    "opera": "77",
-    "edge": "91",
-    "firefox": "74",
-    "safari": "13.1",
-    "node": "16.9",
-    "deno": "1.9",
-    "ios": "13.4",
-    "samsung": "16",
-    "opera_mobile": "64",
-    "electron": "13.0"
-  },
-  "transform-optional-chaining": {
-    "chrome": "80",
-    "opera": "67",
-    "edge": "80",
-    "firefox": "74",
-    "safari": "13.1",
-    "node": "14",
-    "deno": "1",
-    "ios": "13.4",
-    "samsung": "13",
-    "rhino": "1.8",
-    "opera_mobile": "57",
-    "electron": "8.0"
-  },
-  "proposal-optional-chaining": {
-    "chrome": "80",
-    "opera": "67",
-    "edge": "80",
-    "firefox": "74",
-    "safari": "13.1",
-    "node": "14",
-    "deno": "1",
-    "ios": "13.4",
-    "samsung": "13",
-    "rhino": "1.8",
-    "opera_mobile": "57",
-    "electron": "8.0"
-  },
-  "transform-parameters": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "15",
-    "firefox": "52",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "transform-async-to-generator": {
-    "chrome": "55",
-    "opera": "42",
-    "edge": "15",
-    "firefox": "52",
-    "safari": "10.1",
-    "node": "7.6",
-    "deno": "1",
-    "ios": "10.3",
-    "samsung": "6",
-    "opera_mobile": "42",
-    "electron": "1.6"
-  },
-  "transform-template-literals": {
-    "chrome": "41",
-    "opera": "28",
-    "edge": "13",
-    "firefox": "34",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "3.4",
-    "opera_mobile": "28",
-    "electron": "0.21"
-  },
-  "transform-function-name": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "14",
-    "firefox": "53",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "transform-block-scoping": {
-    "chrome": "50",
-    "opera": "37",
-    "edge": "14",
-    "firefox": "53",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "37",
-    "electron": "1.1"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/@babel/compat-data/data/plugins.json
-```json
-{
-  "transform-explicit-resource-management": {
-    "chrome": "134",
-    "edge": "134",
-    "firefox": "141",
-    "node": "24",
-    "electron": "35.0"
-  },
-  "transform-duplicate-named-capturing-groups-regex": {
-    "chrome": "126",
-    "opera": "112",
-    "edge": "126",
-    "firefox": "129",
-    "safari": "17.4",
-    "node": "23",
-    "ios": "17.4",
-    "electron": "31.0"
-  },
-  "transform-regexp-modifiers": {
-    "chrome": "125",
-    "opera": "111",
-    "edge": "125",
-    "firefox": "132",
-    "node": "23",
-    "samsung": "27",
-    "electron": "31.0"
-  },
-  "transform-unicode-sets-regex": {
-    "chrome": "112",
-    "opera": "98",
-    "edge": "112",
-    "firefox": "116",
-    "safari": "17",
-    "node": "20",
-    "deno": "1.32",
-    "ios": "17",
-    "samsung": "23",
-    "opera_mobile": "75",
-    "electron": "24.0"
-  },
-  "bugfix/transform-v8-static-class-fields-redefine-readonly": {
-    "chrome": "98",
-    "opera": "84",
-    "edge": "98",
-    "firefox": "75",
-    "safari": "15",
-    "node": "12",
-    "deno": "1.18",
-    "ios": "15",
-    "samsung": "11",
-    "opera_mobile": "52",
-    "electron": "17.0"
-  },
-  "bugfix/transform-firefox-class-in-computed-class-key": {
-    "chrome": "74",
-    "opera": "62",
-    "edge": "79",
-    "firefox": "126",
-    "safari": "16",
-    "node": "12",
-    "deno": "1",
-    "ios": "16",
-    "samsung": "11",
-    "opera_mobile": "53",
-    "electron": "6.0"
-  },
-  "bugfix/transform-safari-class-field-initializer-scope": {
-    "chrome": "74",
-    "opera": "62",
-    "edge": "79",
-    "firefox": "69",
-    "safari": "16",
-    "node": "12",
-    "deno": "1",
-    "ios": "16",
-    "samsung": "11",
-    "opera_mobile": "53",
-    "electron": "6.0"
-  },
-  "transform-class-static-block": {
-    "chrome": "94",
-    "opera": "80",
-    "edge": "94",
-    "firefox": "93",
-    "safari": "16.4",
-    "node": "16.11",
-    "deno": "1.14",
-    "ios": "16.4",
-    "samsung": "17",
-    "opera_mobile": "66",
-    "electron": "15.0"
-  },
-  "proposal-class-static-block": {
-    "chrome": "94",
-    "opera": "80",
-    "edge": "94",
-    "firefox": "93",
-    "safari": "16.4",
-    "node": "16.11",
-    "deno": "1.14",
-    "ios": "16.4",
-    "samsung": "17",
-    "opera_mobile": "66",
-    "electron": "15.0"
-  },
-  "transform-private-property-in-object": {
-    "chrome": "91",
-    "opera": "77",
-    "edge": "91",
-    "firefox": "90",
-    "safari": "15",
-    "node": "16.9",
-    "deno": "1.9",
-    "ios": "15",
-    "samsung": "16",
-    "opera_mobile": "64",
-    "electron": "13.0"
-  },
-  "proposal-private-property-in-object": {
-    "chrome": "91",
-    "opera": "77",
-    "edge": "91",
-    "firefox": "90",
-    "safari": "15",
-    "node": "16.9",
-    "deno": "1.9",
-    "ios": "15",
-    "samsung": "16",
-    "opera_mobile": "64",
-    "electron": "13.0"
-  },
-  "transform-class-properties": {
-    "chrome": "74",
-    "opera": "62",
-    "edge": "79",
-    "firefox": "90",
-    "safari": "14.1",
-    "node": "12",
-    "deno": "1",
-    "ios": "14.5",
-    "samsung": "11",
-    "opera_mobile": "53",
-    "electron": "6.0"
-  },
-  "proposal-class-properties": {
-    "chrome": "74",
-    "opera": "62",
-    "edge": "79",
-    "firefox": "90",
-    "safari": "14.1",
-    "node": "12",
-    "deno": "1",
-    "ios": "14.5",
-    "samsung": "11",
-    "opera_mobile": "53",
-    "electron": "6.0"
-  },
-  "transform-private-methods": {
-    "chrome": "84",
-    "opera": "70",
-    "edge": "84",
-    "firefox": "90",
-    "safari": "15",
-    "node": "14.6",
-    "deno": "1",
-    "ios": "15",
-    "samsung": "14",
-    "opera_mobile": "60",
-    "electron": "10.0"
-  },
-  "proposal-private-methods": {
-    "chrome": "84",
-    "opera": "70",
-    "edge": "84",
-    "firefox": "90",
-    "safari": "15",
-    "node": "14.6",
-    "deno": "1",
-    "ios": "15",
-    "samsung": "14",
-    "opera_mobile": "60",
-    "electron": "10.0"
-  },
-  "transform-numeric-separator": {
-    "chrome": "75",
-    "opera": "62",
-    "edge": "79",
-    "firefox": "70",
-    "safari": "13",
-    "node": "12.5",
-    "deno": "1",
-    "ios": "13",
-    "samsung": "11",
-    "rhino": "1.7.14",
-    "opera_mobile": "54",
-    "electron": "6.0"
-  },
-  "proposal-numeric-separator": {
-    "chrome": "75",
-    "opera": "62",
-    "edge": "79",
-    "firefox": "70",
-    "safari": "13",
-    "node": "12.5",
-    "deno": "1",
-    "ios": "13",
-    "samsung": "11",
-    "rhino": "1.7.14",
-    "opera_mobile": "54",
-    "electron": "6.0"
-  },
-  "transform-logical-assignment-operators": {
-    "chrome": "85",
-    "opera": "71",
-    "edge": "85",
-    "firefox": "79",
-    "safari": "14",
-    "node": "15",
-    "deno": "1.2",
-    "ios": "14",
-    "samsung": "14",
-    "opera_mobile": "60",
-    "electron": "10.0"
-  },
-  "proposal-logical-assignment-operators": {
-    "chrome": "85",
-    "opera": "71",
-    "edge": "85",
-    "firefox": "79",
-    "safari": "14",
-    "node": "15",
-    "deno": "1.2",
-    "ios": "14",
-    "samsung": "14",
-    "opera_mobile": "60",
-    "electron": "10.0"
-  },
-  "transform-nullish-coalescing-operator": {
-    "chrome": "80",
-    "opera": "67",
-    "edge": "80",
-    "firefox": "72",
-    "safari": "13.1",
-    "node": "14",
-    "deno": "1",
-    "ios": "13.4",
-    "samsung": "13",
-    "rhino": "1.8",
-    "opera_mobile": "57",
-    "electron": "8.0"
-  },
-  "proposal-nullish-coalescing-operator": {
-    "chrome": "80",
-    "opera": "67",
-    "edge": "80",
-    "firefox": "72",
-    "safari": "13.1",
-    "node": "14",
-    "deno": "1",
-    "ios": "13.4",
-    "samsung": "13",
-    "rhino": "1.8",
-    "opera_mobile": "57",
-    "electron": "8.0"
-  },
-  "transform-optional-chaining": {
-    "chrome": "91",
-    "opera": "77",
-    "edge": "91",
-    "firefox": "74",
-    "safari": "13.1",
-    "node": "16.9",
-    "deno": "1.9",
-    "ios": "13.4",
-    "samsung": "16",
-    "opera_mobile": "64",
-    "electron": "13.0"
-  },
-  "proposal-optional-chaining": {
-    "chrome": "91",
-    "opera": "77",
-    "edge": "91",
-    "firefox": "74",
-    "safari": "13.1",
-    "node": "16.9",
-    "deno": "1.9",
-    "ios": "13.4",
-    "samsung": "16",
-    "opera_mobile": "64",
-    "electron": "13.0"
-  },
-  "transform-json-strings": {
-    "chrome": "66",
-    "opera": "53",
-    "edge": "79",
-    "firefox": "62",
-    "safari": "12",
-    "node": "10",
-    "deno": "1",
-    "ios": "12",
-    "samsung": "9",
-    "rhino": "1.7.14",
-    "opera_mobile": "47",
-    "electron": "3.0"
-  },
-  "proposal-json-strings": {
-    "chrome": "66",
-    "opera": "53",
-    "edge": "79",
-    "firefox": "62",
-    "safari": "12",
-    "node": "10",
-    "deno": "1",
-    "ios": "12",
-    "samsung": "9",
-    "rhino": "1.7.14",
-    "opera_mobile": "47",
-    "electron": "3.0"
-  },
-  "transform-optional-catch-binding": {
-    "chrome": "66",
-    "opera": "53",
-    "edge": "79",
-    "firefox": "58",
-    "safari": "11.1",
-    "node": "10",
-    "deno": "1",
-    "ios": "11.3",
-    "samsung": "9",
-    "opera_mobile": "47",
-    "electron": "3.0"
-  },
-  "proposal-optional-catch-binding": {
-    "chrome": "66",
-    "opera": "53",
-    "edge": "79",
-    "firefox": "58",
-    "safari": "11.1",
-    "node": "10",
-    "deno": "1",
-    "ios": "11.3",
-    "samsung": "9",
-    "opera_mobile": "47",
-    "electron": "3.0"
-  },
-  "transform-parameters": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "18",
-    "firefox": "52",
-    "safari": "16.3",
-    "node": "6",
-    "deno": "1",
-    "ios": "16.3",
-    "samsung": "5",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "transform-async-generator-functions": {
-    "chrome": "63",
-    "opera": "50",
-    "edge": "79",
-    "firefox": "57",
-    "safari": "12",
-    "node": "10",
-    "deno": "1",
-    "ios": "12",
-    "samsung": "8",
-    "opera_mobile": "46",
-    "electron": "3.0"
-  },
-  "proposal-async-generator-functions": {
-    "chrome": "63",
-    "opera": "50",
-    "edge": "79",
-    "firefox": "57",
-    "safari": "12",
-    "node": "10",
-    "deno": "1",
-    "ios": "12",
-    "samsung": "8",
-    "opera_mobile": "46",
-    "electron": "3.0"
-  },
-  "transform-object-rest-spread": {
-    "chrome": "60",
-    "opera": "47",
-    "edge": "79",
-    "firefox": "55",
-    "safari": "11.1",
-    "node": "8.3",
-    "deno": "1",
-    "ios": "11.3",
-    "samsung": "8",
-    "opera_mobile": "44",
-    "electron": "2.0"
-  },
-  "proposal-object-rest-spread": {
-    "chrome": "60",
-    "opera": "47",
-    "edge": "79",
-    "firefox": "55",
-    "safari": "11.1",
-    "node": "8.3",
-    "deno": "1",
-    "ios": "11.3",
-    "samsung": "8",
-    "opera_mobile": "44",
-    "electron": "2.0"
-  },
-  "transform-dotall-regex": {
-    "chrome": "62",
-    "opera": "49",
-    "edge": "79",
-    "firefox": "78",
-    "safari": "11.1",
-    "node": "8.10",
-    "deno": "1",
-    "ios": "11.3",
-    "samsung": "8",
-    "rhino": "1.7.15",
-    "opera_mobile": "46",
-    "electron": "3.0"
-  },
-  "transform-unicode-property-regex": {
-    "chrome": "64",
-    "opera": "51",
-    "edge": "79",
-    "firefox": "78",
-    "safari": "11.1",
-    "node": "10",
-    "deno": "1",
-    "ios": "11.3",
-    "samsung": "9",
-    "opera_mobile": "47",
-    "electron": "3.0"
-  },
-  "proposal-unicode-property-regex": {
-    "chrome": "64",
-    "opera": "51",
-    "edge": "79",
-    "firefox": "78",
-    "safari": "11.1",
-    "node": "10",
-    "deno": "1",
-    "ios": "11.3",
-    "samsung": "9",
-    "opera_mobile": "47",
-    "electron": "3.0"
-  },
-  "transform-named-capturing-groups-regex": {
-    "chrome": "64",
-    "opera": "51",
-    "edge": "79",
-    "firefox": "78",
-    "safari": "11.1",
-    "node": "10",
-    "deno": "1",
-    "ios": "11.3",
-    "samsung": "9",
-    "opera_mobile": "47",
-    "electron": "3.0"
-  },
-  "transform-async-to-generator": {
-    "chrome": "55",
-    "opera": "42",
-    "edge": "15",
-    "firefox": "52",
-    "safari": "11",
-    "node": "7.6",
-    "deno": "1",
-    "ios": "11",
-    "samsung": "6",
-    "opera_mobile": "42",
-    "electron": "1.6"
-  },
-  "transform-exponentiation-operator": {
-    "chrome": "52",
-    "opera": "39",
-    "edge": "14",
-    "firefox": "52",
-    "safari": "10.1",
-    "node": "7",
-    "deno": "1",
-    "ios": "10.3",
-    "samsung": "6",
-    "rhino": "1.7.14",
-    "opera_mobile": "41",
-    "electron": "1.3"
-  },
-  "transform-template-literals": {
-    "chrome": "41",
-    "opera": "28",
-    "edge": "13",
-    "firefox": "34",
-    "safari": "13",
-    "node": "4",
-    "deno": "1",
-    "ios": "13",
-    "samsung": "3.4",
-    "opera_mobile": "28",
-    "electron": "0.21"
-  },
-  "transform-literals": {
-    "chrome": "44",
-    "opera": "31",
-    "edge": "12",
-    "firefox": "53",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "4",
-    "rhino": "1.7.15",
-    "opera_mobile": "32",
-    "electron": "0.30"
-  },
-  "transform-function-name": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "79",
-    "firefox": "53",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "transform-arrow-functions": {
-    "chrome": "47",
-    "opera": "34",
-    "edge": "13",
-    "firefox": "43",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.7.13",
-    "opera_mobile": "34",
-    "electron": "0.36"
-  },
-  "transform-block-scoped-functions": {
-    "chrome": "41",
-    "opera": "28",
-    "edge": "12",
-    "firefox": "46",
-    "safari": "10",
-    "node": "4",
-    "deno": "1",
-    "ie": "11",
-    "ios": "10",
-    "samsung": "3.4",
-    "opera_mobile": "28",
-    "electron": "0.21"
-  },
-  "transform-classes": {
-    "chrome": "46",
-    "opera": "33",
-    "edge": "13",
-    "firefox": "45",
-    "safari": "10",
-    "node": "5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "33",
-    "electron": "0.36"
-  },
-  "transform-object-super": {
-    "chrome": "46",
-    "opera": "33",
-    "edge": "13",
-    "firefox": "45",
-    "safari": "10",
-    "node": "5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "33",
-    "electron": "0.36"
-  },
-  "transform-shorthand-properties": {
-    "chrome": "43",
-    "opera": "30",
-    "edge": "12",
-    "firefox": "33",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "4",
-    "rhino": "1.7.14",
-    "opera_mobile": "30",
-    "electron": "0.27"
-  },
-  "transform-duplicate-keys": {
-    "chrome": "42",
-    "opera": "29",
-    "edge": "12",
-    "firefox": "34",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "3.4",
-    "opera_mobile": "29",
-    "electron": "0.25"
-  },
-  "transform-computed-properties": {
-    "chrome": "44",
-    "opera": "31",
-    "edge": "12",
-    "firefox": "34",
-    "safari": "7.1",
-    "node": "4",
-    "deno": "1",
-    "ios": "8",
-    "samsung": "4",
-    "rhino": "1.8",
-    "opera_mobile": "32",
-    "electron": "0.30"
-  },
-  "transform-for-of": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "15",
-    "firefox": "53",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "transform-sticky-regex": {
-    "chrome": "49",
-    "opera": "36",
-    "edge": "13",
-    "firefox": "3",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "rhino": "1.7.15",
-    "opera_mobile": "36",
-    "electron": "0.37"
-  },
-  "transform-unicode-escapes": {
-    "chrome": "44",
-    "opera": "31",
-    "edge": "12",
-    "firefox": "53",
-    "safari": "9",
-    "node": "4",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "4",
-    "rhino": "1.7.15",
-    "opera_mobile": "32",
-    "electron": "0.30"
-  },
-  "transform-unicode-regex": {
-    "chrome": "50",
-    "opera": "37",
-    "edge": "13",
-    "firefox": "46",
-    "safari": "12",
-    "node": "6",
-    "deno": "1",
-    "ios": "12",
-    "samsung": "5",
-    "opera_mobile": "37",
-    "electron": "1.1"
-  },
-  "transform-spread": {
-    "chrome": "46",
-    "opera": "33",
-    "edge": "13",
-    "firefox": "45",
-    "safari": "10",
-    "node": "5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "33",
-    "electron": "0.36"
-  },
-  "transform-destructuring": {
-    "chrome": "51",
-    "opera": "38",
-    "edge": "15",
-    "firefox": "53",
-    "safari": "10",
-    "node": "6.5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "41",
-    "electron": "1.2"
-  },
-  "transform-block-scoping": {
-    "chrome": "50",
-    "opera": "37",
-    "edge": "14",
-    "firefox": "53",
-    "safari": "11",
-    "node": "6",
-    "deno": "1",
-    "ios": "11",
-    "samsung": "5",
-    "opera_mobile": "37",
-    "electron": "1.1"
-  },
-  "transform-typeof-symbol": {
-    "chrome": "48",
-    "opera": "35",
-    "edge": "12",
-    "firefox": "36",
-    "safari": "9",
-    "node": "6",
-    "deno": "1",
-    "ios": "9",
-    "samsung": "5",
-    "rhino": "1.8",
-    "opera_mobile": "35",
-    "electron": "0.37"
-  },
-  "transform-new-target": {
-    "chrome": "46",
-    "opera": "33",
-    "edge": "14",
-    "firefox": "41",
-    "safari": "10",
-    "node": "5",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "33",
-    "electron": "0.36"
-  },
-  "transform-regenerator": {
-    "chrome": "50",
-    "opera": "37",
-    "edge": "13",
-    "firefox": "53",
-    "safari": "10",
-    "node": "6",
-    "deno": "1",
-    "ios": "10",
-    "samsung": "5",
-    "opera_mobile": "37",
-    "electron": "1.1"
-  },
-  "transform-member-expression-literals": {
-    "chrome": "7",
-    "opera": "12",
-    "edge": "12",
-    "firefox": "2",
-    "safari": "5.1",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "12",
-    "electron": "0.20"
-  },
-  "transform-property-literals": {
-    "chrome": "7",
-    "opera": "12",
-    "edge": "12",
-    "firefox": "2",
-    "safari": "5.1",
-    "node": "0.4",
-    "deno": "1",
-    "ie": "9",
-    "android": "4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "12",
-    "electron": "0.20"
-  },
-  "transform-reserved-words": {
-    "chrome": "13",
-    "opera": "10.50",
-    "edge": "12",
-    "firefox": "2",
-    "safari": "3.1",
-    "node": "0.6",
-    "deno": "1",
-    "ie": "9",
-    "android": "4.4",
-    "ios": "6",
-    "phantom": "1.9",
-    "samsung": "1",
-    "rhino": "1.7.13",
-    "opera_mobile": "10.1",
-    "electron": "0.20"
-  },
-  "transform-export-namespace-from": {
-    "chrome": "72",
-    "deno": "1.0",
-    "edge": "79",
-    "firefox": "80",
-    "node": "13.2.0",
-    "opera": "60",
-    "opera_mobile": "51",
-    "safari": "14.1",
-    "ios": "14.5",
-    "samsung": "11.0",
-    "android": "72",
-    "electron": "5.0"
-  },
-  "proposal-export-namespace-from": {
-    "chrome": "72",
-    "deno": "1.0",
-    "edge": "79",
-    "firefox": "80",
-    "node": "13.2.0",
-    "opera": "60",
-    "opera_mobile": "51",
-    "safari": "14.1",
-    "ios": "14.5",
-    "samsung": "11.0",
-    "android": "72",
-    "electron": "5.0"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/@babel/compat-data/package.json
-```json
-{
-  "name": "@babel/compat-data",
-  "version": "7.29.0",
-  "author": "The Babel Team (https://babel.dev/team)",
-  "license": "MIT",
-  "description": "The compat-data to determine required Babel plugins",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-compat-data"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "exports": {
-    "./plugins": "./plugins.js",
-    "./native-modules": "./native-modules.js",
-    "./corejs2-built-ins": "./corejs2-built-ins.js",
-    "./corejs3-shipped-proposals": "./corejs3-shipped-proposals.js",
-    "./overlapping-plugins": "./overlapping-plugins.js",
-    "./plugin-bugfixes": "./plugin-bugfixes.js"
-  },
-  "scripts": {
-    "build-data": "./scripts/download-compat-table.sh && node ./scripts/build-data.mjs && node ./scripts/build-modules-support.mjs && node ./scripts/build-bugfixes-targets.mjs"
-  },
-  "keywords": [
-    "babel",
-    "compat-table",
-    "compat-data"
-  ],
-  "devDependencies": {
-    "@mdn/browser-compat-data": "^6.0.8",
-    "core-js-compat": "^3.48.0",
-    "electron-to-chromium": "^1.5.278"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/core/package.json
-```json
-{
-  "name": "@babel/core",
-  "version": "7.29.0",
-  "description": "Babel compiler core.",
-  "main": "./lib/index.js",
-  "author": "The Babel Team (https://babel.dev/team)",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-core"
-  },
-  "homepage": "https://babel.dev/docs/en/next/babel-core",
-  "bugs": "https://github.com/babel/babel/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22pkg%3A%20core%22+is%3Aopen",
-  "keywords": [
-    "6to5",
-    "babel",
-    "classes",
-    "const",
-    "es6",
-    "harmony",
-    "let",
-    "modules",
-    "transpile",
-    "transpiler",
-    "var",
-    "babel-core",
-    "compiler"
-  ],
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "funding": {
-    "type": "opencollective",
-    "url": "https://opencollective.com/babel"
-  },
-  "browser": {
-    "./lib/config/files/index.js": "./lib/config/files/index-browser.js",
-    "./lib/config/resolve-targets.js": "./lib/config/resolve-targets-browser.js",
-    "./lib/transform-file.js": "./lib/transform-file-browser.js",
-    "./src/config/files/index.ts": "./src/config/files/index-browser.ts",
-    "./src/config/resolve-targets.ts": "./src/config/resolve-targets-browser.ts",
-    "./src/transform-file.ts": "./src/transform-file-browser.ts"
-  },
-  "dependencies": {
-    "@babel/code-frame": "^7.29.0",
-    "@babel/generator": "^7.29.0",
-    "@babel/helper-compilation-targets": "^7.28.6",
-    "@babel/helper-module-transforms": "^7.28.6",
-    "@babel/helpers": "^7.28.6",
-    "@babel/parser": "^7.29.0",
-    "@babel/template": "^7.28.6",
-    "@babel/traverse": "^7.29.0",
-    "@babel/types": "^7.29.0",
-    "@jridgewell/remapping": "^2.3.5",
-    "convert-source-map": "^2.0.0",
-    "debug": "^4.1.0",
-    "gensync": "^1.0.0-beta.2",
-    "json5": "^2.2.3",
-    "semver": "^6.3.1"
-  },
-  "devDependencies": {
-    "@babel/helper-transform-fixture-test-runner": "^7.28.6",
-    "@babel/plugin-syntax-flow": "^7.28.6",
-    "@babel/plugin-transform-flow-strip-types": "^7.27.1",
-    "@babel/plugin-transform-modules-commonjs": "^7.28.6",
-    "@babel/preset-env": "^7.29.0",
-    "@babel/preset-typescript": "^7.28.5",
-    "@jridgewell/trace-mapping": "^0.3.28",
-    "@types/convert-source-map": "^2.0.0",
-    "@types/debug": "^4.1.0",
-    "@types/resolve": "^1.3.2",
-    "@types/semver": "^5.4.0",
-    "rimraf": "^3.0.0",
-    "ts-node": "^11.0.0-beta.1",
-    "tsx": "^4.20.3"
-  },
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/generator/package.json
-```json
-{
-  "name": "@babel/generator",
-  "version": "7.29.1",
-  "description": "Turns an AST into code.",
-  "author": "The Babel Team (https://babel.dev/team)",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-generator"
-  },
-  "homepage": "https://babel.dev/docs/en/next/babel-generator",
-  "bugs": "https://github.com/babel/babel/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22pkg%3A%20generator%22+is%3Aopen",
-  "main": "./lib/index.js",
-  "files": [
-    "lib"
-  ],
-  "dependencies": {
-    "@babel/parser": "^7.29.0",
-    "@babel/types": "^7.29.0",
-    "@jridgewell/gen-mapping": "^0.3.12",
-    "@jridgewell/trace-mapping": "^0.3.28",
-    "jsesc": "^3.0.2"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.29.0",
-    "@babel/helper-fixtures": "^7.28.6",
-    "@babel/plugin-transform-typescript": "^7.28.6",
-    "@jridgewell/sourcemap-codec": "^1.5.3",
-    "charcodes": "^0.2.0"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/helper-compilation-targets/package.json
-```json
-{
-  "name": "@babel/helper-compilation-targets",
-  "version": "7.28.6",
-  "author": "The Babel Team (https://babel.dev/team)",
-  "license": "MIT",
-  "description": "Helper functions on Babel compilation targets",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-helper-compilation-targets"
-  },
-  "main": "./lib/index.js",
-  "exports": {
-    ".": {
-      "types": "./lib/index.d.ts",
-      "default": "./lib/index.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "keywords": [
-    "babel",
-    "babel-plugin"
-  ],
-  "dependencies": {
-    "@babel/compat-data": "^7.28.6",
-    "@babel/helper-validator-option": "^7.27.1",
-    "browserslist": "^4.24.0",
-    "lru-cache": "^5.1.1",
-    "semver": "^6.3.1"
-  },
-  "devDependencies": {
-    "@babel/helper-plugin-test-runner": "^7.27.1",
-    "@types/lru-cache": "^5.1.1",
-    "@types/semver": "^5.5.0"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/helper-globals/data/browser-upper.json
-```json
-[
-  "AbortController",
-  "AbortSignal",
-  "AbsoluteOrientationSensor",
-  "AbstractRange",
-  "Accelerometer",
-  "AI",
-  "AICreateMonitor",
-  "AITextSession",
-  "AnalyserNode",
-  "Animation",
-  "AnimationEffect",
-  "AnimationEvent",
-  "AnimationPlaybackEvent",
-  "AnimationTimeline",
-  "AsyncDisposableStack",
-  "Attr",
-  "Audio",
-  "AudioBuffer",
-  "AudioBufferSourceNode",
-  "AudioContext",
-  "AudioData",
-  "AudioDecoder",
-  "AudioDestinationNode",
-  "AudioEncoder",
-  "AudioListener",
-  "AudioNode",
-  "AudioParam",
-  "AudioParamMap",
-  "AudioProcessingEvent",
-  "AudioScheduledSourceNode",
-  "AudioSinkInfo",
-  "AudioWorklet",
-  "AudioWorkletGlobalScope",
-  "AudioWorkletNode",
-  "AudioWorkletProcessor",
-  "AuthenticatorAssertionResponse",
-  "AuthenticatorAttestationResponse",
-  "AuthenticatorResponse",
-  "BackgroundFetchManager",
-  "BackgroundFetchRecord",
-  "BackgroundFetchRegistration",
-  "BarcodeDetector",
-  "BarProp",
-  "BaseAudioContext",
-  "BatteryManager",
-  "BeforeUnloadEvent",
-  "BiquadFilterNode",
-  "Blob",
-  "BlobEvent",
-  "Bluetooth",
-  "BluetoothCharacteristicProperties",
-  "BluetoothDevice",
-  "BluetoothRemoteGATTCharacteristic",
-  "BluetoothRemoteGATTDescriptor",
-  "BluetoothRemoteGATTServer",
-  "BluetoothRemoteGATTService",
-  "BluetoothUUID",
-  "BroadcastChannel",
-  "BrowserCaptureMediaStreamTrack",
-  "ByteLengthQueuingStrategy",
-  "Cache",
-  "CacheStorage",
-  "CanvasCaptureMediaStream",
-  "CanvasCaptureMediaStreamTrack",
-  "CanvasGradient",
-  "CanvasPattern",
-  "CanvasRenderingContext2D",
-  "CaptureController",
-  "CaretPosition",
-  "CDATASection",
-  "ChannelMergerNode",
-  "ChannelSplitterNode",
-  "ChapterInformation",
-  "CharacterBoundsUpdateEvent",
-  "CharacterData",
-  "Clipboard",
-  "ClipboardEvent",
-  "ClipboardItem",
-  "CloseEvent",
-  "CloseWatcher",
-  "CommandEvent",
-  "Comment",
-  "CompositionEvent",
-  "CompressionStream",
-  "ConstantSourceNode",
-  "ContentVisibilityAutoStateChangeEvent",
-  "ConvolverNode",
-  "CookieChangeEvent",
-  "CookieDeprecationLabel",
-  "CookieStore",
-  "CookieStoreManager",
-  "CountQueuingStrategy",
-  "Credential",
-  "CredentialsContainer",
-  "CropTarget",
-  "Crypto",
-  "CryptoKey",
-  "CSPViolationReportBody",
-  "CSS",
-  "CSSAnimation",
-  "CSSConditionRule",
-  "CSSContainerRule",
-  "CSSCounterStyleRule",
-  "CSSFontFaceRule",
-  "CSSFontFeatureValuesRule",
-  "CSSFontPaletteValuesRule",
-  "CSSGroupingRule",
-  "CSSImageValue",
-  "CSSImportRule",
-  "CSSKeyframeRule",
-  "CSSKeyframesRule",
-  "CSSKeywordValue",
-  "CSSLayerBlockRule",
-  "CSSLayerStatementRule",
-  "CSSMarginRule",
-  "CSSMathClamp",
-  "CSSMathInvert",
-  "CSSMathMax",
-  "CSSMathMin",
-  "CSSMathNegate",
-  "CSSMathProduct",
-  "CSSMathSum",
-  "CSSMathValue",
-  "CSSMatrixComponent",
-  "CSSMediaRule",
-  "CSSNamespaceRule",
-  "CSSNestedDeclarations",
-  "CSSNumericArray",
-  "CSSNumericValue",
-  "CSSPageDescriptors",
-  "CSSPageRule",
-  "CSSPerspective",
-  "CSSPositionTryDescriptors",
-  "CSSPositionTryRule",
-  "CSSPositionValue",
-  "CSSPropertyRule",
-  "CSSRotate",
-  "CSSRule",
-  "CSSRuleList",
-  "CSSScale",
-  "CSSScopeRule",
-  "CSSSkew",
-  "CSSSkewX",
-  "CSSSkewY",
-  "CSSStartingStyleRule",
-  "CSSStyleDeclaration",
-  "CSSStyleRule",
-  "CSSStyleSheet",
-  "CSSStyleValue",
-  "CSSSupportsRule",
-  "CSSTransformComponent",
-  "CSSTransformValue",
-  "CSSTransition",
-  "CSSTranslate",
-  "CSSUnitValue",
-  "CSSUnparsedValue",
-  "CSSVariableReferenceValue",
-  "CSSViewTransitionRule",
-  "CustomElementRegistry",
-  "CustomEvent",
-  "CustomStateSet",
-  "DataTransfer",
-  "DataTransferItem",
-  "DataTransferItemList",
-  "DecompressionStream",
-  "DelayNode",
-  "DelegatedInkTrailPresenter",
-  "DeviceMotionEvent",
-  "DeviceMotionEventAcceleration",
-  "DeviceMotionEventRotationRate",
-  "DeviceOrientationEvent",
-  "DevicePosture",
-  "DisposableStack",
-  "Document",
-  "DocumentFragment",
-  "DocumentPictureInPicture",
-  "DocumentPictureInPictureEvent",
-  "DocumentTimeline",
-  "DocumentType",
-  "DOMError",
-  "DOMException",
-  "DOMImplementation",
-  "DOMMatrix",
-  "DOMMatrixReadOnly",
-  "DOMParser",
-  "DOMPoint",
-  "DOMPointReadOnly",
-  "DOMQuad",
-  "DOMRect",
-  "DOMRectList",
-  "DOMRectReadOnly",
-  "DOMStringList",
-  "DOMStringMap",
-  "DOMTokenList",
-  "DragEvent",
-  "DynamicsCompressorNode",
-  "EditContext",
-  "Element",
-  "ElementInternals",
-  "EncodedAudioChunk",
-  "EncodedVideoChunk",
-  "ErrorEvent",
-  "Event",
-  "EventCounts",
-  "EventSource",
-  "EventTarget",
-  "External",
-  "EyeDropper",
-  "FeaturePolicy",
-  "FederatedCredential",
-  "Fence",
-  "FencedFrameConfig",
-  "FetchLaterResult",
-  "File",
-  "FileList",
-  "FileReader",
-  "FileSystem",
-  "FileSystemDirectoryEntry",
-  "FileSystemDirectoryHandle",
-  "FileSystemDirectoryReader",
-  "FileSystemEntry",
-  "FileSystemFileEntry",
-  "FileSystemFileHandle",
-  "FileSystemHandle",
-  "FileSystemObserver",
-  "FileSystemWritableFileStream",
-  "FocusEvent",
-  "FontData",
-  "FontFace",
-  "FontFaceSet",
-  "FontFaceSetLoadEvent",
-  "FormData",
-  "FormDataEvent",
-  "FragmentDirective",
-  "GainNode",
-  "Gamepad",
-  "GamepadAxisMoveEvent",
-  "GamepadButton",
-  "GamepadButtonEvent",
-  "GamepadEvent",
-  "GamepadHapticActuator",
-  "GamepadPose",
-  "Geolocation",
-  "GeolocationCoordinates",
-  "GeolocationPosition",
-  "GeolocationPositionError",
-  "GPU",
-  "GPUAdapter",
-  "GPUAdapterInfo",
-  "GPUBindGroup",
-  "GPUBindGroupLayout",
-  "GPUBuffer",
-  "GPUBufferUsage",
-  "GPUCanvasContext",
-  "GPUColorWrite",
-  "GPUCommandBuffer",
-  "GPUCommandEncoder",
-  "GPUCompilationInfo",
-  "GPUCompilationMessage",
-  "GPUComputePassEncoder",
-  "GPUComputePipeline",
-  "GPUDevice",
-  "GPUDeviceLostInfo",
-  "GPUError",
-  "GPUExternalTexture",
-  "GPUInternalError",
-  "GPUMapMode",
-  "GPUOutOfMemoryError",
-  "GPUPipelineError",
-  "GPUPipelineLayout",
-  "GPUQuerySet",
-  "GPUQueue",
-  "GPURenderBundle",
-  "GPURenderBundleEncoder",
-  "GPURenderPassEncoder",
-  "GPURenderPipeline",
-  "GPUSampler",
-  "GPUShaderModule",
-  "GPUShaderStage",
-  "GPUSupportedFeatures",
-  "GPUSupportedLimits",
-  "GPUTexture",
-  "GPUTextureUsage",
-  "GPUTextureView",
-  "GPUUncapturedErrorEvent",
-  "GPUValidationError",
-  "GravitySensor",
-  "Gyroscope",
-  "HashChangeEvent",
-  "Headers",
-  "HID",
-  "HIDConnectionEvent",
-  "HIDDevice",
-  "HIDInputReportEvent",
-  "Highlight",
-  "HighlightRegistry",
-  "History",
-  "HTMLAllCollection",
-  "HTMLAnchorElement",
-  "HTMLAreaElement",
-  "HTMLAudioElement",
-  "HTMLBaseElement",
-  "HTMLBodyElement",
-  "HTMLBRElement",
-  "HTMLButtonElement",
-  "HTMLCanvasElement",
-  "HTMLCollection",
-  "HTMLDataElement",
-  "HTMLDataListElement",
-  "HTMLDetailsElement",
-  "HTMLDialogElement",
-  "HTMLDirectoryElement",
-  "HTMLDivElement",
-  "HTMLDListElement",
-  "HTMLDocument",
-  "HTMLElement",
-  "HTMLEmbedElement",
-  "HTMLFencedFrameElement",
-  "HTMLFieldSetElement",
-  "HTMLFontElement",
-  "HTMLFormControlsCollection",
-  "HTMLFormElement",
-  "HTMLFrameElement",
-  "HTMLFrameSetElement",
-  "HTMLHeadElement",
-  "HTMLHeadingElement",
-  "HTMLHRElement",
-  "HTMLHtmlElement",
-  "HTMLIFrameElement",
-  "HTMLImageElement",
-  "HTMLInputElement",
-  "HTMLLabelElement",
-  "HTMLLegendElement",
-  "HTMLLIElement",
-  "HTMLLinkElement",
-  "HTMLMapElement",
-  "HTMLMarqueeElement",
-  "HTMLMediaElement",
-  "HTMLMenuElement",
-  "HTMLMetaElement",
-  "HTMLMeterElement",
-  "HTMLModElement",
-  "HTMLObjectElement",
-  "HTMLOListElement",
-  "HTMLOptGroupElement",
-  "HTMLOptionElement",
-  "HTMLOptionsCollection",
-  "HTMLOutputElement",
-  "HTMLParagraphElement",
-  "HTMLParamElement",
-  "HTMLPictureElement",
-  "HTMLPreElement",
-  "HTMLProgressElement",
-  "HTMLQuoteElement",
-  "HTMLScriptElement",
-  "HTMLSelectedContentElement",
-  "HTMLSelectElement",
-  "HTMLSlotElement",
-  "HTMLSourceElement",
-  "HTMLSpanElement",
-  "HTMLStyleElement",
-  "HTMLTableCaptionElement",
-  "HTMLTableCellElement",
-  "HTMLTableColElement",
-  "HTMLTableElement",
-  "HTMLTableRowElement",
-  "HTMLTableSectionElement",
-  "HTMLTemplateElement",
-  "HTMLTextAreaElement",
-  "HTMLTimeElement",
-  "HTMLTitleElement",
-  "HTMLTrackElement",
-  "HTMLUListElement",
-  "HTMLUnknownElement",
-  "HTMLVideoElement",
-  "IDBCursor",
-  "IDBCursorWithValue",
-  "IDBDatabase",
-  "IDBFactory",
-  "IDBIndex",
-  "IDBKeyRange",
-  "IDBObjectStore",
-  "IDBOpenDBRequest",
-  "IDBRequest",
-  "IDBTransaction",
-  "IDBVersionChangeEvent",
-  "IdentityCredential",
-  "IdentityCredentialError",
-  "IdentityProvider",
-  "IdleDeadline",
-  "IdleDetector",
-  "IIRFilterNode",
-  "Image",
-  "ImageBitmap",
-  "ImageBitmapRenderingContext",
-  "ImageCapture",
-  "ImageData",
-  "ImageDecoder",
-  "ImageTrack",
-  "ImageTrackList",
-  "Ink",
-  "InputDeviceCapabilities",
-  "InputDeviceInfo",
-  "InputEvent",
-  "IntersectionObserver",
-  "IntersectionObserverEntry",
-  "Keyboard",
-  "KeyboardEvent",
-  "KeyboardLayoutMap",
-  "KeyframeEffect",
-  "LanguageDetector",
-  "LargestContentfulPaint",
-  "LaunchParams",
-  "LaunchQueue",
-  "LayoutShift",
-  "LayoutShiftAttribution",
-  "LinearAccelerationSensor",
-  "Location",
-  "Lock",
-  "LockManager",
-  "MathMLElement",
-  "MediaCapabilities",
-  "MediaCapabilitiesInfo",
-  "MediaDeviceInfo",
-  "MediaDevices",
-  "MediaElementAudioSourceNode",
-  "MediaEncryptedEvent",
-  "MediaError",
-  "MediaKeyError",
-  "MediaKeyMessageEvent",
-  "MediaKeys",
-  "MediaKeySession",
-  "MediaKeyStatusMap",
-  "MediaKeySystemAccess",
-  "MediaList",
-  "MediaMetadata",
-  "MediaQueryList",
-  "MediaQueryListEvent",
-  "MediaRecorder",
-  "MediaRecorderErrorEvent",
-  "MediaSession",
-  "MediaSource",
-  "MediaSourceHandle",
-  "MediaStream",
-  "MediaStreamAudioDestinationNode",
-  "MediaStreamAudioSourceNode",
-  "MediaStreamEvent",
-  "MediaStreamTrack",
-  "MediaStreamTrackAudioSourceNode",
-  "MediaStreamTrackAudioStats",
-  "MediaStreamTrackEvent",
-  "MediaStreamTrackGenerator",
-  "MediaStreamTrackProcessor",
-  "MediaStreamTrackVideoStats",
-  "MessageChannel",
-  "MessageEvent",
-  "MessagePort",
-  "MIDIAccess",
-  "MIDIConnectionEvent",
-  "MIDIInput",
-  "MIDIInputMap",
-  "MIDIMessageEvent",
-  "MIDIOutput",
-  "MIDIOutputMap",
-  "MIDIPort",
-  "MimeType",
-  "MimeTypeArray",
-  "ModelGenericSession",
-  "ModelManager",
-  "MouseEvent",
-  "MutationEvent",
-  "MutationObserver",
-  "MutationRecord",
-  "NamedNodeMap",
-  "NavigateEvent",
-  "Navigation",
-  "NavigationActivation",
-  "NavigationCurrentEntryChangeEvent",
-  "NavigationDestination",
-  "NavigationHistoryEntry",
-  "NavigationPreloadManager",
-  "NavigationTransition",
-  "Navigator",
-  "NavigatorLogin",
-  "NavigatorManagedData",
-  "NavigatorUAData",
-  "NetworkInformation",
-  "Node",
-  "NodeFilter",
-  "NodeIterator",
-  "NodeList",
-  "Notification",
-  "NotifyPaintEvent",
-  "NotRestoredReasonDetails",
-  "NotRestoredReasons",
-  "Observable",
-  "OfflineAudioCompletionEvent",
-  "OfflineAudioContext",
-  "OffscreenCanvas",
-  "OffscreenCanvasRenderingContext2D",
-  "Option",
-  "OrientationSensor",
-  "OscillatorNode",
-  "OTPCredential",
-  "OverconstrainedError",
-  "PageRevealEvent",
-  "PageSwapEvent",
-  "PageTransitionEvent",
-  "PannerNode",
-  "PasswordCredential",
-  "Path2D",
-  "PaymentAddress",
-  "PaymentManager",
-  "PaymentMethodChangeEvent",
-  "PaymentRequest",
-  "PaymentRequestUpdateEvent",
-  "PaymentResponse",
-  "Performance",
-  "PerformanceElementTiming",
-  "PerformanceEntry",
-  "PerformanceEventTiming",
-  "PerformanceLongAnimationFrameTiming",
-  "PerformanceLongTaskTiming",
-  "PerformanceMark",
-  "PerformanceMeasure",
-  "PerformanceNavigation",
-  "PerformanceNavigationTiming",
-  "PerformanceObserver",
-  "PerformanceObserverEntryList",
-  "PerformancePaintTiming",
-  "PerformanceResourceTiming",
-  "PerformanceScriptTiming",
-  "PerformanceServerTiming",
-  "PerformanceTiming",
-  "PeriodicSyncManager",
-  "PeriodicWave",
-  "Permissions",
-  "PermissionStatus",
-  "PERSISTENT",
-  "PictureInPictureEvent",
-  "PictureInPictureWindow",
-  "Plugin",
-  "PluginArray",
-  "PointerEvent",
-  "PopStateEvent",
-  "Presentation",
-  "PresentationAvailability",
-  "PresentationConnection",
-  "PresentationConnectionAvailableEvent",
-  "PresentationConnectionCloseEvent",
-  "PresentationConnectionList",
-  "PresentationReceiver",
-  "PresentationRequest",
-  "PressureObserver",
-  "PressureRecord",
-  "ProcessingInstruction",
-  "Profiler",
-  "ProgressEvent",
-  "PromiseRejectionEvent",
-  "ProtectedAudience",
-  "PublicKeyCredential",
-  "PushManager",
-  "PushSubscription",
-  "PushSubscriptionOptions",
-  "RadioNodeList",
-  "Range",
-  "ReadableByteStreamController",
-  "ReadableStream",
-  "ReadableStreamBYOBReader",
-  "ReadableStreamBYOBRequest",
-  "ReadableStreamDefaultController",
-  "ReadableStreamDefaultReader",
-  "RelativeOrientationSensor",
-  "RemotePlayback",
-  "ReportBody",
-  "ReportingObserver",
-  "Request",
-  "ResizeObserver",
-  "ResizeObserverEntry",
-  "ResizeObserverSize",
-  "Response",
-  "RestrictionTarget",
-  "RTCCertificate",
-  "RTCDataChannel",
-  "RTCDataChannelEvent",
-  "RTCDtlsTransport",
-  "RTCDTMFSender",
-  "RTCDTMFToneChangeEvent",
-  "RTCEncodedAudioFrame",
-  "RTCEncodedVideoFrame",
-  "RTCError",
-  "RTCErrorEvent",
-  "RTCIceCandidate",
-  "RTCIceTransport",
-  "RTCPeerConnection",
-  "RTCPeerConnectionIceErrorEvent",
-  "RTCPeerConnectionIceEvent",
-  "RTCRtpReceiver",
-  "RTCRtpScriptTransform",
-  "RTCRtpSender",
-  "RTCRtpTransceiver",
-  "RTCSctpTransport",
-  "RTCSessionDescription",
-  "RTCStatsReport",
-  "RTCTrackEvent",
-  "Scheduler",
-  "Scheduling",
-  "Screen",
-  "ScreenDetailed",
-  "ScreenDetails",
-  "ScreenOrientation",
-  "ScriptProcessorNode",
-  "ScrollTimeline",
-  "SecurityPolicyViolationEvent",
-  "Selection",
-  "Sensor",
-  "SensorErrorEvent",
-  "Serial",
-  "SerialPort",
-  "ServiceWorker",
-  "ServiceWorkerContainer",
-  "ServiceWorkerRegistration",
-  "ShadowRoot",
-  "SharedStorage",
-  "SharedStorageAppendMethod",
-  "SharedStorageClearMethod",
-  "SharedStorageDeleteMethod",
-  "SharedStorageModifierMethod",
-  "SharedStorageSetMethod",
-  "SharedStorageWorklet",
-  "SharedWorker",
-  "SnapEvent",
-  "SourceBuffer",
-  "SourceBufferList",
-  "SpeechSynthesis",
-  "SpeechSynthesisErrorEvent",
-  "SpeechSynthesisEvent",
-  "SpeechSynthesisUtterance",
-  "SpeechSynthesisVoice",
-  "StaticRange",
-  "StereoPannerNode",
-  "Storage",
-  "StorageBucket",
-  "StorageBucketManager",
-  "StorageEvent",
-  "StorageManager",
-  "StylePropertyMap",
-  "StylePropertyMapReadOnly",
-  "StyleSheet",
-  "StyleSheetList",
-  "SubmitEvent",
-  "Subscriber",
-  "SubtleCrypto",
-  "SuppressedError",
-  "SVGAElement",
-  "SVGAngle",
-  "SVGAnimatedAngle",
-  "SVGAnimatedBoolean",
-  "SVGAnimatedEnumeration",
-  "SVGAnimatedInteger",
-  "SVGAnimatedLength",
-  "SVGAnimatedLengthList",
-  "SVGAnimatedNumber",
-  "SVGAnimatedNumberList",
-  "SVGAnimatedPreserveAspectRatio",
-  "SVGAnimatedRect",
-  "SVGAnimatedString",
-  "SVGAnimatedTransformList",
-  "SVGAnimateElement",
-  "SVGAnimateMotionElement",
-  "SVGAnimateTransformElement",
-  "SVGAnimationElement",
-  "SVGCircleElement",
-  "SVGClipPathElement",
-  "SVGComponentTransferFunctionElement",
-  "SVGDefsElement",
-  "SVGDescElement",
-  "SVGElement",
-  "SVGEllipseElement",
-  "SVGFEBlendElement",
-  "SVGFEColorMatrixElement",
-  "SVGFEComponentTransferElement",
-  "SVGFECompositeElement",
-  "SVGFEConvolveMatrixElement",
-  "SVGFEDiffuseLightingElement",
-  "SVGFEDisplacementMapElement",
-  "SVGFEDistantLightElement",
-  "SVGFEDropShadowElement",
-  "SVGFEFloodElement",
-  "SVGFEFuncAElement",
-  "SVGFEFuncBElement",
-  "SVGFEFuncGElement",
-  "SVGFEFuncRElement",
-  "SVGFEGaussianBlurElement",
-  "SVGFEImageElement",
-  "SVGFEMergeElement",
-  "SVGFEMergeNodeElement",
-  "SVGFEMorphologyElement",
-  "SVGFEOffsetElement",
-  "SVGFEPointLightElement",
-  "SVGFESpecularLightingElement",
-  "SVGFESpotLightElement",
-  "SVGFETileElement",
-  "SVGFETurbulenceElement",
-  "SVGFilterElement",
-  "SVGForeignObjectElement",
-  "SVGGElement",
-  "SVGGeometryElement",
-  "SVGGradientElement",
-  "SVGGraphicsElement",
-  "SVGImageElement",
-  "SVGLength",
-  "SVGLengthList",
-  "SVGLinearGradientElement",
-  "SVGLineElement",
-  "SVGMarkerElement",
-  "SVGMaskElement",
-  "SVGMatrix",
-  "SVGMetadataElement",
-  "SVGMPathElement",
-  "SVGNumber",
-  "SVGNumberList",
-  "SVGPathElement",
-  "SVGPatternElement",
-  "SVGPoint",
-  "SVGPointList",
-  "SVGPolygonElement",
-  "SVGPolylineElement",
-  "SVGPreserveAspectRatio",
-  "SVGRadialGradientElement",
-  "SVGRect",
-  "SVGRectElement",
-  "SVGScriptElement",
-  "SVGSetElement",
-  "SVGStopElement",
-  "SVGStringList",
-  "SVGStyleElement",
-  "SVGSVGElement",
-  "SVGSwitchElement",
-  "SVGSymbolElement",
-  "SVGTextContentElement",
-  "SVGTextElement",
-  "SVGTextPathElement",
-  "SVGTextPositioningElement",
-  "SVGTitleElement",
-  "SVGTransform",
-  "SVGTransformList",
-  "SVGTSpanElement",
-  "SVGUnitTypes",
-  "SVGUseElement",
-  "SVGViewElement",
-  "SyncManager",
-  "TaskAttributionTiming",
-  "TaskController",
-  "TaskPriorityChangeEvent",
-  "TaskSignal",
-  "TEMPORARY",
-  "Text",
-  "TextDecoder",
-  "TextDecoderStream",
-  "TextEncoder",
-  "TextEncoderStream",
-  "TextEvent",
-  "TextFormat",
-  "TextFormatUpdateEvent",
-  "TextMetrics",
-  "TextTrack",
-  "TextTrackCue",
-  "TextTrackCueList",
-  "TextTrackList",
-  "TextUpdateEvent",
-  "TimeEvent",
-  "TimeRanges",
-  "ToggleEvent",
-  "Touch",
-  "TouchEvent",
-  "TouchList",
-  "TrackEvent",
-  "TransformStream",
-  "TransformStreamDefaultController",
-  "TransitionEvent",
-  "TreeWalker",
-  "TrustedHTML",
-  "TrustedScript",
-  "TrustedScriptURL",
-  "TrustedTypePolicy",
-  "TrustedTypePolicyFactory",
-  "UIEvent",
-  "URL",
-  "URLPattern",
-  "URLSearchParams",
-  "USB",
-  "USBAlternateInterface",
-  "USBConfiguration",
-  "USBConnectionEvent",
-  "USBDevice",
-  "USBEndpoint",
-  "USBInterface",
-  "USBInTransferResult",
-  "USBIsochronousInTransferPacket",
-  "USBIsochronousInTransferResult",
-  "USBIsochronousOutTransferPacket",
-  "USBIsochronousOutTransferResult",
-  "USBOutTransferResult",
-  "UserActivation",
-  "ValidityState",
-  "VideoColorSpace",
-  "VideoDecoder",
-  "VideoEncoder",
-  "VideoFrame",
-  "VideoPlaybackQuality",
-  "ViewTimeline",
-  "ViewTransition",
-  "ViewTransitionTypeSet",
-  "VirtualKeyboard",
-  "VirtualKeyboardGeometryChangeEvent",
-  "VisibilityStateEntry",
-  "VisualViewport",
-  "VTTCue",
-  "VTTRegion",
-  "WakeLock",
-  "WakeLockSentinel",
-  "WaveShaperNode",
-  "WebAssembly",
-  "WebGL2RenderingContext",
-  "WebGLActiveInfo",
-  "WebGLBuffer",
-  "WebGLContextEvent",
-  "WebGLFramebuffer",
-  "WebGLObject",
-  "WebGLProgram",
-  "WebGLQuery",
-  "WebGLRenderbuffer",
-  "WebGLRenderingContext",
-  "WebGLSampler",
-  "WebGLShader",
-  "WebGLShaderPrecisionFormat",
-  "WebGLSync",
-  "WebGLTexture",
-  "WebGLTransformFeedback",
-  "WebGLUniformLocation",
-  "WebGLVertexArrayObject",
-  "WebSocket",
-  "WebSocketError",
-  "WebSocketStream",
-  "WebTransport",
-  "WebTransportBidirectionalStream",
-  "WebTransportDatagramDuplexStream",
-  "WebTransportError",
-  "WebTransportReceiveStream",
-  "WebTransportSendStream",
-  "WGSLLanguageFeatures",
-  "WheelEvent",
-  "Window",
-  "WindowControlsOverlay",
-  "WindowControlsOverlayGeometryChangeEvent",
-  "Worker",
-  "Worklet",
-  "WorkletGlobalScope",
-  "WritableStream",
-  "WritableStreamDefaultController",
-  "WritableStreamDefaultWriter",
-  "XMLDocument",
-  "XMLHttpRequest",
-  "XMLHttpRequestEventTarget",
-  "XMLHttpRequestUpload",
-  "XMLSerializer",
-  "XPathEvaluator",
-  "XPathExpression",
-  "XPathResult",
-  "XRAnchor",
-  "XRAnchorSet",
-  "XRBoundedReferenceSpace",
-  "XRCamera",
-  "XRCPUDepthInformation",
-  "XRDepthInformation",
-  "XRDOMOverlayState",
-  "XRFrame",
-  "XRHand",
-  "XRHitTestResult",
-  "XRHitTestSource",
-  "XRInputSource",
-  "XRInputSourceArray",
-  "XRInputSourceEvent",
-  "XRInputSourcesChangeEvent",
-  "XRJointPose",
-  "XRJointSpace",
-  "XRLayer",
-  "XRLightEstimate",
-  "XRLightProbe",
-  "XRPose",
-  "XRRay",
-  "XRReferenceSpace",
-  "XRReferenceSpaceEvent",
-  "XRRenderState",
-  "XRRigidTransform",
-  "XRSession",
-  "XRSessionEvent",
-  "XRSpace",
-  "XRSystem",
-  "XRTransientInputHitTestResult",
-  "XRTransientInputHitTestSource",
-  "XRView",
-  "XRViewerPose",
-  "XRViewport",
-  "XRWebGLBinding",
-  "XRWebGLDepthInformation",
-  "XRWebGLLayer",
-  "XSLTProcessor"
-]
-```
-
-----
-
-# frontend/node_modules/@babel/helper-globals/data/builtin-lower.json
-```json
-[
-  "decodeURI",
-  "decodeURIComponent",
-  "encodeURI",
-  "encodeURIComponent",
-  "escape",
-  "eval",
-  "globalThis",
-  "isFinite",
-  "isNaN",
-  "parseFloat",
-  "parseInt",
-  "undefined",
-  "unescape"
-]
-```
-
-----
-
-# frontend/node_modules/@babel/helper-globals/data/builtin-upper.json
-```json
-[
-  "AggregateError",
-  "Array",
-  "ArrayBuffer",
-  "Atomics",
-  "BigInt",
-  "BigInt64Array",
-  "BigUint64Array",
-  "Boolean",
-  "DataView",
-  "Date",
-  "Error",
-  "EvalError",
-  "FinalizationRegistry",
-  "Float16Array",
-  "Float32Array",
-  "Float64Array",
-  "Function",
-  "Infinity",
-  "Int16Array",
-  "Int32Array",
-  "Int8Array",
-  "Intl",
-  "Iterator",
-  "JSON",
-  "Map",
-  "Math",
-  "NaN",
-  "Number",
-  "Object",
-  "Promise",
-  "Proxy",
-  "RangeError",
-  "ReferenceError",
-  "Reflect",
-  "RegExp",
-  "Set",
-  "SharedArrayBuffer",
-  "String",
-  "Symbol",
-  "SyntaxError",
-  "TypeError",
-  "Uint16Array",
-  "Uint32Array",
-  "Uint8Array",
-  "Uint8ClampedArray",
-  "URIError",
-  "WeakMap",
-  "WeakRef",
-  "WeakSet"
-]
-```
-
-----
-
-# frontend/node_modules/@babel/helper-globals/package.json
-```json
-{
-  "name": "@babel/helper-globals",
-  "version": "7.28.0",
-  "author": "The Babel Team (https://babel.dev/team)",
-  "license": "MIT",
-  "description": "A collection of JavaScript globals for Babel internal usage",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-helper-globals"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "exports": {
-    "./data/browser-upper.json": "./data/browser-upper.json",
-    "./data/builtin-lower.json": "./data/builtin-lower.json",
-    "./data/builtin-upper.json": "./data/builtin-upper.json",
-    "./package.json": "./package.json"
-  },
-  "keywords": [
-    "babel",
-    "globals"
-  ],
-  "devDependencies": {
-    "globals": "^16.1.0"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/helper-module-imports/package.json
-```json
-{
-  "name": "@babel/helper-module-imports",
-  "version": "7.28.6",
-  "description": "Babel helper functions for inserting module loads",
-  "author": "The Babel Team (https://babel.dev/team)",
-  "homepage": "https://babel.dev/docs/en/next/babel-helper-module-imports",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-helper-module-imports"
-  },
-  "main": "./lib/index.js",
-  "dependencies": {
-    "@babel/traverse": "^7.28.6",
-    "@babel/types": "^7.28.6"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.28.6"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/helper-module-transforms/package.json
-```json
-{
-  "name": "@babel/helper-module-transforms",
-  "version": "7.28.6",
-  "description": "Babel helper functions for implementing ES6 module transformations",
-  "author": "The Babel Team (https://babel.dev/team)",
-  "homepage": "https://babel.dev/docs/en/next/babel-helper-module-transforms",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-helper-module-transforms"
-  },
-  "main": "./lib/index.js",
-  "dependencies": {
-    "@babel/helper-module-imports": "^7.28.6",
-    "@babel/helper-validator-identifier": "^7.28.5",
-    "@babel/traverse": "^7.28.6"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.28.6"
-  },
-  "peerDependencies": {
-    "@babel/core": "^7.0.0"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/helper-plugin-utils/package.json
-```json
-{
-  "name": "@babel/helper-plugin-utils",
-  "version": "7.28.6",
-  "description": "General utilities for plugins to use",
-  "author": "The Babel Team (https://babel.dev/team)",
-  "homepage": "https://babel.dev/docs/en/next/babel-helper-plugin-utils",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-helper-plugin-utils"
-  },
-  "main": "./lib/index.js",
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.28.6"
-  },
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/helper-string-parser/package.json
-```json
-{
-  "name": "@babel/helper-string-parser",
-  "version": "7.27.1",
-  "description": "A utility package to parse strings",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-helper-string-parser"
-  },
-  "homepage": "https://babel.dev/docs/en/next/babel-helper-string-parser",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "main": "./lib/index.js",
-  "devDependencies": {
-    "charcodes": "^0.2.0"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "author": "The Babel Team (https://babel.dev/team)",
-  "exports": {
-    ".": {
-      "types": "./lib/index.d.ts",
-      "default": "./lib/index.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/helper-validator-identifier/package.json
-```json
-{
-  "name": "@babel/helper-validator-identifier",
-  "version": "7.28.5",
-  "description": "Validate identifier/keywords name",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-helper-validator-identifier"
-  },
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "main": "./lib/index.js",
-  "exports": {
-    ".": {
-      "types": "./lib/index.d.ts",
-      "default": "./lib/index.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "devDependencies": {
-    "@unicode/unicode-17.0.0": "^1.6.10",
-    "charcodes": "^0.2.0"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "author": "The Babel Team (https://babel.dev/team)",
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/helper-validator-option/package.json
-```json
-{
-  "name": "@babel/helper-validator-option",
-  "version": "7.27.1",
-  "description": "Validate plugin/preset options",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-helper-validator-option"
-  },
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "main": "./lib/index.js",
-  "exports": {
-    ".": {
-      "types": "./lib/index.d.ts",
-      "default": "./lib/index.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "author": "The Babel Team (https://babel.dev/team)",
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/helpers/package.json
-```json
-{
-  "name": "@babel/helpers",
-  "version": "7.28.6",
-  "description": "Collection of helper functions used by Babel transforms.",
-  "author": "The Babel Team (https://babel.dev/team)",
-  "homepage": "https://babel.dev/docs/en/next/babel-helpers",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-helpers"
-  },
-  "main": "./lib/index.js",
-  "dependencies": {
-    "@babel/template": "^7.28.6",
-    "@babel/types": "^7.28.6"
-  },
-  "devDependencies": {
-    "@babel/generator": "^7.28.6",
-    "@babel/helper-plugin-test-runner": "^7.27.1",
-    "@babel/parser": "^7.28.6",
-    "regenerator-runtime": "^0.14.0"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/parser/package.json
-```json
-{
-  "name": "@babel/parser",
-  "version": "7.29.0",
-  "description": "A JavaScript parser",
-  "author": "The Babel Team (https://babel.dev/team)",
-  "homepage": "https://babel.dev/docs/en/next/babel-parser",
-  "bugs": "https://github.com/babel/babel/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22pkg%3A+parser+%28babylon%29%22+is%3Aopen",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "keywords": [
-    "babel",
-    "javascript",
-    "parser",
-    "tc39",
-    "ecmascript",
-    "@babel/parser"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-parser"
-  },
-  "main": "./lib/index.js",
-  "types": "./typings/babel-parser.d.ts",
-  "files": [
-    "bin",
-    "lib",
-    "typings/babel-parser.d.ts",
-    "index.cjs"
-  ],
-  "engines": {
-    "node": ">=6.0.0"
-  },
-  "# dependencies": "This package doesn't actually have runtime dependencies. @babel/types is only needed for type definitions.",
-  "dependencies": {
-    "@babel/types": "^7.29.0"
-  },
-  "devDependencies": {
-    "@babel/code-frame": "^7.29.0",
-    "@babel/helper-check-duplicate-nodes": "^7.28.6",
-    "@babel/helper-fixtures": "^7.28.6",
-    "@babel/helper-string-parser": "^7.27.1",
-    "@babel/helper-validator-identifier": "^7.28.5",
-    "charcodes": "^0.2.0"
-  },
-  "bin": "./bin/babel-parser.js",
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/plugin-transform-react-jsx-self/package.json
-```json
-{
-  "name": "@babel/plugin-transform-react-jsx-self",
-  "version": "7.27.1",
-  "description": "Add a __self prop to all JSX Elements",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-plugin-transform-react-jsx-self"
-  },
-  "homepage": "https://babel.dev/docs/en/next/babel-plugin-transform-react-jsx-self",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "main": "./lib/index.js",
-  "keywords": [
-    "babel-plugin"
-  ],
-  "dependencies": {
-    "@babel/helper-plugin-utils": "^7.27.1"
-  },
-  "peerDependencies": {
-    "@babel/core": "^7.0.0-0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.27.1",
-    "@babel/helper-plugin-test-runner": "^7.27.1",
-    "@babel/plugin-syntax-jsx": "^7.27.1"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "author": "The Babel Team (https://babel.dev/team)",
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/plugin-transform-react-jsx-source/package.json
-```json
-{
-  "name": "@babel/plugin-transform-react-jsx-source",
-  "version": "7.27.1",
-  "description": "Add a __source prop to all JSX Elements",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-plugin-transform-react-jsx-source"
-  },
-  "homepage": "https://babel.dev/docs/en/next/babel-plugin-transform-react-jsx-source",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "main": "./lib/index.js",
-  "keywords": [
-    "babel-plugin"
-  ],
-  "dependencies": {
-    "@babel/helper-plugin-utils": "^7.27.1"
-  },
-  "peerDependencies": {
-    "@babel/core": "^7.0.0-0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.27.1",
-    "@babel/helper-plugin-test-runner": "^7.27.1",
-    "@babel/plugin-syntax-jsx": "^7.27.1"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "author": "The Babel Team (https://babel.dev/team)",
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/template/package.json
-```json
-{
-  "name": "@babel/template",
-  "version": "7.28.6",
-  "description": "Generate an AST from a string template.",
-  "author": "The Babel Team (https://babel.dev/team)",
-  "homepage": "https://babel.dev/docs/en/next/babel-template",
-  "bugs": "https://github.com/babel/babel/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22pkg%3A%20template%22+is%3Aopen",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-template"
-  },
-  "main": "./lib/index.js",
-  "dependencies": {
-    "@babel/code-frame": "^7.28.6",
-    "@babel/parser": "^7.28.6",
-    "@babel/types": "^7.28.6"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/traverse/package.json
-```json
-{
-  "name": "@babel/traverse",
-  "version": "7.29.0",
-  "description": "The Babel Traverse module maintains the overall tree state, and is responsible for replacing, removing, and adding nodes",
-  "author": "The Babel Team (https://babel.dev/team)",
-  "homepage": "https://babel.dev/docs/en/next/babel-traverse",
-  "bugs": "https://github.com/babel/babel/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22pkg%3A%20traverse%22+is%3Aopen",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-traverse"
-  },
-  "main": "./lib/index.js",
-  "dependencies": {
-    "@babel/code-frame": "^7.29.0",
-    "@babel/generator": "^7.29.0",
-    "@babel/helper-globals": "^7.28.0",
-    "@babel/parser": "^7.29.0",
-    "@babel/template": "^7.28.6",
-    "@babel/types": "^7.29.0",
-    "debug": "^4.3.1"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.29.0",
-    "@babel/helper-plugin-test-runner": "^7.27.1"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "type": "commonjs"
-}```
-
-----
-
-# frontend/node_modules/@babel/traverse/tsconfig.overrides.json
-```json
-{
-  "compilerOptions": {
-    "strictNullChecks": true,
-    "strictPropertyInitialization": true
-  }
-}```
-
-----
-
-# frontend/node_modules/@babel/types/package.json
-```json
-{
-  "name": "@babel/types",
-  "version": "7.29.0",
-  "description": "Babel Types is a Lodash-esque utility library for AST nodes",
-  "author": "The Babel Team (https://babel.dev/team)",
-  "homepage": "https://babel.dev/docs/en/next/babel-types",
-  "bugs": "https://github.com/babel/babel/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22pkg%3A%20types%22+is%3Aopen",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/babel/babel.git",
-    "directory": "packages/babel-types"
-  },
-  "main": "./lib/index.js",
-  "dependencies": {
-    "@babel/helper-string-parser": "^7.27.1",
-    "@babel/helper-validator-identifier": "^7.28.5"
-  },
-  "devDependencies": {
-    "@babel/generator": "^7.29.0",
-    "@babel/helper-fixtures": "^7.28.6",
-    "@babel/parser": "^7.29.0"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "type": "commonjs",
-  "types": "./lib/index-legacy.d.ts",
-  "typesVersions": {
-    ">=4.1": {
-      "lib/index-legacy.d.ts": [
-        "lib/index.d.ts"
-      ]
-    }
-  }
-}```
-
-----
-
-# frontend/node_modules/@jridgewell/gen-mapping/package.json
-```json
-{
-  "name": "@jridgewell/gen-mapping",
-  "version": "0.3.13",
-  "description": "Generate source maps",
-  "keywords": [
-    "source",
-    "map"
-  ],
-  "main": "dist/gen-mapping.umd.js",
-  "module": "dist/gen-mapping.mjs",
-  "types": "types/gen-mapping.d.cts",
-  "files": [
-    "dist",
-    "src",
-    "types"
-  ],
-  "exports": {
-    ".": [
-      {
-        "import": {
-          "types": "./types/gen-mapping.d.mts",
-          "default": "./dist/gen-mapping.mjs"
-        },
-        "default": {
-          "types": "./types/gen-mapping.d.cts",
-          "default": "./dist/gen-mapping.umd.js"
-        }
-      },
-      "./dist/gen-mapping.umd.js"
-    ],
-    "./package.json": "./package.json"
-  },
-  "scripts": {
-    "benchmark": "run-s build:code benchmark:*",
-    "benchmark:install": "cd benchmark && npm install",
-    "benchmark:only": "node --expose-gc benchmark/index.js",
-    "build": "run-s -n build:code build:types",
-    "build:code": "node ../../esbuild.mjs gen-mapping.ts",
-    "build:types": "run-s build:types:force build:types:emit build:types:mts",
-    "build:types:force": "rimraf tsconfig.build.tsbuildinfo",
-    "build:types:emit": "tsc --project tsconfig.build.json",
-    "build:types:mts": "node ../../mts-types.mjs",
-    "clean": "run-s -n clean:code clean:types",
-    "clean:code": "tsc --build --clean tsconfig.build.json",
-    "clean:types": "rimraf dist types",
-    "test": "run-s -n test:types test:only test:format",
-    "test:format": "prettier --check '{src,test}/**/*.ts'",
-    "test:only": "mocha",
-    "test:types": "eslint '{src,test}/**/*.ts'",
-    "lint": "run-s -n lint:types lint:format",
-    "lint:format": "npm run test:format -- --write",
-    "lint:types": "npm run test:types -- --fix",
-    "prepublishOnly": "npm run-s -n build test"
-  },
-  "homepage": "https://github.com/jridgewell/sourcemaps/tree/main/packages/gen-mapping",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jridgewell/sourcemaps.git",
-    "directory": "packages/gen-mapping"
-  },
-  "author": "Justin Ridgewell <justin@ridgewell.name>",
-  "license": "MIT",
-  "dependencies": {
-    "@jridgewell/sourcemap-codec": "^1.5.0",
-    "@jridgewell/trace-mapping": "^0.3.24"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/@jridgewell/remapping/package.json
-```json
-{
-  "name": "@jridgewell/remapping",
-  "version": "2.3.5",
-  "description": "Remap sequential sourcemaps through transformations to point at the original source code",
-  "keywords": [
-    "source",
-    "map",
-    "remap"
-  ],
-  "main": "dist/remapping.umd.js",
-  "module": "dist/remapping.mjs",
-  "types": "types/remapping.d.cts",
-  "files": [
-    "dist",
-    "src",
-    "types"
-  ],
-  "exports": {
-    ".": [
-      {
-        "import": {
-          "types": "./types/remapping.d.mts",
-          "default": "./dist/remapping.mjs"
-        },
-        "default": {
-          "types": "./types/remapping.d.cts",
-          "default": "./dist/remapping.umd.js"
-        }
-      },
-      "./dist/remapping.umd.js"
-    ],
-    "./package.json": "./package.json"
-  },
-  "scripts": {
-    "benchmark": "run-s build:code benchmark:*",
-    "benchmark:install": "cd benchmark && npm install",
-    "benchmark:only": "node --expose-gc benchmark/index.js",
-    "build": "run-s -n build:code build:types",
-    "build:code": "node ../../esbuild.mjs remapping.ts",
-    "build:types": "run-s build:types:force build:types:emit build:types:mts",
-    "build:types:force": "rimraf tsconfig.build.tsbuildinfo",
-    "build:types:emit": "tsc --project tsconfig.build.json",
-    "build:types:mts": "node ../../mts-types.mjs",
-    "clean": "run-s -n clean:code clean:types",
-    "clean:code": "tsc --build --clean tsconfig.build.json",
-    "clean:types": "rimraf dist types",
-    "test": "run-s -n test:types test:only test:format",
-    "test:format": "prettier --check '{src,test}/**/*.ts'",
-    "test:only": "mocha",
-    "test:types": "eslint '{src,test}/**/*.ts'",
-    "lint": "run-s -n lint:types lint:format",
-    "lint:format": "npm run test:format -- --write",
-    "lint:types": "npm run test:types -- --fix",
-    "prepublishOnly": "npm run-s -n build test"
-  },
-  "homepage": "https://github.com/jridgewell/sourcemaps/tree/main/packages/remapping",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jridgewell/sourcemaps.git",
-    "directory": "packages/remapping"
-  },
-  "author": "Justin Ridgewell <justin@ridgewell.name>",
-  "license": "MIT",
-  "dependencies": {
-    "@jridgewell/gen-mapping": "^0.3.5",
-    "@jridgewell/trace-mapping": "^0.3.24"
-  },
-  "devDependencies": {
-    "source-map": "0.6.1"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/@jridgewell/resolve-uri/package.json
-```json
-{
-  "name": "@jridgewell/resolve-uri",
-  "version": "3.1.2",
-  "description": "Resolve a URI relative to an optional base URI",
-  "keywords": [
-    "resolve",
-    "uri",
-    "url",
-    "path"
-  ],
-  "author": "Justin Ridgewell <justin@ridgewell.name>",
-  "license": "MIT",
-  "repository": "https://github.com/jridgewell/resolve-uri",
-  "main": "dist/resolve-uri.umd.js",
-  "module": "dist/resolve-uri.mjs",
-  "types": "dist/types/resolve-uri.d.ts",
-  "exports": {
-    ".": [
-      {
-        "types": "./dist/types/resolve-uri.d.ts",
-        "browser": "./dist/resolve-uri.umd.js",
-        "require": "./dist/resolve-uri.umd.js",
-        "import": "./dist/resolve-uri.mjs"
-      },
-      "./dist/resolve-uri.umd.js"
-    ],
-    "./package.json": "./package.json"
-  },
-  "files": [
-    "dist"
-  ],
-  "engines": {
-    "node": ">=6.0.0"
-  },
-  "scripts": {
-    "prebuild": "rm -rf dist",
-    "build": "run-s -n build:*",
-    "build:rollup": "rollup -c rollup.config.js",
-    "build:ts": "tsc --project tsconfig.build.json",
-    "lint": "run-s -n lint:*",
-    "lint:prettier": "npm run test:lint:prettier -- --write",
-    "lint:ts": "npm run test:lint:ts -- --fix",
-    "pretest": "run-s build:rollup",
-    "test": "run-s -n test:lint test:only",
-    "test:debug": "mocha --inspect-brk",
-    "test:lint": "run-s -n test:lint:*",
-    "test:lint:prettier": "prettier --check '{src,test}/**/*.ts'",
-    "test:lint:ts": "eslint '{src,test}/**/*.ts'",
-    "test:only": "mocha",
-    "test:coverage": "c8 mocha",
-    "test:watch": "mocha --watch",
-    "prepublishOnly": "npm run preversion",
-    "preversion": "run-s test build"
-  },
-  "devDependencies": {
-    "@jridgewell/resolve-uri-latest": "npm:@jridgewell/resolve-uri@*",
-    "@rollup/plugin-typescript": "8.3.0",
-    "@typescript-eslint/eslint-plugin": "5.10.0",
-    "@typescript-eslint/parser": "5.10.0",
-    "c8": "7.11.0",
-    "eslint": "8.7.0",
-    "eslint-config-prettier": "8.3.0",
-    "mocha": "9.2.0",
-    "npm-run-all": "4.1.5",
-    "prettier": "2.5.1",
-    "rollup": "2.66.0",
-    "typescript": "4.5.5"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/@jridgewell/sourcemap-codec/package.json
-```json
-{
-  "name": "@jridgewell/sourcemap-codec",
-  "version": "1.5.5",
-  "description": "Encode/decode sourcemap mappings",
-  "keywords": [
-    "sourcemap",
-    "vlq"
-  ],
-  "main": "dist/sourcemap-codec.umd.js",
-  "module": "dist/sourcemap-codec.mjs",
-  "types": "types/sourcemap-codec.d.cts",
-  "files": [
-    "dist",
-    "src",
-    "types"
-  ],
-  "exports": {
-    ".": [
-      {
-        "import": {
-          "types": "./types/sourcemap-codec.d.mts",
-          "default": "./dist/sourcemap-codec.mjs"
-        },
-        "default": {
-          "types": "./types/sourcemap-codec.d.cts",
-          "default": "./dist/sourcemap-codec.umd.js"
-        }
-      },
-      "./dist/sourcemap-codec.umd.js"
-    ],
-    "./package.json": "./package.json"
-  },
-  "scripts": {
-    "benchmark": "run-s build:code benchmark:*",
-    "benchmark:install": "cd benchmark && npm install",
-    "benchmark:only": "node --expose-gc benchmark/index.js",
-    "build": "run-s -n build:code build:types",
-    "build:code": "node ../../esbuild.mjs sourcemap-codec.ts",
-    "build:types": "run-s build:types:force build:types:emit build:types:mts",
-    "build:types:force": "rimraf tsconfig.build.tsbuildinfo",
-    "build:types:emit": "tsc --project tsconfig.build.json",
-    "build:types:mts": "node ../../mts-types.mjs",
-    "clean": "run-s -n clean:code clean:types",
-    "clean:code": "tsc --build --clean tsconfig.build.json",
-    "clean:types": "rimraf dist types",
-    "test": "run-s -n test:types test:only test:format",
-    "test:format": "prettier --check '{src,test}/**/*.ts'",
-    "test:only": "mocha",
-    "test:types": "eslint '{src,test}/**/*.ts'",
-    "lint": "run-s -n lint:types lint:format",
-    "lint:format": "npm run test:format -- --write",
-    "lint:types": "npm run test:types -- --fix",
-    "prepublishOnly": "npm run-s -n build test"
-  },
-  "homepage": "https://github.com/jridgewell/sourcemaps/tree/main/packages/sourcemap-codec",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jridgewell/sourcemaps.git",
-    "directory": "packages/sourcemap-codec"
-  },
-  "author": "Justin Ridgewell <justin@ridgewell.name>",
-  "license": "MIT"
-}
-```
-
-----
-
-# frontend/node_modules/@jridgewell/trace-mapping/package.json
-```json
-{
-  "name": "@jridgewell/trace-mapping",
-  "version": "0.3.31",
-  "description": "Trace the original position through a source map",
-  "keywords": [
-    "source",
-    "map"
-  ],
-  "main": "dist/trace-mapping.umd.js",
-  "module": "dist/trace-mapping.mjs",
-  "types": "types/trace-mapping.d.cts",
-  "files": [
-    "dist",
-    "src",
-    "types"
-  ],
-  "exports": {
-    ".": [
-      {
-        "import": {
-          "types": "./types/trace-mapping.d.mts",
-          "default": "./dist/trace-mapping.mjs"
-        },
-        "default": {
-          "types": "./types/trace-mapping.d.cts",
-          "default": "./dist/trace-mapping.umd.js"
-        }
-      },
-      "./dist/trace-mapping.umd.js"
-    ],
-    "./package.json": "./package.json"
-  },
-  "scripts": {
-    "benchmark": "run-s build:code benchmark:*",
-    "benchmark:install": "cd benchmark && npm install",
-    "benchmark:only": "node --expose-gc benchmark/index.mjs",
-    "build": "run-s -n build:code build:types",
-    "build:code": "node ../../esbuild.mjs trace-mapping.ts",
-    "build:types": "run-s build:types:force build:types:emit build:types:mts",
-    "build:types:force": "rimraf tsconfig.build.tsbuildinfo",
-    "build:types:emit": "tsc --project tsconfig.build.json",
-    "build:types:mts": "node ../../mts-types.mjs",
-    "clean": "run-s -n clean:code clean:types",
-    "clean:code": "tsc --build --clean tsconfig.build.json",
-    "clean:types": "rimraf dist types",
-    "test": "run-s -n test:types test:only test:format",
-    "test:format": "prettier --check '{src,test}/**/*.ts'",
-    "test:only": "mocha",
-    "test:types": "eslint '{src,test}/**/*.ts'",
-    "lint": "run-s -n lint:types lint:format",
-    "lint:format": "npm run test:format -- --write",
-    "lint:types": "npm run test:types -- --fix",
-    "prepublishOnly": "npm run-s -n build test"
-  },
-  "homepage": "https://github.com/jridgewell/sourcemaps/tree/main/packages/trace-mapping",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jridgewell/sourcemaps.git",
-    "directory": "packages/trace-mapping"
-  },
-  "author": "Justin Ridgewell <justin@ridgewell.name>",
-  "license": "MIT",
-  "dependencies": {
-    "@jridgewell/resolve-uri": "^3.1.0",
-    "@jridgewell/sourcemap-codec": "^1.4.14"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/@rolldown/pluginutils/package.json
-```json
-{
-  "name": "@rolldown/pluginutils",
-  "version": "1.0.0-beta.27",
-  "license": "MIT",
-  "type": "module",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rolldown/rolldown.git",
-    "directory": "packages/pluginutils"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "files": [
-    "dist"
-  ],
-  "devDependencies": {
-    "@types/picomatch": "^4.0.0",
-    "picomatch": "^4.0.2",
-    "tsdown": "0.12.9",
-    "vitest": "^3.0.1"
-  },
-  "scripts": {
-    "build": "tsdown",
-    "test": "vitest --typecheck"
-  }
-}```
-
-----
-
-# frontend/node_modules/@rollup/rollup-win32-x64-gnu/package.json
-```json
-{
-  "name": "@rollup/rollup-win32-x64-gnu",
-  "version": "4.59.0",
-  "os": [
-    "win32"
-  ],
-  "cpu": [
-    "x64"
-  ],
-  "files": [
-    "rollup.win32-x64-gnu.node"
-  ],
-  "description": "Native bindings for Rollup",
-  "author": "Lukas Taegert-Atkinson",
-  "homepage": "https://rollupjs.org/",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rollup/rollup.git"
-  },
-  "main": "./rollup.win32-x64-gnu.node"
-}```
-
-----
-
-# frontend/node_modules/@rollup/rollup-win32-x64-msvc/package.json
-```json
-{
-  "name": "@rollup/rollup-win32-x64-msvc",
-  "version": "4.59.0",
-  "os": [
-    "win32"
-  ],
-  "cpu": [
-    "x64"
-  ],
-  "files": [
-    "rollup.win32-x64-msvc.node"
-  ],
-  "description": "Native bindings for Rollup",
-  "author": "Lukas Taegert-Atkinson",
-  "homepage": "https://rollupjs.org/",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rollup/rollup.git"
-  },
-  "main": "./rollup.win32-x64-msvc.node"
-}```
-
-----
-
-# frontend/node_modules/@types/babel__core/package.json
-```json
-{
-    "name": "@types/babel__core",
-    "version": "7.20.5",
-    "description": "TypeScript definitions for @babel/core",
-    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/babel__core",
-    "license": "MIT",
-    "contributors": [
-        {
-            "name": "Troy Gerwien",
-            "githubUsername": "yortus",
-            "url": "https://github.com/yortus"
-        },
-        {
-            "name": "Marvin Hagemeister",
-            "githubUsername": "marvinhagemeister",
-            "url": "https://github.com/marvinhagemeister"
-        },
-        {
-            "name": "Melvin Groenhoff",
-            "githubUsername": "mgroenhoff",
-            "url": "https://github.com/mgroenhoff"
-        },
-        {
-            "name": "Jessica Franco",
-            "githubUsername": "Jessidhia",
-            "url": "https://github.com/Jessidhia"
-        },
-        {
-            "name": "Ifiok Jr.",
-            "githubUsername": "ifiokjr",
-            "url": "https://github.com/ifiokjr"
-        }
-    ],
-    "main": "",
-    "types": "index.d.ts",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-        "directory": "types/babel__core"
-    },
-    "scripts": {},
-    "dependencies": {
-        "@babel/parser": "^7.20.7",
-        "@babel/types": "^7.20.7",
-        "@types/babel__generator": "*",
-        "@types/babel__template": "*",
-        "@types/babel__traverse": "*"
-    },
-    "typesPublisherContentHash": "3ece429b02ff9f70503a5644f2b303b04d10e6da7940c91a9eff5e52f2c76b91",
-    "typeScriptVersion": "4.5"
-}```
-
-----
-
-# frontend/node_modules/@types/babel__generator/package.json
-```json
-{
-    "name": "@types/babel__generator",
-    "version": "7.27.0",
-    "description": "TypeScript definitions for @babel/generator",
-    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/babel__generator",
-    "license": "MIT",
-    "contributors": [
-        {
-            "name": "Troy Gerwien",
-            "githubUsername": "yortus",
-            "url": "https://github.com/yortus"
-        },
-        {
-            "name": "Melvin Groenhoff",
-            "githubUsername": "mgroenhoff",
-            "url": "https://github.com/mgroenhoff"
-        },
-        {
-            "name": "Cameron Yan",
-            "githubUsername": "khell",
-            "url": "https://github.com/khell"
-        },
-        {
-            "name": "Lyanbin",
-            "githubUsername": "Lyanbin",
-            "url": "https://github.com/Lyanbin"
-        }
-    ],
-    "main": "",
-    "types": "index.d.ts",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-        "directory": "types/babel__generator"
-    },
-    "scripts": {},
-    "dependencies": {
-        "@babel/types": "^7.0.0"
-    },
-    "peerDependencies": {},
-    "typesPublisherContentHash": "b5c7deac65dbd6ab9b313d1d71c86afe4383b881dcb4e3b3ac51dab07b8f95fb",
-    "typeScriptVersion": "5.1"
-}```
-
-----
-
-# frontend/node_modules/@types/babel__template/package.json
-```json
-{
-    "name": "@types/babel__template",
-    "version": "7.4.4",
-    "description": "TypeScript definitions for @babel/template",
-    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/babel__template",
-    "license": "MIT",
-    "contributors": [
-        {
-            "name": "Troy Gerwien",
-            "githubUsername": "yortus",
-            "url": "https://github.com/yortus"
-        },
-        {
-            "name": "Marvin Hagemeister",
-            "githubUsername": "marvinhagemeister",
-            "url": "https://github.com/marvinhagemeister"
-        },
-        {
-            "name": "Melvin Groenhoff",
-            "githubUsername": "mgroenhoff",
-            "url": "https://github.com/mgroenhoff"
-        },
-        {
-            "name": "ExE Boss",
-            "githubUsername": "ExE-Boss",
-            "url": "https://github.com/ExE-Boss"
-        }
-    ],
-    "main": "",
-    "types": "index.d.ts",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-        "directory": "types/babel__template"
-    },
-    "scripts": {},
-    "dependencies": {
-        "@babel/parser": "^7.1.0",
-        "@babel/types": "^7.0.0"
-    },
-    "typesPublisherContentHash": "5730d754b4d1fcd41676b093f9e32b340c749c4d37b126dfa312e394467e86c6",
-    "typeScriptVersion": "4.5"
-}```
-
-----
-
-# frontend/node_modules/@types/babel__traverse/package.json
-```json
-{
-    "name": "@types/babel__traverse",
-    "version": "7.28.0",
-    "description": "TypeScript definitions for @babel/traverse",
-    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/babel__traverse",
-    "license": "MIT",
-    "contributors": [
-        {
-            "name": "Troy Gerwien",
-            "githubUsername": "yortus",
-            "url": "https://github.com/yortus"
-        },
-        {
-            "name": "Marvin Hagemeister",
-            "githubUsername": "marvinhagemeister",
-            "url": "https://github.com/marvinhagemeister"
-        },
-        {
-            "name": "Ryan Petrich",
-            "githubUsername": "rpetrich",
-            "url": "https://github.com/rpetrich"
-        },
-        {
-            "name": "Melvin Groenhoff",
-            "githubUsername": "mgroenhoff",
-            "url": "https://github.com/mgroenhoff"
-        },
-        {
-            "name": "Dean L.",
-            "githubUsername": "dlgrit",
-            "url": "https://github.com/dlgrit"
-        },
-        {
-            "name": "Ifiok Jr.",
-            "githubUsername": "ifiokjr",
-            "url": "https://github.com/ifiokjr"
-        },
-        {
-            "name": "ExE Boss",
-            "githubUsername": "ExE-Boss",
-            "url": "https://github.com/ExE-Boss"
-        },
-        {
-            "name": "Daniel Tschinder",
-            "githubUsername": "danez",
-            "url": "https://github.com/danez"
-        }
-    ],
-    "main": "",
-    "types": "index.d.ts",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-        "directory": "types/babel__traverse"
-    },
-    "scripts": {},
-    "dependencies": {
-        "@babel/types": "^7.28.2"
-    },
-    "peerDependencies": {},
-    "typesPublisherContentHash": "f8bf439253873b2b30a22c425df086f130320cf70d832d84412e82a51e410680",
-    "typeScriptVersion": "5.1"
-}```
-
-----
-
-# frontend/node_modules/@types/estree/package.json
-```json
-{
-    "name": "@types/estree",
-    "version": "1.0.8",
-    "description": "TypeScript definitions for estree",
-    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/estree",
-    "license": "MIT",
-    "contributors": [
-        {
-            "name": "RReverser",
-            "githubUsername": "RReverser",
-            "url": "https://github.com/RReverser"
-        }
-    ],
-    "main": "",
-    "types": "index.d.ts",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-        "directory": "types/estree"
-    },
-    "scripts": {},
-    "dependencies": {},
-    "peerDependencies": {},
-    "typesPublisherContentHash": "7a167b6e4a4d9f6e9a2cb9fd3fc45c885f89cbdeb44b3e5961bb057a45c082fd",
-    "typeScriptVersion": "5.1",
-    "nonNpm": true
-}```
-
-----
-
-# frontend/node_modules/@types/prop-types/package.json
-```json
-{
-    "name": "@types/prop-types",
-    "version": "15.7.15",
-    "description": "TypeScript definitions for prop-types",
-    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/prop-types",
-    "license": "MIT",
-    "contributors": [
-        {
-            "name": "DovydasNavickas",
-            "githubUsername": "DovydasNavickas",
-            "url": "https://github.com/DovydasNavickas"
-        },
-        {
-            "name": "Ferdy Budhidharma",
-            "githubUsername": "ferdaber",
-            "url": "https://github.com/ferdaber"
-        },
-        {
-            "name": "Sebastian Silbermann",
-            "githubUsername": "eps1lon",
-            "url": "https://github.com/eps1lon"
-        }
-    ],
-    "main": "",
-    "types": "index.d.ts",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-        "directory": "types/prop-types"
-    },
-    "scripts": {},
-    "dependencies": {},
-    "peerDependencies": {},
-    "typesPublisherContentHash": "92a20bc6f48f988ae6f314daa592e457e4b7ccb6ef115535bf69c7061375a248",
-    "typeScriptVersion": "5.1"
-}```
-
-----
-
-# frontend/node_modules/@types/react-dom/package.json
-```json
-{
-    "name": "@types/react-dom",
-    "version": "18.3.7",
-    "description": "TypeScript definitions for react-dom",
-    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react-dom",
-    "license": "MIT",
-    "contributors": [
-        {
-            "name": "Asana",
-            "url": "https://asana.com"
-        },
-        {
-            "name": "AssureSign",
-            "url": "http://www.assuresign.com"
-        },
-        {
-            "name": "Microsoft",
-            "url": "https://microsoft.com"
-        },
-        {
-            "name": "MartynasZilinskas",
-            "githubUsername": "MartynasZilinskas",
-            "url": "https://github.com/MartynasZilinskas"
-        },
-        {
-            "name": "Josh Rutherford",
-            "githubUsername": "theruther4d",
-            "url": "https://github.com/theruther4d"
-        },
-        {
-            "name": "Jessica Franco",
-            "githubUsername": "Jessidhia",
-            "url": "https://github.com/Jessidhia"
-        },
-        {
-            "name": "Sebastian Silbermann",
-            "githubUsername": "eps1lon",
-            "url": "https://github.com/eps1lon"
-        }
-    ],
-    "main": "",
-    "types": "index.d.ts",
-    "exports": {
-        ".": {
-            "types": {
-                "default": "./index.d.ts"
-            }
-        },
-        "./canary": {
-            "types": {
-                "default": "./canary.d.ts"
-            }
-        },
-        "./client": {
-            "types": {
-                "default": "./client.d.ts"
-            }
-        },
-        "./server": {
-            "types": {
-                "default": "./server.d.ts"
-            }
-        },
-        "./experimental": {
-            "types": {
-                "default": "./experimental.d.ts"
-            }
-        },
-        "./test-utils": {
-            "types": {
-                "default": "./test-utils/index.d.ts"
-            }
-        },
-        "./package.json": "./package.json"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-        "directory": "types/react-dom"
-    },
-    "scripts": {},
-    "dependencies": {},
-    "peerDependencies": {
-        "@types/react": "^18.0.0"
-    },
-    "typesPublisherContentHash": "091d1528d83863778f5cb9fbf6c81d6e64ed2394f4c3c73a57ed81d9871b4465",
-    "typeScriptVersion": "5.1"
-}```
-
-----
-
-# frontend/node_modules/@types/react/package.json
-```json
-{
-    "name": "@types/react",
-    "version": "18.3.28",
-    "description": "TypeScript definitions for react",
-    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/react",
-    "license": "MIT",
-    "contributors": [
-        {
-            "name": "Asana",
-            "url": "https://asana.com"
-        },
-        {
-            "name": "AssureSign",
-            "url": "http://www.assuresign.com"
-        },
-        {
-            "name": "Microsoft",
-            "url": "https://microsoft.com"
-        },
-        {
-            "name": "John Reilly",
-            "githubUsername": "johnnyreilly",
-            "url": "https://github.com/johnnyreilly"
-        },
-        {
-            "name": "Benoit Benezech",
-            "githubUsername": "bbenezech",
-            "url": "https://github.com/bbenezech"
-        },
-        {
-            "name": "Patricio Zavolinsky",
-            "githubUsername": "pzavolinsky",
-            "url": "https://github.com/pzavolinsky"
-        },
-        {
-            "name": "Eric Anderson",
-            "githubUsername": "ericanderson",
-            "url": "https://github.com/ericanderson"
-        },
-        {
-            "name": "Dovydas Navickas",
-            "githubUsername": "DovydasNavickas",
-            "url": "https://github.com/DovydasNavickas"
-        },
-        {
-            "name": "Josh Rutherford",
-            "githubUsername": "theruther4d",
-            "url": "https://github.com/theruther4d"
-        },
-        {
-            "name": "Guilherme Hübner",
-            "githubUsername": "guilhermehubner",
-            "url": "https://github.com/guilhermehubner"
-        },
-        {
-            "name": "Ferdy Budhidharma",
-            "githubUsername": "ferdaber",
-            "url": "https://github.com/ferdaber"
-        },
-        {
-            "name": "Johann Rakotoharisoa",
-            "githubUsername": "jrakotoharisoa",
-            "url": "https://github.com/jrakotoharisoa"
-        },
-        {
-            "name": "Olivier Pascal",
-            "githubUsername": "pascaloliv",
-            "url": "https://github.com/pascaloliv"
-        },
-        {
-            "name": "Martin Hochel",
-            "githubUsername": "hotell",
-            "url": "https://github.com/hotell"
-        },
-        {
-            "name": "Frank Li",
-            "githubUsername": "franklixuefei",
-            "url": "https://github.com/franklixuefei"
-        },
-        {
-            "name": "Jessica Franco",
-            "githubUsername": "Jessidhia",
-            "url": "https://github.com/Jessidhia"
-        },
-        {
-            "name": "Saransh Kataria",
-            "githubUsername": "saranshkataria",
-            "url": "https://github.com/saranshkataria"
-        },
-        {
-            "name": "Kanitkorn Sujautra",
-            "githubUsername": "lukyth",
-            "url": "https://github.com/lukyth"
-        },
-        {
-            "name": "Sebastian Silbermann",
-            "githubUsername": "eps1lon",
-            "url": "https://github.com/eps1lon"
-        },
-        {
-            "name": "Kyle Scully",
-            "githubUsername": "zieka",
-            "url": "https://github.com/zieka"
-        },
-        {
-            "name": "Cong Zhang",
-            "githubUsername": "dancerphil",
-            "url": "https://github.com/dancerphil"
-        },
-        {
-            "name": "Dimitri Mitropoulos",
-            "githubUsername": "dimitropoulos",
-            "url": "https://github.com/dimitropoulos"
-        },
-        {
-            "name": "JongChan Choi",
-            "githubUsername": "disjukr",
-            "url": "https://github.com/disjukr"
-        },
-        {
-            "name": "Victor Magalhães",
-            "githubUsername": "vhfmag",
-            "url": "https://github.com/vhfmag"
-        },
-        {
-            "name": "Priyanshu Rav",
-            "githubUsername": "priyanshurav",
-            "url": "https://github.com/priyanshurav"
-        },
-        {
-            "name": "Dmitry Semigradsky",
-            "githubUsername": "Semigradsky",
-            "url": "https://github.com/Semigradsky"
-        },
-        {
-            "name": "Matt Pocock",
-            "githubUsername": "mattpocock",
-            "url": "https://github.com/mattpocock"
-        }
-    ],
-    "main": "",
-    "types": "index.d.ts",
-    "typesVersions": {
-        "<=5.0": {
-            "*": [
-                "ts5.0/*"
-            ]
-        }
-    },
-    "exports": {
-        ".": {
-            "types@<=5.0": {
-                "default": "./ts5.0/index.d.ts"
-            },
-            "types": {
-                "default": "./index.d.ts"
-            }
-        },
-        "./canary": {
-            "types@<=5.0": {
-                "default": "./ts5.0/canary.d.ts"
-            },
-            "types": {
-                "default": "./canary.d.ts"
-            }
-        },
-        "./experimental": {
-            "types@<=5.0": {
-                "default": "./ts5.0/experimental.d.ts"
-            },
-            "types": {
-                "default": "./experimental.d.ts"
-            }
-        },
-        "./jsx-runtime": {
-            "types@<=5.0": {
-                "default": "./ts5.0/jsx-runtime.d.ts"
-            },
-            "types": {
-                "default": "./jsx-runtime.d.ts"
-            }
-        },
-        "./jsx-dev-runtime": {
-            "types@<=5.0": {
-                "default": "./ts5.0/jsx-dev-runtime.d.ts"
-            },
-            "types": {
-                "default": "./jsx-dev-runtime.d.ts"
-            }
-        },
-        "./package.json": "./package.json"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-        "directory": "types/react"
-    },
-    "scripts": {},
-    "dependencies": {
-        "@types/prop-types": "*",
-        "csstype": "^3.2.2"
-    },
-    "peerDependencies": {},
-    "typesPublisherContentHash": "0ea06bef541d937c6628af8b44027771d39c4189db995868d91ac6157c442c8f",
-    "typeScriptVersion": "5.2"
-}```
-
-----
-
-# frontend/node_modules/@vitejs/plugin-react/package.json
-```json
-{
-  "name": "@vitejs/plugin-react",
-  "version": "4.7.0",
-  "license": "MIT",
-  "author": "Evan You",
-  "description": "The default Vite plugin for React projects",
-  "keywords": [
-    "vite",
-    "vite-plugin",
-    "react",
-    "babel",
-    "react-refresh",
-    "fast refresh"
-  ],
-  "contributors": [
-    "Alec Larson",
-    "Arnaud Barré"
-  ],
-  "files": [
-    "dist"
-  ],
-  "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "scripts": {
-    "dev": "tsdown --watch",
-    "build": "tsdown",
-    "prepublishOnly": "npm run build",
-    "test-unit": "vitest run"
-  },
-  "engines": {
-    "node": "^14.18.0 || >=16.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vitejs/vite-plugin-react.git",
-    "directory": "packages/plugin-react"
-  },
-  "bugs": {
-    "url": "https://github.com/vitejs/vite-plugin-react/issues"
-  },
-  "homepage": "https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#readme",
-  "dependencies": {
-    "@babel/core": "^7.28.0",
-    "@babel/plugin-transform-react-jsx-self": "^7.27.1",
-    "@babel/plugin-transform-react-jsx-source": "^7.27.1",
-    "@rolldown/pluginutils": "1.0.0-beta.27",
-    "@types/babel__core": "^7.20.5",
-    "react-refresh": "^0.17.0"
-  },
-  "peerDependencies": {
-    "vite": "^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0"
-  },
-  "devDependencies": {
-    "@vitejs/react-common": "workspace:*",
-    "babel-plugin-react-compiler": "19.1.0-rc.2",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "rolldown": "1.0.0-beta.27",
-    "tsdown": "^0.12.9",
-    "vitest": "^3.2.4"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/baseline-browser-mapping/package.json
-```json
-{
-  "name": "baseline-browser-mapping",
-  "main": "./dist/index.cjs",
-  "version": "2.10.8",
-  "description": "A library for obtaining browser versions with their maximum supported Baseline feature set and Widely Available status.",
-  "exports": {
-    ".": {
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "./legacy": {
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
-    }
-  },
-  "jsdelivr": "./dist/index.js",
-  "files": [
-    "dist/*",
-    "!dist/scripts/*",
-    "LICENSE.txt",
-    "README.md"
-  ],
-  "types": "./dist/index.d.ts",
-  "type": "module",
-  "bin": {
-    "baseline-browser-mapping": "dist/cli.cjs"
-  },
-  "engines": {
-    "node": ">=6.0.0"
-  },
-  "scripts": {
-    "fix-cli-permissions": "output=$(npx baseline-browser-mapping 2>&1); path=$(printf '%s\n' \"$output\" | sed -n 's/^.*: \\(.*\\): Permission denied$/\\1/p; t; s/^\\(.*\\): Permission denied$/\\1/p'); if [ -n \"$path\" ]; then echo \"Permission denied for: $path\"; echo \"Removing $path ...\"; rm -rf \"$path\"; else echo \"$output\"; fi",
-    "test:format": "npx prettier --check .",
-    "test:lint": "npx eslint .",
-    "test:legacy-test": "node spec/legacy-tests/legacy-test.cjs; node dist/cli.cjs",
-    "test:jasmine": "npx jasmine",
-    "test:jasmine-browser": "npx jasmine-browser-runner runSpecs --config ./spec/support/jasmine-browser.js",
-    "test": "npm run build && npm run fix-cli-permissions && npm run test:format && npm run test:lint && npm run test:jasmine && npm run test:jasmine-browser",
-    "build": "rm -rf dist; npx prettier . --write; rollup -c; rm -rf ./dist/scripts/expose-data.d.ts ./dist/cli.d.ts",
-    "refresh-downstream": "npx tsx scripts/refresh-downstream.ts",
-    "refresh-static": "npx tsx scripts/refresh-static.ts",
-    "update-data-file": "npx tsx scripts/update-data-file.ts; npx prettier ./src/data/data.js --write",
-    "update-data-dependencies": "npm i @mdn/browser-compat-data@latest web-features@latest -D",
-    "check-data-changes": "git diff --name-only | grep -q '^src/data/data.js$' && echo 'changes-available=TRUE' || echo 'changes-available=FALSE'"
-  },
-  "license": "Apache-2.0",
-  "devDependencies": {
-    "@mdn/browser-compat-data": "^7.3.7",
-    "@rollup/plugin-terser": "^1.0.0",
-    "@rollup/plugin-typescript": "^12.1.3",
-    "@types/node": "^22.15.17",
-    "eslint-plugin-new-with-error": "^5.0.0",
-    "jasmine": "^5.8.0",
-    "jasmine-browser-runner": "^3.0.0",
-    "jasmine-spec-reporter": "^7.0.0",
-    "prettier": "^3.5.3",
-    "rollup": "^4.44.0",
-    "tslib": "^2.8.1",
-    "typescript": "^5.7.2",
-    "typescript-eslint": "^8.35.0",
-    "web-features": "^3.20.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/web-platform-dx/baseline-browser-mapping.git"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/browserslist/package.json
-```json
-{
-  "name": "browserslist",
-  "version": "4.28.1",
-  "description": "Share target browsers between different front-end tools, like Autoprefixer, Stylelint and babel-env-preset",
-  "keywords": [
-    "caniuse",
-    "browsers",
-    "target"
-  ],
-  "funding": [
-    {
-      "type": "opencollective",
-      "url": "https://opencollective.com/browserslist"
-    },
-    {
-      "type": "tidelift",
-      "url": "https://tidelift.com/funding/github/npm/browserslist"
-    },
-    {
-      "type": "github",
-      "url": "https://github.com/sponsors/ai"
-    }
-  ],
-  "author": "Andrey Sitnik <andrey@sitnik.ru>",
-  "license": "MIT",
-  "repository": "browserslist/browserslist",
-  "dependencies": {
-    "baseline-browser-mapping": "^2.9.0",
-    "caniuse-lite": "^1.0.30001759",
-    "electron-to-chromium": "^1.5.263",
-    "node-releases": "^2.0.27",
-    "update-browserslist-db": "^1.2.0"
-  },
-  "engines": {
-    "node": "^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7"
-  },
-  "bin": {
-    "browserslist": "cli.js"
-  },
-  "types": "./index.d.ts",
-  "browser": {
-    "./node.js": "./browser.js",
-    "path": false
-  }
-}
-```
-
-----
-
-# frontend/node_modules/caniuse-lite/package.json
-```json
-{
-  "name": "caniuse-lite",
-  "version": "1.0.30001779",
-  "description": "A smaller version of caniuse-db, with only the essentials!",
-  "main": "dist/unpacker/index.js",
-  "files": [
-    "data",
-    "dist"
-  ],
-  "keywords": [
-    "support"
-  ],
-  "author": {
-    "name": "Ben Briggs",
-    "email": "beneb.info@gmail.com",
-    "url": "http://beneb.info"
-  },
-  "repository": "browserslist/caniuse-lite",
-  "funding": [
-    {
-      "type": "opencollective",
-      "url": "https://opencollective.com/browserslist"
-    },
-    {
-      "type": "tidelift",
-      "url": "https://tidelift.com/funding/github/npm/caniuse-lite"
-    },
-    {
-      "type": "github",
-      "url": "https://github.com/sponsors/ai"
-    }
-  ],
-  "license": "CC-BY-4.0"
-}
-```
-
-----
-
-# frontend/node_modules/convert-source-map/package.json
-```json
-{
-  "name": "convert-source-map",
-  "version": "2.0.0",
-  "description": "Converts a source-map from/to  different formats and allows adding/changing properties.",
-  "main": "index.js",
-  "scripts": {
-    "test": "tap test/*.js --color"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/thlorenz/convert-source-map.git"
-  },
-  "homepage": "https://github.com/thlorenz/convert-source-map",
-  "devDependencies": {
-    "inline-source-map": "~0.6.2",
-    "tap": "~9.0.0"
-  },
-  "keywords": [
-    "convert",
-    "sourcemap",
-    "source",
-    "map",
-    "browser",
-    "debug"
-  ],
-  "author": {
-    "name": "Thorsten Lorenz",
-    "email": "thlorenz@gmx.de",
-    "url": "http://thlorenz.com"
-  },
-  "license": "MIT",
-  "engine": {
-    "node": ">=4"
-  },
-  "files": [
-    "index.js"
-  ]
-}
-```
-
-----
-
-# frontend/node_modules/csstype/package.json
-```json
-{
-  "name": "csstype",
-  "version": "3.2.3",
-  "main": "",
-  "types": "index.d.ts",
-  "description": "Strict TypeScript and Flow types for style based on MDN data",
-  "repository": "https://github.com/frenic/csstype",
-  "author": "Fredrik Nicol <fredrik.nicol@gmail.com>",
-  "license": "MIT",
-  "devDependencies": {
-    "@babel/core": "^7.28.5",
-    "@babel/preset-env": "^7.28.5",
-    "@babel/preset-typescript": "^7.28.5",
-    "@eslint/js": "^9.39.1",
-    "@mdn/browser-compat-data": "7.1.21",
-    "@tsconfig/node24": "^24.0.2",
-    "@types/chokidar": "^2.1.7",
-    "@types/css-tree": "^2.3.11",
-    "@types/jest": "^30.0.0",
-    "@types/jsdom": "^27.0.0",
-    "@types/node": "^24.10.1",
-    "@types/prettier": "^3.0.0",
-    "@types/turndown": "^5.0.6",
-    "babel-jest": "^30.2.0",
-    "chalk": "^5.6.2",
-    "chokidar": "^4.0.3",
-    "css-tree": "^3.1.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.4",
-    "flow-bin": "^0.291.0",
-    "jest": "^30.2.0",
-    "jsdom": "^27.2.0",
-    "mdn-data": "2.25.0",
-    "prettier": "^3.6.2",
-    "release-it": "^19.0.6",
-    "tsx": "^4.20.6",
-    "turndown": "^7.2.2",
-    "typescript": "~5.9.3",
-    "typescript-eslint": "^8.46.4"
-  },
-  "overrides": {
-    "js-yaml": ">=4.1.1"
-  },
-  "scripts": {
-    "prepublish": "npm install --no-save --prefix __tests__ && npm install --no-save --prefix __tests__/__fixtures__",
-    "release": "release-it",
-    "update": "tsx update.ts",
-    "build": "tsx --inspect build.ts --start",
-    "watch": "tsx build.ts --watch",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
-    "pretty": "prettier --write build.ts **/*.{ts,js,json,md}",
-    "lazy": "tsc && npm run lint",
-    "test": "jest --runInBand",
-    "test:src": "jest src.*.ts",
-    "test:dist": "jest dist.*.ts --runInBand"
-  },
-  "files": [
-    "index.d.ts",
-    "index.js.flow"
-  ],
-  "keywords": [
-    "css",
-    "style",
-    "typescript",
-    "flow",
-    "typings",
-    "types",
-    "definitions"
-  ]
-}
-```
-
-----
-
-# frontend/node_modules/debug/package.json
-```json
-{
-  "name": "debug",
-  "version": "4.4.3",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/debug-js/debug.git"
-  },
-  "description": "Lightweight debugging utility for Node.js and the browser",
-  "keywords": [
-    "debug",
-    "log",
-    "debugger"
-  ],
-  "files": [
-    "src",
-    "LICENSE",
-    "README.md"
-  ],
-  "author": "Josh Junon (https://github.com/qix-)",
-  "contributors": [
-    "TJ Holowaychuk <tj@vision-media.ca>",
-    "Nathan Rajlich <nathan@tootallnate.net> (http://n8.io)",
-    "Andrew Rhyne <rhyneandrew@gmail.com>"
-  ],
-  "license": "MIT",
-  "scripts": {
-    "lint": "xo",
-    "test": "npm run test:node && npm run test:browser && npm run lint",
-    "test:node": "mocha test.js test.node.js",
-    "test:browser": "karma start --single-run",
-    "test:coverage": "cat ./coverage/lcov.info | coveralls"
-  },
-  "dependencies": {
-    "ms": "^2.1.3"
-  },
-  "devDependencies": {
-    "brfs": "^2.0.1",
-    "browserify": "^16.2.3",
-    "coveralls": "^3.0.2",
-    "karma": "^3.1.4",
-    "karma-browserify": "^6.0.0",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-mocha": "^1.3.0",
-    "mocha": "^5.2.0",
-    "mocha-lcov-reporter": "^1.2.0",
-    "sinon": "^14.0.0",
-    "xo": "^0.23.0"
-  },
-  "peerDependenciesMeta": {
-    "supports-color": {
-      "optional": true
-    }
-  },
-  "main": "./src/index.js",
-  "browser": "./src/browser.js",
-  "engines": {
-    "node": ">=6.0"
-  },
-  "xo": {
-    "rules": {
-      "import/extensions": "off"
-    }
-  }
-}
-```
-
-----
-
-# frontend/node_modules/electron-to-chromium/chromium-versions.json
-```json
-{"39":"0.20","40":"0.21","41":"0.21","42":"0.25","43":"0.27","44":"0.30","45":"0.31","47":"0.36","49":"0.37","50":"1.1","51":"1.2","52":"1.3","53":"1.4","54":"1.4","56":"1.6","58":"1.7","59":"1.8","61":"2.0","66":"3.0","69":"4.0","72":"5.0","73":"5.0","76":"6.0","78":"7.0","79":"8.0","80":"8.0","82":"9.0","83":"9.0","84":"10.0","85":"10.0","86":"11.0","87":"11.0","89":"12.0","90":"13.0","91":"13.0","92":"14.0","93":"14.0","94":"15.0","95":"16.0","96":"16.0","98":"17.0","99":"18.0","100":"18.0","102":"19.0","103":"20.0","104":"20.0","105":"21.0","106":"21.0","107":"22.0","108":"22.0","110":"23.0","111":"24.0","112":"24.0","114":"25.0","116":"26.0","118":"27.0","119":"28.0","120":"28.0","121":"29.0","122":"29.0","123":"30.0","124":"30.0","125":"31.0","126":"31.0","127":"32.0","128":"32.0","129":"33.0","130":"33.0","131":"34.0","132":"34.0","133":"35.0","134":"35.0","135":"36.0","136":"36.0","137":"37.0","138":"37.0","139":"38.0","140":"38.0","141":"39.0","142":"39.0","143":"40.0","144":"40.0","146":"41.0"}```
-
-----
-
-# frontend/node_modules/electron-to-chromium/full-chromium-versions.json
-```json
-{"39.0.2171.65":["0.20.0","0.20.1","0.20.2","0.20.3","0.20.4","0.20.5","0.20.6","0.20.7","0.20.8"],"40.0.2214.91":["0.21.0","0.21.1","0.21.2"],"41.0.2272.76":["0.21.3","0.22.1","0.22.2","0.22.3","0.23.0","0.24.0"],"42.0.2311.107":["0.25.0","0.25.1","0.25.2","0.25.3","0.26.0","0.26.1","0.27.0","0.27.1"],"43.0.2357.65":["0.27.2","0.27.3","0.28.0","0.28.1","0.28.2","0.28.3","0.29.1","0.29.2"],"44.0.2403.125":["0.30.4","0.31.0"],"45.0.2454.85":["0.31.2","0.32.2","0.32.3","0.33.0","0.33.1","0.33.2","0.33.3","0.33.4","0.33.6","0.33.7","0.33.8","0.33.9","0.34.0","0.34.1","0.34.2","0.34.3","0.34.4","0.35.1","0.35.2","0.35.3","0.35.4","0.35.5"],"47.0.2526.73":["0.36.0","0.36.2","0.36.3","0.36.4"],"47.0.2526.110":["0.36.5","0.36.6","0.36.7","0.36.8","0.36.9","0.36.10","0.36.11","0.36.12"],"49.0.2623.75":["0.37.0","0.37.1","0.37.3","0.37.4","0.37.5","0.37.6","0.37.7","0.37.8","1.0.0","1.0.1","1.0.2"],"50.0.2661.102":["1.1.0","1.1.1","1.1.2","1.1.3"],"51.0.2704.63":["1.2.0","1.2.1"],"51.0.2704.84":["1.2.2","1.2.3"],"51.0.2704.103":["1.2.4","1.2.5"],"51.0.2704.106":["1.2.6","1.2.7","1.2.8"],"52.0.2743.82":["1.3.0","1.3.1","1.3.2","1.3.3","1.3.4","1.3.5","1.3.6","1.3.7","1.3.9","1.3.10","1.3.13","1.3.14","1.3.15"],"53.0.2785.113":["1.4.0","1.4.1","1.4.2","1.4.3","1.4.4","1.4.5"],"53.0.2785.143":["1.4.6","1.4.7","1.4.8","1.4.10","1.4.11","1.4.13","1.4.14","1.4.15","1.4.16"],"54.0.2840.51":["1.4.12"],"54.0.2840.101":["1.5.0","1.5.1"],"56.0.2924.87":["1.6.0","1.6.1","1.6.2","1.6.3","1.6.4","1.6.5","1.6.6","1.6.7","1.6.8","1.6.9","1.6.10","1.6.11","1.6.12","1.6.13","1.6.14","1.6.15","1.6.16","1.6.17","1.6.18"],"58.0.3029.110":["1.7.0","1.7.1","1.7.2","1.7.3","1.7.4","1.7.5","1.7.6","1.7.7","1.7.8","1.7.9","1.7.10","1.7.11","1.7.12","1.7.13","1.7.14","1.7.15","1.7.16"],"59.0.3071.115":["1.8.0","1.8.1","1.8.2-beta.1","1.8.2-beta.2","1.8.2-beta.3","1.8.2-beta.4","1.8.2-beta.5","1.8.2","1.8.3","1.8.4","1.8.5","1.8.6","1.8.7","1.8.8"],"61.0.3163.100":["2.0.0-beta.1","2.0.0-beta.2","2.0.0-beta.3","2.0.0-beta.4","2.0.0-beta.5","2.0.0-beta.6","2.0.0-beta.7","2.0.0-beta.8","2.0.0","2.0.1","2.0.2","2.0.3","2.0.4","2.0.5","2.0.6","2.0.7","2.0.8","2.0.9","2.0.10","2.0.11","2.0.12","2.0.13","2.0.14","2.0.15","2.0.16","2.0.17","2.0.18","2.1.0-unsupported.20180809"],"66.0.3359.181":["3.0.0-beta.1","3.0.0-beta.2","3.0.0-beta.3","3.0.0-beta.4","3.0.0-beta.5","3.0.0-beta.6","3.0.0-beta.7","3.0.0-beta.8","3.0.0-beta.9","3.0.0-beta.10","3.0.0-beta.11","3.0.0-beta.12","3.0.0-beta.13","3.0.0","3.0.1","3.0.2","3.0.3","3.0.4","3.0.5","3.0.6","3.0.7","3.0.8","3.0.9","3.0.10","3.0.11","3.0.12","3.0.13","3.0.14","3.0.15","3.0.16","3.1.0-beta.1","3.1.0-beta.2","3.1.0-beta.3","3.1.0-beta.4","3.1.0-beta.5","3.1.0","3.1.1","3.1.2","3.1.3","3.1.4","3.1.5","3.1.6","3.1.7","3.1.8","3.1.9","3.1.10","3.1.11","3.1.12","3.1.13"],"69.0.3497.106":["4.0.0-beta.1","4.0.0-beta.2","4.0.0-beta.3","4.0.0-beta.4","4.0.0-beta.5","4.0.0-beta.6","4.0.0-beta.7","4.0.0-beta.8","4.0.0-beta.9","4.0.0-beta.10","4.0.0-beta.11","4.0.0","4.0.1","4.0.2","4.0.3","4.0.4","4.0.5","4.0.6"],"69.0.3497.128":["4.0.7","4.0.8","4.1.0","4.1.1","4.1.2","4.1.3","4.1.4","4.1.5","4.2.0","4.2.1","4.2.2","4.2.3","4.2.4","4.2.5","4.2.6","4.2.7","4.2.8","4.2.9","4.2.10","4.2.11","4.2.12"],"72.0.3626.52":["5.0.0-beta.1","5.0.0-beta.2"],"73.0.3683.27":["5.0.0-beta.3"],"73.0.3683.54":["5.0.0-beta.4"],"73.0.3683.61":["5.0.0-beta.5"],"73.0.3683.84":["5.0.0-beta.6"],"73.0.3683.94":["5.0.0-beta.7"],"73.0.3683.104":["5.0.0-beta.8"],"73.0.3683.117":["5.0.0-beta.9"],"73.0.3683.119":["5.0.0"],"73.0.3683.121":["5.0.1","5.0.2","5.0.3","5.0.4","5.0.5","5.0.6","5.0.7","5.0.8","5.0.9","5.0.10","5.0.11","5.0.12","5.0.13"],"76.0.3774.1":["6.0.0-beta.1"],"76.0.3783.1":["6.0.0-beta.2","6.0.0-beta.3","6.0.0-beta.4"],"76.0.3805.4":["6.0.0-beta.5"],"76.0.3809.3":["6.0.0-beta.6"],"76.0.3809.22":["6.0.0-beta.7"],"76.0.3809.26":["6.0.0-beta.8","6.0.0-beta.9"],"76.0.3809.37":["6.0.0-beta.10"],"76.0.3809.42":["6.0.0-beta.11"],"76.0.3809.54":["6.0.0-beta.12"],"76.0.3809.60":["6.0.0-beta.13"],"76.0.3809.68":["6.0.0-beta.14"],"76.0.3809.74":["6.0.0-beta.15"],"76.0.3809.88":["6.0.0"],"76.0.3809.102":["6.0.1"],"76.0.3809.110":["6.0.2"],"76.0.3809.126":["6.0.3"],"76.0.3809.131":["6.0.4"],"76.0.3809.136":["6.0.5"],"76.0.3809.138":["6.0.6"],"76.0.3809.139":["6.0.7"],"76.0.3809.146":["6.0.8","6.0.9","6.0.10","6.0.11","6.0.12","6.1.0","6.1.1","6.1.2","6.1.3","6.1.4","6.1.5","6.1.6","6.1.7","6.1.8","6.1.9","6.1.10","6.1.11","6.1.12"],"78.0.3866.0":["7.0.0-beta.1","7.0.0-beta.2","7.0.0-beta.3"],"78.0.3896.6":["7.0.0-beta.4"],"78.0.3905.1":["7.0.0-beta.5","7.0.0-beta.6","7.0.0-beta.7","7.0.0"],"78.0.3904.92":["7.0.1"],"78.0.3904.94":["7.1.0"],"78.0.3904.99":["7.1.1"],"78.0.3904.113":["7.1.2"],"78.0.3904.126":["7.1.3"],"78.0.3904.130":["7.1.4","7.1.5","7.1.6","7.1.7","7.1.8","7.1.9","7.1.10","7.1.11","7.1.12","7.1.13","7.1.14","7.2.0","7.2.1","7.2.2","7.2.3","7.2.4","7.3.0","7.3.1","7.3.2","7.3.3"],"79.0.3931.0":["8.0.0-beta.1","8.0.0-beta.2"],"80.0.3955.0":["8.0.0-beta.3","8.0.0-beta.4"],"80.0.3987.14":["8.0.0-beta.5"],"80.0.3987.51":["8.0.0-beta.6"],"80.0.3987.59":["8.0.0-beta.7"],"80.0.3987.75":["8.0.0-beta.8","8.0.0-beta.9"],"80.0.3987.86":["8.0.0","8.0.1","8.0.2"],"80.0.3987.134":["8.0.3"],"80.0.3987.137":["8.1.0"],"80.0.3987.141":["8.1.1"],"80.0.3987.158":["8.2.0"],"80.0.3987.163":["8.2.1","8.2.2","8.2.3","8.5.3","8.5.4","8.5.5"],"80.0.3987.165":["8.2.4","8.2.5","8.3.0","8.3.1","8.3.2","8.3.3","8.3.4","8.4.0","8.4.1","8.5.0","8.5.1","8.5.2"],"82.0.4048.0":["9.0.0-beta.1","9.0.0-beta.2","9.0.0-beta.3","9.0.0-beta.4","9.0.0-beta.5"],"82.0.4058.2":["9.0.0-beta.6","9.0.0-beta.7","9.0.0-beta.9"],"82.0.4085.10":["9.0.0-beta.10"],"82.0.4085.14":["9.0.0-beta.11","9.0.0-beta.12","9.0.0-beta.13"],"82.0.4085.27":["9.0.0-beta.14"],"83.0.4102.3":["9.0.0-beta.15","9.0.0-beta.16"],"83.0.4103.14":["9.0.0-beta.17"],"83.0.4103.16":["9.0.0-beta.18"],"83.0.4103.24":["9.0.0-beta.19"],"83.0.4103.26":["9.0.0-beta.20","9.0.0-beta.21"],"83.0.4103.34":["9.0.0-beta.22"],"83.0.4103.44":["9.0.0-beta.23"],"83.0.4103.45":["9.0.0-beta.24"],"83.0.4103.64":["9.0.0"],"83.0.4103.94":["9.0.1","9.0.2"],"83.0.4103.100":["9.0.3"],"83.0.4103.104":["9.0.4"],"83.0.4103.119":["9.0.5"],"83.0.4103.122":["9.1.0","9.1.1","9.1.2","9.2.0","9.2.1","9.3.0","9.3.1","9.3.2","9.3.3","9.3.4","9.3.5","9.4.0","9.4.1","9.4.2","9.4.3","9.4.4"],"84.0.4129.0":["10.0.0-beta.1","10.0.0-beta.2"],"85.0.4161.2":["10.0.0-beta.3","10.0.0-beta.4"],"85.0.4181.1":["10.0.0-beta.8","10.0.0-beta.9"],"85.0.4183.19":["10.0.0-beta.10"],"85.0.4183.20":["10.0.0-beta.11"],"85.0.4183.26":["10.0.0-beta.12"],"85.0.4183.39":["10.0.0-beta.13","10.0.0-beta.14","10.0.0-beta.15","10.0.0-beta.17","10.0.0-beta.19","10.0.0-beta.20","10.0.0-beta.21"],"85.0.4183.70":["10.0.0-beta.23"],"85.0.4183.78":["10.0.0-beta.24"],"85.0.4183.80":["10.0.0-beta.25"],"85.0.4183.84":["10.0.0"],"85.0.4183.86":["10.0.1"],"85.0.4183.87":["10.1.0"],"85.0.4183.93":["10.1.1"],"85.0.4183.98":["10.1.2"],"85.0.4183.121":["10.1.3","10.1.4","10.1.5","10.1.6","10.1.7","10.2.0","10.3.0","10.3.1","10.3.2","10.4.0","10.4.1","10.4.2","10.4.3","10.4.4","10.4.5","10.4.6","10.4.7"],"86.0.4234.0":["11.0.0-beta.1","11.0.0-beta.3","11.0.0-beta.4","11.0.0-beta.5","11.0.0-beta.6","11.0.0-beta.7"],"87.0.4251.1":["11.0.0-beta.8","11.0.0-beta.9","11.0.0-beta.11"],"87.0.4280.11":["11.0.0-beta.12","11.0.0-beta.13"],"87.0.4280.27":["11.0.0-beta.16","11.0.0-beta.17","11.0.0-beta.18","11.0.0-beta.19"],"87.0.4280.40":["11.0.0-beta.20"],"87.0.4280.47":["11.0.0-beta.22","11.0.0-beta.23"],"87.0.4280.60":["11.0.0","11.0.1"],"87.0.4280.67":["11.0.2","11.0.3","11.0.4"],"87.0.4280.88":["11.0.5","11.1.0","11.1.1"],"87.0.4280.141":["11.2.0","11.2.1","11.2.2","11.2.3","11.3.0","11.4.0","11.4.1","11.4.2","11.4.3","11.4.4","11.4.5","11.4.6","11.4.7","11.4.8","11.4.9","11.4.10","11.4.11","11.4.12","11.5.0"],"89.0.4328.0":["12.0.0-beta.1","12.0.0-beta.3","12.0.0-beta.4","12.0.0-beta.5","12.0.0-beta.6","12.0.0-beta.7","12.0.0-beta.8","12.0.0-beta.9","12.0.0-beta.10","12.0.0-beta.11","12.0.0-beta.12","12.0.0-beta.14"],"89.0.4348.1":["12.0.0-beta.16","12.0.0-beta.18","12.0.0-beta.19","12.0.0-beta.20"],"89.0.4388.2":["12.0.0-beta.21","12.0.0-beta.22","12.0.0-beta.23","12.0.0-beta.24","12.0.0-beta.25","12.0.0-beta.26"],"89.0.4389.23":["12.0.0-beta.27","12.0.0-beta.28","12.0.0-beta.29"],"89.0.4389.58":["12.0.0-beta.30","12.0.0-beta.31"],"89.0.4389.69":["12.0.0"],"89.0.4389.82":["12.0.1"],"89.0.4389.90":["12.0.2"],"89.0.4389.114":["12.0.3","12.0.4"],"89.0.4389.128":["12.0.5","12.0.6","12.0.7","12.0.8","12.0.9","12.0.10","12.0.11","12.0.12","12.0.13","12.0.14","12.0.15","12.0.16","12.0.17","12.0.18","12.1.0","12.1.1","12.1.2","12.2.0","12.2.1","12.2.2","12.2.3"],"90.0.4402.0":["13.0.0-beta.2","13.0.0-beta.3"],"90.0.4415.0":["13.0.0-beta.4","13.0.0-beta.5","13.0.0-beta.6","13.0.0-beta.7","13.0.0-beta.8","13.0.0-beta.9","13.0.0-beta.10","13.0.0-beta.11","13.0.0-beta.12","13.0.0-beta.13"],"91.0.4448.0":["13.0.0-beta.14","13.0.0-beta.16","13.0.0-beta.17","13.0.0-beta.18","13.0.0-beta.20"],"91.0.4472.33":["13.0.0-beta.21","13.0.0-beta.22","13.0.0-beta.23"],"91.0.4472.38":["13.0.0-beta.24","13.0.0-beta.25","13.0.0-beta.26","13.0.0-beta.27","13.0.0-beta.28"],"91.0.4472.69":["13.0.0","13.0.1"],"91.0.4472.77":["13.1.0","13.1.1","13.1.2"],"91.0.4472.106":["13.1.3","13.1.4"],"91.0.4472.124":["13.1.5","13.1.6","13.1.7"],"91.0.4472.164":["13.1.8","13.1.9","13.2.0","13.2.1","13.2.2","13.2.3","13.3.0","13.4.0","13.5.0","13.5.1","13.5.2","13.6.0","13.6.1","13.6.2","13.6.3","13.6.6","13.6.7","13.6.8","13.6.9"],"92.0.4511.0":["14.0.0-beta.1","14.0.0-beta.2","14.0.0-beta.3"],"93.0.4536.0":["14.0.0-beta.5","14.0.0-beta.6","14.0.0-beta.7","14.0.0-beta.8"],"93.0.4539.0":["14.0.0-beta.9","14.0.0-beta.10"],"93.0.4557.4":["14.0.0-beta.11","14.0.0-beta.12"],"93.0.4566.0":["14.0.0-beta.13","14.0.0-beta.14","14.0.0-beta.15","14.0.0-beta.16","14.0.0-beta.17","15.0.0-alpha.1","15.0.0-alpha.2"],"93.0.4577.15":["14.0.0-beta.18","14.0.0-beta.19","14.0.0-beta.20","14.0.0-beta.21"],"93.0.4577.25":["14.0.0-beta.22","14.0.0-beta.23"],"93.0.4577.51":["14.0.0-beta.24","14.0.0-beta.25"],"93.0.4577.58":["14.0.0"],"93.0.4577.63":["14.0.1"],"93.0.4577.82":["14.0.2","14.1.0","14.1.1","14.2.0","14.2.1","14.2.2","14.2.3","14.2.4","14.2.5","14.2.6","14.2.7","14.2.8","14.2.9"],"94.0.4584.0":["15.0.0-alpha.3","15.0.0-alpha.4","15.0.0-alpha.5","15.0.0-alpha.6"],"94.0.4590.2":["15.0.0-alpha.7","15.0.0-alpha.8","15.0.0-alpha.9"],"94.0.4606.12":["15.0.0-alpha.10"],"94.0.4606.20":["15.0.0-beta.1","15.0.0-beta.2"],"94.0.4606.31":["15.0.0-beta.3","15.0.0-beta.4","15.0.0-beta.5","15.0.0-beta.6","15.0.0-beta.7"],"94.0.4606.51":["15.0.0"],"94.0.4606.61":["15.1.0","15.1.1"],"94.0.4606.71":["15.1.2"],"94.0.4606.81":["15.2.0","15.3.0","15.3.1","15.3.2","15.3.3","15.3.4","15.3.5","15.3.6","15.3.7","15.4.0","15.4.1","15.4.2","15.5.0","15.5.1","15.5.2","15.5.3","15.5.4","15.5.5","15.5.6","15.5.7"],"95.0.4629.0":["16.0.0-alpha.1","16.0.0-alpha.2","16.0.0-alpha.3","16.0.0-alpha.4","16.0.0-alpha.5","16.0.0-alpha.6","16.0.0-alpha.7"],"96.0.4647.0":["16.0.0-alpha.8","16.0.0-alpha.9","16.0.0-beta.1","16.0.0-beta.2","16.0.0-beta.3"],"96.0.4664.18":["16.0.0-beta.4","16.0.0-beta.5"],"96.0.4664.27":["16.0.0-beta.6","16.0.0-beta.7"],"96.0.4664.35":["16.0.0-beta.8","16.0.0-beta.9"],"96.0.4664.45":["16.0.0","16.0.1"],"96.0.4664.55":["16.0.2","16.0.3","16.0.4","16.0.5"],"96.0.4664.110":["16.0.6","16.0.7","16.0.8"],"96.0.4664.174":["16.0.9","16.0.10","16.1.0","16.1.1","16.2.0","16.2.1","16.2.2","16.2.3","16.2.4","16.2.5","16.2.6","16.2.7","16.2.8"],"96.0.4664.4":["17.0.0-alpha.1","17.0.0-alpha.2","17.0.0-alpha.3"],"98.0.4706.0":["17.0.0-alpha.4","17.0.0-alpha.5","17.0.0-alpha.6","17.0.0-beta.1","17.0.0-beta.2"],"98.0.4758.9":["17.0.0-beta.3"],"98.0.4758.11":["17.0.0-beta.4","17.0.0-beta.5","17.0.0-beta.6","17.0.0-beta.7","17.0.0-beta.8","17.0.0-beta.9"],"98.0.4758.74":["17.0.0"],"98.0.4758.82":["17.0.1"],"98.0.4758.102":["17.1.0"],"98.0.4758.109":["17.1.1","17.1.2","17.2.0"],"98.0.4758.141":["17.3.0","17.3.1","17.4.0","17.4.1","17.4.2","17.4.3","17.4.4","17.4.5","17.4.6","17.4.7","17.4.8","17.4.9","17.4.10","17.4.11"],"99.0.4767.0":["18.0.0-alpha.1","18.0.0-alpha.2","18.0.0-alpha.3","18.0.0-alpha.4","18.0.0-alpha.5"],"100.0.4894.0":["18.0.0-beta.1","18.0.0-beta.2","18.0.0-beta.3","18.0.0-beta.4","18.0.0-beta.5","18.0.0-beta.6"],"100.0.4896.56":["18.0.0"],"100.0.4896.60":["18.0.1","18.0.2"],"100.0.4896.75":["18.0.3","18.0.4"],"100.0.4896.127":["18.1.0"],"100.0.4896.143":["18.2.0","18.2.1","18.2.2","18.2.3"],"100.0.4896.160":["18.2.4","18.3.0","18.3.1","18.3.2","18.3.3","18.3.4","18.3.5","18.3.6","18.3.7","18.3.8","18.3.9","18.3.11","18.3.12","18.3.13","18.3.14","18.3.15"],"102.0.4962.3":["19.0.0-alpha.1"],"102.0.4971.0":["19.0.0-alpha.2","19.0.0-alpha.3"],"102.0.4989.0":["19.0.0-alpha.4","19.0.0-alpha.5"],"102.0.4999.0":["19.0.0-beta.1","19.0.0-beta.2","19.0.0-beta.3"],"102.0.5005.27":["19.0.0-beta.4"],"102.0.5005.40":["19.0.0-beta.5","19.0.0-beta.6","19.0.0-beta.7"],"102.0.5005.49":["19.0.0-beta.8"],"102.0.5005.61":["19.0.0","19.0.1"],"102.0.5005.63":["19.0.2","19.0.3","19.0.4"],"102.0.5005.115":["19.0.5","19.0.6"],"102.0.5005.134":["19.0.7"],"102.0.5005.148":["19.0.8"],"102.0.5005.167":["19.0.9","19.0.10","19.0.11","19.0.12","19.0.13","19.0.14","19.0.15","19.0.16","19.0.17","19.1.0","19.1.1","19.1.2","19.1.3","19.1.4","19.1.5","19.1.6","19.1.7","19.1.8","19.1.9"],"103.0.5044.0":["20.0.0-alpha.1"],"104.0.5073.0":["20.0.0-alpha.2","20.0.0-alpha.3","20.0.0-alpha.4","20.0.0-alpha.5","20.0.0-alpha.6","20.0.0-alpha.7","20.0.0-beta.1","20.0.0-beta.2","20.0.0-beta.3","20.0.0-beta.4","20.0.0-beta.5","20.0.0-beta.6","20.0.0-beta.7","20.0.0-beta.8"],"104.0.5112.39":["20.0.0-beta.9"],"104.0.5112.48":["20.0.0-beta.10","20.0.0-beta.11","20.0.0-beta.12"],"104.0.5112.57":["20.0.0-beta.13"],"104.0.5112.65":["20.0.0"],"104.0.5112.81":["20.0.1","20.0.2","20.0.3"],"104.0.5112.102":["20.1.0","20.1.1"],"104.0.5112.114":["20.1.2","20.1.3","20.1.4"],"104.0.5112.124":["20.2.0","20.3.0","20.3.1","20.3.2","20.3.3","20.3.4","20.3.5","20.3.6","20.3.7","20.3.8","20.3.9","20.3.10","20.3.11","20.3.12"],"105.0.5187.0":["21.0.0-alpha.1","21.0.0-alpha.2","21.0.0-alpha.3","21.0.0-alpha.4","21.0.0-alpha.5"],"106.0.5216.0":["21.0.0-alpha.6","21.0.0-beta.1","21.0.0-beta.2","21.0.0-beta.3","21.0.0-beta.4","21.0.0-beta.5"],"106.0.5249.40":["21.0.0-beta.6","21.0.0-beta.7","21.0.0-beta.8"],"106.0.5249.51":["21.0.0"],"106.0.5249.61":["21.0.1"],"106.0.5249.91":["21.1.0"],"106.0.5249.103":["21.1.1"],"106.0.5249.119":["21.2.0"],"106.0.5249.165":["21.2.1"],"106.0.5249.168":["21.2.2","21.2.3"],"106.0.5249.181":["21.3.0","21.3.1"],"106.0.5249.199":["21.3.3","21.3.4","21.3.5","21.4.0","21.4.1","21.4.2","21.4.3","21.4.4"],"107.0.5286.0":["22.0.0-alpha.1"],"108.0.5329.0":["22.0.0-alpha.3","22.0.0-alpha.4","22.0.0-alpha.5","22.0.0-alpha.6"],"108.0.5355.0":["22.0.0-alpha.7"],"108.0.5359.10":["22.0.0-alpha.8","22.0.0-beta.1","22.0.0-beta.2","22.0.0-beta.3"],"108.0.5359.29":["22.0.0-beta.4"],"108.0.5359.40":["22.0.0-beta.5","22.0.0-beta.6"],"108.0.5359.48":["22.0.0-beta.7","22.0.0-beta.8"],"108.0.5359.62":["22.0.0"],"108.0.5359.125":["22.0.1"],"108.0.5359.179":["22.0.2","22.0.3","22.1.0"],"108.0.5359.215":["22.2.0","22.2.1","22.3.0","22.3.1","22.3.2","22.3.3","22.3.4","22.3.5","22.3.6","22.3.7","22.3.8","22.3.9","22.3.10","22.3.11","22.3.12","22.3.13","22.3.14","22.3.15","22.3.16","22.3.17","22.3.18","22.3.20","22.3.21","22.3.22","22.3.23","22.3.24","22.3.25","22.3.26","22.3.27"],"110.0.5415.0":["23.0.0-alpha.1"],"110.0.5451.0":["23.0.0-alpha.2","23.0.0-alpha.3"],"110.0.5478.5":["23.0.0-beta.1","23.0.0-beta.2","23.0.0-beta.3"],"110.0.5481.30":["23.0.0-beta.4"],"110.0.5481.38":["23.0.0-beta.5"],"110.0.5481.52":["23.0.0-beta.6","23.0.0-beta.8"],"110.0.5481.77":["23.0.0"],"110.0.5481.100":["23.1.0"],"110.0.5481.104":["23.1.1"],"110.0.5481.177":["23.1.2"],"110.0.5481.179":["23.1.3"],"110.0.5481.192":["23.1.4","23.2.0"],"110.0.5481.208":["23.2.1","23.2.2","23.2.3","23.2.4","23.3.0","23.3.1","23.3.2","23.3.3","23.3.4","23.3.5","23.3.6","23.3.7","23.3.8","23.3.9","23.3.10","23.3.11","23.3.12","23.3.13"],"111.0.5560.0":["24.0.0-alpha.1","24.0.0-alpha.2","24.0.0-alpha.3","24.0.0-alpha.4","24.0.0-alpha.5","24.0.0-alpha.6","24.0.0-alpha.7"],"111.0.5563.50":["24.0.0-beta.1","24.0.0-beta.2"],"112.0.5615.20":["24.0.0-beta.3","24.0.0-beta.4"],"112.0.5615.29":["24.0.0-beta.5"],"112.0.5615.39":["24.0.0-beta.6","24.0.0-beta.7"],"112.0.5615.49":["24.0.0"],"112.0.5615.50":["24.1.0","24.1.1"],"112.0.5615.87":["24.1.2"],"112.0.5615.165":["24.1.3","24.2.0","24.3.0"],"112.0.5615.183":["24.3.1"],"112.0.5615.204":["24.4.0","24.4.1","24.5.0","24.5.1","24.6.0","24.6.1","24.6.2","24.6.3","24.6.4","24.6.5","24.7.0","24.7.1","24.8.0","24.8.1","24.8.2","24.8.3","24.8.4","24.8.5","24.8.6","24.8.7","24.8.8"],"114.0.5694.0":["25.0.0-alpha.1","25.0.0-alpha.2"],"114.0.5710.0":["25.0.0-alpha.3","25.0.0-alpha.4"],"114.0.5719.0":["25.0.0-alpha.5","25.0.0-alpha.6","25.0.0-beta.1","25.0.0-beta.2","25.0.0-beta.3"],"114.0.5735.16":["25.0.0-beta.4","25.0.0-beta.5","25.0.0-beta.6","25.0.0-beta.7"],"114.0.5735.35":["25.0.0-beta.8"],"114.0.5735.45":["25.0.0-beta.9","25.0.0","25.0.1"],"114.0.5735.106":["25.1.0","25.1.1"],"114.0.5735.134":["25.2.0"],"114.0.5735.199":["25.3.0"],"114.0.5735.243":["25.3.1"],"114.0.5735.248":["25.3.2","25.4.0"],"114.0.5735.289":["25.5.0","25.6.0","25.7.0","25.8.0","25.8.1","25.8.2","25.8.3","25.8.4","25.9.0","25.9.1","25.9.2","25.9.3","25.9.4","25.9.5","25.9.6","25.9.7","25.9.8"],"116.0.5791.0":["26.0.0-alpha.1","26.0.0-alpha.2","26.0.0-alpha.3","26.0.0-alpha.4","26.0.0-alpha.5"],"116.0.5815.0":["26.0.0-alpha.6"],"116.0.5831.0":["26.0.0-alpha.7"],"116.0.5845.0":["26.0.0-alpha.8","26.0.0-beta.1"],"116.0.5845.14":["26.0.0-beta.2","26.0.0-beta.3","26.0.0-beta.4","26.0.0-beta.5","26.0.0-beta.6","26.0.0-beta.7"],"116.0.5845.42":["26.0.0-beta.8","26.0.0-beta.9"],"116.0.5845.49":["26.0.0-beta.10","26.0.0-beta.11"],"116.0.5845.62":["26.0.0-beta.12"],"116.0.5845.82":["26.0.0"],"116.0.5845.97":["26.1.0"],"116.0.5845.179":["26.2.0"],"116.0.5845.188":["26.2.1"],"116.0.5845.190":["26.2.2","26.2.3","26.2.4"],"116.0.5845.228":["26.3.0","26.4.0","26.4.1","26.4.2","26.4.3","26.5.0","26.6.0","26.6.1","26.6.2","26.6.3","26.6.4","26.6.5","26.6.6","26.6.7","26.6.8","26.6.9","26.6.10"],"118.0.5949.0":["27.0.0-alpha.1","27.0.0-alpha.2","27.0.0-alpha.3","27.0.0-alpha.4","27.0.0-alpha.5","27.0.0-alpha.6"],"118.0.5993.5":["27.0.0-beta.1","27.0.0-beta.2","27.0.0-beta.3"],"118.0.5993.11":["27.0.0-beta.4"],"118.0.5993.18":["27.0.0-beta.5","27.0.0-beta.6","27.0.0-beta.7","27.0.0-beta.8","27.0.0-beta.9"],"118.0.5993.54":["27.0.0"],"118.0.5993.89":["27.0.1","27.0.2"],"118.0.5993.120":["27.0.3"],"118.0.5993.129":["27.0.4"],"118.0.5993.144":["27.1.0","27.1.2"],"118.0.5993.159":["27.1.3","27.2.0","27.2.1","27.2.2","27.2.3","27.2.4","27.3.0","27.3.1","27.3.2","27.3.3","27.3.4","27.3.5","27.3.6","27.3.7","27.3.8","27.3.9","27.3.10","27.3.11"],"119.0.6045.0":["28.0.0-alpha.1","28.0.0-alpha.2"],"119.0.6045.21":["28.0.0-alpha.3","28.0.0-alpha.4"],"119.0.6045.33":["28.0.0-alpha.5","28.0.0-alpha.6","28.0.0-alpha.7","28.0.0-beta.1"],"120.0.6099.0":["28.0.0-beta.2"],"120.0.6099.5":["28.0.0-beta.3","28.0.0-beta.4"],"120.0.6099.18":["28.0.0-beta.5","28.0.0-beta.6","28.0.0-beta.7","28.0.0-beta.8","28.0.0-beta.9","28.0.0-beta.10"],"120.0.6099.35":["28.0.0-beta.11"],"120.0.6099.56":["28.0.0"],"120.0.6099.109":["28.1.0","28.1.1"],"120.0.6099.199":["28.1.2","28.1.3"],"120.0.6099.216":["28.1.4"],"120.0.6099.227":["28.2.0"],"120.0.6099.268":["28.2.1"],"120.0.6099.276":["28.2.2"],"120.0.6099.283":["28.2.3"],"120.0.6099.291":["28.2.4","28.2.5","28.2.6","28.2.7","28.2.8","28.2.9","28.2.10","28.3.0","28.3.1","28.3.2","28.3.3"],"121.0.6147.0":["29.0.0-alpha.1","29.0.0-alpha.2","29.0.0-alpha.3"],"121.0.6159.0":["29.0.0-alpha.4","29.0.0-alpha.5","29.0.0-alpha.6","29.0.0-alpha.7"],"122.0.6194.0":["29.0.0-alpha.8"],"122.0.6236.2":["29.0.0-alpha.9","29.0.0-alpha.10","29.0.0-alpha.11","29.0.0-beta.1","29.0.0-beta.2"],"122.0.6261.6":["29.0.0-beta.3","29.0.0-beta.4"],"122.0.6261.18":["29.0.0-beta.5","29.0.0-beta.6","29.0.0-beta.7","29.0.0-beta.8","29.0.0-beta.9","29.0.0-beta.10","29.0.0-beta.11"],"122.0.6261.29":["29.0.0-beta.12"],"122.0.6261.39":["29.0.0"],"122.0.6261.57":["29.0.1"],"122.0.6261.70":["29.1.0"],"122.0.6261.111":["29.1.1"],"122.0.6261.112":["29.1.2","29.1.3"],"122.0.6261.129":["29.1.4"],"122.0.6261.130":["29.1.5"],"122.0.6261.139":["29.1.6"],"122.0.6261.156":["29.2.0","29.3.0","29.3.1","29.3.2","29.3.3","29.4.0","29.4.1","29.4.2","29.4.3","29.4.4","29.4.5","29.4.6"],"123.0.6296.0":["30.0.0-alpha.1"],"123.0.6312.5":["30.0.0-alpha.2"],"124.0.6323.0":["30.0.0-alpha.3","30.0.0-alpha.4"],"124.0.6331.0":["30.0.0-alpha.5","30.0.0-alpha.6"],"124.0.6353.0":["30.0.0-alpha.7"],"124.0.6359.0":["30.0.0-beta.1","30.0.0-beta.2"],"124.0.6367.9":["30.0.0-beta.3","30.0.0-beta.4","30.0.0-beta.5"],"124.0.6367.18":["30.0.0-beta.6"],"124.0.6367.29":["30.0.0-beta.7","30.0.0-beta.8"],"124.0.6367.49":["30.0.0"],"124.0.6367.60":["30.0.1"],"124.0.6367.91":["30.0.2"],"124.0.6367.119":["30.0.3"],"124.0.6367.201":["30.0.4"],"124.0.6367.207":["30.0.5","30.0.6"],"124.0.6367.221":["30.0.7"],"124.0.6367.230":["30.0.8"],"124.0.6367.233":["30.0.9"],"124.0.6367.243":["30.1.0","30.1.1","30.1.2","30.2.0","30.3.0","30.3.1","30.4.0","30.5.0","30.5.1"],"125.0.6412.0":["31.0.0-alpha.1","31.0.0-alpha.2","31.0.0-alpha.3","31.0.0-alpha.4","31.0.0-alpha.5"],"126.0.6445.0":["31.0.0-beta.1","31.0.0-beta.2","31.0.0-beta.3","31.0.0-beta.4","31.0.0-beta.5","31.0.0-beta.6","31.0.0-beta.7","31.0.0-beta.8","31.0.0-beta.9"],"126.0.6478.36":["31.0.0-beta.10","31.0.0","31.0.1"],"126.0.6478.61":["31.0.2"],"126.0.6478.114":["31.1.0"],"126.0.6478.127":["31.2.0","31.2.1"],"126.0.6478.183":["31.3.0"],"126.0.6478.185":["31.3.1"],"126.0.6478.234":["31.4.0","31.5.0","31.6.0","31.7.0","31.7.1","31.7.2","31.7.3","31.7.4","31.7.5","31.7.6","31.7.7"],"127.0.6521.0":["32.0.0-alpha.1","32.0.0-alpha.2","32.0.0-alpha.3","32.0.0-alpha.4","32.0.0-alpha.5"],"128.0.6571.0":["32.0.0-alpha.6","32.0.0-alpha.7"],"128.0.6573.0":["32.0.0-alpha.8","32.0.0-alpha.9","32.0.0-alpha.10","32.0.0-beta.1"],"128.0.6611.0":["32.0.0-beta.2"],"128.0.6613.7":["32.0.0-beta.3"],"128.0.6613.18":["32.0.0-beta.4"],"128.0.6613.27":["32.0.0-beta.5","32.0.0-beta.6","32.0.0-beta.7"],"128.0.6613.36":["32.0.0","32.0.1"],"128.0.6613.84":["32.0.2"],"128.0.6613.120":["32.1.0"],"128.0.6613.137":["32.1.1"],"128.0.6613.162":["32.1.2"],"128.0.6613.178":["32.2.0"],"128.0.6613.186":["32.2.1","32.2.2","32.2.3","32.2.4","32.2.5","32.2.6","32.2.7","32.2.8","32.3.0","32.3.1","32.3.2","32.3.3"],"129.0.6668.0":["33.0.0-alpha.1"],"130.0.6672.0":["33.0.0-alpha.2","33.0.0-alpha.3","33.0.0-alpha.4","33.0.0-alpha.5","33.0.0-alpha.6","33.0.0-beta.1","33.0.0-beta.2","33.0.0-beta.3","33.0.0-beta.4"],"130.0.6723.19":["33.0.0-beta.5","33.0.0-beta.6","33.0.0-beta.7"],"130.0.6723.31":["33.0.0-beta.8","33.0.0-beta.9","33.0.0-beta.10"],"130.0.6723.44":["33.0.0-beta.11","33.0.0"],"130.0.6723.59":["33.0.1","33.0.2"],"130.0.6723.91":["33.1.0"],"130.0.6723.118":["33.2.0"],"130.0.6723.137":["33.2.1"],"130.0.6723.152":["33.3.0"],"130.0.6723.170":["33.3.1"],"130.0.6723.191":["33.3.2","33.4.0","33.4.1","33.4.2","33.4.3","33.4.4","33.4.5","33.4.6","33.4.7","33.4.8","33.4.9","33.4.10","33.4.11"],"131.0.6776.0":["34.0.0-alpha.1"],"132.0.6779.0":["34.0.0-alpha.2"],"132.0.6789.1":["34.0.0-alpha.3","34.0.0-alpha.4","34.0.0-alpha.5","34.0.0-alpha.6","34.0.0-alpha.7"],"132.0.6820.0":["34.0.0-alpha.8"],"132.0.6824.0":["34.0.0-alpha.9","34.0.0-beta.1","34.0.0-beta.2","34.0.0-beta.3"],"132.0.6834.6":["34.0.0-beta.4","34.0.0-beta.5"],"132.0.6834.15":["34.0.0-beta.6","34.0.0-beta.7","34.0.0-beta.8"],"132.0.6834.32":["34.0.0-beta.9","34.0.0-beta.10","34.0.0-beta.11"],"132.0.6834.46":["34.0.0-beta.12","34.0.0-beta.13"],"132.0.6834.57":["34.0.0-beta.14","34.0.0-beta.15","34.0.0-beta.16"],"132.0.6834.83":["34.0.0","34.0.1"],"132.0.6834.159":["34.0.2"],"132.0.6834.194":["34.1.0","34.1.1"],"132.0.6834.196":["34.2.0"],"132.0.6834.210":["34.3.0","34.3.1","34.3.2","34.3.3","34.3.4","34.4.0","34.4.1","34.5.0","34.5.1","34.5.2","34.5.3","34.5.4","34.5.5","34.5.6","34.5.7","34.5.8"],"133.0.6920.0":["35.0.0-alpha.1","35.0.0-alpha.2","35.0.0-alpha.3","35.0.0-alpha.4","35.0.0-alpha.5","35.0.0-beta.1"],"134.0.6968.0":["35.0.0-beta.2","35.0.0-beta.3","35.0.0-beta.4"],"134.0.6989.0":["35.0.0-beta.5"],"134.0.6990.0":["35.0.0-beta.6","35.0.0-beta.7"],"134.0.6998.10":["35.0.0-beta.8","35.0.0-beta.9"],"134.0.6998.23":["35.0.0-beta.10","35.0.0-beta.11","35.0.0-beta.12"],"134.0.6998.44":["35.0.0-beta.13","35.0.0","35.0.1"],"134.0.6998.88":["35.0.2","35.0.3"],"134.0.6998.165":["35.1.0","35.1.1"],"134.0.6998.178":["35.1.2"],"134.0.6998.179":["35.1.3","35.1.4","35.1.5"],"134.0.6998.205":["35.2.0","35.2.1","35.2.2","35.3.0","35.4.0","35.5.0","35.5.1","35.6.0","35.7.0","35.7.1","35.7.2","35.7.4","35.7.5"],"135.0.7049.5":["36.0.0-alpha.1"],"136.0.7062.0":["36.0.0-alpha.2","36.0.0-alpha.3","36.0.0-alpha.4"],"136.0.7067.0":["36.0.0-alpha.5","36.0.0-alpha.6","36.0.0-beta.1","36.0.0-beta.2","36.0.0-beta.3","36.0.0-beta.4"],"136.0.7103.17":["36.0.0-beta.5"],"136.0.7103.25":["36.0.0-beta.6","36.0.0-beta.7"],"136.0.7103.33":["36.0.0-beta.8","36.0.0-beta.9"],"136.0.7103.48":["36.0.0","36.0.1"],"136.0.7103.49":["36.1.0","36.2.0"],"136.0.7103.93":["36.2.1"],"136.0.7103.113":["36.3.0","36.3.1"],"136.0.7103.115":["36.3.2"],"136.0.7103.149":["36.4.0"],"136.0.7103.168":["36.5.0"],"136.0.7103.177":["36.6.0","36.7.0","36.7.1","36.7.3","36.7.4","36.8.0","36.8.1","36.9.0","36.9.1","36.9.2","36.9.3","36.9.4","36.9.5"],"137.0.7151.0":["37.0.0-alpha.1","37.0.0-alpha.2"],"138.0.7156.0":["37.0.0-alpha.3"],"138.0.7165.0":["37.0.0-alpha.4"],"138.0.7177.0":["37.0.0-alpha.5"],"138.0.7178.0":["37.0.0-alpha.6","37.0.0-alpha.7","37.0.0-beta.1","37.0.0-beta.2"],"138.0.7190.0":["37.0.0-beta.3"],"138.0.7204.15":["37.0.0-beta.4","37.0.0-beta.5","37.0.0-beta.6","37.0.0-beta.7"],"138.0.7204.23":["37.0.0-beta.8"],"138.0.7204.35":["37.0.0-beta.9","37.0.0","37.1.0"],"138.0.7204.97":["37.2.0","37.2.1"],"138.0.7204.100":["37.2.2","37.2.3"],"138.0.7204.157":["37.2.4"],"138.0.7204.168":["37.2.5"],"138.0.7204.185":["37.2.6"],"138.0.7204.224":["37.3.0"],"138.0.7204.235":["37.3.1"],"138.0.7204.243":["37.4.0"],"138.0.7204.251":["37.5.0","37.5.1","37.6.0","37.6.1","37.7.0","37.7.1","37.8.0","37.9.0","37.10.0","37.10.1","37.10.2","37.10.3"],"139.0.7219.0":["38.0.0-alpha.1","38.0.0-alpha.2","38.0.0-alpha.3"],"140.0.7261.0":["38.0.0-alpha.4","38.0.0-alpha.5","38.0.0-alpha.6"],"140.0.7281.0":["38.0.0-alpha.7","38.0.0-alpha.8"],"140.0.7301.0":["38.0.0-alpha.9"],"140.0.7309.0":["38.0.0-alpha.10"],"140.0.7312.0":["38.0.0-alpha.11"],"140.0.7314.0":["38.0.0-alpha.12","38.0.0-alpha.13","38.0.0-beta.1"],"140.0.7327.0":["38.0.0-beta.2","38.0.0-beta.3"],"140.0.7339.2":["38.0.0-beta.4","38.0.0-beta.5","38.0.0-beta.6"],"140.0.7339.16":["38.0.0-beta.7"],"140.0.7339.24":["38.0.0-beta.8","38.0.0-beta.9"],"140.0.7339.41":["38.0.0-beta.11","38.0.0"],"140.0.7339.80":["38.1.0"],"140.0.7339.133":["38.1.1","38.1.2","38.2.0","38.2.1","38.2.2"],"140.0.7339.240":["38.3.0","38.4.0"],"140.0.7339.249":["38.5.0","38.6.0","38.7.0","38.7.1","38.7.2","38.8.0","38.8.1","38.8.2","38.8.4","38.8.6"],"141.0.7361.0":["39.0.0-alpha.1","39.0.0-alpha.2"],"141.0.7390.7":["39.0.0-alpha.3","39.0.0-alpha.4","39.0.0-alpha.5"],"142.0.7417.0":["39.0.0-alpha.6","39.0.0-alpha.7","39.0.0-alpha.8","39.0.0-alpha.9","39.0.0-beta.1","39.0.0-beta.2","39.0.0-beta.3"],"142.0.7444.34":["39.0.0-beta.4","39.0.0-beta.5"],"142.0.7444.52":["39.0.0"],"142.0.7444.59":["39.1.0","39.1.1"],"142.0.7444.134":["39.1.2"],"142.0.7444.162":["39.2.0","39.2.1","39.2.2"],"142.0.7444.175":["39.2.3"],"142.0.7444.177":["39.2.4","39.2.5"],"142.0.7444.226":["39.2.6"],"142.0.7444.235":["39.2.7"],"142.0.7444.265":["39.3.0","39.4.0","39.5.0","39.5.1","39.5.2","39.6.0","39.6.1","39.7.0","39.8.0"],"143.0.7499.0":["40.0.0-alpha.2"],"144.0.7506.0":["40.0.0-alpha.4"],"144.0.7526.0":["40.0.0-alpha.5","40.0.0-alpha.6","40.0.0-alpha.7","40.0.0-alpha.8"],"144.0.7527.0":["40.0.0-beta.1","40.0.0-beta.2"],"144.0.7547.0":["40.0.0-beta.3","40.0.0-beta.4","40.0.0-beta.5"],"144.0.7559.31":["40.0.0-beta.6","40.0.0-beta.7","40.0.0-beta.8"],"144.0.7559.60":["40.0.0-beta.9","40.0.0"],"144.0.7559.96":["40.1.0"],"144.0.7559.111":["40.2.0","40.2.1"],"144.0.7559.134":["40.3.0","40.4.0"],"144.0.7559.173":["40.4.1"],"144.0.7559.177":["40.5.0","40.6.0"],"144.0.7559.220":["40.6.1"],"144.0.7559.225":["40.7.0"],"144.0.7559.236":["40.8.0"],"146.0.7635.0":["41.0.0-alpha.1","41.0.0-alpha.2"],"146.0.7645.0":["41.0.0-alpha.3"],"146.0.7650.0":["41.0.0-alpha.4","41.0.0-alpha.5","41.0.0-alpha.6","41.0.0-beta.1","41.0.0-beta.2","41.0.0-beta.3"],"146.0.7666.0":["41.0.0-beta.4"],"146.0.7680.16":["41.0.0-beta.5","41.0.0-beta.6"],"146.0.7680.31":["41.0.0-beta.7","41.0.0-beta.8"],"146.0.7680.65":["41.0.0"]}```
-
-----
-
-# frontend/node_modules/electron-to-chromium/full-versions.json
-```json
-{"0.20.0":"39.0.2171.65","0.20.1":"39.0.2171.65","0.20.2":"39.0.2171.65","0.20.3":"39.0.2171.65","0.20.4":"39.0.2171.65","0.20.5":"39.0.2171.65","0.20.6":"39.0.2171.65","0.20.7":"39.0.2171.65","0.20.8":"39.0.2171.65","0.21.0":"40.0.2214.91","0.21.1":"40.0.2214.91","0.21.2":"40.0.2214.91","0.21.3":"41.0.2272.76","0.22.1":"41.0.2272.76","0.22.2":"41.0.2272.76","0.22.3":"41.0.2272.76","0.23.0":"41.0.2272.76","0.24.0":"41.0.2272.76","0.25.0":"42.0.2311.107","0.25.1":"42.0.2311.107","0.25.2":"42.0.2311.107","0.25.3":"42.0.2311.107","0.26.0":"42.0.2311.107","0.26.1":"42.0.2311.107","0.27.0":"42.0.2311.107","0.27.1":"42.0.2311.107","0.27.2":"43.0.2357.65","0.27.3":"43.0.2357.65","0.28.0":"43.0.2357.65","0.28.1":"43.0.2357.65","0.28.2":"43.0.2357.65","0.28.3":"43.0.2357.65","0.29.1":"43.0.2357.65","0.29.2":"43.0.2357.65","0.30.4":"44.0.2403.125","0.31.0":"44.0.2403.125","0.31.2":"45.0.2454.85","0.32.2":"45.0.2454.85","0.32.3":"45.0.2454.85","0.33.0":"45.0.2454.85","0.33.1":"45.0.2454.85","0.33.2":"45.0.2454.85","0.33.3":"45.0.2454.85","0.33.4":"45.0.2454.85","0.33.6":"45.0.2454.85","0.33.7":"45.0.2454.85","0.33.8":"45.0.2454.85","0.33.9":"45.0.2454.85","0.34.0":"45.0.2454.85","0.34.1":"45.0.2454.85","0.34.2":"45.0.2454.85","0.34.3":"45.0.2454.85","0.34.4":"45.0.2454.85","0.35.1":"45.0.2454.85","0.35.2":"45.0.2454.85","0.35.3":"45.0.2454.85","0.35.4":"45.0.2454.85","0.35.5":"45.0.2454.85","0.36.0":"47.0.2526.73","0.36.2":"47.0.2526.73","0.36.3":"47.0.2526.73","0.36.4":"47.0.2526.73","0.36.5":"47.0.2526.110","0.36.6":"47.0.2526.110","0.36.7":"47.0.2526.110","0.36.8":"47.0.2526.110","0.36.9":"47.0.2526.110","0.36.10":"47.0.2526.110","0.36.11":"47.0.2526.110","0.36.12":"47.0.2526.110","0.37.0":"49.0.2623.75","0.37.1":"49.0.2623.75","0.37.3":"49.0.2623.75","0.37.4":"49.0.2623.75","0.37.5":"49.0.2623.75","0.37.6":"49.0.2623.75","0.37.7":"49.0.2623.75","0.37.8":"49.0.2623.75","1.0.0":"49.0.2623.75","1.0.1":"49.0.2623.75","1.0.2":"49.0.2623.75","1.1.0":"50.0.2661.102","1.1.1":"50.0.2661.102","1.1.2":"50.0.2661.102","1.1.3":"50.0.2661.102","1.2.0":"51.0.2704.63","1.2.1":"51.0.2704.63","1.2.2":"51.0.2704.84","1.2.3":"51.0.2704.84","1.2.4":"51.0.2704.103","1.2.5":"51.0.2704.103","1.2.6":"51.0.2704.106","1.2.7":"51.0.2704.106","1.2.8":"51.0.2704.106","1.3.0":"52.0.2743.82","1.3.1":"52.0.2743.82","1.3.2":"52.0.2743.82","1.3.3":"52.0.2743.82","1.3.4":"52.0.2743.82","1.3.5":"52.0.2743.82","1.3.6":"52.0.2743.82","1.3.7":"52.0.2743.82","1.3.9":"52.0.2743.82","1.3.10":"52.0.2743.82","1.3.13":"52.0.2743.82","1.3.14":"52.0.2743.82","1.3.15":"52.0.2743.82","1.4.0":"53.0.2785.113","1.4.1":"53.0.2785.113","1.4.2":"53.0.2785.113","1.4.3":"53.0.2785.113","1.4.4":"53.0.2785.113","1.4.5":"53.0.2785.113","1.4.6":"53.0.2785.143","1.4.7":"53.0.2785.143","1.4.8":"53.0.2785.143","1.4.10":"53.0.2785.143","1.4.11":"53.0.2785.143","1.4.12":"54.0.2840.51","1.4.13":"53.0.2785.143","1.4.14":"53.0.2785.143","1.4.15":"53.0.2785.143","1.4.16":"53.0.2785.143","1.5.0":"54.0.2840.101","1.5.1":"54.0.2840.101","1.6.0":"56.0.2924.87","1.6.1":"56.0.2924.87","1.6.2":"56.0.2924.87","1.6.3":"56.0.2924.87","1.6.4":"56.0.2924.87","1.6.5":"56.0.2924.87","1.6.6":"56.0.2924.87","1.6.7":"56.0.2924.87","1.6.8":"56.0.2924.87","1.6.9":"56.0.2924.87","1.6.10":"56.0.2924.87","1.6.11":"56.0.2924.87","1.6.12":"56.0.2924.87","1.6.13":"56.0.2924.87","1.6.14":"56.0.2924.87","1.6.15":"56.0.2924.87","1.6.16":"56.0.2924.87","1.6.17":"56.0.2924.87","1.6.18":"56.0.2924.87","1.7.0":"58.0.3029.110","1.7.1":"58.0.3029.110","1.7.2":"58.0.3029.110","1.7.3":"58.0.3029.110","1.7.4":"58.0.3029.110","1.7.5":"58.0.3029.110","1.7.6":"58.0.3029.110","1.7.7":"58.0.3029.110","1.7.8":"58.0.3029.110","1.7.9":"58.0.3029.110","1.7.10":"58.0.3029.110","1.7.11":"58.0.3029.110","1.7.12":"58.0.3029.110","1.7.13":"58.0.3029.110","1.7.14":"58.0.3029.110","1.7.15":"58.0.3029.110","1.7.16":"58.0.3029.110","1.8.0":"59.0.3071.115","1.8.1":"59.0.3071.115","1.8.2-beta.1":"59.0.3071.115","1.8.2-beta.2":"59.0.3071.115","1.8.2-beta.3":"59.0.3071.115","1.8.2-beta.4":"59.0.3071.115","1.8.2-beta.5":"59.0.3071.115","1.8.2":"59.0.3071.115","1.8.3":"59.0.3071.115","1.8.4":"59.0.3071.115","1.8.5":"59.0.3071.115","1.8.6":"59.0.3071.115","1.8.7":"59.0.3071.115","1.8.8":"59.0.3071.115","2.0.0-beta.1":"61.0.3163.100","2.0.0-beta.2":"61.0.3163.100","2.0.0-beta.3":"61.0.3163.100","2.0.0-beta.4":"61.0.3163.100","2.0.0-beta.5":"61.0.3163.100","2.0.0-beta.6":"61.0.3163.100","2.0.0-beta.7":"61.0.3163.100","2.0.0-beta.8":"61.0.3163.100","2.0.0":"61.0.3163.100","2.0.1":"61.0.3163.100","2.0.2":"61.0.3163.100","2.0.3":"61.0.3163.100","2.0.4":"61.0.3163.100","2.0.5":"61.0.3163.100","2.0.6":"61.0.3163.100","2.0.7":"61.0.3163.100","2.0.8":"61.0.3163.100","2.0.9":"61.0.3163.100","2.0.10":"61.0.3163.100","2.0.11":"61.0.3163.100","2.0.12":"61.0.3163.100","2.0.13":"61.0.3163.100","2.0.14":"61.0.3163.100","2.0.15":"61.0.3163.100","2.0.16":"61.0.3163.100","2.0.17":"61.0.3163.100","2.0.18":"61.0.3163.100","2.1.0-unsupported.20180809":"61.0.3163.100","3.0.0-beta.1":"66.0.3359.181","3.0.0-beta.2":"66.0.3359.181","3.0.0-beta.3":"66.0.3359.181","3.0.0-beta.4":"66.0.3359.181","3.0.0-beta.5":"66.0.3359.181","3.0.0-beta.6":"66.0.3359.181","3.0.0-beta.7":"66.0.3359.181","3.0.0-beta.8":"66.0.3359.181","3.0.0-beta.9":"66.0.3359.181","3.0.0-beta.10":"66.0.3359.181","3.0.0-beta.11":"66.0.3359.181","3.0.0-beta.12":"66.0.3359.181","3.0.0-beta.13":"66.0.3359.181","3.0.0":"66.0.3359.181","3.0.1":"66.0.3359.181","3.0.2":"66.0.3359.181","3.0.3":"66.0.3359.181","3.0.4":"66.0.3359.181","3.0.5":"66.0.3359.181","3.0.6":"66.0.3359.181","3.0.7":"66.0.3359.181","3.0.8":"66.0.3359.181","3.0.9":"66.0.3359.181","3.0.10":"66.0.3359.181","3.0.11":"66.0.3359.181","3.0.12":"66.0.3359.181","3.0.13":"66.0.3359.181","3.0.14":"66.0.3359.181","3.0.15":"66.0.3359.181","3.0.16":"66.0.3359.181","3.1.0-beta.1":"66.0.3359.181","3.1.0-beta.2":"66.0.3359.181","3.1.0-beta.3":"66.0.3359.181","3.1.0-beta.4":"66.0.3359.181","3.1.0-beta.5":"66.0.3359.181","3.1.0":"66.0.3359.181","3.1.1":"66.0.3359.181","3.1.2":"66.0.3359.181","3.1.3":"66.0.3359.181","3.1.4":"66.0.3359.181","3.1.5":"66.0.3359.181","3.1.6":"66.0.3359.181","3.1.7":"66.0.3359.181","3.1.8":"66.0.3359.181","3.1.9":"66.0.3359.181","3.1.10":"66.0.3359.181","3.1.11":"66.0.3359.181","3.1.12":"66.0.3359.181","3.1.13":"66.0.3359.181","4.0.0-beta.1":"69.0.3497.106","4.0.0-beta.2":"69.0.3497.106","4.0.0-beta.3":"69.0.3497.106","4.0.0-beta.4":"69.0.3497.106","4.0.0-beta.5":"69.0.3497.106","4.0.0-beta.6":"69.0.3497.106","4.0.0-beta.7":"69.0.3497.106","4.0.0-beta.8":"69.0.3497.106","4.0.0-beta.9":"69.0.3497.106","4.0.0-beta.10":"69.0.3497.106","4.0.0-beta.11":"69.0.3497.106","4.0.0":"69.0.3497.106","4.0.1":"69.0.3497.106","4.0.2":"69.0.3497.106","4.0.3":"69.0.3497.106","4.0.4":"69.0.3497.106","4.0.5":"69.0.3497.106","4.0.6":"69.0.3497.106","4.0.7":"69.0.3497.128","4.0.8":"69.0.3497.128","4.1.0":"69.0.3497.128","4.1.1":"69.0.3497.128","4.1.2":"69.0.3497.128","4.1.3":"69.0.3497.128","4.1.4":"69.0.3497.128","4.1.5":"69.0.3497.128","4.2.0":"69.0.3497.128","4.2.1":"69.0.3497.128","4.2.2":"69.0.3497.128","4.2.3":"69.0.3497.128","4.2.4":"69.0.3497.128","4.2.5":"69.0.3497.128","4.2.6":"69.0.3497.128","4.2.7":"69.0.3497.128","4.2.8":"69.0.3497.128","4.2.9":"69.0.3497.128","4.2.10":"69.0.3497.128","4.2.11":"69.0.3497.128","4.2.12":"69.0.3497.128","5.0.0-beta.1":"72.0.3626.52","5.0.0-beta.2":"72.0.3626.52","5.0.0-beta.3":"73.0.3683.27","5.0.0-beta.4":"73.0.3683.54","5.0.0-beta.5":"73.0.3683.61","5.0.0-beta.6":"73.0.3683.84","5.0.0-beta.7":"73.0.3683.94","5.0.0-beta.8":"73.0.3683.104","5.0.0-beta.9":"73.0.3683.117","5.0.0":"73.0.3683.119","5.0.1":"73.0.3683.121","5.0.2":"73.0.3683.121","5.0.3":"73.0.3683.121","5.0.4":"73.0.3683.121","5.0.5":"73.0.3683.121","5.0.6":"73.0.3683.121","5.0.7":"73.0.3683.121","5.0.8":"73.0.3683.121","5.0.9":"73.0.3683.121","5.0.10":"73.0.3683.121","5.0.11":"73.0.3683.121","5.0.12":"73.0.3683.121","5.0.13":"73.0.3683.121","6.0.0-beta.1":"76.0.3774.1","6.0.0-beta.2":"76.0.3783.1","6.0.0-beta.3":"76.0.3783.1","6.0.0-beta.4":"76.0.3783.1","6.0.0-beta.5":"76.0.3805.4","6.0.0-beta.6":"76.0.3809.3","6.0.0-beta.7":"76.0.3809.22","6.0.0-beta.8":"76.0.3809.26","6.0.0-beta.9":"76.0.3809.26","6.0.0-beta.10":"76.0.3809.37","6.0.0-beta.11":"76.0.3809.42","6.0.0-beta.12":"76.0.3809.54","6.0.0-beta.13":"76.0.3809.60","6.0.0-beta.14":"76.0.3809.68","6.0.0-beta.15":"76.0.3809.74","6.0.0":"76.0.3809.88","6.0.1":"76.0.3809.102","6.0.2":"76.0.3809.110","6.0.3":"76.0.3809.126","6.0.4":"76.0.3809.131","6.0.5":"76.0.3809.136","6.0.6":"76.0.3809.138","6.0.7":"76.0.3809.139","6.0.8":"76.0.3809.146","6.0.9":"76.0.3809.146","6.0.10":"76.0.3809.146","6.0.11":"76.0.3809.146","6.0.12":"76.0.3809.146","6.1.0":"76.0.3809.146","6.1.1":"76.0.3809.146","6.1.2":"76.0.3809.146","6.1.3":"76.0.3809.146","6.1.4":"76.0.3809.146","6.1.5":"76.0.3809.146","6.1.6":"76.0.3809.146","6.1.7":"76.0.3809.146","6.1.8":"76.0.3809.146","6.1.9":"76.0.3809.146","6.1.10":"76.0.3809.146","6.1.11":"76.0.3809.146","6.1.12":"76.0.3809.146","7.0.0-beta.1":"78.0.3866.0","7.0.0-beta.2":"78.0.3866.0","7.0.0-beta.3":"78.0.3866.0","7.0.0-beta.4":"78.0.3896.6","7.0.0-beta.5":"78.0.3905.1","7.0.0-beta.6":"78.0.3905.1","7.0.0-beta.7":"78.0.3905.1","7.0.0":"78.0.3905.1","7.0.1":"78.0.3904.92","7.1.0":"78.0.3904.94","7.1.1":"78.0.3904.99","7.1.2":"78.0.3904.113","7.1.3":"78.0.3904.126","7.1.4":"78.0.3904.130","7.1.5":"78.0.3904.130","7.1.6":"78.0.3904.130","7.1.7":"78.0.3904.130","7.1.8":"78.0.3904.130","7.1.9":"78.0.3904.130","7.1.10":"78.0.3904.130","7.1.11":"78.0.3904.130","7.1.12":"78.0.3904.130","7.1.13":"78.0.3904.130","7.1.14":"78.0.3904.130","7.2.0":"78.0.3904.130","7.2.1":"78.0.3904.130","7.2.2":"78.0.3904.130","7.2.3":"78.0.3904.130","7.2.4":"78.0.3904.130","7.3.0":"78.0.3904.130","7.3.1":"78.0.3904.130","7.3.2":"78.0.3904.130","7.3.3":"78.0.3904.130","8.0.0-beta.1":"79.0.3931.0","8.0.0-beta.2":"79.0.3931.0","8.0.0-beta.3":"80.0.3955.0","8.0.0-beta.4":"80.0.3955.0","8.0.0-beta.5":"80.0.3987.14","8.0.0-beta.6":"80.0.3987.51","8.0.0-beta.7":"80.0.3987.59","8.0.0-beta.8":"80.0.3987.75","8.0.0-beta.9":"80.0.3987.75","8.0.0":"80.0.3987.86","8.0.1":"80.0.3987.86","8.0.2":"80.0.3987.86","8.0.3":"80.0.3987.134","8.1.0":"80.0.3987.137","8.1.1":"80.0.3987.141","8.2.0":"80.0.3987.158","8.2.1":"80.0.3987.163","8.2.2":"80.0.3987.163","8.2.3":"80.0.3987.163","8.2.4":"80.0.3987.165","8.2.5":"80.0.3987.165","8.3.0":"80.0.3987.165","8.3.1":"80.0.3987.165","8.3.2":"80.0.3987.165","8.3.3":"80.0.3987.165","8.3.4":"80.0.3987.165","8.4.0":"80.0.3987.165","8.4.1":"80.0.3987.165","8.5.0":"80.0.3987.165","8.5.1":"80.0.3987.165","8.5.2":"80.0.3987.165","8.5.3":"80.0.3987.163","8.5.4":"80.0.3987.163","8.5.5":"80.0.3987.163","9.0.0-beta.1":"82.0.4048.0","9.0.0-beta.2":"82.0.4048.0","9.0.0-beta.3":"82.0.4048.0","9.0.0-beta.4":"82.0.4048.0","9.0.0-beta.5":"82.0.4048.0","9.0.0-beta.6":"82.0.4058.2","9.0.0-beta.7":"82.0.4058.2","9.0.0-beta.9":"82.0.4058.2","9.0.0-beta.10":"82.0.4085.10","9.0.0-beta.11":"82.0.4085.14","9.0.0-beta.12":"82.0.4085.14","9.0.0-beta.13":"82.0.4085.14","9.0.0-beta.14":"82.0.4085.27","9.0.0-beta.15":"83.0.4102.3","9.0.0-beta.16":"83.0.4102.3","9.0.0-beta.17":"83.0.4103.14","9.0.0-beta.18":"83.0.4103.16","9.0.0-beta.19":"83.0.4103.24","9.0.0-beta.20":"83.0.4103.26","9.0.0-beta.21":"83.0.4103.26","9.0.0-beta.22":"83.0.4103.34","9.0.0-beta.23":"83.0.4103.44","9.0.0-beta.24":"83.0.4103.45","9.0.0":"83.0.4103.64","9.0.1":"83.0.4103.94","9.0.2":"83.0.4103.94","9.0.3":"83.0.4103.100","9.0.4":"83.0.4103.104","9.0.5":"83.0.4103.119","9.1.0":"83.0.4103.122","9.1.1":"83.0.4103.122","9.1.2":"83.0.4103.122","9.2.0":"83.0.4103.122","9.2.1":"83.0.4103.122","9.3.0":"83.0.4103.122","9.3.1":"83.0.4103.122","9.3.2":"83.0.4103.122","9.3.3":"83.0.4103.122","9.3.4":"83.0.4103.122","9.3.5":"83.0.4103.122","9.4.0":"83.0.4103.122","9.4.1":"83.0.4103.122","9.4.2":"83.0.4103.122","9.4.3":"83.0.4103.122","9.4.4":"83.0.4103.122","10.0.0-beta.1":"84.0.4129.0","10.0.0-beta.2":"84.0.4129.0","10.0.0-beta.3":"85.0.4161.2","10.0.0-beta.4":"85.0.4161.2","10.0.0-beta.8":"85.0.4181.1","10.0.0-beta.9":"85.0.4181.1","10.0.0-beta.10":"85.0.4183.19","10.0.0-beta.11":"85.0.4183.20","10.0.0-beta.12":"85.0.4183.26","10.0.0-beta.13":"85.0.4183.39","10.0.0-beta.14":"85.0.4183.39","10.0.0-beta.15":"85.0.4183.39","10.0.0-beta.17":"85.0.4183.39","10.0.0-beta.19":"85.0.4183.39","10.0.0-beta.20":"85.0.4183.39","10.0.0-beta.21":"85.0.4183.39","10.0.0-beta.23":"85.0.4183.70","10.0.0-beta.24":"85.0.4183.78","10.0.0-beta.25":"85.0.4183.80","10.0.0":"85.0.4183.84","10.0.1":"85.0.4183.86","10.1.0":"85.0.4183.87","10.1.1":"85.0.4183.93","10.1.2":"85.0.4183.98","10.1.3":"85.0.4183.121","10.1.4":"85.0.4183.121","10.1.5":"85.0.4183.121","10.1.6":"85.0.4183.121","10.1.7":"85.0.4183.121","10.2.0":"85.0.4183.121","10.3.0":"85.0.4183.121","10.3.1":"85.0.4183.121","10.3.2":"85.0.4183.121","10.4.0":"85.0.4183.121","10.4.1":"85.0.4183.121","10.4.2":"85.0.4183.121","10.4.3":"85.0.4183.121","10.4.4":"85.0.4183.121","10.4.5":"85.0.4183.121","10.4.6":"85.0.4183.121","10.4.7":"85.0.4183.121","11.0.0-beta.1":"86.0.4234.0","11.0.0-beta.3":"86.0.4234.0","11.0.0-beta.4":"86.0.4234.0","11.0.0-beta.5":"86.0.4234.0","11.0.0-beta.6":"86.0.4234.0","11.0.0-beta.7":"86.0.4234.0","11.0.0-beta.8":"87.0.4251.1","11.0.0-beta.9":"87.0.4251.1","11.0.0-beta.11":"87.0.4251.1","11.0.0-beta.12":"87.0.4280.11","11.0.0-beta.13":"87.0.4280.11","11.0.0-beta.16":"87.0.4280.27","11.0.0-beta.17":"87.0.4280.27","11.0.0-beta.18":"87.0.4280.27","11.0.0-beta.19":"87.0.4280.27","11.0.0-beta.20":"87.0.4280.40","11.0.0-beta.22":"87.0.4280.47","11.0.0-beta.23":"87.0.4280.47","11.0.0":"87.0.4280.60","11.0.1":"87.0.4280.60","11.0.2":"87.0.4280.67","11.0.3":"87.0.4280.67","11.0.4":"87.0.4280.67","11.0.5":"87.0.4280.88","11.1.0":"87.0.4280.88","11.1.1":"87.0.4280.88","11.2.0":"87.0.4280.141","11.2.1":"87.0.4280.141","11.2.2":"87.0.4280.141","11.2.3":"87.0.4280.141","11.3.0":"87.0.4280.141","11.4.0":"87.0.4280.141","11.4.1":"87.0.4280.141","11.4.2":"87.0.4280.141","11.4.3":"87.0.4280.141","11.4.4":"87.0.4280.141","11.4.5":"87.0.4280.141","11.4.6":"87.0.4280.141","11.4.7":"87.0.4280.141","11.4.8":"87.0.4280.141","11.4.9":"87.0.4280.141","11.4.10":"87.0.4280.141","11.4.11":"87.0.4280.141","11.4.12":"87.0.4280.141","11.5.0":"87.0.4280.141","12.0.0-beta.1":"89.0.4328.0","12.0.0-beta.3":"89.0.4328.0","12.0.0-beta.4":"89.0.4328.0","12.0.0-beta.5":"89.0.4328.0","12.0.0-beta.6":"89.0.4328.0","12.0.0-beta.7":"89.0.4328.0","12.0.0-beta.8":"89.0.4328.0","12.0.0-beta.9":"89.0.4328.0","12.0.0-beta.10":"89.0.4328.0","12.0.0-beta.11":"89.0.4328.0","12.0.0-beta.12":"89.0.4328.0","12.0.0-beta.14":"89.0.4328.0","12.0.0-beta.16":"89.0.4348.1","12.0.0-beta.18":"89.0.4348.1","12.0.0-beta.19":"89.0.4348.1","12.0.0-beta.20":"89.0.4348.1","12.0.0-beta.21":"89.0.4388.2","12.0.0-beta.22":"89.0.4388.2","12.0.0-beta.23":"89.0.4388.2","12.0.0-beta.24":"89.0.4388.2","12.0.0-beta.25":"89.0.4388.2","12.0.0-beta.26":"89.0.4388.2","12.0.0-beta.27":"89.0.4389.23","12.0.0-beta.28":"89.0.4389.23","12.0.0-beta.29":"89.0.4389.23","12.0.0-beta.30":"89.0.4389.58","12.0.0-beta.31":"89.0.4389.58","12.0.0":"89.0.4389.69","12.0.1":"89.0.4389.82","12.0.2":"89.0.4389.90","12.0.3":"89.0.4389.114","12.0.4":"89.0.4389.114","12.0.5":"89.0.4389.128","12.0.6":"89.0.4389.128","12.0.7":"89.0.4389.128","12.0.8":"89.0.4389.128","12.0.9":"89.0.4389.128","12.0.10":"89.0.4389.128","12.0.11":"89.0.4389.128","12.0.12":"89.0.4389.128","12.0.13":"89.0.4389.128","12.0.14":"89.0.4389.128","12.0.15":"89.0.4389.128","12.0.16":"89.0.4389.128","12.0.17":"89.0.4389.128","12.0.18":"89.0.4389.128","12.1.0":"89.0.4389.128","12.1.1":"89.0.4389.128","12.1.2":"89.0.4389.128","12.2.0":"89.0.4389.128","12.2.1":"89.0.4389.128","12.2.2":"89.0.4389.128","12.2.3":"89.0.4389.128","13.0.0-beta.2":"90.0.4402.0","13.0.0-beta.3":"90.0.4402.0","13.0.0-beta.4":"90.0.4415.0","13.0.0-beta.5":"90.0.4415.0","13.0.0-beta.6":"90.0.4415.0","13.0.0-beta.7":"90.0.4415.0","13.0.0-beta.8":"90.0.4415.0","13.0.0-beta.9":"90.0.4415.0","13.0.0-beta.10":"90.0.4415.0","13.0.0-beta.11":"90.0.4415.0","13.0.0-beta.12":"90.0.4415.0","13.0.0-beta.13":"90.0.4415.0","13.0.0-beta.14":"91.0.4448.0","13.0.0-beta.16":"91.0.4448.0","13.0.0-beta.17":"91.0.4448.0","13.0.0-beta.18":"91.0.4448.0","13.0.0-beta.20":"91.0.4448.0","13.0.0-beta.21":"91.0.4472.33","13.0.0-beta.22":"91.0.4472.33","13.0.0-beta.23":"91.0.4472.33","13.0.0-beta.24":"91.0.4472.38","13.0.0-beta.25":"91.0.4472.38","13.0.0-beta.26":"91.0.4472.38","13.0.0-beta.27":"91.0.4472.38","13.0.0-beta.28":"91.0.4472.38","13.0.0":"91.0.4472.69","13.0.1":"91.0.4472.69","13.1.0":"91.0.4472.77","13.1.1":"91.0.4472.77","13.1.2":"91.0.4472.77","13.1.3":"91.0.4472.106","13.1.4":"91.0.4472.106","13.1.5":"91.0.4472.124","13.1.6":"91.0.4472.124","13.1.7":"91.0.4472.124","13.1.8":"91.0.4472.164","13.1.9":"91.0.4472.164","13.2.0":"91.0.4472.164","13.2.1":"91.0.4472.164","13.2.2":"91.0.4472.164","13.2.3":"91.0.4472.164","13.3.0":"91.0.4472.164","13.4.0":"91.0.4472.164","13.5.0":"91.0.4472.164","13.5.1":"91.0.4472.164","13.5.2":"91.0.4472.164","13.6.0":"91.0.4472.164","13.6.1":"91.0.4472.164","13.6.2":"91.0.4472.164","13.6.3":"91.0.4472.164","13.6.6":"91.0.4472.164","13.6.7":"91.0.4472.164","13.6.8":"91.0.4472.164","13.6.9":"91.0.4472.164","14.0.0-beta.1":"92.0.4511.0","14.0.0-beta.2":"92.0.4511.0","14.0.0-beta.3":"92.0.4511.0","14.0.0-beta.5":"93.0.4536.0","14.0.0-beta.6":"93.0.4536.0","14.0.0-beta.7":"93.0.4536.0","14.0.0-beta.8":"93.0.4536.0","14.0.0-beta.9":"93.0.4539.0","14.0.0-beta.10":"93.0.4539.0","14.0.0-beta.11":"93.0.4557.4","14.0.0-beta.12":"93.0.4557.4","14.0.0-beta.13":"93.0.4566.0","14.0.0-beta.14":"93.0.4566.0","14.0.0-beta.15":"93.0.4566.0","14.0.0-beta.16":"93.0.4566.0","14.0.0-beta.17":"93.0.4566.0","14.0.0-beta.18":"93.0.4577.15","14.0.0-beta.19":"93.0.4577.15","14.0.0-beta.20":"93.0.4577.15","14.0.0-beta.21":"93.0.4577.15","14.0.0-beta.22":"93.0.4577.25","14.0.0-beta.23":"93.0.4577.25","14.0.0-beta.24":"93.0.4577.51","14.0.0-beta.25":"93.0.4577.51","14.0.0":"93.0.4577.58","14.0.1":"93.0.4577.63","14.0.2":"93.0.4577.82","14.1.0":"93.0.4577.82","14.1.1":"93.0.4577.82","14.2.0":"93.0.4577.82","14.2.1":"93.0.4577.82","14.2.2":"93.0.4577.82","14.2.3":"93.0.4577.82","14.2.4":"93.0.4577.82","14.2.5":"93.0.4577.82","14.2.6":"93.0.4577.82","14.2.7":"93.0.4577.82","14.2.8":"93.0.4577.82","14.2.9":"93.0.4577.82","15.0.0-alpha.1":"93.0.4566.0","15.0.0-alpha.2":"93.0.4566.0","15.0.0-alpha.3":"94.0.4584.0","15.0.0-alpha.4":"94.0.4584.0","15.0.0-alpha.5":"94.0.4584.0","15.0.0-alpha.6":"94.0.4584.0","15.0.0-alpha.7":"94.0.4590.2","15.0.0-alpha.8":"94.0.4590.2","15.0.0-alpha.9":"94.0.4590.2","15.0.0-alpha.10":"94.0.4606.12","15.0.0-beta.1":"94.0.4606.20","15.0.0-beta.2":"94.0.4606.20","15.0.0-beta.3":"94.0.4606.31","15.0.0-beta.4":"94.0.4606.31","15.0.0-beta.5":"94.0.4606.31","15.0.0-beta.6":"94.0.4606.31","15.0.0-beta.7":"94.0.4606.31","15.0.0":"94.0.4606.51","15.1.0":"94.0.4606.61","15.1.1":"94.0.4606.61","15.1.2":"94.0.4606.71","15.2.0":"94.0.4606.81","15.3.0":"94.0.4606.81","15.3.1":"94.0.4606.81","15.3.2":"94.0.4606.81","15.3.3":"94.0.4606.81","15.3.4":"94.0.4606.81","15.3.5":"94.0.4606.81","15.3.6":"94.0.4606.81","15.3.7":"94.0.4606.81","15.4.0":"94.0.4606.81","15.4.1":"94.0.4606.81","15.4.2":"94.0.4606.81","15.5.0":"94.0.4606.81","15.5.1":"94.0.4606.81","15.5.2":"94.0.4606.81","15.5.3":"94.0.4606.81","15.5.4":"94.0.4606.81","15.5.5":"94.0.4606.81","15.5.6":"94.0.4606.81","15.5.7":"94.0.4606.81","16.0.0-alpha.1":"95.0.4629.0","16.0.0-alpha.2":"95.0.4629.0","16.0.0-alpha.3":"95.0.4629.0","16.0.0-alpha.4":"95.0.4629.0","16.0.0-alpha.5":"95.0.4629.0","16.0.0-alpha.6":"95.0.4629.0","16.0.0-alpha.7":"95.0.4629.0","16.0.0-alpha.8":"96.0.4647.0","16.0.0-alpha.9":"96.0.4647.0","16.0.0-beta.1":"96.0.4647.0","16.0.0-beta.2":"96.0.4647.0","16.0.0-beta.3":"96.0.4647.0","16.0.0-beta.4":"96.0.4664.18","16.0.0-beta.5":"96.0.4664.18","16.0.0-beta.6":"96.0.4664.27","16.0.0-beta.7":"96.0.4664.27","16.0.0-beta.8":"96.0.4664.35","16.0.0-beta.9":"96.0.4664.35","16.0.0":"96.0.4664.45","16.0.1":"96.0.4664.45","16.0.2":"96.0.4664.55","16.0.3":"96.0.4664.55","16.0.4":"96.0.4664.55","16.0.5":"96.0.4664.55","16.0.6":"96.0.4664.110","16.0.7":"96.0.4664.110","16.0.8":"96.0.4664.110","16.0.9":"96.0.4664.174","16.0.10":"96.0.4664.174","16.1.0":"96.0.4664.174","16.1.1":"96.0.4664.174","16.2.0":"96.0.4664.174","16.2.1":"96.0.4664.174","16.2.2":"96.0.4664.174","16.2.3":"96.0.4664.174","16.2.4":"96.0.4664.174","16.2.5":"96.0.4664.174","16.2.6":"96.0.4664.174","16.2.7":"96.0.4664.174","16.2.8":"96.0.4664.174","17.0.0-alpha.1":"96.0.4664.4","17.0.0-alpha.2":"96.0.4664.4","17.0.0-alpha.3":"96.0.4664.4","17.0.0-alpha.4":"98.0.4706.0","17.0.0-alpha.5":"98.0.4706.0","17.0.0-alpha.6":"98.0.4706.0","17.0.0-beta.1":"98.0.4706.0","17.0.0-beta.2":"98.0.4706.0","17.0.0-beta.3":"98.0.4758.9","17.0.0-beta.4":"98.0.4758.11","17.0.0-beta.5":"98.0.4758.11","17.0.0-beta.6":"98.0.4758.11","17.0.0-beta.7":"98.0.4758.11","17.0.0-beta.8":"98.0.4758.11","17.0.0-beta.9":"98.0.4758.11","17.0.0":"98.0.4758.74","17.0.1":"98.0.4758.82","17.1.0":"98.0.4758.102","17.1.1":"98.0.4758.109","17.1.2":"98.0.4758.109","17.2.0":"98.0.4758.109","17.3.0":"98.0.4758.141","17.3.1":"98.0.4758.141","17.4.0":"98.0.4758.141","17.4.1":"98.0.4758.141","17.4.2":"98.0.4758.141","17.4.3":"98.0.4758.141","17.4.4":"98.0.4758.141","17.4.5":"98.0.4758.141","17.4.6":"98.0.4758.141","17.4.7":"98.0.4758.141","17.4.8":"98.0.4758.141","17.4.9":"98.0.4758.141","17.4.10":"98.0.4758.141","17.4.11":"98.0.4758.141","18.0.0-alpha.1":"99.0.4767.0","18.0.0-alpha.2":"99.0.4767.0","18.0.0-alpha.3":"99.0.4767.0","18.0.0-alpha.4":"99.0.4767.0","18.0.0-alpha.5":"99.0.4767.0","18.0.0-beta.1":"100.0.4894.0","18.0.0-beta.2":"100.0.4894.0","18.0.0-beta.3":"100.0.4894.0","18.0.0-beta.4":"100.0.4894.0","18.0.0-beta.5":"100.0.4894.0","18.0.0-beta.6":"100.0.4894.0","18.0.0":"100.0.4896.56","18.0.1":"100.0.4896.60","18.0.2":"100.0.4896.60","18.0.3":"100.0.4896.75","18.0.4":"100.0.4896.75","18.1.0":"100.0.4896.127","18.2.0":"100.0.4896.143","18.2.1":"100.0.4896.143","18.2.2":"100.0.4896.143","18.2.3":"100.0.4896.143","18.2.4":"100.0.4896.160","18.3.0":"100.0.4896.160","18.3.1":"100.0.4896.160","18.3.2":"100.0.4896.160","18.3.3":"100.0.4896.160","18.3.4":"100.0.4896.160","18.3.5":"100.0.4896.160","18.3.6":"100.0.4896.160","18.3.7":"100.0.4896.160","18.3.8":"100.0.4896.160","18.3.9":"100.0.4896.160","18.3.11":"100.0.4896.160","18.3.12":"100.0.4896.160","18.3.13":"100.0.4896.160","18.3.14":"100.0.4896.160","18.3.15":"100.0.4896.160","19.0.0-alpha.1":"102.0.4962.3","19.0.0-alpha.2":"102.0.4971.0","19.0.0-alpha.3":"102.0.4971.0","19.0.0-alpha.4":"102.0.4989.0","19.0.0-alpha.5":"102.0.4989.0","19.0.0-beta.1":"102.0.4999.0","19.0.0-beta.2":"102.0.4999.0","19.0.0-beta.3":"102.0.4999.0","19.0.0-beta.4":"102.0.5005.27","19.0.0-beta.5":"102.0.5005.40","19.0.0-beta.6":"102.0.5005.40","19.0.0-beta.7":"102.0.5005.40","19.0.0-beta.8":"102.0.5005.49","19.0.0":"102.0.5005.61","19.0.1":"102.0.5005.61","19.0.2":"102.0.5005.63","19.0.3":"102.0.5005.63","19.0.4":"102.0.5005.63","19.0.5":"102.0.5005.115","19.0.6":"102.0.5005.115","19.0.7":"102.0.5005.134","19.0.8":"102.0.5005.148","19.0.9":"102.0.5005.167","19.0.10":"102.0.5005.167","19.0.11":"102.0.5005.167","19.0.12":"102.0.5005.167","19.0.13":"102.0.5005.167","19.0.14":"102.0.5005.167","19.0.15":"102.0.5005.167","19.0.16":"102.0.5005.167","19.0.17":"102.0.5005.167","19.1.0":"102.0.5005.167","19.1.1":"102.0.5005.167","19.1.2":"102.0.5005.167","19.1.3":"102.0.5005.167","19.1.4":"102.0.5005.167","19.1.5":"102.0.5005.167","19.1.6":"102.0.5005.167","19.1.7":"102.0.5005.167","19.1.8":"102.0.5005.167","19.1.9":"102.0.5005.167","20.0.0-alpha.1":"103.0.5044.0","20.0.0-alpha.2":"104.0.5073.0","20.0.0-alpha.3":"104.0.5073.0","20.0.0-alpha.4":"104.0.5073.0","20.0.0-alpha.5":"104.0.5073.0","20.0.0-alpha.6":"104.0.5073.0","20.0.0-alpha.7":"104.0.5073.0","20.0.0-beta.1":"104.0.5073.0","20.0.0-beta.2":"104.0.5073.0","20.0.0-beta.3":"104.0.5073.0","20.0.0-beta.4":"104.0.5073.0","20.0.0-beta.5":"104.0.5073.0","20.0.0-beta.6":"104.0.5073.0","20.0.0-beta.7":"104.0.5073.0","20.0.0-beta.8":"104.0.5073.0","20.0.0-beta.9":"104.0.5112.39","20.0.0-beta.10":"104.0.5112.48","20.0.0-beta.11":"104.0.5112.48","20.0.0-beta.12":"104.0.5112.48","20.0.0-beta.13":"104.0.5112.57","20.0.0":"104.0.5112.65","20.0.1":"104.0.5112.81","20.0.2":"104.0.5112.81","20.0.3":"104.0.5112.81","20.1.0":"104.0.5112.102","20.1.1":"104.0.5112.102","20.1.2":"104.0.5112.114","20.1.3":"104.0.5112.114","20.1.4":"104.0.5112.114","20.2.0":"104.0.5112.124","20.3.0":"104.0.5112.124","20.3.1":"104.0.5112.124","20.3.2":"104.0.5112.124","20.3.3":"104.0.5112.124","20.3.4":"104.0.5112.124","20.3.5":"104.0.5112.124","20.3.6":"104.0.5112.124","20.3.7":"104.0.5112.124","20.3.8":"104.0.5112.124","20.3.9":"104.0.5112.124","20.3.10":"104.0.5112.124","20.3.11":"104.0.5112.124","20.3.12":"104.0.5112.124","21.0.0-alpha.1":"105.0.5187.0","21.0.0-alpha.2":"105.0.5187.0","21.0.0-alpha.3":"105.0.5187.0","21.0.0-alpha.4":"105.0.5187.0","21.0.0-alpha.5":"105.0.5187.0","21.0.0-alpha.6":"106.0.5216.0","21.0.0-beta.1":"106.0.5216.0","21.0.0-beta.2":"106.0.5216.0","21.0.0-beta.3":"106.0.5216.0","21.0.0-beta.4":"106.0.5216.0","21.0.0-beta.5":"106.0.5216.0","21.0.0-beta.6":"106.0.5249.40","21.0.0-beta.7":"106.0.5249.40","21.0.0-beta.8":"106.0.5249.40","21.0.0":"106.0.5249.51","21.0.1":"106.0.5249.61","21.1.0":"106.0.5249.91","21.1.1":"106.0.5249.103","21.2.0":"106.0.5249.119","21.2.1":"106.0.5249.165","21.2.2":"106.0.5249.168","21.2.3":"106.0.5249.168","21.3.0":"106.0.5249.181","21.3.1":"106.0.5249.181","21.3.3":"106.0.5249.199","21.3.4":"106.0.5249.199","21.3.5":"106.0.5249.199","21.4.0":"106.0.5249.199","21.4.1":"106.0.5249.199","21.4.2":"106.0.5249.199","21.4.3":"106.0.5249.199","21.4.4":"106.0.5249.199","22.0.0-alpha.1":"107.0.5286.0","22.0.0-alpha.3":"108.0.5329.0","22.0.0-alpha.4":"108.0.5329.0","22.0.0-alpha.5":"108.0.5329.0","22.0.0-alpha.6":"108.0.5329.0","22.0.0-alpha.7":"108.0.5355.0","22.0.0-alpha.8":"108.0.5359.10","22.0.0-beta.1":"108.0.5359.10","22.0.0-beta.2":"108.0.5359.10","22.0.0-beta.3":"108.0.5359.10","22.0.0-beta.4":"108.0.5359.29","22.0.0-beta.5":"108.0.5359.40","22.0.0-beta.6":"108.0.5359.40","22.0.0-beta.7":"108.0.5359.48","22.0.0-beta.8":"108.0.5359.48","22.0.0":"108.0.5359.62","22.0.1":"108.0.5359.125","22.0.2":"108.0.5359.179","22.0.3":"108.0.5359.179","22.1.0":"108.0.5359.179","22.2.0":"108.0.5359.215","22.2.1":"108.0.5359.215","22.3.0":"108.0.5359.215","22.3.1":"108.0.5359.215","22.3.2":"108.0.5359.215","22.3.3":"108.0.5359.215","22.3.4":"108.0.5359.215","22.3.5":"108.0.5359.215","22.3.6":"108.0.5359.215","22.3.7":"108.0.5359.215","22.3.8":"108.0.5359.215","22.3.9":"108.0.5359.215","22.3.10":"108.0.5359.215","22.3.11":"108.0.5359.215","22.3.12":"108.0.5359.215","22.3.13":"108.0.5359.215","22.3.14":"108.0.5359.215","22.3.15":"108.0.5359.215","22.3.16":"108.0.5359.215","22.3.17":"108.0.5359.215","22.3.18":"108.0.5359.215","22.3.20":"108.0.5359.215","22.3.21":"108.0.5359.215","22.3.22":"108.0.5359.215","22.3.23":"108.0.5359.215","22.3.24":"108.0.5359.215","22.3.25":"108.0.5359.215","22.3.26":"108.0.5359.215","22.3.27":"108.0.5359.215","23.0.0-alpha.1":"110.0.5415.0","23.0.0-alpha.2":"110.0.5451.0","23.0.0-alpha.3":"110.0.5451.0","23.0.0-beta.1":"110.0.5478.5","23.0.0-beta.2":"110.0.5478.5","23.0.0-beta.3":"110.0.5478.5","23.0.0-beta.4":"110.0.5481.30","23.0.0-beta.5":"110.0.5481.38","23.0.0-beta.6":"110.0.5481.52","23.0.0-beta.8":"110.0.5481.52","23.0.0":"110.0.5481.77","23.1.0":"110.0.5481.100","23.1.1":"110.0.5481.104","23.1.2":"110.0.5481.177","23.1.3":"110.0.5481.179","23.1.4":"110.0.5481.192","23.2.0":"110.0.5481.192","23.2.1":"110.0.5481.208","23.2.2":"110.0.5481.208","23.2.3":"110.0.5481.208","23.2.4":"110.0.5481.208","23.3.0":"110.0.5481.208","23.3.1":"110.0.5481.208","23.3.2":"110.0.5481.208","23.3.3":"110.0.5481.208","23.3.4":"110.0.5481.208","23.3.5":"110.0.5481.208","23.3.6":"110.0.5481.208","23.3.7":"110.0.5481.208","23.3.8":"110.0.5481.208","23.3.9":"110.0.5481.208","23.3.10":"110.0.5481.208","23.3.11":"110.0.5481.208","23.3.12":"110.0.5481.208","23.3.13":"110.0.5481.208","24.0.0-alpha.1":"111.0.5560.0","24.0.0-alpha.2":"111.0.5560.0","24.0.0-alpha.3":"111.0.5560.0","24.0.0-alpha.4":"111.0.5560.0","24.0.0-alpha.5":"111.0.5560.0","24.0.0-alpha.6":"111.0.5560.0","24.0.0-alpha.7":"111.0.5560.0","24.0.0-beta.1":"111.0.5563.50","24.0.0-beta.2":"111.0.5563.50","24.0.0-beta.3":"112.0.5615.20","24.0.0-beta.4":"112.0.5615.20","24.0.0-beta.5":"112.0.5615.29","24.0.0-beta.6":"112.0.5615.39","24.0.0-beta.7":"112.0.5615.39","24.0.0":"112.0.5615.49","24.1.0":"112.0.5615.50","24.1.1":"112.0.5615.50","24.1.2":"112.0.5615.87","24.1.3":"112.0.5615.165","24.2.0":"112.0.5615.165","24.3.0":"112.0.5615.165","24.3.1":"112.0.5615.183","24.4.0":"112.0.5615.204","24.4.1":"112.0.5615.204","24.5.0":"112.0.5615.204","24.5.1":"112.0.5615.204","24.6.0":"112.0.5615.204","24.6.1":"112.0.5615.204","24.6.2":"112.0.5615.204","24.6.3":"112.0.5615.204","24.6.4":"112.0.5615.204","24.6.5":"112.0.5615.204","24.7.0":"112.0.5615.204","24.7.1":"112.0.5615.204","24.8.0":"112.0.5615.204","24.8.1":"112.0.5615.204","24.8.2":"112.0.5615.204","24.8.3":"112.0.5615.204","24.8.4":"112.0.5615.204","24.8.5":"112.0.5615.204","24.8.6":"112.0.5615.204","24.8.7":"112.0.5615.204","24.8.8":"112.0.5615.204","25.0.0-alpha.1":"114.0.5694.0","25.0.0-alpha.2":"114.0.5694.0","25.0.0-alpha.3":"114.0.5710.0","25.0.0-alpha.4":"114.0.5710.0","25.0.0-alpha.5":"114.0.5719.0","25.0.0-alpha.6":"114.0.5719.0","25.0.0-beta.1":"114.0.5719.0","25.0.0-beta.2":"114.0.5719.0","25.0.0-beta.3":"114.0.5719.0","25.0.0-beta.4":"114.0.5735.16","25.0.0-beta.5":"114.0.5735.16","25.0.0-beta.6":"114.0.5735.16","25.0.0-beta.7":"114.0.5735.16","25.0.0-beta.8":"114.0.5735.35","25.0.0-beta.9":"114.0.5735.45","25.0.0":"114.0.5735.45","25.0.1":"114.0.5735.45","25.1.0":"114.0.5735.106","25.1.1":"114.0.5735.106","25.2.0":"114.0.5735.134","25.3.0":"114.0.5735.199","25.3.1":"114.0.5735.243","25.3.2":"114.0.5735.248","25.4.0":"114.0.5735.248","25.5.0":"114.0.5735.289","25.6.0":"114.0.5735.289","25.7.0":"114.0.5735.289","25.8.0":"114.0.5735.289","25.8.1":"114.0.5735.289","25.8.2":"114.0.5735.289","25.8.3":"114.0.5735.289","25.8.4":"114.0.5735.289","25.9.0":"114.0.5735.289","25.9.1":"114.0.5735.289","25.9.2":"114.0.5735.289","25.9.3":"114.0.5735.289","25.9.4":"114.0.5735.289","25.9.5":"114.0.5735.289","25.9.6":"114.0.5735.289","25.9.7":"114.0.5735.289","25.9.8":"114.0.5735.289","26.0.0-alpha.1":"116.0.5791.0","26.0.0-alpha.2":"116.0.5791.0","26.0.0-alpha.3":"116.0.5791.0","26.0.0-alpha.4":"116.0.5791.0","26.0.0-alpha.5":"116.0.5791.0","26.0.0-alpha.6":"116.0.5815.0","26.0.0-alpha.7":"116.0.5831.0","26.0.0-alpha.8":"116.0.5845.0","26.0.0-beta.1":"116.0.5845.0","26.0.0-beta.2":"116.0.5845.14","26.0.0-beta.3":"116.0.5845.14","26.0.0-beta.4":"116.0.5845.14","26.0.0-beta.5":"116.0.5845.14","26.0.0-beta.6":"116.0.5845.14","26.0.0-beta.7":"116.0.5845.14","26.0.0-beta.8":"116.0.5845.42","26.0.0-beta.9":"116.0.5845.42","26.0.0-beta.10":"116.0.5845.49","26.0.0-beta.11":"116.0.5845.49","26.0.0-beta.12":"116.0.5845.62","26.0.0":"116.0.5845.82","26.1.0":"116.0.5845.97","26.2.0":"116.0.5845.179","26.2.1":"116.0.5845.188","26.2.2":"116.0.5845.190","26.2.3":"116.0.5845.190","26.2.4":"116.0.5845.190","26.3.0":"116.0.5845.228","26.4.0":"116.0.5845.228","26.4.1":"116.0.5845.228","26.4.2":"116.0.5845.228","26.4.3":"116.0.5845.228","26.5.0":"116.0.5845.228","26.6.0":"116.0.5845.228","26.6.1":"116.0.5845.228","26.6.2":"116.0.5845.228","26.6.3":"116.0.5845.228","26.6.4":"116.0.5845.228","26.6.5":"116.0.5845.228","26.6.6":"116.0.5845.228","26.6.7":"116.0.5845.228","26.6.8":"116.0.5845.228","26.6.9":"116.0.5845.228","26.6.10":"116.0.5845.228","27.0.0-alpha.1":"118.0.5949.0","27.0.0-alpha.2":"118.0.5949.0","27.0.0-alpha.3":"118.0.5949.0","27.0.0-alpha.4":"118.0.5949.0","27.0.0-alpha.5":"118.0.5949.0","27.0.0-alpha.6":"118.0.5949.0","27.0.0-beta.1":"118.0.5993.5","27.0.0-beta.2":"118.0.5993.5","27.0.0-beta.3":"118.0.5993.5","27.0.0-beta.4":"118.0.5993.11","27.0.0-beta.5":"118.0.5993.18","27.0.0-beta.6":"118.0.5993.18","27.0.0-beta.7":"118.0.5993.18","27.0.0-beta.8":"118.0.5993.18","27.0.0-beta.9":"118.0.5993.18","27.0.0":"118.0.5993.54","27.0.1":"118.0.5993.89","27.0.2":"118.0.5993.89","27.0.3":"118.0.5993.120","27.0.4":"118.0.5993.129","27.1.0":"118.0.5993.144","27.1.2":"118.0.5993.144","27.1.3":"118.0.5993.159","27.2.0":"118.0.5993.159","27.2.1":"118.0.5993.159","27.2.2":"118.0.5993.159","27.2.3":"118.0.5993.159","27.2.4":"118.0.5993.159","27.3.0":"118.0.5993.159","27.3.1":"118.0.5993.159","27.3.2":"118.0.5993.159","27.3.3":"118.0.5993.159","27.3.4":"118.0.5993.159","27.3.5":"118.0.5993.159","27.3.6":"118.0.5993.159","27.3.7":"118.0.5993.159","27.3.8":"118.0.5993.159","27.3.9":"118.0.5993.159","27.3.10":"118.0.5993.159","27.3.11":"118.0.5993.159","28.0.0-alpha.1":"119.0.6045.0","28.0.0-alpha.2":"119.0.6045.0","28.0.0-alpha.3":"119.0.6045.21","28.0.0-alpha.4":"119.0.6045.21","28.0.0-alpha.5":"119.0.6045.33","28.0.0-alpha.6":"119.0.6045.33","28.0.0-alpha.7":"119.0.6045.33","28.0.0-beta.1":"119.0.6045.33","28.0.0-beta.2":"120.0.6099.0","28.0.0-beta.3":"120.0.6099.5","28.0.0-beta.4":"120.0.6099.5","28.0.0-beta.5":"120.0.6099.18","28.0.0-beta.6":"120.0.6099.18","28.0.0-beta.7":"120.0.6099.18","28.0.0-beta.8":"120.0.6099.18","28.0.0-beta.9":"120.0.6099.18","28.0.0-beta.10":"120.0.6099.18","28.0.0-beta.11":"120.0.6099.35","28.0.0":"120.0.6099.56","28.1.0":"120.0.6099.109","28.1.1":"120.0.6099.109","28.1.2":"120.0.6099.199","28.1.3":"120.0.6099.199","28.1.4":"120.0.6099.216","28.2.0":"120.0.6099.227","28.2.1":"120.0.6099.268","28.2.2":"120.0.6099.276","28.2.3":"120.0.6099.283","28.2.4":"120.0.6099.291","28.2.5":"120.0.6099.291","28.2.6":"120.0.6099.291","28.2.7":"120.0.6099.291","28.2.8":"120.0.6099.291","28.2.9":"120.0.6099.291","28.2.10":"120.0.6099.291","28.3.0":"120.0.6099.291","28.3.1":"120.0.6099.291","28.3.2":"120.0.6099.291","28.3.3":"120.0.6099.291","29.0.0-alpha.1":"121.0.6147.0","29.0.0-alpha.2":"121.0.6147.0","29.0.0-alpha.3":"121.0.6147.0","29.0.0-alpha.4":"121.0.6159.0","29.0.0-alpha.5":"121.0.6159.0","29.0.0-alpha.6":"121.0.6159.0","29.0.0-alpha.7":"121.0.6159.0","29.0.0-alpha.8":"122.0.6194.0","29.0.0-alpha.9":"122.0.6236.2","29.0.0-alpha.10":"122.0.6236.2","29.0.0-alpha.11":"122.0.6236.2","29.0.0-beta.1":"122.0.6236.2","29.0.0-beta.2":"122.0.6236.2","29.0.0-beta.3":"122.0.6261.6","29.0.0-beta.4":"122.0.6261.6","29.0.0-beta.5":"122.0.6261.18","29.0.0-beta.6":"122.0.6261.18","29.0.0-beta.7":"122.0.6261.18","29.0.0-beta.8":"122.0.6261.18","29.0.0-beta.9":"122.0.6261.18","29.0.0-beta.10":"122.0.6261.18","29.0.0-beta.11":"122.0.6261.18","29.0.0-beta.12":"122.0.6261.29","29.0.0":"122.0.6261.39","29.0.1":"122.0.6261.57","29.1.0":"122.0.6261.70","29.1.1":"122.0.6261.111","29.1.2":"122.0.6261.112","29.1.3":"122.0.6261.112","29.1.4":"122.0.6261.129","29.1.5":"122.0.6261.130","29.1.6":"122.0.6261.139","29.2.0":"122.0.6261.156","29.3.0":"122.0.6261.156","29.3.1":"122.0.6261.156","29.3.2":"122.0.6261.156","29.3.3":"122.0.6261.156","29.4.0":"122.0.6261.156","29.4.1":"122.0.6261.156","29.4.2":"122.0.6261.156","29.4.3":"122.0.6261.156","29.4.4":"122.0.6261.156","29.4.5":"122.0.6261.156","29.4.6":"122.0.6261.156","30.0.0-alpha.1":"123.0.6296.0","30.0.0-alpha.2":"123.0.6312.5","30.0.0-alpha.3":"124.0.6323.0","30.0.0-alpha.4":"124.0.6323.0","30.0.0-alpha.5":"124.0.6331.0","30.0.0-alpha.6":"124.0.6331.0","30.0.0-alpha.7":"124.0.6353.0","30.0.0-beta.1":"124.0.6359.0","30.0.0-beta.2":"124.0.6359.0","30.0.0-beta.3":"124.0.6367.9","30.0.0-beta.4":"124.0.6367.9","30.0.0-beta.5":"124.0.6367.9","30.0.0-beta.6":"124.0.6367.18","30.0.0-beta.7":"124.0.6367.29","30.0.0-beta.8":"124.0.6367.29","30.0.0":"124.0.6367.49","30.0.1":"124.0.6367.60","30.0.2":"124.0.6367.91","30.0.3":"124.0.6367.119","30.0.4":"124.0.6367.201","30.0.5":"124.0.6367.207","30.0.6":"124.0.6367.207","30.0.7":"124.0.6367.221","30.0.8":"124.0.6367.230","30.0.9":"124.0.6367.233","30.1.0":"124.0.6367.243","30.1.1":"124.0.6367.243","30.1.2":"124.0.6367.243","30.2.0":"124.0.6367.243","30.3.0":"124.0.6367.243","30.3.1":"124.0.6367.243","30.4.0":"124.0.6367.243","30.5.0":"124.0.6367.243","30.5.1":"124.0.6367.243","31.0.0-alpha.1":"125.0.6412.0","31.0.0-alpha.2":"125.0.6412.0","31.0.0-alpha.3":"125.0.6412.0","31.0.0-alpha.4":"125.0.6412.0","31.0.0-alpha.5":"125.0.6412.0","31.0.0-beta.1":"126.0.6445.0","31.0.0-beta.2":"126.0.6445.0","31.0.0-beta.3":"126.0.6445.0","31.0.0-beta.4":"126.0.6445.0","31.0.0-beta.5":"126.0.6445.0","31.0.0-beta.6":"126.0.6445.0","31.0.0-beta.7":"126.0.6445.0","31.0.0-beta.8":"126.0.6445.0","31.0.0-beta.9":"126.0.6445.0","31.0.0-beta.10":"126.0.6478.36","31.0.0":"126.0.6478.36","31.0.1":"126.0.6478.36","31.0.2":"126.0.6478.61","31.1.0":"126.0.6478.114","31.2.0":"126.0.6478.127","31.2.1":"126.0.6478.127","31.3.0":"126.0.6478.183","31.3.1":"126.0.6478.185","31.4.0":"126.0.6478.234","31.5.0":"126.0.6478.234","31.6.0":"126.0.6478.234","31.7.0":"126.0.6478.234","31.7.1":"126.0.6478.234","31.7.2":"126.0.6478.234","31.7.3":"126.0.6478.234","31.7.4":"126.0.6478.234","31.7.5":"126.0.6478.234","31.7.6":"126.0.6478.234","31.7.7":"126.0.6478.234","32.0.0-alpha.1":"127.0.6521.0","32.0.0-alpha.2":"127.0.6521.0","32.0.0-alpha.3":"127.0.6521.0","32.0.0-alpha.4":"127.0.6521.0","32.0.0-alpha.5":"127.0.6521.0","32.0.0-alpha.6":"128.0.6571.0","32.0.0-alpha.7":"128.0.6571.0","32.0.0-alpha.8":"128.0.6573.0","32.0.0-alpha.9":"128.0.6573.0","32.0.0-alpha.10":"128.0.6573.0","32.0.0-beta.1":"128.0.6573.0","32.0.0-beta.2":"128.0.6611.0","32.0.0-beta.3":"128.0.6613.7","32.0.0-beta.4":"128.0.6613.18","32.0.0-beta.5":"128.0.6613.27","32.0.0-beta.6":"128.0.6613.27","32.0.0-beta.7":"128.0.6613.27","32.0.0":"128.0.6613.36","32.0.1":"128.0.6613.36","32.0.2":"128.0.6613.84","32.1.0":"128.0.6613.120","32.1.1":"128.0.6613.137","32.1.2":"128.0.6613.162","32.2.0":"128.0.6613.178","32.2.1":"128.0.6613.186","32.2.2":"128.0.6613.186","32.2.3":"128.0.6613.186","32.2.4":"128.0.6613.186","32.2.5":"128.0.6613.186","32.2.6":"128.0.6613.186","32.2.7":"128.0.6613.186","32.2.8":"128.0.6613.186","32.3.0":"128.0.6613.186","32.3.1":"128.0.6613.186","32.3.2":"128.0.6613.186","32.3.3":"128.0.6613.186","33.0.0-alpha.1":"129.0.6668.0","33.0.0-alpha.2":"130.0.6672.0","33.0.0-alpha.3":"130.0.6672.0","33.0.0-alpha.4":"130.0.6672.0","33.0.0-alpha.5":"130.0.6672.0","33.0.0-alpha.6":"130.0.6672.0","33.0.0-beta.1":"130.0.6672.0","33.0.0-beta.2":"130.0.6672.0","33.0.0-beta.3":"130.0.6672.0","33.0.0-beta.4":"130.0.6672.0","33.0.0-beta.5":"130.0.6723.19","33.0.0-beta.6":"130.0.6723.19","33.0.0-beta.7":"130.0.6723.19","33.0.0-beta.8":"130.0.6723.31","33.0.0-beta.9":"130.0.6723.31","33.0.0-beta.10":"130.0.6723.31","33.0.0-beta.11":"130.0.6723.44","33.0.0":"130.0.6723.44","33.0.1":"130.0.6723.59","33.0.2":"130.0.6723.59","33.1.0":"130.0.6723.91","33.2.0":"130.0.6723.118","33.2.1":"130.0.6723.137","33.3.0":"130.0.6723.152","33.3.1":"130.0.6723.170","33.3.2":"130.0.6723.191","33.4.0":"130.0.6723.191","33.4.1":"130.0.6723.191","33.4.2":"130.0.6723.191","33.4.3":"130.0.6723.191","33.4.4":"130.0.6723.191","33.4.5":"130.0.6723.191","33.4.6":"130.0.6723.191","33.4.7":"130.0.6723.191","33.4.8":"130.0.6723.191","33.4.9":"130.0.6723.191","33.4.10":"130.0.6723.191","33.4.11":"130.0.6723.191","34.0.0-alpha.1":"131.0.6776.0","34.0.0-alpha.2":"132.0.6779.0","34.0.0-alpha.3":"132.0.6789.1","34.0.0-alpha.4":"132.0.6789.1","34.0.0-alpha.5":"132.0.6789.1","34.0.0-alpha.6":"132.0.6789.1","34.0.0-alpha.7":"132.0.6789.1","34.0.0-alpha.8":"132.0.6820.0","34.0.0-alpha.9":"132.0.6824.0","34.0.0-beta.1":"132.0.6824.0","34.0.0-beta.2":"132.0.6824.0","34.0.0-beta.3":"132.0.6824.0","34.0.0-beta.4":"132.0.6834.6","34.0.0-beta.5":"132.0.6834.6","34.0.0-beta.6":"132.0.6834.15","34.0.0-beta.7":"132.0.6834.15","34.0.0-beta.8":"132.0.6834.15","34.0.0-beta.9":"132.0.6834.32","34.0.0-beta.10":"132.0.6834.32","34.0.0-beta.11":"132.0.6834.32","34.0.0-beta.12":"132.0.6834.46","34.0.0-beta.13":"132.0.6834.46","34.0.0-beta.14":"132.0.6834.57","34.0.0-beta.15":"132.0.6834.57","34.0.0-beta.16":"132.0.6834.57","34.0.0":"132.0.6834.83","34.0.1":"132.0.6834.83","34.0.2":"132.0.6834.159","34.1.0":"132.0.6834.194","34.1.1":"132.0.6834.194","34.2.0":"132.0.6834.196","34.3.0":"132.0.6834.210","34.3.1":"132.0.6834.210","34.3.2":"132.0.6834.210","34.3.3":"132.0.6834.210","34.3.4":"132.0.6834.210","34.4.0":"132.0.6834.210","34.4.1":"132.0.6834.210","34.5.0":"132.0.6834.210","34.5.1":"132.0.6834.210","34.5.2":"132.0.6834.210","34.5.3":"132.0.6834.210","34.5.4":"132.0.6834.210","34.5.5":"132.0.6834.210","34.5.6":"132.0.6834.210","34.5.7":"132.0.6834.210","34.5.8":"132.0.6834.210","35.0.0-alpha.1":"133.0.6920.0","35.0.0-alpha.2":"133.0.6920.0","35.0.0-alpha.3":"133.0.6920.0","35.0.0-alpha.4":"133.0.6920.0","35.0.0-alpha.5":"133.0.6920.0","35.0.0-beta.1":"133.0.6920.0","35.0.0-beta.2":"134.0.6968.0","35.0.0-beta.3":"134.0.6968.0","35.0.0-beta.4":"134.0.6968.0","35.0.0-beta.5":"134.0.6989.0","35.0.0-beta.6":"134.0.6990.0","35.0.0-beta.7":"134.0.6990.0","35.0.0-beta.8":"134.0.6998.10","35.0.0-beta.9":"134.0.6998.10","35.0.0-beta.10":"134.0.6998.23","35.0.0-beta.11":"134.0.6998.23","35.0.0-beta.12":"134.0.6998.23","35.0.0-beta.13":"134.0.6998.44","35.0.0":"134.0.6998.44","35.0.1":"134.0.6998.44","35.0.2":"134.0.6998.88","35.0.3":"134.0.6998.88","35.1.0":"134.0.6998.165","35.1.1":"134.0.6998.165","35.1.2":"134.0.6998.178","35.1.3":"134.0.6998.179","35.1.4":"134.0.6998.179","35.1.5":"134.0.6998.179","35.2.0":"134.0.6998.205","35.2.1":"134.0.6998.205","35.2.2":"134.0.6998.205","35.3.0":"134.0.6998.205","35.4.0":"134.0.6998.205","35.5.0":"134.0.6998.205","35.5.1":"134.0.6998.205","35.6.0":"134.0.6998.205","35.7.0":"134.0.6998.205","35.7.1":"134.0.6998.205","35.7.2":"134.0.6998.205","35.7.4":"134.0.6998.205","35.7.5":"134.0.6998.205","36.0.0-alpha.1":"135.0.7049.5","36.0.0-alpha.2":"136.0.7062.0","36.0.0-alpha.3":"136.0.7062.0","36.0.0-alpha.4":"136.0.7062.0","36.0.0-alpha.5":"136.0.7067.0","36.0.0-alpha.6":"136.0.7067.0","36.0.0-beta.1":"136.0.7067.0","36.0.0-beta.2":"136.0.7067.0","36.0.0-beta.3":"136.0.7067.0","36.0.0-beta.4":"136.0.7067.0","36.0.0-beta.5":"136.0.7103.17","36.0.0-beta.6":"136.0.7103.25","36.0.0-beta.7":"136.0.7103.25","36.0.0-beta.8":"136.0.7103.33","36.0.0-beta.9":"136.0.7103.33","36.0.0":"136.0.7103.48","36.0.1":"136.0.7103.48","36.1.0":"136.0.7103.49","36.2.0":"136.0.7103.49","36.2.1":"136.0.7103.93","36.3.0":"136.0.7103.113","36.3.1":"136.0.7103.113","36.3.2":"136.0.7103.115","36.4.0":"136.0.7103.149","36.5.0":"136.0.7103.168","36.6.0":"136.0.7103.177","36.7.0":"136.0.7103.177","36.7.1":"136.0.7103.177","36.7.3":"136.0.7103.177","36.7.4":"136.0.7103.177","36.8.0":"136.0.7103.177","36.8.1":"136.0.7103.177","36.9.0":"136.0.7103.177","36.9.1":"136.0.7103.177","36.9.2":"136.0.7103.177","36.9.3":"136.0.7103.177","36.9.4":"136.0.7103.177","36.9.5":"136.0.7103.177","37.0.0-alpha.1":"137.0.7151.0","37.0.0-alpha.2":"137.0.7151.0","37.0.0-alpha.3":"138.0.7156.0","37.0.0-alpha.4":"138.0.7165.0","37.0.0-alpha.5":"138.0.7177.0","37.0.0-alpha.6":"138.0.7178.0","37.0.0-alpha.7":"138.0.7178.0","37.0.0-beta.1":"138.0.7178.0","37.0.0-beta.2":"138.0.7178.0","37.0.0-beta.3":"138.0.7190.0","37.0.0-beta.4":"138.0.7204.15","37.0.0-beta.5":"138.0.7204.15","37.0.0-beta.6":"138.0.7204.15","37.0.0-beta.7":"138.0.7204.15","37.0.0-beta.8":"138.0.7204.23","37.0.0-beta.9":"138.0.7204.35","37.0.0":"138.0.7204.35","37.1.0":"138.0.7204.35","37.2.0":"138.0.7204.97","37.2.1":"138.0.7204.97","37.2.2":"138.0.7204.100","37.2.3":"138.0.7204.100","37.2.4":"138.0.7204.157","37.2.5":"138.0.7204.168","37.2.6":"138.0.7204.185","37.3.0":"138.0.7204.224","37.3.1":"138.0.7204.235","37.4.0":"138.0.7204.243","37.5.0":"138.0.7204.251","37.5.1":"138.0.7204.251","37.6.0":"138.0.7204.251","37.6.1":"138.0.7204.251","37.7.0":"138.0.7204.251","37.7.1":"138.0.7204.251","37.8.0":"138.0.7204.251","37.9.0":"138.0.7204.251","37.10.0":"138.0.7204.251","37.10.1":"138.0.7204.251","37.10.2":"138.0.7204.251","37.10.3":"138.0.7204.251","38.0.0-alpha.1":"139.0.7219.0","38.0.0-alpha.2":"139.0.7219.0","38.0.0-alpha.3":"139.0.7219.0","38.0.0-alpha.4":"140.0.7261.0","38.0.0-alpha.5":"140.0.7261.0","38.0.0-alpha.6":"140.0.7261.0","38.0.0-alpha.7":"140.0.7281.0","38.0.0-alpha.8":"140.0.7281.0","38.0.0-alpha.9":"140.0.7301.0","38.0.0-alpha.10":"140.0.7309.0","38.0.0-alpha.11":"140.0.7312.0","38.0.0-alpha.12":"140.0.7314.0","38.0.0-alpha.13":"140.0.7314.0","38.0.0-beta.1":"140.0.7314.0","38.0.0-beta.2":"140.0.7327.0","38.0.0-beta.3":"140.0.7327.0","38.0.0-beta.4":"140.0.7339.2","38.0.0-beta.5":"140.0.7339.2","38.0.0-beta.6":"140.0.7339.2","38.0.0-beta.7":"140.0.7339.16","38.0.0-beta.8":"140.0.7339.24","38.0.0-beta.9":"140.0.7339.24","38.0.0-beta.11":"140.0.7339.41","38.0.0":"140.0.7339.41","38.1.0":"140.0.7339.80","38.1.1":"140.0.7339.133","38.1.2":"140.0.7339.133","38.2.0":"140.0.7339.133","38.2.1":"140.0.7339.133","38.2.2":"140.0.7339.133","38.3.0":"140.0.7339.240","38.4.0":"140.0.7339.240","38.5.0":"140.0.7339.249","38.6.0":"140.0.7339.249","38.7.0":"140.0.7339.249","38.7.1":"140.0.7339.249","38.7.2":"140.0.7339.249","38.8.0":"140.0.7339.249","38.8.1":"140.0.7339.249","38.8.2":"140.0.7339.249","38.8.4":"140.0.7339.249","38.8.6":"140.0.7339.249","39.0.0-alpha.1":"141.0.7361.0","39.0.0-alpha.2":"141.0.7361.0","39.0.0-alpha.3":"141.0.7390.7","39.0.0-alpha.4":"141.0.7390.7","39.0.0-alpha.5":"141.0.7390.7","39.0.0-alpha.6":"142.0.7417.0","39.0.0-alpha.7":"142.0.7417.0","39.0.0-alpha.8":"142.0.7417.0","39.0.0-alpha.9":"142.0.7417.0","39.0.0-beta.1":"142.0.7417.0","39.0.0-beta.2":"142.0.7417.0","39.0.0-beta.3":"142.0.7417.0","39.0.0-beta.4":"142.0.7444.34","39.0.0-beta.5":"142.0.7444.34","39.0.0":"142.0.7444.52","39.1.0":"142.0.7444.59","39.1.1":"142.0.7444.59","39.1.2":"142.0.7444.134","39.2.0":"142.0.7444.162","39.2.1":"142.0.7444.162","39.2.2":"142.0.7444.162","39.2.3":"142.0.7444.175","39.2.4":"142.0.7444.177","39.2.5":"142.0.7444.177","39.2.6":"142.0.7444.226","39.2.7":"142.0.7444.235","39.3.0":"142.0.7444.265","39.4.0":"142.0.7444.265","39.5.0":"142.0.7444.265","39.5.1":"142.0.7444.265","39.5.2":"142.0.7444.265","39.6.0":"142.0.7444.265","39.6.1":"142.0.7444.265","39.7.0":"142.0.7444.265","39.8.0":"142.0.7444.265","40.0.0-alpha.2":"143.0.7499.0","40.0.0-alpha.4":"144.0.7506.0","40.0.0-alpha.5":"144.0.7526.0","40.0.0-alpha.6":"144.0.7526.0","40.0.0-alpha.7":"144.0.7526.0","40.0.0-alpha.8":"144.0.7526.0","40.0.0-beta.1":"144.0.7527.0","40.0.0-beta.2":"144.0.7527.0","40.0.0-beta.3":"144.0.7547.0","40.0.0-beta.4":"144.0.7547.0","40.0.0-beta.5":"144.0.7547.0","40.0.0-beta.6":"144.0.7559.31","40.0.0-beta.7":"144.0.7559.31","40.0.0-beta.8":"144.0.7559.31","40.0.0-beta.9":"144.0.7559.60","40.0.0":"144.0.7559.60","40.1.0":"144.0.7559.96","40.2.0":"144.0.7559.111","40.2.1":"144.0.7559.111","40.3.0":"144.0.7559.134","40.4.0":"144.0.7559.134","40.4.1":"144.0.7559.173","40.5.0":"144.0.7559.177","40.6.0":"144.0.7559.177","40.6.1":"144.0.7559.220","40.7.0":"144.0.7559.225","40.8.0":"144.0.7559.236","41.0.0-alpha.1":"146.0.7635.0","41.0.0-alpha.2":"146.0.7635.0","41.0.0-alpha.3":"146.0.7645.0","41.0.0-alpha.4":"146.0.7650.0","41.0.0-alpha.5":"146.0.7650.0","41.0.0-alpha.6":"146.0.7650.0","41.0.0-beta.1":"146.0.7650.0","41.0.0-beta.2":"146.0.7650.0","41.0.0-beta.3":"146.0.7650.0","41.0.0-beta.4":"146.0.7666.0","41.0.0-beta.5":"146.0.7680.16","41.0.0-beta.6":"146.0.7680.16","41.0.0-beta.7":"146.0.7680.31","41.0.0-beta.8":"146.0.7680.31","41.0.0":"146.0.7680.65"}```
-
-----
-
-# frontend/node_modules/electron-to-chromium/package.json
-```json
-{
-  "name": "electron-to-chromium",
-  "version": "1.5.313",
-  "description": "Provides a list of electron-to-chromium version mappings",
-  "main": "index.js",
-  "files": [
-    "versions.js",
-    "full-versions.js",
-    "chromium-versions.js",
-    "full-chromium-versions.js",
-    "versions.json",
-    "full-versions.json",
-    "chromium-versions.json",
-    "full-chromium-versions.json",
-    "LICENSE"
-  ],
-  "scripts": {
-    "build": "node build.mjs",
-    "update": "node automated-update.js",
-    "test": "nyc ava --verbose",
-    "report": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kilian/electron-to-chromium.git"
-  },
-  "keywords": [
-    "electron",
-    "chrome",
-    "chromium",
-    "browserslist",
-    "browserlist"
-  ],
-  "author": "Kilian Valkhof",
-  "license": "ISC",
-  "devDependencies": {
-    "ava": "^5.1.1",
-    "codecov": "^3.8.2",
-    "compare-versions": "^6.0.0-rc.1",
-    "node-fetch": "^3.3.0",
-    "nyc": "^15.1.0",
-    "shelljs": "^0.8.5"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/electron-to-chromium/versions.json
-```json
-{"0.20":"39","0.21":"41","0.22":"41","0.23":"41","0.24":"41","0.25":"42","0.26":"42","0.27":"43","0.28":"43","0.29":"43","0.30":"44","0.31":"45","0.32":"45","0.33":"45","0.34":"45","0.35":"45","0.36":"47","0.37":"49","1.0":"49","1.1":"50","1.2":"51","1.3":"52","1.4":"53","1.5":"54","1.6":"56","1.7":"58","1.8":"59","2.0":"61","2.1":"61","3.0":"66","3.1":"66","4.0":"69","4.1":"69","4.2":"69","5.0":"73","6.0":"76","6.1":"76","7.0":"78","7.1":"78","7.2":"78","7.3":"78","8.0":"80","8.1":"80","8.2":"80","8.3":"80","8.4":"80","8.5":"80","9.0":"83","9.1":"83","9.2":"83","9.3":"83","9.4":"83","10.0":"85","10.1":"85","10.2":"85","10.3":"85","10.4":"85","11.0":"87","11.1":"87","11.2":"87","11.3":"87","11.4":"87","11.5":"87","12.0":"89","12.1":"89","12.2":"89","13.0":"91","13.1":"91","13.2":"91","13.3":"91","13.4":"91","13.5":"91","13.6":"91","14.0":"93","14.1":"93","14.2":"93","15.0":"94","15.1":"94","15.2":"94","15.3":"94","15.4":"94","15.5":"94","16.0":"96","16.1":"96","16.2":"96","17.0":"98","17.1":"98","17.2":"98","17.3":"98","17.4":"98","18.0":"100","18.1":"100","18.2":"100","18.3":"100","19.0":"102","19.1":"102","20.0":"104","20.1":"104","20.2":"104","20.3":"104","21.0":"106","21.1":"106","21.2":"106","21.3":"106","21.4":"106","22.0":"108","22.1":"108","22.2":"108","22.3":"108","23.0":"110","23.1":"110","23.2":"110","23.3":"110","24.0":"112","24.1":"112","24.2":"112","24.3":"112","24.4":"112","24.5":"112","24.6":"112","24.7":"112","24.8":"112","25.0":"114","25.1":"114","25.2":"114","25.3":"114","25.4":"114","25.5":"114","25.6":"114","25.7":"114","25.8":"114","25.9":"114","26.0":"116","26.1":"116","26.2":"116","26.3":"116","26.4":"116","26.5":"116","26.6":"116","27.0":"118","27.1":"118","27.2":"118","27.3":"118","28.0":"120","28.1":"120","28.2":"120","28.3":"120","29.0":"122","29.1":"122","29.2":"122","29.3":"122","29.4":"122","30.0":"124","30.1":"124","30.2":"124","30.3":"124","30.4":"124","30.5":"124","31.0":"126","31.1":"126","31.2":"126","31.3":"126","31.4":"126","31.5":"126","31.6":"126","31.7":"126","32.0":"128","32.1":"128","32.2":"128","32.3":"128","33.0":"130","33.1":"130","33.2":"130","33.3":"130","33.4":"130","34.0":"132","34.1":"132","34.2":"132","34.3":"132","34.4":"132","34.5":"132","35.0":"134","35.1":"134","35.2":"134","35.3":"134","35.4":"134","35.5":"134","35.6":"134","35.7":"134","36.0":"136","36.1":"136","36.2":"136","36.3":"136","36.4":"136","36.5":"136","36.6":"136","36.7":"136","36.8":"136","36.9":"136","37.0":"138","37.1":"138","37.2":"138","37.3":"138","37.4":"138","37.5":"138","37.6":"138","37.7":"138","37.8":"138","37.9":"138","37.10":"138","38.0":"140","38.1":"140","38.2":"140","38.3":"140","38.4":"140","38.5":"140","38.6":"140","38.7":"140","38.8":"140","39.0":"142","39.1":"142","39.2":"142","39.3":"142","39.4":"142","39.5":"142","39.6":"142","39.7":"142","39.8":"142","40.0":"144","40.1":"144","40.2":"144","40.3":"144","40.4":"144","40.5":"144","40.6":"144","40.7":"144","40.8":"144","41.0":"146"}```
-
-----
-
-# frontend/node_modules/escalade/package.json
-```json
-{
-  "name": "escalade",
-  "version": "3.2.0",
-  "repository": "lukeed/escalade",
-  "description": "A tiny (183B to 210B) and fast utility to ascend parent directories",
-  "module": "dist/index.mjs",
-  "main": "dist/index.js",
-  "types": "index.d.ts",
-  "license": "MIT",
-  "author": {
-    "name": "Luke Edwards",
-    "email": "luke.edwards05@gmail.com",
-    "url": "https://lukeed.com"
-  },
-  "exports": {
-    ".": [
-      {
-        "import": {
-          "types": "./index.d.mts",
-          "default": "./dist/index.mjs"
-        },
-        "require": {
-          "types": "./index.d.ts",
-          "default": "./dist/index.js"
-        }
-      },
-      "./dist/index.js"
-    ],
-    "./sync": [
-      {
-        "import": {
-          "types": "./sync/index.d.mts",
-          "default": "./sync/index.mjs"
-        },
-        "require": {
-          "types": "./sync/index.d.ts",
-          "default": "./sync/index.js"
-        }
-      },
-      "./sync/index.js"
-    ]
-  },
-  "files": [
-    "*.d.mts",
-    "*.d.ts",
-    "dist",
-    "sync"
-  ],
-  "modes": {
-    "sync": "src/sync.js",
-    "default": "src/async.js"
-  },
-  "engines": {
-    "node": ">=6"
-  },
-  "scripts": {
-    "build": "bundt",
-    "pretest": "npm run build",
-    "test": "uvu -r esm test -i fixtures"
-  },
-  "keywords": [
-    "find",
-    "parent",
-    "parents",
-    "directory",
-    "search",
-    "walk"
-  ],
-  "devDependencies": {
-    "bundt": "1.1.1",
-    "esm": "3.2.25",
-    "uvu": "0.3.3"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/gensync/package.json
-```json
-{
-  "name": "gensync",
-  "version": "1.0.0-beta.2",
-  "license": "MIT",
-  "description": "Allows users to use generators in order to write common functions that can be both sync or async.",
-  "main": "index.js",
-  "author": "Logan Smyth <loganfsmyth@gmail.com>",
-  "homepage": "https://github.com/loganfsmyth/gensync",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/loganfsmyth/gensync.git"
-  },
-  "scripts": {
-    "test": "jest"
-  },
-  "engines": {
-    "node": ">=6.9.0"
-  },
-  "keywords": [
-    "async",
-    "sync",
-    "generators",
-    "async-await",
-    "callbacks"
-  ],
-  "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.6.1",
-    "eslint": "^4.19.1",
-    "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-prettier": "^2.6.0",
-    "flow-bin": "^0.71.0",
-    "jest": "^22.4.3",
-    "prettier": "^1.12.1"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/js-tokens/package.json
-```json
-{
-  "name": "js-tokens",
-  "version": "4.0.0",
-  "author": "Simon Lydell",
-  "license": "MIT",
-  "description": "A regex that tokenizes JavaScript.",
-  "keywords": [
-    "JavaScript",
-    "js",
-    "token",
-    "tokenize",
-    "regex"
-  ],
-  "files": [
-    "index.js"
-  ],
-  "repository": "lydell/js-tokens",
-  "scripts": {
-    "test": "mocha --ui tdd",
-    "esprima-compare": "node esprima-compare ./index.js everything.js/es5.js",
-    "build": "node generate-index.js",
-    "dev": "npm run build && npm test"
-  },
-  "devDependencies": {
-    "coffeescript": "2.1.1",
-    "esprima": "4.0.0",
-    "everything.js": "1.0.3",
-    "mocha": "5.0.0"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/jsesc/package.json
-```json
-{
-  "name": "jsesc",
-  "version": "3.1.0",
-  "description": "Given some data, jsesc returns the shortest possible stringified & ASCII-safe representation of that data.",
-  "homepage": "https://mths.be/jsesc",
-  "engines": {
-    "node": ">=6"
-  },
-  "main": "jsesc.js",
-  "bin": "bin/jsesc",
-  "man": "man/jsesc.1",
-  "keywords": [
-    "buffer",
-    "escape",
-    "javascript",
-    "json",
-    "map",
-    "set",
-    "string",
-    "stringify",
-    "tool"
-  ],
-  "license": "MIT",
-  "author": {
-    "name": "Mathias Bynens",
-    "url": "https://mathiasbynens.be/"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mathiasbynens/jsesc.git"
-  },
-  "bugs": "https://github.com/mathiasbynens/jsesc/issues",
-  "files": [
-    "LICENSE-MIT.txt",
-    "jsesc.js",
-    "bin/",
-    "man/"
-  ],
-  "scripts": {
-    "build": "grunt template",
-    "coveralls": "istanbul cover --verbose --dir 'coverage' 'tests/tests.js' && coveralls < coverage/lcov.info'",
-    "cover": "istanbul cover --report 'html' --verbose --dir 'coverage' 'tests/tests.js'",
-    "test": "mocha tests"
-  },
-  "devDependencies": {
-    "coveralls": "^2.11.6",
-    "grunt": "^0.4.5",
-    "grunt-cli": "^1.3.2",
-    "grunt-template": "^0.2.3",
-    "istanbul": "^0.4.2",
-    "mocha": "^5.2.0",
-    "regenerate": "^1.3.0",
-    "requirejs": "^2.1.22",
-    "unicode-13.0.0": "0.8.0"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/json5/package.json
-```json
-{
-  "name": "json5",
-  "version": "2.2.3",
-  "description": "JSON for Humans",
-  "main": "lib/index.js",
-  "module": "dist/index.mjs",
-  "bin": "lib/cli.js",
-  "browser": "dist/index.js",
-  "types": "lib/index.d.ts",
-  "files": [
-    "lib/",
-    "dist/"
-  ],
-  "engines": {
-    "node": ">=6"
-  },
-  "scripts": {
-    "build": "rollup -c",
-    "build-package": "node build/package.js",
-    "build-unicode": "node build/unicode.js",
-    "coverage": "tap --coverage-report html test",
-    "lint": "eslint --fix .",
-    "lint-report": "eslint .",
-    "prepublishOnly": "npm run production",
-    "preversion": "npm run production",
-    "production": "run-s test build",
-    "tap": "tap -Rspec --100 test",
-    "test": "run-s lint-report tap",
-    "version": "npm run build-package && git add package.json5"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/json5/json5.git"
-  },
-  "keywords": [
-    "json",
-    "json5",
-    "es5",
-    "es2015",
-    "ecmascript"
-  ],
-  "author": "Aseem Kishore <aseem.kishore@gmail.com>",
-  "contributors": [
-    "Max Nanasy <max.nanasy@gmail.com>",
-    "Andrew Eisenberg <andrew@eisenberg.as>",
-    "Jordan Tucker <jordanbtucker@gmail.com>"
-  ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/json5/json5/issues"
-  },
-  "homepage": "http://json5.org/",
-  "devDependencies": {
-    "core-js": "^2.6.5",
-    "eslint": "^5.15.3",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-node": "^8.0.1",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "npm-run-all": "^4.1.5",
-    "regenerate": "^1.4.0",
-    "rollup": "^0.64.1",
-    "rollup-plugin-buble": "^0.19.6",
-    "rollup-plugin-commonjs": "^9.2.1",
-    "rollup-plugin-node-resolve": "^3.4.0",
-    "rollup-plugin-terser": "^1.0.1",
-    "sinon": "^6.3.5",
-    "tap": "^12.6.0",
-    "unicode-10.0.0": "^0.7.5"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/loose-envify/package.json
-```json
-{
-  "name": "loose-envify",
-  "version": "1.4.0",
-  "description": "Fast (and loose) selective `process.env` replacer using js-tokens instead of an AST",
-  "keywords": [
-    "environment",
-    "variables",
-    "browserify",
-    "browserify-transform",
-    "transform",
-    "source",
-    "configuration"
-  ],
-  "homepage": "https://github.com/zertosh/loose-envify",
-  "license": "MIT",
-  "author": "Andres Suarez <zertosh@gmail.com>",
-  "main": "index.js",
-  "bin": {
-    "loose-envify": "cli.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/zertosh/loose-envify.git"
-  },
-  "scripts": {
-    "test": "tap test/*.js"
-  },
-  "dependencies": {
-    "js-tokens": "^3.0.0 || ^4.0.0"
-  },
-  "devDependencies": {
-    "browserify": "^13.1.1",
-    "envify": "^3.4.0",
-    "tap": "^8.0.0"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/lru-cache/package.json
-```json
-{
-  "name": "lru-cache",
-  "description": "A cache object that deletes the least-recently-used items.",
-  "version": "5.1.1",
-  "author": "Isaac Z. Schlueter <i@izs.me>",
-  "keywords": [
-    "mru",
-    "lru",
-    "cache"
-  ],
-  "scripts": {
-    "test": "tap test/*.js --100 -J",
-    "snap": "TAP_SNAPSHOT=1 tap test/*.js -J",
-    "coveragerport": "tap --coverage-report=html",
-    "preversion": "npm test",
-    "postversion": "npm publish",
-    "postpublish": "git push origin --all; git push origin --tags"
-  },
-  "main": "index.js",
-  "repository": "git://github.com/isaacs/node-lru-cache.git",
-  "devDependencies": {
-    "benchmark": "^2.1.4",
-    "tap": "^12.1.0"
-  },
-  "license": "ISC",
-  "dependencies": {
-    "yallist": "^3.0.2"
-  },
-  "files": [
-    "index.js"
-  ]
-}
-```
-
-----
-
-# frontend/node_modules/lucide-react/package.json
-```json
-{
-  "name": "lucide-react",
-  "description": "A Lucide icon library package for React applications.",
-  "version": "0.577.0",
-  "license": "ISC",
-  "homepage": "https://lucide.dev",
-  "bugs": "https://github.com/lucide-icons/lucide/issues",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/lucide-icons/lucide.git",
-    "directory": "packages/lucide-react"
-  },
-  "keywords": [
-    "Lucide",
-    "React",
-    "Feather",
-    "Icons",
-    "Icon",
-    "SVG",
-    "Feather Icons",
-    "Fontawesome",
-    "Font Awesome"
-  ],
-  "author": "Eric Fennis",
-  "amdName": "lucide-react",
-  "main": "dist/cjs/lucide-react.js",
-  "main:umd": "dist/umd/lucide-react.js",
-  "module": "dist/esm/lucide-react.js",
-  "unpkg": "dist/umd/lucide-react.min.js",
-  "typings": "dist/lucide-react.d.ts",
-  "sideEffects": false,
-  "files": [
-    "dist",
-    "dynamic.mjs",
-    "dynamic.js.map",
-    "dynamic.d.ts",
-    "dynamicIconImports.mjs",
-    "dynamicIconImports.js.map",
-    "dynamicIconImports.d.ts"
-  ],
-  "devDependencies": {
-    "@testing-library/jest-dom": "^6.8.0",
-    "@testing-library/react": "^14.1.2",
-    "@types/react": "^18.2.37",
-    "@vitejs/plugin-react": "^4.4.1",
-    "jest-serializer-html": "^7.1.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "rollup": "^4.59.0",
-    "rollup-plugin-dts": "^6.2.3",
-    "rollup-plugin-preserve-directives": "^0.4.0",
-    "typescript": "^5.8.3",
-    "vite": "^7.2.4",
-    "vitest": "^4.0.12",
-    "@lucide/build-icons": "1.1.0",
-    "@lucide/rollup-plugins": "1.0.0",
-    "@lucide/shared": "1.0.0"
-  },
-  "peerDependencies": {
-    "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0"
-  },
-  "scripts": {
-    "build": "pnpm clean && pnpm copy:license && pnpm build:icons && pnpm typecheck && pnpm build:bundles",
-    "copy:license": "cp ../../LICENSE ./LICENSE",
-    "clean": "rm -rf dist && rm -rf stats && rm -rf ./src/icons/*.ts && rm -f dynamic.* && rm -f dynamicIconImports.d.ts",
-    "build:icons": "build-icons --output=./src --templateSrc=./scripts/exportTemplate.mts --renderUniqueKey --withAliases --withDynamicImports --separateAliasesFile --separateAliasesFileIgnore=fingerprint --aliasesFileExtension=.ts --iconFileExtension=.ts --exportFileName=index.ts",
-    "build:bundles": "rollup -c ./rollup.config.mjs",
-    "typecheck": "tsc",
-    "typecheck:watch": "tsc -w",
-    "test": "pnpm build:icons && vitest run",
-    "test:watch": "vitest watch",
-    "version": "pnpm version --git-tag-version=false"
-  }
-}```
-
-----
-
-# frontend/node_modules/ms/package.json
-```json
-{
-  "name": "ms",
-  "version": "2.1.3",
-  "description": "Tiny millisecond conversion utility",
-  "repository": "vercel/ms",
-  "main": "./index",
-  "files": [
-    "index.js"
-  ],
-  "scripts": {
-    "precommit": "lint-staged",
-    "lint": "eslint lib/* bin/*",
-    "test": "mocha tests.js"
-  },
-  "eslintConfig": {
-    "extends": "eslint:recommended",
-    "env": {
-      "node": true,
-      "es6": true
-    }
-  },
-  "lint-staged": {
-    "*.js": [
-      "npm run lint",
-      "prettier --single-quote --write",
-      "git add"
-    ]
-  },
-  "license": "MIT",
-  "devDependencies": {
-    "eslint": "4.18.2",
-    "expect.js": "0.3.1",
-    "husky": "0.14.3",
-    "lint-staged": "5.0.0",
-    "mocha": "4.0.1",
-    "prettier": "2.0.5"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/nanoid/async/package.json
-```json
-{
-  "type": "module",
-  "main": "index.cjs",
-  "module": "index.js",
-  "react-native": {
-    "./index.js": "./index.native.js"
-  },
-  "browser": {
-    "./index.js": "./index.browser.js",
-    "./index.cjs": "./index.browser.cjs"
-  }
-}```
-
-----
-
-# frontend/node_modules/nanoid/non-secure/package.json
-```json
-{
-  "type": "module",
-  "main": "index.cjs",
-  "module": "index.js",
-  "react-native": "index.js"
-}```
-
-----
-
-# frontend/node_modules/nanoid/package.json
-```json
-{
-  "name": "nanoid",
-  "version": "3.3.11",
-  "description": "A tiny (116 bytes), secure URL-friendly unique string ID generator",
-  "keywords": [
-    "uuid",
-    "random",
-    "id",
-    "url"
-  ],
-  "engines": {
-    "node": "^10 || ^12 || ^13.7 || ^14 || >=15.0.1"
-  },
-  "funding": [
-    {
-      "type": "github",
-      "url": "https://github.com/sponsors/ai"
-    }
-  ],
-  "author": "Andrey Sitnik <andrey@sitnik.ru>",
-  "license": "MIT",
-  "repository": "ai/nanoid",
-  "browser": {
-    "./index.js": "./index.browser.js",
-    "./async/index.js": "./async/index.browser.js",
-    "./async/index.cjs": "./async/index.browser.cjs",
-    "./index.cjs": "./index.browser.cjs"
-  },
-  "react-native": "index.js",
-  "bin": "./bin/nanoid.cjs",
-  "sideEffects": false,
-  "types": "./index.d.ts",
-  "type": "module",
-  "main": "index.cjs",
-  "module": "index.js",
-  "exports": {
-    ".": {
-      "react-native": "./index.browser.js",
-      "browser": "./index.browser.js",
-      "require": {
-        "types": "./index.d.cts",
-        "default": "./index.cjs"
-      },
-      "import": {
-        "types": "./index.d.ts",
-        "default": "./index.js"
-      },
-      "default": "./index.js"
-    },
-    "./package.json": "./package.json",
-    "./async/package.json": "./async/package.json",
-    "./async": {
-      "browser": "./async/index.browser.js",
-      "require": {
-        "types": "./index.d.cts",
-        "default": "./async/index.cjs"
-      },
-      "import": {
-        "types": "./index.d.ts",
-        "default": "./async/index.js"
-      },
-      "default": "./async/index.js"
-    },
-    "./non-secure/package.json": "./non-secure/package.json",
-    "./non-secure": {
-      "require": {
-        "types": "./index.d.cts",
-        "default": "./non-secure/index.cjs"
-      },
-      "import": {
-        "types": "./index.d.ts",
-        "default": "./non-secure/index.js"
-      },
-      "default": "./non-secure/index.js"
-    },
-    "./url-alphabet/package.json": "./url-alphabet/package.json",
-    "./url-alphabet": {
-      "require": {
-        "types": "./index.d.cts",
-        "default": "./url-alphabet/index.cjs"
-      },
-      "import": {
-        "types": "./index.d.ts",
-        "default": "./url-alphabet/index.js"
-      },
-      "default": "./url-alphabet/index.js"
-    }
-  }
-}
-```
-
-----
-
-# frontend/node_modules/nanoid/url-alphabet/package.json
-```json
-{
-  "type": "module",
-  "main": "index.cjs",
-  "module": "index.js",
-  "react-native": "index.js"
-}```
-
-----
-
-# frontend/node_modules/node-releases/data/processed/envs.json
-```json
-[{"name":"nodejs","version":"0.2.0","date":"2011-08-26","lts":false,"security":false,"v8":"2.3.8.0"},{"name":"nodejs","version":"0.3.0","date":"2011-08-26","lts":false,"security":false,"v8":"2.5.1.0"},{"name":"nodejs","version":"0.4.0","date":"2011-08-26","lts":false,"security":false,"v8":"3.1.2.0"},{"name":"nodejs","version":"0.5.0","date":"2011-08-26","lts":false,"security":false,"v8":"3.1.8.25"},{"name":"nodejs","version":"0.6.0","date":"2011-11-04","lts":false,"security":false,"v8":"3.6.6.6"},{"name":"nodejs","version":"0.7.0","date":"2012-01-17","lts":false,"security":false,"v8":"3.8.6.0"},{"name":"nodejs","version":"0.8.0","date":"2012-06-22","lts":false,"security":false,"v8":"3.11.10.10"},{"name":"nodejs","version":"0.9.0","date":"2012-07-20","lts":false,"security":false,"v8":"3.11.10.15"},{"name":"nodejs","version":"0.10.0","date":"2013-03-11","lts":false,"security":false,"v8":"3.14.5.8"},{"name":"nodejs","version":"0.11.0","date":"2013-03-28","lts":false,"security":false,"v8":"3.17.13.0"},{"name":"nodejs","version":"0.12.0","date":"2015-02-06","lts":false,"security":false,"v8":"3.28.73.0"},{"name":"nodejs","version":"4.0.0","date":"2015-09-08","lts":false,"security":false,"v8":"4.5.103.30"},{"name":"nodejs","version":"4.1.0","date":"2015-09-17","lts":false,"security":false,"v8":"4.5.103.33"},{"name":"nodejs","version":"4.2.0","date":"2015-10-12","lts":"Argon","security":false,"v8":"4.5.103.35"},{"name":"nodejs","version":"4.3.0","date":"2016-02-09","lts":"Argon","security":false,"v8":"4.5.103.35"},{"name":"nodejs","version":"4.4.0","date":"2016-03-08","lts":"Argon","security":false,"v8":"4.5.103.35"},{"name":"nodejs","version":"4.5.0","date":"2016-08-16","lts":"Argon","security":false,"v8":"4.5.103.37"},{"name":"nodejs","version":"4.6.0","date":"2016-09-27","lts":"Argon","security":true,"v8":"4.5.103.37"},{"name":"nodejs","version":"4.7.0","date":"2016-12-06","lts":"Argon","security":false,"v8":"4.5.103.43"},{"name":"nodejs","version":"4.8.0","date":"2017-02-21","lts":"Argon","security":false,"v8":"4.5.103.45"},{"name":"nodejs","version":"4.9.0","date":"2018-03-28","lts":"Argon","security":true,"v8":"4.5.103.53"},{"name":"nodejs","version":"5.0.0","date":"2015-10-29","lts":false,"security":false,"v8":"4.6.85.28"},{"name":"nodejs","version":"5.1.0","date":"2015-11-17","lts":false,"security":false,"v8":"4.6.85.31"},{"name":"nodejs","version":"5.2.0","date":"2015-12-09","lts":false,"security":false,"v8":"4.6.85.31"},{"name":"nodejs","version":"5.3.0","date":"2015-12-15","lts":false,"security":false,"v8":"4.6.85.31"},{"name":"nodejs","version":"5.4.0","date":"2016-01-06","lts":false,"security":false,"v8":"4.6.85.31"},{"name":"nodejs","version":"5.5.0","date":"2016-01-21","lts":false,"security":false,"v8":"4.6.85.31"},{"name":"nodejs","version":"5.6.0","date":"2016-02-09","lts":false,"security":false,"v8":"4.6.85.31"},{"name":"nodejs","version":"5.7.0","date":"2016-02-23","lts":false,"security":false,"v8":"4.6.85.31"},{"name":"nodejs","version":"5.8.0","date":"2016-03-09","lts":false,"security":false,"v8":"4.6.85.31"},{"name":"nodejs","version":"5.9.0","date":"2016-03-16","lts":false,"security":false,"v8":"4.6.85.31"},{"name":"nodejs","version":"5.10.0","date":"2016-04-01","lts":false,"security":false,"v8":"4.6.85.31"},{"name":"nodejs","version":"5.11.0","date":"2016-04-21","lts":false,"security":false,"v8":"4.6.85.31"},{"name":"nodejs","version":"5.12.0","date":"2016-06-23","lts":false,"security":false,"v8":"4.6.85.32"},{"name":"nodejs","version":"6.0.0","date":"2016-04-26","lts":false,"security":false,"v8":"5.0.71.35"},{"name":"nodejs","version":"6.1.0","date":"2016-05-05","lts":false,"security":false,"v8":"5.0.71.35"},{"name":"nodejs","version":"6.2.0","date":"2016-05-17","lts":false,"security":false,"v8":"5.0.71.47"},{"name":"nodejs","version":"6.3.0","date":"2016-07-06","lts":false,"security":false,"v8":"5.0.71.52"},{"name":"nodejs","version":"6.4.0","date":"2016-08-12","lts":false,"security":false,"v8":"5.0.71.60"},{"name":"nodejs","version":"6.5.0","date":"2016-08-26","lts":false,"security":false,"v8":"5.1.281.81"},{"name":"nodejs","version":"6.6.0","date":"2016-09-14","lts":false,"security":false,"v8":"5.1.281.83"},{"name":"nodejs","version":"6.7.0","date":"2016-09-27","lts":false,"security":true,"v8":"5.1.281.83"},{"name":"nodejs","version":"6.8.0","date":"2016-10-12","lts":false,"security":false,"v8":"5.1.281.84"},{"name":"nodejs","version":"6.9.0","date":"2016-10-18","lts":"Boron","security":false,"v8":"5.1.281.84"},{"name":"nodejs","version":"6.10.0","date":"2017-02-21","lts":"Boron","security":false,"v8":"5.1.281.93"},{"name":"nodejs","version":"6.11.0","date":"2017-06-06","lts":"Boron","security":false,"v8":"5.1.281.102"},{"name":"nodejs","version":"6.12.0","date":"2017-11-06","lts":"Boron","security":false,"v8":"5.1.281.108"},{"name":"nodejs","version":"6.13.0","date":"2018-02-10","lts":"Boron","security":false,"v8":"5.1.281.111"},{"name":"nodejs","version":"6.14.0","date":"2018-03-28","lts":"Boron","security":true,"v8":"5.1.281.111"},{"name":"nodejs","version":"6.15.0","date":"2018-11-27","lts":"Boron","security":true,"v8":"5.1.281.111"},{"name":"nodejs","version":"6.16.0","date":"2018-12-26","lts":"Boron","security":false,"v8":"5.1.281.111"},{"name":"nodejs","version":"6.17.0","date":"2019-02-28","lts":"Boron","security":true,"v8":"5.1.281.111"},{"name":"nodejs","version":"7.0.0","date":"2016-10-25","lts":false,"security":false,"v8":"5.4.500.36"},{"name":"nodejs","version":"7.1.0","date":"2016-11-08","lts":false,"security":false,"v8":"5.4.500.36"},{"name":"nodejs","version":"7.2.0","date":"2016-11-22","lts":false,"security":false,"v8":"5.4.500.43"},{"name":"nodejs","version":"7.3.0","date":"2016-12-20","lts":false,"security":false,"v8":"5.4.500.45"},{"name":"nodejs","version":"7.4.0","date":"2017-01-04","lts":false,"security":false,"v8":"5.4.500.45"},{"name":"nodejs","version":"7.5.0","date":"2017-01-31","lts":false,"security":false,"v8":"5.4.500.48"},{"name":"nodejs","version":"7.6.0","date":"2017-02-21","lts":false,"security":false,"v8":"5.5.372.40"},{"name":"nodejs","version":"7.7.0","date":"2017-02-28","lts":false,"security":false,"v8":"5.5.372.41"},{"name":"nodejs","version":"7.8.0","date":"2017-03-29","lts":false,"security":false,"v8":"5.5.372.43"},{"name":"nodejs","version":"7.9.0","date":"2017-04-11","lts":false,"security":false,"v8":"5.5.372.43"},{"name":"nodejs","version":"7.10.0","date":"2017-05-02","lts":false,"security":false,"v8":"5.5.372.43"},{"name":"nodejs","version":"8.0.0","date":"2017-05-30","lts":false,"security":false,"v8":"5.8.283.41"},{"name":"nodejs","version":"8.1.0","date":"2017-06-08","lts":false,"security":false,"v8":"5.8.283.41"},{"name":"nodejs","version":"8.2.0","date":"2017-07-19","lts":false,"security":false,"v8":"5.8.283.41"},{"name":"nodejs","version":"8.3.0","date":"2017-08-08","lts":false,"security":false,"v8":"6.0.286.52"},{"name":"nodejs","version":"8.4.0","date":"2017-08-15","lts":false,"security":false,"v8":"6.0.286.52"},{"name":"nodejs","version":"8.5.0","date":"2017-09-12","lts":false,"security":false,"v8":"6.0.287.53"},{"name":"nodejs","version":"8.6.0","date":"2017-09-26","lts":false,"security":false,"v8":"6.0.287.53"},{"name":"nodejs","version":"8.7.0","date":"2017-10-11","lts":false,"security":false,"v8":"6.1.534.42"},{"name":"nodejs","version":"8.8.0","date":"2017-10-24","lts":false,"security":false,"v8":"6.1.534.42"},{"name":"nodejs","version":"8.9.0","date":"2017-10-31","lts":"Carbon","security":false,"v8":"6.1.534.46"},{"name":"nodejs","version":"8.10.0","date":"2018-03-06","lts":"Carbon","security":false,"v8":"6.2.414.50"},{"name":"nodejs","version":"8.11.0","date":"2018-03-28","lts":"Carbon","security":true,"v8":"6.2.414.50"},{"name":"nodejs","version":"8.12.0","date":"2018-09-10","lts":"Carbon","security":false,"v8":"6.2.414.66"},{"name":"nodejs","version":"8.13.0","date":"2018-11-20","lts":"Carbon","security":false,"v8":"6.2.414.72"},{"name":"nodejs","version":"8.14.0","date":"2018-11-27","lts":"Carbon","security":true,"v8":"6.2.414.72"},{"name":"nodejs","version":"8.15.0","date":"2018-12-26","lts":"Carbon","security":false,"v8":"6.2.414.75"},{"name":"nodejs","version":"8.16.0","date":"2019-04-16","lts":"Carbon","security":false,"v8":"6.2.414.77"},{"name":"nodejs","version":"8.17.0","date":"2019-12-17","lts":"Carbon","security":true,"v8":"6.2.414.78"},{"name":"nodejs","version":"9.0.0","date":"2017-10-31","lts":false,"security":false,"v8":"6.2.414.32"},{"name":"nodejs","version":"9.1.0","date":"2017-11-07","lts":false,"security":false,"v8":"6.2.414.32"},{"name":"nodejs","version":"9.2.0","date":"2017-11-14","lts":false,"security":false,"v8":"6.2.414.44"},{"name":"nodejs","version":"9.3.0","date":"2017-12-12","lts":false,"security":false,"v8":"6.2.414.46"},{"name":"nodejs","version":"9.4.0","date":"2018-01-10","lts":false,"security":false,"v8":"6.2.414.46"},{"name":"nodejs","version":"9.5.0","date":"2018-01-31","lts":false,"security":false,"v8":"6.2.414.46"},{"name":"nodejs","version":"9.6.0","date":"2018-02-21","lts":false,"security":false,"v8":"6.2.414.46"},{"name":"nodejs","version":"9.7.0","date":"2018-03-01","lts":false,"security":false,"v8":"6.2.414.46"},{"name":"nodejs","version":"9.8.0","date":"2018-03-07","lts":false,"security":false,"v8":"6.2.414.46"},{"name":"nodejs","version":"9.9.0","date":"2018-03-21","lts":false,"security":false,"v8":"6.2.414.46"},{"name":"nodejs","version":"9.10.0","date":"2018-03-28","lts":false,"security":true,"v8":"6.2.414.46"},{"name":"nodejs","version":"9.11.0","date":"2018-04-04","lts":false,"security":false,"v8":"6.2.414.46"},{"name":"nodejs","version":"10.0.0","date":"2018-04-24","lts":false,"security":false,"v8":"6.6.346.24"},{"name":"nodejs","version":"10.1.0","date":"2018-05-08","lts":false,"security":false,"v8":"6.6.346.27"},{"name":"nodejs","version":"10.2.0","date":"2018-05-23","lts":false,"security":false,"v8":"6.6.346.32"},{"name":"nodejs","version":"10.3.0","date":"2018-05-29","lts":false,"security":false,"v8":"6.6.346.32"},{"name":"nodejs","version":"10.4.0","date":"2018-06-06","lts":false,"security":false,"v8":"6.7.288.43"},{"name":"nodejs","version":"10.5.0","date":"2018-06-20","lts":false,"security":false,"v8":"6.7.288.46"},{"name":"nodejs","version":"10.6.0","date":"2018-07-04","lts":false,"security":false,"v8":"6.7.288.46"},{"name":"nodejs","version":"10.7.0","date":"2018-07-18","lts":false,"security":false,"v8":"6.7.288.49"},{"name":"nodejs","version":"10.8.0","date":"2018-08-01","lts":false,"security":false,"v8":"6.7.288.49"},{"name":"nodejs","version":"10.9.0","date":"2018-08-15","lts":false,"security":false,"v8":"6.8.275.24"},{"name":"nodejs","version":"10.10.0","date":"2018-09-06","lts":false,"security":false,"v8":"6.8.275.30"},{"name":"nodejs","version":"10.11.0","date":"2018-09-19","lts":false,"security":false,"v8":"6.8.275.32"},{"name":"nodejs","version":"10.12.0","date":"2018-10-10","lts":false,"security":false,"v8":"6.8.275.32"},{"name":"nodejs","version":"10.13.0","date":"2018-10-30","lts":"Dubnium","security":false,"v8":"6.8.275.32"},{"name":"nodejs","version":"10.14.0","date":"2018-11-27","lts":"Dubnium","security":true,"v8":"6.8.275.32"},{"name":"nodejs","version":"10.15.0","date":"2018-12-26","lts":"Dubnium","security":false,"v8":"6.8.275.32"},{"name":"nodejs","version":"10.16.0","date":"2019-05-28","lts":"Dubnium","security":false,"v8":"6.8.275.32"},{"name":"nodejs","version":"10.17.0","date":"2019-10-22","lts":"Dubnium","security":false,"v8":"6.8.275.32"},{"name":"nodejs","version":"10.18.0","date":"2019-12-17","lts":"Dubnium","security":true,"v8":"6.8.275.32"},{"name":"nodejs","version":"10.19.0","date":"2020-02-05","lts":"Dubnium","security":true,"v8":"6.8.275.32"},{"name":"nodejs","version":"10.20.0","date":"2020-03-26","lts":"Dubnium","security":false,"v8":"6.8.275.32"},{"name":"nodejs","version":"10.21.0","date":"2020-06-02","lts":"Dubnium","security":true,"v8":"6.8.275.32"},{"name":"nodejs","version":"10.22.0","date":"2020-07-21","lts":"Dubnium","security":false,"v8":"6.8.275.32"},{"name":"nodejs","version":"10.23.0","date":"2020-10-27","lts":"Dubnium","security":false,"v8":"6.8.275.32"},{"name":"nodejs","version":"10.24.0","date":"2021-02-23","lts":"Dubnium","security":true,"v8":"6.8.275.32"},{"name":"nodejs","version":"11.0.0","date":"2018-10-23","lts":false,"security":false,"v8":"7.0.276.28"},{"name":"nodejs","version":"11.1.0","date":"2018-10-30","lts":false,"security":false,"v8":"7.0.276.32"},{"name":"nodejs","version":"11.2.0","date":"2018-11-15","lts":false,"security":false,"v8":"7.0.276.38"},{"name":"nodejs","version":"11.3.0","date":"2018-11-27","lts":false,"security":true,"v8":"7.0.276.38"},{"name":"nodejs","version":"11.4.0","date":"2018-12-07","lts":false,"security":false,"v8":"7.0.276.38"},{"name":"nodejs","version":"11.5.0","date":"2018-12-18","lts":false,"security":false,"v8":"7.0.276.38"},{"name":"nodejs","version":"11.6.0","date":"2018-12-26","lts":false,"security":false,"v8":"7.0.276.38"},{"name":"nodejs","version":"11.7.0","date":"2019-01-17","lts":false,"security":false,"v8":"7.0.276.38"},{"name":"nodejs","version":"11.8.0","date":"2019-01-24","lts":false,"security":false,"v8":"7.0.276.38"},{"name":"nodejs","version":"11.9.0","date":"2019-01-30","lts":false,"security":false,"v8":"7.0.276.38"},{"name":"nodejs","version":"11.10.0","date":"2019-02-14","lts":false,"security":false,"v8":"7.0.276.38"},{"name":"nodejs","version":"11.11.0","date":"2019-03-05","lts":false,"security":false,"v8":"7.0.276.38"},{"name":"nodejs","version":"11.12.0","date":"2019-03-14","lts":false,"security":false,"v8":"7.0.276.38"},{"name":"nodejs","version":"11.13.0","date":"2019-03-28","lts":false,"security":false,"v8":"7.0.276.38"},{"name":"nodejs","version":"11.14.0","date":"2019-04-10","lts":false,"security":false,"v8":"7.0.276.38"},{"name":"nodejs","version":"11.15.0","date":"2019-04-30","lts":false,"security":false,"v8":"7.0.276.38"},{"name":"nodejs","version":"12.0.0","date":"2019-04-23","lts":false,"security":false,"v8":"7.4.288.21"},{"name":"nodejs","version":"12.1.0","date":"2019-04-29","lts":false,"security":false,"v8":"7.4.288.21"},{"name":"nodejs","version":"12.2.0","date":"2019-05-07","lts":false,"security":false,"v8":"7.4.288.21"},{"name":"nodejs","version":"12.3.0","date":"2019-05-21","lts":false,"security":false,"v8":"7.4.288.27"},{"name":"nodejs","version":"12.4.0","date":"2019-06-04","lts":false,"security":false,"v8":"7.4.288.27"},{"name":"nodejs","version":"12.5.0","date":"2019-06-26","lts":false,"security":false,"v8":"7.5.288.22"},{"name":"nodejs","version":"12.6.0","date":"2019-07-03","lts":false,"security":false,"v8":"7.5.288.22"},{"name":"nodejs","version":"12.7.0","date":"2019-07-23","lts":false,"security":false,"v8":"7.5.288.22"},{"name":"nodejs","version":"12.8.0","date":"2019-08-06","lts":false,"security":false,"v8":"7.5.288.22"},{"name":"nodejs","version":"12.9.0","date":"2019-08-20","lts":false,"security":false,"v8":"7.6.303.29"},{"name":"nodejs","version":"12.10.0","date":"2019-09-04","lts":false,"security":false,"v8":"7.6.303.29"},{"name":"nodejs","version":"12.11.0","date":"2019-09-25","lts":false,"security":false,"v8":"7.7.299.11"},{"name":"nodejs","version":"12.12.0","date":"2019-10-11","lts":false,"security":false,"v8":"7.7.299.13"},{"name":"nodejs","version":"12.13.0","date":"2019-10-21","lts":"Erbium","security":false,"v8":"7.7.299.13"},{"name":"nodejs","version":"12.14.0","date":"2019-12-17","lts":"Erbium","security":true,"v8":"7.7.299.13"},{"name":"nodejs","version":"12.15.0","date":"2020-02-05","lts":"Erbium","security":true,"v8":"7.7.299.13"},{"name":"nodejs","version":"12.16.0","date":"2020-02-11","lts":"Erbium","security":false,"v8":"7.8.279.23"},{"name":"nodejs","version":"12.17.0","date":"2020-05-26","lts":"Erbium","security":false,"v8":"7.8.279.23"},{"name":"nodejs","version":"12.18.0","date":"2020-06-02","lts":"Erbium","security":true,"v8":"7.8.279.23"},{"name":"nodejs","version":"12.19.0","date":"2020-10-06","lts":"Erbium","security":false,"v8":"7.8.279.23"},{"name":"nodejs","version":"12.20.0","date":"2020-11-24","lts":"Erbium","security":false,"v8":"7.8.279.23"},{"name":"nodejs","version":"12.21.0","date":"2021-02-23","lts":"Erbium","security":true,"v8":"7.8.279.23"},{"name":"nodejs","version":"12.22.0","date":"2021-03-30","lts":"Erbium","security":false,"v8":"7.8.279.23"},{"name":"nodejs","version":"13.0.0","date":"2019-10-22","lts":false,"security":false,"v8":"7.8.279.17"},{"name":"nodejs","version":"13.1.0","date":"2019-11-05","lts":false,"security":false,"v8":"7.8.279.17"},{"name":"nodejs","version":"13.2.0","date":"2019-11-21","lts":false,"security":false,"v8":"7.9.317.23"},{"name":"nodejs","version":"13.3.0","date":"2019-12-03","lts":false,"security":false,"v8":"7.9.317.25"},{"name":"nodejs","version":"13.4.0","date":"2019-12-17","lts":false,"security":true,"v8":"7.9.317.25"},{"name":"nodejs","version":"13.5.0","date":"2019-12-18","lts":false,"security":false,"v8":"7.9.317.25"},{"name":"nodejs","version":"13.6.0","date":"2020-01-07","lts":false,"security":false,"v8":"7.9.317.25"},{"name":"nodejs","version":"13.7.0","date":"2020-01-21","lts":false,"security":false,"v8":"7.9.317.25"},{"name":"nodejs","version":"13.8.0","date":"2020-02-05","lts":false,"security":true,"v8":"7.9.317.25"},{"name":"nodejs","version":"13.9.0","date":"2020-02-18","lts":false,"security":false,"v8":"7.9.317.25"},{"name":"nodejs","version":"13.10.0","date":"2020-03-04","lts":false,"security":false,"v8":"7.9.317.25"},{"name":"nodejs","version":"13.11.0","date":"2020-03-12","lts":false,"security":false,"v8":"7.9.317.25"},{"name":"nodejs","version":"13.12.0","date":"2020-03-26","lts":false,"security":false,"v8":"7.9.317.25"},{"name":"nodejs","version":"13.13.0","date":"2020-04-14","lts":false,"security":false,"v8":"7.9.317.25"},{"name":"nodejs","version":"13.14.0","date":"2020-04-29","lts":false,"security":false,"v8":"7.9.317.25"},{"name":"nodejs","version":"14.0.0","date":"2020-04-21","lts":false,"security":false,"v8":"8.1.307.30"},{"name":"nodejs","version":"14.1.0","date":"2020-04-29","lts":false,"security":false,"v8":"8.1.307.31"},{"name":"nodejs","version":"14.2.0","date":"2020-05-05","lts":false,"security":false,"v8":"8.1.307.31"},{"name":"nodejs","version":"14.3.0","date":"2020-05-19","lts":false,"security":false,"v8":"8.1.307.31"},{"name":"nodejs","version":"14.4.0","date":"2020-06-02","lts":false,"security":true,"v8":"8.1.307.31"},{"name":"nodejs","version":"14.5.0","date":"2020-06-30","lts":false,"security":false,"v8":"8.3.110.9"},{"name":"nodejs","version":"14.6.0","date":"2020-07-20","lts":false,"security":false,"v8":"8.4.371.19"},{"name":"nodejs","version":"14.7.0","date":"2020-07-29","lts":false,"security":false,"v8":"8.4.371.19"},{"name":"nodejs","version":"14.8.0","date":"2020-08-11","lts":false,"security":false,"v8":"8.4.371.19"},{"name":"nodejs","version":"14.9.0","date":"2020-08-27","lts":false,"security":false,"v8":"8.4.371.19"},{"name":"nodejs","version":"14.10.0","date":"2020-09-08","lts":false,"security":false,"v8":"8.4.371.19"},{"name":"nodejs","version":"14.11.0","date":"2020-09-15","lts":false,"security":true,"v8":"8.4.371.19"},{"name":"nodejs","version":"14.12.0","date":"2020-09-22","lts":false,"security":false,"v8":"8.4.371.19"},{"name":"nodejs","version":"14.13.0","date":"2020-09-29","lts":false,"security":false,"v8":"8.4.371.19"},{"name":"nodejs","version":"14.14.0","date":"2020-10-15","lts":false,"security":false,"v8":"8.4.371.19"},{"name":"nodejs","version":"14.15.0","date":"2020-10-27","lts":"Fermium","security":false,"v8":"8.4.371.19"},{"name":"nodejs","version":"14.16.0","date":"2021-02-23","lts":"Fermium","security":true,"v8":"8.4.371.19"},{"name":"nodejs","version":"14.17.0","date":"2021-05-11","lts":"Fermium","security":false,"v8":"8.4.371.23"},{"name":"nodejs","version":"14.18.0","date":"2021-09-28","lts":"Fermium","security":false,"v8":"8.4.371.23"},{"name":"nodejs","version":"14.19.0","date":"2022-02-01","lts":"Fermium","security":false,"v8":"8.4.371.23"},{"name":"nodejs","version":"14.20.0","date":"2022-07-07","lts":"Fermium","security":true,"v8":"8.4.371.23"},{"name":"nodejs","version":"14.21.0","date":"2022-11-01","lts":"Fermium","security":false,"v8":"8.4.371.23"},{"name":"nodejs","version":"15.0.0","date":"2020-10-20","lts":false,"security":false,"v8":"8.6.395.16"},{"name":"nodejs","version":"15.1.0","date":"2020-11-04","lts":false,"security":false,"v8":"8.6.395.17"},{"name":"nodejs","version":"15.2.0","date":"2020-11-10","lts":false,"security":false,"v8":"8.6.395.17"},{"name":"nodejs","version":"15.3.0","date":"2020-11-24","lts":false,"security":false,"v8":"8.6.395.17"},{"name":"nodejs","version":"15.4.0","date":"2020-12-09","lts":false,"security":false,"v8":"8.6.395.17"},{"name":"nodejs","version":"15.5.0","date":"2020-12-22","lts":false,"security":false,"v8":"8.6.395.17"},{"name":"nodejs","version":"15.6.0","date":"2021-01-14","lts":false,"security":false,"v8":"8.6.395.17"},{"name":"nodejs","version":"15.7.0","date":"2021-01-25","lts":false,"security":false,"v8":"8.6.395.17"},{"name":"nodejs","version":"15.8.0","date":"2021-02-02","lts":false,"security":false,"v8":"8.6.395.17"},{"name":"nodejs","version":"15.9.0","date":"2021-02-18","lts":false,"security":false,"v8":"8.6.395.17"},{"name":"nodejs","version":"15.10.0","date":"2021-02-23","lts":false,"security":true,"v8":"8.6.395.17"},{"name":"nodejs","version":"15.11.0","date":"2021-03-03","lts":false,"security":false,"v8":"8.6.395.17"},{"name":"nodejs","version":"15.12.0","date":"2021-03-17","lts":false,"security":false,"v8":"8.6.395.17"},{"name":"nodejs","version":"15.13.0","date":"2021-03-31","lts":false,"security":false,"v8":"8.6.395.17"},{"name":"nodejs","version":"15.14.0","date":"2021-04-06","lts":false,"security":false,"v8":"8.6.395.17"},{"name":"nodejs","version":"16.0.0","date":"2021-04-20","lts":false,"security":false,"v8":"9.0.257.17"},{"name":"nodejs","version":"16.1.0","date":"2021-05-04","lts":false,"security":false,"v8":"9.0.257.24"},{"name":"nodejs","version":"16.2.0","date":"2021-05-19","lts":false,"security":false,"v8":"9.0.257.25"},{"name":"nodejs","version":"16.3.0","date":"2021-06-03","lts":false,"security":false,"v8":"9.0.257.25"},{"name":"nodejs","version":"16.4.0","date":"2021-06-23","lts":false,"security":false,"v8":"9.1.269.36"},{"name":"nodejs","version":"16.5.0","date":"2021-07-14","lts":false,"security":false,"v8":"9.1.269.38"},{"name":"nodejs","version":"16.6.0","date":"2021-07-29","lts":false,"security":true,"v8":"9.2.230.21"},{"name":"nodejs","version":"16.7.0","date":"2021-08-18","lts":false,"security":false,"v8":"9.2.230.21"},{"name":"nodejs","version":"16.8.0","date":"2021-08-25","lts":false,"security":false,"v8":"9.2.230.21"},{"name":"nodejs","version":"16.9.0","date":"2021-09-07","lts":false,"security":false,"v8":"9.3.345.16"},{"name":"nodejs","version":"16.10.0","date":"2021-09-22","lts":false,"security":false,"v8":"9.3.345.19"},{"name":"nodejs","version":"16.11.0","date":"2021-10-08","lts":false,"security":false,"v8":"9.4.146.19"},{"name":"nodejs","version":"16.12.0","date":"2021-10-20","lts":false,"security":false,"v8":"9.4.146.19"},{"name":"nodejs","version":"16.13.0","date":"2021-10-26","lts":"Gallium","security":false,"v8":"9.4.146.19"},{"name":"nodejs","version":"16.14.0","date":"2022-02-08","lts":"Gallium","security":false,"v8":"9.4.146.24"},{"name":"nodejs","version":"16.15.0","date":"2022-04-26","lts":"Gallium","security":false,"v8":"9.4.146.24"},{"name":"nodejs","version":"16.16.0","date":"2022-07-07","lts":"Gallium","security":true,"v8":"9.4.146.24"},{"name":"nodejs","version":"16.17.0","date":"2022-08-16","lts":"Gallium","security":false,"v8":"9.4.146.26"},{"name":"nodejs","version":"16.18.0","date":"2022-10-12","lts":"Gallium","security":false,"v8":"9.4.146.26"},{"name":"nodejs","version":"16.19.0","date":"2022-12-13","lts":"Gallium","security":false,"v8":"9.4.146.26"},{"name":"nodejs","version":"16.20.0","date":"2023-03-28","lts":"Gallium","security":false,"v8":"9.4.146.26"},{"name":"nodejs","version":"17.0.0","date":"2021-10-19","lts":false,"security":false,"v8":"9.5.172.21"},{"name":"nodejs","version":"17.1.0","date":"2021-11-09","lts":false,"security":false,"v8":"9.5.172.25"},{"name":"nodejs","version":"17.2.0","date":"2021-11-30","lts":false,"security":false,"v8":"9.6.180.14"},{"name":"nodejs","version":"17.3.0","date":"2021-12-17","lts":false,"security":false,"v8":"9.6.180.15"},{"name":"nodejs","version":"17.4.0","date":"2022-01-18","lts":false,"security":false,"v8":"9.6.180.15"},{"name":"nodejs","version":"17.5.0","date":"2022-02-10","lts":false,"security":false,"v8":"9.6.180.15"},{"name":"nodejs","version":"17.6.0","date":"2022-02-22","lts":false,"security":false,"v8":"9.6.180.15"},{"name":"nodejs","version":"17.7.0","date":"2022-03-09","lts":false,"security":false,"v8":"9.6.180.15"},{"name":"nodejs","version":"17.8.0","date":"2022-03-22","lts":false,"security":false,"v8":"9.6.180.15"},{"name":"nodejs","version":"17.9.0","date":"2022-04-07","lts":false,"security":false,"v8":"9.6.180.15"},{"name":"nodejs","version":"18.0.0","date":"2022-04-18","lts":false,"security":false,"v8":"10.1.124.8"},{"name":"nodejs","version":"18.1.0","date":"2022-05-03","lts":false,"security":false,"v8":"10.1.124.8"},{"name":"nodejs","version":"18.2.0","date":"2022-05-17","lts":false,"security":false,"v8":"10.1.124.8"},{"name":"nodejs","version":"18.3.0","date":"2022-06-02","lts":false,"security":false,"v8":"10.2.154.4"},{"name":"nodejs","version":"18.4.0","date":"2022-06-16","lts":false,"security":false,"v8":"10.2.154.4"},{"name":"nodejs","version":"18.5.0","date":"2022-07-06","lts":false,"security":true,"v8":"10.2.154.4"},{"name":"nodejs","version":"18.6.0","date":"2022-07-13","lts":false,"security":false,"v8":"10.2.154.13"},{"name":"nodejs","version":"18.7.0","date":"2022-07-26","lts":false,"security":false,"v8":"10.2.154.13"},{"name":"nodejs","version":"18.8.0","date":"2022-08-24","lts":false,"security":false,"v8":"10.2.154.13"},{"name":"nodejs","version":"18.9.0","date":"2022-09-07","lts":false,"security":false,"v8":"10.2.154.15"},{"name":"nodejs","version":"18.10.0","date":"2022-09-28","lts":false,"security":false,"v8":"10.2.154.15"},{"name":"nodejs","version":"18.11.0","date":"2022-10-13","lts":false,"security":false,"v8":"10.2.154.15"},{"name":"nodejs","version":"18.12.0","date":"2022-10-25","lts":"Hydrogen","security":false,"v8":"10.2.154.15"},{"name":"nodejs","version":"18.13.0","date":"2023-01-05","lts":"Hydrogen","security":false,"v8":"10.2.154.23"},{"name":"nodejs","version":"18.14.0","date":"2023-02-01","lts":"Hydrogen","security":false,"v8":"10.2.154.23"},{"name":"nodejs","version":"18.15.0","date":"2023-03-05","lts":"Hydrogen","security":false,"v8":"10.2.154.26"},{"name":"nodejs","version":"18.16.0","date":"2023-04-12","lts":"Hydrogen","security":false,"v8":"10.2.154.26"},{"name":"nodejs","version":"18.17.0","date":"2023-07-18","lts":"Hydrogen","security":false,"v8":"10.2.154.26"},{"name":"nodejs","version":"18.18.0","date":"2023-09-18","lts":"Hydrogen","security":false,"v8":"10.2.154.26"},{"name":"nodejs","version":"18.19.0","date":"2023-11-29","lts":"Hydrogen","security":false,"v8":"10.2.154.26"},{"name":"nodejs","version":"18.20.0","date":"2024-03-26","lts":"Hydrogen","security":false,"v8":"10.2.154.26"},{"name":"nodejs","version":"19.0.0","date":"2022-10-17","lts":false,"security":false,"v8":"10.7.193.13"},{"name":"nodejs","version":"19.1.0","date":"2022-11-14","lts":false,"security":false,"v8":"10.7.193.20"},{"name":"nodejs","version":"19.2.0","date":"2022-11-29","lts":false,"security":false,"v8":"10.8.168.20"},{"name":"nodejs","version":"19.3.0","date":"2022-12-14","lts":false,"security":false,"v8":"10.8.168.21"},{"name":"nodejs","version":"19.4.0","date":"2023-01-05","lts":false,"security":false,"v8":"10.8.168.25"},{"name":"nodejs","version":"19.5.0","date":"2023-01-24","lts":false,"security":false,"v8":"10.8.168.25"},{"name":"nodejs","version":"19.6.0","date":"2023-02-01","lts":false,"security":false,"v8":"10.8.168.25"},{"name":"nodejs","version":"19.7.0","date":"2023-02-21","lts":false,"security":false,"v8":"10.8.168.25"},{"name":"nodejs","version":"19.8.0","date":"2023-03-14","lts":false,"security":false,"v8":"10.8.168.25"},{"name":"nodejs","version":"19.9.0","date":"2023-04-10","lts":false,"security":false,"v8":"10.8.168.25"},{"name":"nodejs","version":"20.0.0","date":"2023-04-17","lts":false,"security":false,"v8":"11.3.244.4"},{"name":"nodejs","version":"20.1.0","date":"2023-05-03","lts":false,"security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.2.0","date":"2023-05-16","lts":false,"security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.3.0","date":"2023-06-08","lts":false,"security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.4.0","date":"2023-07-04","lts":false,"security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.5.0","date":"2023-07-19","lts":false,"security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.6.0","date":"2023-08-23","lts":false,"security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.7.0","date":"2023-09-18","lts":false,"security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.8.0","date":"2023-09-28","lts":false,"security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.9.0","date":"2023-10-24","lts":"Iron","security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.10.0","date":"2023-11-22","lts":"Iron","security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.11.0","date":"2024-01-09","lts":"Iron","security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.12.0","date":"2024-03-26","lts":"Iron","security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.13.0","date":"2024-05-07","lts":"Iron","security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.14.0","date":"2024-05-28","lts":"Iron","security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.15.0","date":"2024-06-20","lts":"Iron","security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.16.0","date":"2024-07-24","lts":"Iron","security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.17.0","date":"2024-08-21","lts":"Iron","security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.18.0","date":"2024-10-03","lts":"Iron","security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.19.0","date":"2025-03-13","lts":"Iron","security":false,"v8":"11.3.244.8"},{"name":"nodejs","version":"20.20.0","date":"2026-01-12","lts":"Iron","security":true,"v8":"11.3.244.8"},{"name":"nodejs","version":"21.0.0","date":"2023-10-17","lts":false,"security":false,"v8":"11.8.172.13"},{"name":"nodejs","version":"21.1.0","date":"2023-10-24","lts":false,"security":false,"v8":"11.8.172.15"},{"name":"nodejs","version":"21.2.0","date":"2023-11-14","lts":false,"security":false,"v8":"11.8.172.17"},{"name":"nodejs","version":"21.3.0","date":"2023-11-30","lts":false,"security":false,"v8":"11.8.172.17"},{"name":"nodejs","version":"21.4.0","date":"2023-12-05","lts":false,"security":false,"v8":"11.8.172.17"},{"name":"nodejs","version":"21.5.0","date":"2023-12-19","lts":false,"security":false,"v8":"11.8.172.17"},{"name":"nodejs","version":"21.6.0","date":"2024-01-14","lts":false,"security":false,"v8":"11.8.172.17"},{"name":"nodejs","version":"21.7.0","date":"2024-03-06","lts":false,"security":false,"v8":"11.8.172.17"},{"name":"nodejs","version":"22.0.0","date":"2024-04-24","lts":false,"security":false,"v8":"12.4.254.14"},{"name":"nodejs","version":"22.1.0","date":"2024-05-02","lts":false,"security":false,"v8":"12.4.254.14"},{"name":"nodejs","version":"22.2.0","date":"2024-05-15","lts":false,"security":false,"v8":"12.4.254.14"},{"name":"nodejs","version":"22.3.0","date":"2024-06-11","lts":false,"security":false,"v8":"12.4.254.20"},{"name":"nodejs","version":"22.4.0","date":"2024-07-02","lts":false,"security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.5.0","date":"2024-07-17","lts":false,"security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.6.0","date":"2024-08-06","lts":false,"security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.7.0","date":"2024-08-21","lts":false,"security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.8.0","date":"2024-09-03","lts":false,"security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.9.0","date":"2024-09-17","lts":false,"security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.10.0","date":"2024-10-16","lts":false,"security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.11.0","date":"2024-10-29","lts":"Jod","security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.12.0","date":"2024-12-02","lts":"Jod","security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.13.0","date":"2025-01-06","lts":"Jod","security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.14.0","date":"2025-02-11","lts":"Jod","security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.15.0","date":"2025-04-22","lts":"Jod","security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.16.0","date":"2025-05-20","lts":"Jod","security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.17.0","date":"2025-06-24","lts":"Jod","security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.18.0","date":"2025-07-31","lts":"Jod","security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.19.0","date":"2025-08-28","lts":"Jod","security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.20.0","date":"2025-09-24","lts":"Jod","security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.21.0","date":"2025-10-20","lts":"Jod","security":false,"v8":"12.4.254.21"},{"name":"nodejs","version":"22.22.0","date":"2026-01-12","lts":"Jod","security":true,"v8":"12.4.254.21"},{"name":"nodejs","version":"23.0.0","date":"2024-10-16","lts":false,"security":false,"v8":"12.9.202.26"},{"name":"nodejs","version":"23.1.0","date":"2024-10-24","lts":false,"security":false,"v8":"12.9.202.28"},{"name":"nodejs","version":"23.2.0","date":"2024-11-11","lts":false,"security":false,"v8":"12.9.202.28"},{"name":"nodejs","version":"23.3.0","date":"2024-11-20","lts":false,"security":false,"v8":"12.9.202.28"},{"name":"nodejs","version":"23.4.0","date":"2024-12-10","lts":false,"security":false,"v8":"12.9.202.28"},{"name":"nodejs","version":"23.5.0","date":"2024-12-19","lts":false,"security":false,"v8":"12.9.202.28"},{"name":"nodejs","version":"23.6.0","date":"2025-01-07","lts":false,"security":false,"v8":"12.9.202.28"},{"name":"nodejs","version":"23.7.0","date":"2025-01-30","lts":false,"security":false,"v8":"12.9.202.28"},{"name":"nodejs","version":"23.8.0","date":"2025-02-13","lts":false,"security":false,"v8":"12.9.202.28"},{"name":"nodejs","version":"23.9.0","date":"2025-02-26","lts":false,"security":false,"v8":"12.9.202.28"},{"name":"nodejs","version":"23.10.0","date":"2025-03-13","lts":false,"security":false,"v8":"12.9.202.28"},{"name":"nodejs","version":"23.11.0","date":"2025-04-01","lts":false,"security":false,"v8":"12.9.202.28"},{"name":"nodejs","version":"24.0.0","date":"2025-05-06","lts":false,"security":false,"v8":"13.6.233.8"},{"name":"nodejs","version":"24.1.0","date":"2025-05-20","lts":false,"security":false,"v8":"13.6.233.10"},{"name":"nodejs","version":"24.2.0","date":"2025-06-09","lts":false,"security":false,"v8":"13.6.233.10"},{"name":"nodejs","version":"24.3.0","date":"2025-06-24","lts":false,"security":false,"v8":"13.6.233.10"},{"name":"nodejs","version":"24.4.0","date":"2025-07-09","lts":false,"security":false,"v8":"13.6.233.10"},{"name":"nodejs","version":"24.5.0","date":"2025-07-31","lts":false,"security":false,"v8":"13.6.233.10"},{"name":"nodejs","version":"24.6.0","date":"2025-08-14","lts":false,"security":false,"v8":"13.6.233.10"},{"name":"nodejs","version":"24.7.0","date":"2025-08-27","lts":false,"security":false,"v8":"13.6.233.10"},{"name":"nodejs","version":"24.8.0","date":"2025-09-10","lts":false,"security":false,"v8":"13.6.233.10"},{"name":"nodejs","version":"24.9.0","date":"2025-09-25","lts":false,"security":false,"v8":"13.6.233.10"},{"name":"nodejs","version":"24.10.0","date":"2025-10-08","lts":false,"security":false,"v8":"13.6.233.10"},{"name":"nodejs","version":"24.11.0","date":"2025-10-28","lts":"Krypton","security":false,"v8":"13.6.233.10"},{"name":"nodejs","version":"24.12.0","date":"2025-12-10","lts":"Krypton","security":false,"v8":"13.6.233.17"},{"name":"nodejs","version":"24.13.0","date":"2026-01-12","lts":"Krypton","security":true,"v8":"13.6.233.17"},{"name":"nodejs","version":"24.14.0","date":"2026-02-24","lts":"Krypton","security":false,"v8":"13.6.233.17"},{"name":"nodejs","version":"25.0.0","date":"2025-10-15","lts":false,"security":false,"v8":"14.1.146.11"},{"name":"nodejs","version":"25.1.0","date":"2025-10-28","lts":false,"security":false,"v8":"14.1.146.11"},{"name":"nodejs","version":"25.2.0","date":"2025-11-11","lts":false,"security":false,"v8":"14.1.146.11"},{"name":"nodejs","version":"25.3.0","date":"2026-01-12","lts":false,"security":true,"v8":"14.1.146.11"},{"name":"nodejs","version":"25.4.0","date":"2026-01-19","lts":false,"security":false,"v8":"14.1.146.11"},{"name":"nodejs","version":"25.5.0","date":"2026-01-26","lts":false,"security":false,"v8":"14.1.146.11"},{"name":"nodejs","version":"25.6.0","date":"2026-02-02","lts":false,"security":false,"v8":"14.1.146.11"},{"name":"nodejs","version":"25.7.0","date":"2026-02-24","lts":false,"security":false,"v8":"14.1.146.11"},{"name":"nodejs","version":"25.8.0","date":"2026-03-03","lts":false,"security":false,"v8":"14.1.146.11"}]```
-
-----
-
-# frontend/node_modules/node-releases/data/release-schedule/release-schedule.json
-```json
-{"v0.8":{"start":"2012-06-25","end":"2014-07-31"},"v0.10":{"start":"2013-03-11","end":"2016-10-31"},"v0.12":{"start":"2015-02-06","end":"2016-12-31"},"v4":{"start":"2015-09-08","lts":"2015-10-12","maintenance":"2017-04-01","end":"2018-04-30","codename":"Argon"},"v5":{"start":"2015-10-29","maintenance":"2016-04-30","end":"2016-06-30"},"v6":{"start":"2016-04-26","lts":"2016-10-18","maintenance":"2018-04-30","end":"2019-04-30","codename":"Boron"},"v7":{"start":"2016-10-25","maintenance":"2017-04-30","end":"2017-06-30"},"v8":{"start":"2017-05-30","lts":"2017-10-31","maintenance":"2019-01-01","end":"2019-12-31","codename":"Carbon"},"v9":{"start":"2017-10-01","maintenance":"2018-04-01","end":"2018-06-30"},"v10":{"start":"2018-04-24","lts":"2018-10-30","maintenance":"2020-05-19","end":"2021-04-30","codename":"Dubnium"},"v11":{"start":"2018-10-23","maintenance":"2019-04-22","end":"2019-06-01"},"v12":{"start":"2019-04-23","lts":"2019-10-21","maintenance":"2020-11-30","end":"2022-04-30","codename":"Erbium"},"v13":{"start":"2019-10-22","maintenance":"2020-04-01","end":"2020-06-01"},"v14":{"start":"2020-04-21","lts":"2020-10-27","maintenance":"2021-10-19","end":"2023-04-30","codename":"Fermium"},"v15":{"start":"2020-10-20","maintenance":"2021-04-01","end":"2021-06-01"},"v16":{"start":"2021-04-20","lts":"2021-10-26","maintenance":"2022-10-18","end":"2023-09-11","codename":"Gallium"},"v17":{"start":"2021-10-19","maintenance":"2022-04-01","end":"2022-06-01"},"v18":{"start":"2022-04-19","lts":"2022-10-25","maintenance":"2023-10-18","end":"2025-04-30","codename":"Hydrogen"},"v19":{"start":"2022-10-18","maintenance":"2023-04-01","end":"2023-06-01"},"v20":{"start":"2023-04-18","lts":"2023-10-24","maintenance":"2024-10-22","end":"2026-04-30","codename":"Iron"},"v21":{"start":"2023-10-17","maintenance":"2024-04-01","end":"2024-06-01"},"v22":{"start":"2024-04-24","lts":"2024-10-29","maintenance":"2025-10-21","end":"2027-04-30","codename":"Jod"},"v23":{"start":"2024-10-16","maintenance":"2025-04-01","end":"2025-06-01"},"v24":{"start":"2025-05-06","lts":"2025-10-28","maintenance":"2026-10-20","end":"2028-04-30","codename":"Krypton"},"v25":{"start":"2025-10-15","maintenance":"2026-04-01","end":"2026-06-01"},"v26":{"start":"2026-04-22","lts":"2026-10-28","maintenance":"2027-10-20","end":"2029-04-30","codename":""}}```
-
-----
-
-# frontend/node_modules/node-releases/package.json
-```json
-{
-  "name": "node-releases",
-  "version": "2.0.36",
-  "description": "Node.js releases data",
-  "type": "module",
-  "scripts": {
-    "build": "node scripts/build.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/chicoxyzzy/node-releases.git"
-  },
-  "keywords": [
-    "nodejs",
-    "releases"
-  ],
-  "author": "Sergey Rubanov <chi187@gmail.com>",
-  "license": "MIT",
-  "devDependencies": {
-    "semver": "^7.3.5"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/picocolors/package.json
-```json
-{
-  "name": "picocolors",
-  "version": "1.1.1",
-  "main": "./picocolors.js",
-  "types": "./picocolors.d.ts",
-  "browser": {
-    "./picocolors.js": "./picocolors.browser.js"
-  },
-  "sideEffects": false,
-  "description": "The tiniest and the fastest library for terminal output formatting with ANSI colors",
-  "files": [
-    "picocolors.*",
-    "types.d.ts"
-  ],
-  "keywords": [
-    "terminal",
-    "colors",
-    "formatting",
-    "cli",
-    "console"
-  ],
-  "author": "Alexey Raspopov",
-  "repository": "alexeyraspopov/picocolors",
-  "license": "ISC"
-}
-```
-
-----
-
-# frontend/node_modules/postcss/package.json
-```json
-{
-  "name": "postcss",
-  "version": "8.5.8",
-  "description": "Tool for transforming styles with JS plugins",
-  "engines": {
-    "node": "^10 || ^12 || >=14"
-  },
-  "exports": {
-    ".": {
-      "import": "./lib/postcss.mjs",
-      "require": "./lib/postcss.js"
-    },
-    "./lib/at-rule": "./lib/at-rule.js",
-    "./lib/comment": "./lib/comment.js",
-    "./lib/container": "./lib/container.js",
-    "./lib/css-syntax-error": "./lib/css-syntax-error.js",
-    "./lib/declaration": "./lib/declaration.js",
-    "./lib/fromJSON": "./lib/fromJSON.js",
-    "./lib/input": "./lib/input.js",
-    "./lib/lazy-result": "./lib/lazy-result.js",
-    "./lib/no-work-result": "./lib/no-work-result.js",
-    "./lib/list": "./lib/list.js",
-    "./lib/map-generator": "./lib/map-generator.js",
-    "./lib/node": "./lib/node.js",
-    "./lib/parse": "./lib/parse.js",
-    "./lib/parser": "./lib/parser.js",
-    "./lib/postcss": "./lib/postcss.js",
-    "./lib/previous-map": "./lib/previous-map.js",
-    "./lib/processor": "./lib/processor.js",
-    "./lib/result": "./lib/result.js",
-    "./lib/root": "./lib/root.js",
-    "./lib/rule": "./lib/rule.js",
-    "./lib/stringifier": "./lib/stringifier.js",
-    "./lib/stringify": "./lib/stringify.js",
-    "./lib/symbols": "./lib/symbols.js",
-    "./lib/terminal-highlight": "./lib/terminal-highlight.js",
-    "./lib/tokenize": "./lib/tokenize.js",
-    "./lib/warn-once": "./lib/warn-once.js",
-    "./lib/warning": "./lib/warning.js",
-    "./package.json": "./package.json"
-  },
-  "main": "./lib/postcss.js",
-  "types": "./lib/postcss.d.ts",
-  "keywords": [
-    "css",
-    "postcss",
-    "rework",
-    "preprocessor",
-    "parser",
-    "source map",
-    "transform",
-    "manipulation",
-    "transpiler"
-  ],
-  "funding": [
-    {
-      "type": "opencollective",
-      "url": "https://opencollective.com/postcss/"
-    },
-    {
-      "type": "tidelift",
-      "url": "https://tidelift.com/funding/github/npm/postcss"
-    },
-    {
-      "type": "github",
-      "url": "https://github.com/sponsors/ai"
-    }
-  ],
-  "author": "Andrey Sitnik <andrey@sitnik.ru>",
-  "license": "MIT",
-  "homepage": "https://postcss.org/",
-  "repository": "postcss/postcss",
-  "bugs": {
-    "url": "https://github.com/postcss/postcss/issues"
-  },
-  "dependencies": {
-    "nanoid": "^3.3.11",
-    "picocolors": "^1.1.1",
-    "source-map-js": "^1.2.1"
-  },
-  "browser": {
-    "./lib/terminal-highlight": false,
-    "source-map-js": false,
-    "path": false,
-    "url": false,
-    "fs": false
-  }
-}
-```
-
-----
-
-# frontend/node_modules/react-dom/package.json
-```json
-{
-  "name": "react-dom",
-  "version": "18.3.1",
-  "description": "React package for working with the DOM.",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/facebook/react.git",
-    "directory": "packages/react-dom"
-  },
-  "keywords": [
-    "react"
-  ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/facebook/react/issues"
-  },
-  "homepage": "https://reactjs.org/",
-  "dependencies": {
-    "loose-envify": "^1.1.0",
-    "scheduler": "^0.23.2"
-  },
-  "peerDependencies": {
-    "react": "^18.3.1"
-  },
-  "files": [
-    "LICENSE",
-    "README.md",
-    "index.js",
-    "client.js",
-    "profiling.js",
-    "server.js",
-    "server.browser.js",
-    "server.node.js",
-    "test-utils.js",
-    "cjs/",
-    "umd/"
-  ],
-  "exports": {
-    ".": "./index.js",
-    "./client": "./client.js",
-    "./server": {
-      "deno": "./server.browser.js",
-      "worker": "./server.browser.js",
-      "browser": "./server.browser.js",
-      "default": "./server.node.js"
-    },
-    "./server.browser": "./server.browser.js",
-    "./server.node": "./server.node.js",
-    "./profiling": "./profiling.js",
-    "./test-utils": "./test-utils.js",
-    "./package.json": "./package.json"
-  },
-  "browser": {
-    "./server.js": "./server.browser.js"
-  },
-  "browserify": {
-    "transform": [
-      "loose-envify"
-    ]
-  }
-}```
-
-----
-
-# frontend/node_modules/react-refresh/package.json
-```json
-{
-  "name": "react-refresh",
-  "description": "React is a JavaScript library for building user interfaces.",
-  "keywords": [
-    "react"
-  ],
-  "version": "0.17.0",
-  "homepage": "https://react.dev/",
-  "bugs": "https://github.com/facebook/react/issues",
-  "license": "MIT",
-  "files": [
-    "LICENSE",
-    "README.md",
-    "babel.js",
-    "runtime.js",
-    "cjs/"
-  ],
-  "main": "runtime.js",
-  "exports": {
-    ".": "./runtime.js",
-    "./runtime": "./runtime.js",
-    "./babel": "./babel.js",
-    "./package.json": "./package.json"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/facebook/react.git",
-    "directory": "packages/react"
-  },
-  "engines": {
-    "node": ">=0.10.0"
-  },
-  "devDependencies": {
-    "react-16-8": "npm:react@16.8.0",
-    "react-dom-16-8": "npm:react-dom@16.8.0",
-    "scheduler-0-13": "npm:scheduler@0.13.0"
-  }
-}```
-
-----
-
-# frontend/node_modules/react/package.json
-```json
-{
-  "name": "react",
-  "description": "React is a JavaScript library for building user interfaces.",
-  "keywords": [
-    "react"
-  ],
-  "version": "18.3.1",
-  "homepage": "https://reactjs.org/",
-  "bugs": "https://github.com/facebook/react/issues",
-  "license": "MIT",
-  "files": [
-    "LICENSE",
-    "README.md",
-    "index.js",
-    "cjs/",
-    "umd/",
-    "jsx-runtime.js",
-    "jsx-dev-runtime.js",
-    "react.shared-subset.js"
-  ],
-  "main": "index.js",
-  "exports": {
-    ".": {
-      "react-server": "./react.shared-subset.js",
-      "default": "./index.js"
-    },
-    "./package.json": "./package.json",
-    "./jsx-runtime": "./jsx-runtime.js",
-    "./jsx-dev-runtime": "./jsx-dev-runtime.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/facebook/react.git",
-    "directory": "packages/react"
-  },
-  "engines": {
-    "node": ">=0.10.0"
-  },
-  "dependencies": {
-    "loose-envify": "^1.1.0"
-  },
-  "browserify": {
-    "transform": [
-      "loose-envify"
-    ]
-  }
-}```
-
-----
-
-# frontend/node_modules/rollup/package.json
-```json
-{
-  "name": "rollup",
-  "version": "4.59.0",
-  "description": "Next-generation ES module bundler",
-  "main": "dist/rollup.js",
-  "module": "dist/es/rollup.js",
-  "types": "dist/rollup.d.ts",
-  "bin": {
-    "rollup": "dist/bin/rollup"
-  },
-  "napi": {
-    "binaryName": "rollup",
-    "packageName": "@rollup/rollup",
-    "targets": [
-      "aarch64-apple-darwin",
-      "aarch64-linux-android",
-      "aarch64-pc-windows-msvc",
-      "aarch64-unknown-freebsd",
-      "aarch64-unknown-linux-gnu",
-      "aarch64-unknown-linux-musl",
-      "armv7-linux-androideabi",
-      "armv7-unknown-linux-gnueabihf",
-      "armv7-unknown-linux-musleabihf",
-      "i686-pc-windows-msvc",
-      "loongarch64-unknown-linux-gnu",
-      "loongarch64-unknown-linux-musl",
-      "riscv64gc-unknown-linux-gnu",
-      "riscv64gc-unknown-linux-musl",
-      "powerpc64le-unknown-linux-gnu",
-      "powerpc64le-unknown-linux-musl",
-      "s390x-unknown-linux-gnu",
-      "x86_64-apple-darwin",
-      "x86_64-pc-windows-gnu",
-      "x86_64-pc-windows-msvc",
-      "x86_64-unknown-freebsd",
-      "x86_64-unknown-linux-gnu",
-      "x86_64-unknown-linux-musl",
-      "x86_64-unknown-openbsd",
-      "aarch64-unknown-linux-ohos"
-    ]
-  },
-  "scripts": {
-    "build": "concurrently -c green,blue \"npm run build:wasm\" \"npm:build:ast-converters\" && concurrently -c green,blue \"npm run build:napi -- --release\" \"npm:build:js\" && npm run build:copy-native",
-    "build:quick": "concurrently -c green,blue 'npm:build:napi' 'npm:build:cjs' && npm run build:copy-native",
-    "build:napi": "napi build --cwd rust/bindings_napi --platform --dts ../../native.d.ts --no-js --output-dir ../.. --package-json-path ../../package.json",
-    "build:wasm": "wasm-pack build rust/bindings_wasm --out-dir ../../wasm --target web --no-pack && shx rm wasm/.gitignore",
-    "build:wasm:node": "wasm-pack build rust/bindings_wasm --out-dir ../../wasm-node --target nodejs --no-pack && shx rm wasm-node/.gitignore",
-    "update:napi": "npm run build:napi && npm run build:copy-native",
-    "build:js": "rollup --config rollup.config.ts --configPlugin typescript --forceExit",
-    "build:js:node": "rollup --config rollup.config.ts --configPlugin typescript --configIsBuildNode --forceExit",
-    "build:prepare": "concurrently -c green,blue \"npm run build:napi -- --release\" \"npm:build:js:node\" && npm run build:copy-native",
-    "update:js": "npm run build:js && npm run build:copy-native",
-    "build:copy-native": "shx mkdir -p dist && shx cp rollup.*.node dist/",
-    "dev": "concurrently -kc green,blue 'nodemon --watch rust -e rs --exec \"npm run build:wasm\"' 'vitepress dev docs'",
-    "build:cjs": "rollup --config rollup.config.ts --configPlugin typescript --configTest --forceExit",
-    "build:bootstrap": "shx mv dist dist-build && node dist-build/bin/rollup --config rollup.config.ts --configPlugin typescript --forceExit && shx rm -rf dist-build",
-    "build:bootstrap:cjs": "shx mv dist dist-build && node dist-build/bin/rollup --config rollup.config.ts --configPlugin typescript --configTest --forceExit && shx rm -rf dist-build",
-    "build:docs": "vitepress build docs",
-    "build:ast-converters": "node scripts/generate-ast-converters.js",
-    "preview:docs": "vitepress preview docs",
-    "ci:artifacts": "napi artifacts",
-    "ci:lint": "concurrently -c red,yellow,green,blue 'npm:lint:js:nofix' 'npm:lint:native-js' 'npm:lint:markdown:nofix' 'npm:lint:rust:nofix'",
-    "ci:test:all": "concurrently --kill-others-on-fail -c green,blue,magenta,cyan 'npm:test:only' 'npm:test:typescript' 'npm:test:leak' 'npm:test:browser'",
-    "ci:coverage": "NODE_OPTIONS=--no-experimental-require-module nyc --reporter lcovonly mocha",
-    "lint": "concurrently -c red,yellow,green,blue 'npm:lint:js' 'npm:lint:native-js' 'npm:lint:markdown' 'npm:lint:rust'",
-    "lint:js": "eslint . --fix --cache --concurrency auto",
-    "lint:js:nofix": "eslint . --cache --concurrency auto",
-    "lint:native-js": "node scripts/lint-native-js.js",
-    "lint:markdown": "prettier --write \"**/*.md\"",
-    "lint:markdown:nofix": "prettier --check \"**/*.md\"",
-    "lint:rust": "cd rust && cargo fmt && cargo clippy --fix --allow-dirty",
-    "lint:rust:nofix": "cd rust && cargo fmt --check && cargo clippy",
-    "perf": "npm run build:bootstrap:cjs && node --expose-gc scripts/perf-report/index.js",
-    "prepare": "husky && npm run prepare:patch && node scripts/check-release.js || npm run build:prepare",
-    "prepare:patch": "patch-package",
-    "prepublishOnly": "node scripts/check-release.js && node scripts/prepublish.js",
-    "postpublish": "node scripts/postpublish.js",
-    "prepublish:napi": "napi prepublish --no-gh-release",
-    "release": "node scripts/prepare-release.js",
-    "release:docs": "git fetch --update-head-ok origin master:master && git branch --force documentation-published master && git push origin documentation-published",
-    "check-audit": "check-audit",
-    "resolve-audit": "resolve-audit",
-    "test": "npm run build && npm run test:all",
-    "test:update-snapshots": "node scripts/update-snapshots.js",
-    "test:cjs": "npm run build:cjs && npm run test:only",
-    "test:quick": "mocha -b test/test.js",
-    "test:all": "concurrently --kill-others-on-fail -c green,blue,magenta,cyan,red 'npm:test:only' 'npm:test:browser' 'npm:test:typescript' 'npm:test:package' 'npm:test:options'",
-    "test:coverage": "npm run build:cjs && shx rm -rf coverage/* && nyc --reporter html mocha test/test.js",
-    "test:coverage:browser": "npm run build && shx rm -rf coverage/* && nyc mocha test/browser/index.js",
-    "test:leak": "npm install --no-save weak-napi && node --expose-gc test/leak/index.js",
-    "test:package": "node scripts/test-package.js",
-    "test:options": "node scripts/test-options.js",
-    "test:only": "mocha test/test.js",
-    "test:typescript": "shx rm -rf test/typescript/dist && shx cp -r dist test/typescript/ && tsc --noEmit -p test/typescript && tsc --noEmit -p . && tsc --noEmit -p scripts && vue-tsc --noEmit -p docs",
-    "test:browser": "mocha test/browser/index.js",
-    "watch": "rollup --config rollup.config.ts --configPlugin typescript --watch"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rollup/rollup.git"
-  },
-  "keywords": [
-    "modules",
-    "bundler",
-    "bundling",
-    "es6",
-    "optimizer"
-  ],
-  "author": "Rich Harris",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/rollup/rollup/issues"
-  },
-  "homepage": "https://rollupjs.org/",
-  "optionalDependencies": {
-    "fsevents": "~2.3.2",
-    "@rollup/rollup-darwin-arm64": "4.59.0",
-    "@rollup/rollup-android-arm64": "4.59.0",
-    "@rollup/rollup-win32-arm64-msvc": "4.59.0",
-    "@rollup/rollup-freebsd-arm64": "4.59.0",
-    "@rollup/rollup-linux-arm64-gnu": "4.59.0",
-    "@rollup/rollup-linux-arm64-musl": "4.59.0",
-    "@rollup/rollup-android-arm-eabi": "4.59.0",
-    "@rollup/rollup-linux-arm-gnueabihf": "4.59.0",
-    "@rollup/rollup-linux-arm-musleabihf": "4.59.0",
-    "@rollup/rollup-win32-ia32-msvc": "4.59.0",
-    "@rollup/rollup-linux-loong64-gnu": "4.59.0",
-    "@rollup/rollup-linux-loong64-musl": "4.59.0",
-    "@rollup/rollup-linux-riscv64-gnu": "4.59.0",
-    "@rollup/rollup-linux-riscv64-musl": "4.59.0",
-    "@rollup/rollup-linux-ppc64-gnu": "4.59.0",
-    "@rollup/rollup-linux-ppc64-musl": "4.59.0",
-    "@rollup/rollup-linux-s390x-gnu": "4.59.0",
-    "@rollup/rollup-darwin-x64": "4.59.0",
-    "@rollup/rollup-win32-x64-gnu": "4.59.0",
-    "@rollup/rollup-win32-x64-msvc": "4.59.0",
-    "@rollup/rollup-freebsd-x64": "4.59.0",
-    "@rollup/rollup-linux-x64-gnu": "4.59.0",
-    "@rollup/rollup-linux-x64-musl": "4.59.0",
-    "@rollup/rollup-openbsd-x64": "4.59.0",
-    "@rollup/rollup-openharmony-arm64": "4.59.0"
-  },
-  "dependencies": {
-    "@types/estree": "1.0.8"
-  },
-  "devDependenciesComments": {
-    "core-js": "We only update manually as every update requires a snapshot update"
-  },
-  "devDependencies": {
-    "@codemirror/commands": "^6.10.2",
-    "@codemirror/lang-javascript": "^6.2.4",
-    "@codemirror/language": "^6.12.1",
-    "@codemirror/search": "^6.6.0",
-    "@codemirror/state": "^6.5.4",
-    "@codemirror/view": "^6.39.14",
-    "@eslint/js": "^10.0.1",
-    "@inquirer/prompts": "^7.10.1",
-    "@jridgewell/sourcemap-codec": "^1.5.5",
-    "@mermaid-js/mermaid-cli": "^11.12.0",
-    "@napi-rs/cli": "3.4.1",
-    "@rollup/plugin-alias": "^6.0.0",
-    "@rollup/plugin-buble": "^1.0.3",
-    "@rollup/plugin-commonjs": "^29.0.0",
-    "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-node-resolve": "^16.0.3",
-    "@rollup/plugin-replace": "^6.0.3",
-    "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^12.3.0",
-    "@rollup/pluginutils": "^5.3.0",
-    "@shikijs/vitepress-twoslash": "^3.22.0",
-    "@types/mocha": "^10.0.10",
-    "@types/node": "^20.19.33",
-    "@types/picomatch": "^4.0.2",
-    "@types/semver": "^7.7.1",
-    "@types/yargs-parser": "^21.0.3",
-    "@vue/language-server": "^3.2.4",
-    "acorn": "^8.15.0",
-    "acorn-import-assertions": "^1.9.0",
-    "acorn-jsx": "^5.3.2",
-    "buble": "^0.20.0",
-    "builtin-modules": "^5.0.0",
-    "chokidar": "^3.6.0",
-    "concurrently": "^9.2.1",
-    "core-js": "3.38.1",
-    "cross-env": "^10.1.0",
-    "date-time": "^4.0.0",
-    "es5-shim": "^4.6.7",
-    "es6-shim": "^0.35.8",
-    "eslint": "^10.0.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.5",
-    "eslint-plugin-unicorn": "^63.0.0",
-    "eslint-plugin-vue": "^10.8.0",
-    "fixturify": "^3.0.0",
-    "flru": "^1.0.2",
-    "fs-extra": "^11.3.3",
-    "github-api": "^3.4.0",
-    "globals": "^17.3.0",
-    "husky": "^9.1.7",
-    "is-reference": "^3.0.3",
-    "lint-staged": "^16.2.7",
-    "locate-character": "^3.0.0",
-    "magic-string": "^0.30.21",
-    "memfs": "^4.56.10",
-    "mocha": "11.3.0",
-    "nodemon": "^3.1.11",
-    "npm-audit-resolver": "^3.0.0-RC.0",
-    "nyc": "^17.1.0",
-    "patch-package": "^8.0.1",
-    "picocolors": "^1.1.1",
-    "picomatch": "^4.0.3",
-    "pinia": "^3.0.4",
-    "prettier": "^3.8.1",
-    "prettier-plugin-organize-imports": "^4.3.0",
-    "pretty-bytes": "^7.1.0",
-    "pretty-ms": "^9.3.0",
-    "requirejs": "^2.3.8",
-    "rollup": "^4.57.1",
-    "rollup-plugin-license": "^3.7.0",
-    "semver": "^7.7.4",
-    "shx": "^0.4.0",
-    "signal-exit": "^4.1.0",
-    "source-map": "^0.7.6",
-    "source-map-support": "^0.5.21",
-    "systemjs": "^6.15.1",
-    "terser": "^5.46.0",
-    "tslib": "^2.8.1",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.0",
-    "vite": "^7.3.1",
-    "vitepress": "^1.6.4",
-    "vue": "^3.5.28",
-    "vue-eslint-parser": "^10.4.0",
-    "vue-tsc": "^3.2.4",
-    "wasm-pack": "^0.14.0",
-    "yargs-parser": "^21.1.1"
-  },
-  "overrides": {
-    "axios": "^1.13.5",
-    "esbuild": ">0.24.2",
-    "lodash-es": ">4.17.22",
-    "path-scurry": {
-      "lru-cache": "^11.2.6"
-    },
-    "readable-stream": "npm:@built-in/readable-stream@1",
-    "semver": "^7.7.4",
-    "tar": ">7.5.6",
-    "vite": "$vite"
-  },
-  "comments": {
-    "vue-tsc": "This is necessary so that prettier-plugin-organize-imports works correctly in Vue templatges"
-  },
-  "files": [
-    "dist/*.node",
-    "dist/**/*.js",
-    "dist/*.d.ts",
-    "dist/bin/rollup",
-    "dist/es/package.json"
-  ],
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/rollup.d.ts",
-      "import": "./dist/es/rollup.js",
-      "require": "./dist/rollup.js"
-    },
-    "./loadConfigFile": {
-      "types": "./dist/loadConfigFile.d.ts",
-      "require": "./dist/loadConfigFile.js",
-      "default": "./dist/loadConfigFile.js"
-    },
-    "./getLogFilter": {
-      "types": "./dist/getLogFilter.d.ts",
-      "import": "./dist/es/getLogFilter.js",
-      "require": "./dist/getLogFilter.js"
-    },
-    "./parseAst": {
-      "types": "./dist/parseAst.d.ts",
-      "import": "./dist/es/parseAst.js",
-      "require": "./dist/parseAst.js"
-    },
-    "./dist/*": "./dist/*",
-    "./package.json": "./package.json"
-  }
-}```
-
-----
-
-# frontend/node_modules/scheduler/package.json
-```json
-{
-  "name": "scheduler",
-  "version": "0.23.2",
-  "description": "Cooperative scheduler for the browser environment.",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/facebook/react.git",
-    "directory": "packages/scheduler"
-  },
-  "license": "MIT",
-  "keywords": [
-    "react"
-  ],
-  "bugs": {
-    "url": "https://github.com/facebook/react/issues"
-  },
-  "homepage": "https://reactjs.org/",
-  "dependencies": {
-    "loose-envify": "^1.1.0"
-  },
-  "files": [
-    "LICENSE",
-    "README.md",
-    "index.js",
-    "unstable_mock.js",
-    "unstable_post_task.js",
-    "cjs/",
-    "umd/"
-  ],
-  "browserify": {
-    "transform": [
-      "loose-envify"
-    ]
-  }
-}```
-
-----
-
-# frontend/node_modules/semver/package.json
-```json
-{
-  "name": "semver",
-  "version": "6.3.1",
-  "description": "The semantic version parser used by npm.",
-  "main": "semver.js",
-  "scripts": {
-    "test": "tap test/ --100 --timeout=30",
-    "lint": "echo linting disabled",
-    "postlint": "template-oss-check",
-    "template-oss-apply": "template-oss-apply --force",
-    "lintfix": "npm run lint -- --fix",
-    "snap": "tap test/ --100 --timeout=30",
-    "posttest": "npm run lint"
-  },
-  "devDependencies": {
-    "@npmcli/template-oss": "4.17.0",
-    "tap": "^12.7.0"
-  },
-  "license": "ISC",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/npm/node-semver.git"
-  },
-  "bin": {
-    "semver": "./bin/semver.js"
-  },
-  "files": [
-    "bin",
-    "range.bnf",
-    "semver.js"
-  ],
-  "author": "GitHub Inc.",
-  "templateOSS": {
-    "//@npmcli/template-oss": "This file is partially managed by @npmcli/template-oss. Edits may be overwritten.",
-    "content": "./scripts/template-oss",
-    "version": "4.17.0"
-  }
-}
-```
-
-----
-
-# frontend/node_modules/source-map-js/package.json
-```json
-{
-  "name": "source-map-js",
-  "description": "Generates and consumes source maps",
-  "version": "1.2.1",
-  "homepage": "https://github.com/7rulnik/source-map-js",
-  "author": "Valentin 7rulnik Semirulnik <v7rulnik@gmail.com>",
-  "contributors": [
-    "Nick Fitzgerald <nfitzgerald@mozilla.com>",
-    "Tobias Koppers <tobias.koppers@googlemail.com>",
-    "Duncan Beevers <duncan@dweebd.com>",
-    "Stephen Crane <scrane@mozilla.com>",
-    "Ryan Seddon <seddon.ryan@gmail.com>",
-    "Miles Elam <miles.elam@deem.com>",
-    "Mihai Bazon <mihai.bazon@gmail.com>",
-    "Michael Ficarra <github.public.email@michael.ficarra.me>",
-    "Todd Wolfson <todd@twolfson.com>",
-    "Alexander Solovyov <alexander@solovyov.net>",
-    "Felix Gnass <fgnass@gmail.com>",
-    "Conrad Irwin <conrad.irwin@gmail.com>",
-    "usrbincc <usrbincc@yahoo.com>",
-    "David Glasser <glasser@davidglasser.net>",
-    "Chase Douglas <chase@newrelic.com>",
-    "Evan Wallace <evan.exe@gmail.com>",
-    "Heather Arthur <fayearthur@gmail.com>",
-    "Hugh Kennedy <hughskennedy@gmail.com>",
-    "David Glasser <glasser@davidglasser.net>",
-    "Simon Lydell <simon.lydell@gmail.com>",
-    "Jmeas Smith <jellyes2@gmail.com>",
-    "Michael Z Goddard <mzgoddard@gmail.com>",
-    "azu <azu@users.noreply.github.com>",
-    "John Gozde <john@gozde.ca>",
-    "Adam Kirkton <akirkton@truefitinnovation.com>",
-    "Chris Montgomery <christopher.montgomery@dowjones.com>",
-    "J. Ryan Stinnett <jryans@gmail.com>",
-    "Jack Herrington <jherrington@walmartlabs.com>",
-    "Chris Truter <jeffpalentine@gmail.com>",
-    "Daniel Espeset <daniel@danielespeset.com>",
-    "Jamie Wong <jamie.lf.wong@gmail.com>",
-    "Eddy Bruël <ejpbruel@mozilla.com>",
-    "Hawken Rives <hawkrives@gmail.com>",
-    "Gilad Peleg <giladp007@gmail.com>",
-    "djchie <djchie.dev@gmail.com>",
-    "Gary Ye <garysye@gmail.com>",
-    "Nicolas Lalevée <nicolas.lalevee@hibnet.org>"
-  ],
-  "repository": "7rulnik/source-map-js",
-  "main": "./source-map.js",
-  "files": [
-    "source-map.js",
-    "source-map.d.ts",
-    "lib/"
-  ],
-  "engines": {
-    "node": ">=0.10.0"
-  },
-  "license": "BSD-3-Clause",
-  "scripts": {
-    "test": "npm run build && node test/run-tests.js",
-    "build": "webpack --color",
-    "toc": "doctoc --title '## Table of Contents' README.md && doctoc --title '## Table of Contents' CONTRIBUTING.md"
-  },
-  "devDependencies": {
-    "clean-publish": "^3.1.0",
-    "doctoc": "^0.15.0",
-    "webpack": "^1.12.0"
-  },
-  "clean-publish": {
-    "cleanDocs": true
-  },
-  "typings": "source-map.d.ts"
-}
-```
-
-----
-
-# frontend/node_modules/update-browserslist-db/package.json
-```json
-{
-  "name": "update-browserslist-db",
-  "version": "1.2.3",
-  "description": "CLI tool to update caniuse-lite to refresh target browsers from Browserslist config",
-  "keywords": [
-    "caniuse",
-    "browsers",
-    "target"
-  ],
-  "funding": [
-    {
-      "type": "opencollective",
-      "url": "https://opencollective.com/browserslist"
-    },
-    {
-      "type": "tidelift",
-      "url": "https://tidelift.com/funding/github/npm/browserslist"
-    },
-    {
-      "type": "github",
-      "url": "https://github.com/sponsors/ai"
-    }
-  ],
-  "author": "Andrey Sitnik <andrey@sitnik.ru>",
-  "license": "MIT",
-  "repository": "browserslist/update-db",
-  "types": "./index.d.ts",
-  "exports": {
-    ".": "./index.js",
-    "./package.json": "./package.json"
-  },
-  "dependencies": {
-    "escalade": "^3.2.0",
-    "picocolors": "^1.1.1"
-  },
-  "peerDependencies": {
-    "browserslist": ">= 4.21.0"
-  },
-  "bin": "cli.js"
-}
-```
-
-----
-
-# frontend/node_modules/vite/package.json
-```json
-{
-  "name": "vite",
-  "version": "5.4.21",
-  "type": "module",
-  "license": "MIT",
-  "author": "Evan You",
-  "description": "Native-ESM powered web dev build tool",
-  "bin": {
-    "vite": "bin/vite.js"
-  },
-  "keywords": [
-    "frontend",
-    "framework",
-    "hmr",
-    "dev-server",
-    "build-tool",
-    "vite"
-  ],
-  "main": "./dist/node/index.js",
-  "types": "./dist/node/index.d.ts",
-  "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/node/index.d.ts",
-        "default": "./dist/node/index.js"
-      },
-      "require": {
-        "types": "./index.d.cts",
-        "default": "./index.cjs"
-      }
-    },
-    "./client": {
-      "types": "./client.d.ts"
-    },
-    "./runtime": {
-      "types": "./dist/node/runtime.d.ts",
-      "import": "./dist/node/runtime.js"
-    },
-    "./dist/client/*": "./dist/client/*",
-    "./types/*": {
-      "types": "./types/*"
-    },
-    "./package.json": "./package.json"
-  },
-  "typesVersions": {
-    "*": {
-      "runtime": [
-        "dist/node/runtime.d.ts"
-      ]
-    }
-  },
-  "files": [
-    "bin",
-    "dist",
-    "client.d.ts",
-    "index.cjs",
-    "index.d.cts",
-    "types"
-  ],
-  "engines": {
-    "node": "^18.0.0 || >=20.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vitejs/vite.git",
-    "directory": "packages/vite"
-  },
-  "bugs": {
-    "url": "https://github.com/vitejs/vite/issues"
-  },
-  "homepage": "https://vite.dev",
-  "funding": "https://github.com/vitejs/vite?sponsor=1",
-  "//": "READ CONTRIBUTING.md to understand what to put under deps vs. devDeps!",
-  "dependencies": {
-    "esbuild": "^0.21.3",
-    "postcss": "^8.4.43",
-    "rollup": "^4.20.0"
-  },
-  "optionalDependencies": {
-    "fsevents": "~2.3.3"
-  },
-  "devDependencies": {
-    "@ampproject/remapping": "^2.3.0",
-    "@babel/parser": "^7.25.6",
-    "@jridgewell/trace-mapping": "^0.3.25",
-    "@polka/compression": "^1.0.0-next.25",
-    "@rollup/plugin-alias": "^5.1.0",
-    "@rollup/plugin-commonjs": "^26.0.1",
-    "@rollup/plugin-dynamic-import-vars": "^2.1.2",
-    "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-node-resolve": "15.2.3",
-    "@rollup/pluginutils": "^5.1.0",
-    "@types/escape-html": "^1.0.4",
-    "@types/pnpapi": "^0.0.5",
-    "artichokie": "^0.2.1",
-    "cac": "^6.7.14",
-    "chokidar": "^3.6.0",
-    "connect": "^3.7.0",
-    "convert-source-map": "^2.0.0",
-    "cors": "^2.8.5",
-    "cross-spawn": "^7.0.3",
-    "debug": "^4.3.6",
-    "dep-types": "link:./src/types",
-    "dotenv": "^16.4.5",
-    "dotenv-expand": "^11.0.6",
-    "es-module-lexer": "^1.5.4",
-    "escape-html": "^1.0.3",
-    "estree-walker": "^3.0.3",
-    "etag": "^1.8.1",
-    "fast-glob": "^3.3.2",
-    "http-proxy": "^1.18.1",
-    "launch-editor-middleware": "^2.9.1",
-    "lightningcss": "^1.26.0",
-    "magic-string": "^0.30.11",
-    "micromatch": "^4.0.8",
-    "mlly": "^1.7.1",
-    "mrmime": "^2.0.0",
-    "open": "^8.4.2",
-    "parse5": "^7.1.2",
-    "pathe": "^1.1.2",
-    "periscopic": "^4.0.2",
-    "picocolors": "^1.0.1",
-    "picomatch": "^2.3.1",
-    "postcss-import": "^16.1.0",
-    "postcss-load-config": "^4.0.2",
-    "postcss-modules": "^6.0.0",
-    "resolve.exports": "^2.0.2",
-    "rollup-plugin-dts": "^6.1.1",
-    "rollup-plugin-esbuild": "^6.1.1",
-    "rollup-plugin-license": "^3.5.2",
-    "sass": "^1.77.8",
-    "sass-embedded": "^1.77.8",
-    "sirv": "^2.0.4",
-    "source-map-support": "^0.5.21",
-    "strip-ansi": "^7.1.0",
-    "strip-literal": "^2.1.0",
-    "tsconfck": "^3.1.4",
-    "tslib": "^2.7.0",
-    "types": "link:./types",
-    "ufo": "^1.5.4",
-    "ws": "^8.18.0"
-  },
-  "peerDependencies": {
-    "@types/node": "^18.0.0 || >=20.0.0",
-    "less": "*",
-    "lightningcss": "^1.21.0",
-    "sass": "*",
-    "sass-embedded": "*",
-    "stylus": "*",
-    "sugarss": "*",
-    "terser": "^5.4.0"
-  },
-  "peerDependenciesMeta": {
-    "@types/node": {
-      "optional": true
-    },
-    "sass": {
-      "optional": true
-    },
-    "sass-embedded": {
-      "optional": true
-    },
-    "stylus": {
-      "optional": true
-    },
-    "less": {
-      "optional": true
-    },
-    "sugarss": {
-      "optional": true
-    },
-    "lightningcss": {
-      "optional": true
-    },
-    "terser": {
-      "optional": true
-    }
-  },
-  "scripts": {
-    "dev": "tsx scripts/dev.ts",
-    "build": "rimraf dist && run-s build-bundle build-types",
-    "build-bundle": "rollup --config rollup.config.ts --configPlugin esbuild",
-    "build-types": "run-s build-types-temp build-types-roll build-types-check",
-    "build-types-temp": "tsc --emitDeclarationOnly --outDir temp -p src/node",
-    "build-types-roll": "rollup --config rollup.dts.config.ts --configPlugin esbuild && rimraf temp",
-    "build-types-check": "tsc --project tsconfig.check.json",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint --cache --ext .ts src/**",
-    "format": "prettier --write --cache --parser typescript \"src/**/*.ts\""
-  }
-}```
-
-----
-
-# frontend/node_modules/vite/types/package.json
-```json
-{
-  "//": "this file is here to make typescript happy when moduleResolution=node16+",
-  "version": "0.0.0"
-}
-```
-
-----
-
-# frontend/node_modules/yallist/package.json
-```json
-{
-  "name": "yallist",
-  "version": "3.1.1",
-  "description": "Yet Another Linked List",
-  "main": "yallist.js",
-  "directories": {
-    "test": "test"
-  },
-  "files": [
-    "yallist.js",
-    "iterator.js"
-  ],
-  "dependencies": {},
-  "devDependencies": {
-    "tap": "^12.1.0"
-  },
-  "scripts": {
-    "test": "tap test/*.js --100",
-    "preversion": "npm test",
-    "postversion": "npm publish",
-    "postpublish": "git push origin --all; git push origin --tags"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/isaacs/yallist.git"
-  },
-  "author": "Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)",
-  "license": "ISC"
-}
-```
-
-----
-
 # frontend/package-lock.json
 ```json
 {
@@ -12841,6 +3462,2646 @@ class TilesetEditorController(QObject):
 
 ----
 
+# frontend/src/App.css
+```css
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #0e1117;
+  --surface:  #161b22;
+  --surface2: #1c2330;
+  --border:   #2d3748;
+  --border2:  #3d4f66;
+  --text:     #e2e8f0;
+  --muted:    #718096;
+  --accent:   #58a6ff;
+  --best:     #3fb950;
+  --danger:   #f85149;
+  --mono:     'IBM Plex Mono', monospace;
+  --sans:     'IBM Plex Sans', sans-serif;
+  --radius:   6px;
+}
+
+html, body, #root { height: 100%; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+
+.header { border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 10; }
+.header-inner { max-width: 1400px; margin: 0 auto; padding: 0 24px; height: 52px; display: flex; align-items: center; gap: 32px; }
+.logo { display: flex; align-items: center; gap: 6px; font-family: var(--mono); }
+.logo-mark { width: 28px; height: 28px; background: var(--accent); color: var(--bg); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 500; }
+.logo-text { font-size: 16px; font-weight: 500; }
+.nav { display: flex; gap: 2px; }
+.nav-tab { padding: 6px 14px; border: none; background: transparent; color: var(--muted); font-family: var(--mono); font-size: 13px; cursor: pointer; border-radius: var(--radius); transition: color 0.15s, background 0.15s; }
+.nav-tab:hover { color: var(--text); background: var(--surface2); }
+.nav-tab.active { color: var(--accent); background: rgba(88,166,255,0.1); }
+.header-right { margin-left: auto; }
+.palette-count { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+.main { max-width: 1400px; margin: 0 auto; padding: 28px 24px; }
+.tab-content { animation: fadeIn 0.15s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+
+/* shared primitives used across multiple components */
+.section-label { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.pixel-img { display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; gap: 12px; color: var(--muted); font-size: 13px; text-align: center; }
+.error-msg { font-family: var(--mono); font-size: 12px; color: var(--danger); }
+.spinner { width: 22px; height: 22px; border: 2px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* shared buttons used in multiple tabs */
+.btn-primary { padding: 10px 18px; background: var(--accent); color: var(--bg); border: none; border-radius: var(--radius); font-family: var(--mono); font-size: 13px; font-weight: 500; cursor: pointer; transition: opacity 0.15s, transform 0.1s; width: 100%; }
+.btn-primary:hover:not(:disabled) { opacity: 0.88; }
+.btn-primary:active:not(:disabled) { transform: scale(0.98); }
+.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-secondary { padding: 8px 14px; background: transparent; color: var(--text); border: 1px solid var(--border2); border-radius: var(--radius); font-family: var(--mono); font-size: 12px; cursor: pointer; transition: border-color 0.15s; width: 100%; }
+.btn-secondary:hover { border-color: var(--accent); }
+.btn-ghost { padding: 4px 8px; background: transparent; border: none; color: var(--muted); font-family: var(--mono); font-size: 11px; cursor: pointer; }
+.btn-ghost:hover { color: var(--text); }
+.btn-ghost-subtle { padding: 6px; background: transparent; border: none; color: var(--muted); font-family: var(--mono); font-size: 11px; cursor: pointer; text-align: center; width: 100%; }
+.btn-ghost-subtle:hover:not(:disabled) { color: var(--text); }
+.btn-ghost-subtle:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* shared field */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field-label { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.field-input { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: var(--mono); font-size: 13px; padding: 8px 10px; width: 100%; transition: border-color 0.15s; }
+.field-input:focus { outline: none; border-color: var(--accent); }
+
+
+.logo {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.logo-icon {
+  height: 100%;
+  max-height: 100%;
+  width: auto;
+  object-fit: contain;
+}
+
+.star-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.star-btn:hover {
+  color: #e3b341;
+  border-color: #e3b341;
+}```
+
+----
+
+# frontend/src/App.jsx
+```jsx
+import { useState, useEffect } from 'react'
+import { ConvertTab } from './tabs/ConvertTab'
+import { ExtractTab } from './tabs/ExtractTab'
+import { BatchTab } from './tabs/BatchTab'
+import { TilesetTab } from './tabs/TilesetTab'
+import './App.css'
+
+const API = '/api'
+const TABS = ['convert', 'extract', 'batch', 'tileset']
+
+export default function App() {
+  const [tab, setTab] = useState('convert')
+  const [palettes, setPalettes] = useState([])
+
+  useEffect(() => {
+    fetch(`${API}/palettes`)
+      .then(r => r.json())
+      .then(setPalettes)
+      .catch(() => {})
+  }, [])
+
+  return (
+    <div className="app">
+      <header className="header">
+        <div className="header-inner">
+          <a className="logo" href='#' onClick={() => setTab('convert')}>
+            <img src="/porypal.ico" alt="Porypal" className="logo-icon" />
+          </a>
+          <nav className="nav">
+            {TABS.map(t => (
+              <button
+                key={t}
+                className={`nav-tab ${tab === t ? 'active' : ''}`}
+                onClick={() => setTab(t)}
+              >
+                {t}
+              </button>
+            ))}
+          </nav>
+          <div className="header-right">
+            <a
+              className="star-btn"
+              href="https://github.com/loxed/porypal"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/>
+              </svg>
+              Support the project
+            </a>
+          </div>
+        </div>
+      </header>
+      <main className="main">
+        {tab === 'convert' && <ConvertTab />}
+        {tab === 'extract' && <ExtractTab />}
+        {tab === 'batch'   && <BatchTab palettes={palettes} />}
+        {tab === 'tileset' && <TilesetTab />}
+      </main>
+    </div>
+  )
+}```
+
+----
+
+# frontend/src/components/ColorSwatch.css
+```css
+.inline-swatch {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border-radius: 2px;
+  border: 1px solid rgba(255,255,255,0.15);
+  vertical-align: middle;
+  margin-right: 3px;
+  position: relative;
+  top: -1px;
+}```
+
+----
+
+# frontend/src/components/ColorSwatch.jsx
+```jsx
+import './ColorSwatch.css'
+
+export function ColorSwatch({ hex }) {
+  return (
+    <span
+      className="inline-swatch"
+      style={{ background: hex }}
+      title={hex}
+    />
+  )
+}```
+
+----
+
+# frontend/src/components/DropZone.css
+```css
+.dropzone { border: 1px dashed var(--border2); border-radius: var(--radius); padding: 28px 16px; text-align: center; cursor: pointer; transition: border-color 0.15s, background 0.15s; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.dropzone:hover, .dropzone.dragging { border-color: var(--accent); background: rgba(88,166,255,0.04); }
+.dropzone-label { font-size: 13px; font-weight: 500; }
+.dropzone-hint { font-size: 11px; font-family: var(--mono); color: var(--muted); }
+```
+
+----
+
+# frontend/src/components/DropZone.jsx
+```jsx
+import { useState, useRef } from 'react'
+import './DropZone.css'
+
+export function DropZone({ onFile, label = 'Drop sprite here' }) {
+  const [dragging, setDragging] = useState(false)
+  const inputRef = useRef()
+
+  const handleDrop = (e) => {
+    e.preventDefault()
+    setDragging(false)
+    const f = e.dataTransfer.files[0]
+    if (f) onFile(f)
+  }
+
+  return (
+    <div
+      className={`dropzone ${dragging ? 'dragging' : ''}`}
+      onDragOver={e => { e.preventDefault(); setDragging(true) }}
+      onDragLeave={() => setDragging(false)}
+      onDrop={handleDrop}
+      onClick={() => inputRef.current.click()}
+    >
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        style={{ display: 'none' }}
+        onChange={e => e.target.files[0] && onFile(e.target.files[0])}
+      />
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--muted)' }}>
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      <p className="dropzone-label">{label}</p>
+      <p className="dropzone-hint">PNG, JPG, BMP · click or drag</p>
+    </div>
+  )
+}
+```
+
+----
+
+# frontend/src/components/PaletteStrip.css
+```css
+.palette-strip {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 2px;
+  width: 100%;
+  overflow: visible;
+}
+
+.palette-swatch {
+  aspect-ratio: 1;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.08);
+  cursor: pointer;
+  min-width: 0;
+  position: relative;
+}
+
+.palette-swatch.used {
+  opacity: 0.8;
+}
+
+.palette-swatch.used:hover {
+  opacity: 1;
+}
+
+.palette-swatch.unused {
+  opacity: 0.2;
+}
+
+.palette-swatch.unused::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-conic-gradient(rgba(0,0,0,0.35) 0% 25%, transparent 0% 50%);
+  background-size: var(--check-size, 25%) var(--check-size, 25%);
+  pointer-events: none;
+  border-radius: inherit;
+  transition: opacity 0.15s;
+}
+
+.palette-swatch.unused:hover {
+  opacity: 1;
+}
+
+.palette-swatch.unused:hover::before {
+  opacity: 0.2;
+}
+
+.swatch-tooltip {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.swatch-hex {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text);
+}
+
+.swatch-icon {
+  color: var(--muted);
+}
+
+.swatch-icon.copied {
+  color: var(--best);
+}```
+
+----
+
+# frontend/src/components/PaletteStrip.jsx
+```jsx
+import { useState } from 'react'
+import { Copy, Check } from 'lucide-react'
+import './PaletteStrip.css'
+
+export function PaletteStrip({ colors, usedIndices = [], checkSize = '25%' }) {
+  const [hover, setHover] = useState(null)
+  const [copied, setCopied] = useState(null)
+  const usedSet = new Set(usedIndices)
+
+  const handleClick = (e, hex, i) => {
+    e.stopPropagation()
+    navigator.clipboard.writeText(hex).then(() => {
+      setCopied(i)
+      setTimeout(() => setCopied(null), 1500)
+    })
+  }
+
+  return (
+    <div className="palette-strip">
+      {colors.map((hex, i) => (
+        <div
+          key={i}
+          className={`palette-swatch ${usedSet.has(i) ? 'used' : 'unused'}`}
+          style={{ background: hex, '--check-size': checkSize }}
+          onMouseEnter={() => setHover(i)}
+          onMouseLeave={() => setHover(null)}
+          onClick={e => handleClick(e, hex, i)}
+        >
+          {(hover === i || copied === i) && (
+            <div className="swatch-tooltip">
+              {hover === i && <span className="swatch-hex">{hex}</span>}
+              {copied === i
+                ? <Check size={11} className="swatch-icon copied" />
+                : <Copy size={11} className="swatch-icon" />
+              }
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}```
+
+----
+
+# frontend/src/components/PresetList.css
+```css
+.preset-list { display: flex; flex-direction: column; gap: 2px; }
+
+.preset-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; padding: 7px 8px; border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  transition: border-color 0.1s, background 0.1s;
+  min-height: 36px;
+}
+.preset-row:hover { border-color: var(--border2); background: var(--surface); }
+.preset-row.active { border-color: var(--accent); background: rgba(88,166,255,0.07); }
+
+.preset-info { display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 0; }
+.preset-name { font-family: var(--mono); font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.preset-meta { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+.preset-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+
+.preset-hover-actions { display: flex; align-items: center; gap: 4px; }
+
+.preset-apply {
+  display: flex; align-items: center; gap: 4px;
+  padding: 3px 8px;
+  background: var(--accent); color: var(--bg);
+  border: none; border-radius: 4px;
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  cursor: pointer; white-space: nowrap;
+  transition: opacity 0.1s;
+}
+.preset-apply:hover { opacity: 0.85; }
+
+.preset-delete {
+  background: transparent; border: none; color: var(--muted);
+  cursor: pointer; padding: 3px; display: flex; align-items: center;
+  border-radius: 3px; transition: color 0.1s;
+}
+.preset-delete:hover { color: var(--danger); }
+
+.preset-warn {
+  color: #EF9F27; display: flex; align-items: center;
+  cursor: default;
+}
+
+.preset-active-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent); display: block;
+}
+
+.preset-loading { display: flex; align-items: center; color: var(--muted); }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin 0.7s linear infinite; }```
+
+----
+
+# frontend/src/components/PresetList.jsx
+```jsx
+import { useState } from 'react'
+import { Trash2, AlertTriangle, Check, Loader } from 'lucide-react'
+import './PresetList.css'
+
+export function PresetList({ presets, defaultIds, activePresetId, onLoad, onDelete, currentState }) {
+  const [hoveredId, setHoveredId] = useState(null)
+  const [loadingId, setLoadingId] = useState(null)
+
+  const isDirty = (preset) => {
+    if (!currentState) return false
+    return (
+      currentState.tileW !== preset.tile_w ||
+      currentState.tileH !== preset.tile_h ||
+      currentState.cols !== preset.cols ||
+      currentState.rows !== preset.rows ||
+      currentState.slots.some(s => s !== null)
+    )
+  }
+
+  const handleApply = async (id) => {
+    setLoadingId(id)
+    await onLoad(id)
+    setLoadingId(null)
+    setHoveredId(null)
+  }
+
+  return (
+    <div className="preset-list">
+      {presets.map(p => {
+        const isActive = activePresetId === p.id
+        const isHovered = hoveredId === p.id
+        const isLoading = loadingId === p.id
+        const dirty = isDirty(p)
+
+        return (
+          <div
+            key={p.id}
+            className={`preset-row ${isActive ? 'active' : ''}`}
+            onMouseEnter={() => setHoveredId(p.id)}
+            onMouseLeave={() => setHoveredId(null)}
+          >
+            <div className="preset-info">
+              <span className="preset-name">{p.name}</span>
+              <span className="preset-meta">{p.cols}×{p.rows} · {p.tile_w}px</span>
+            </div>
+
+            <div className="preset-actions">
+              {isLoading ? (
+                <span className="preset-loading"><Loader size={13} className="spin"/></span>
+              ) : isHovered ? (
+                <div className="preset-hover-actions">
+                  {dirty && (
+                    <span className="preset-warn" title="Will reset current layout">
+                      <AlertTriangle size={12}/>
+                    </span>
+                  )}
+                  <button className="preset-apply" onClick={() => handleApply(p.id)}>
+                    <Check size={12}/> apply
+                  </button>
+                  {!defaultIds.has(p.id) && (
+                    <button className="preset-delete"
+                      onClick={e => { e.stopPropagation(); onDelete(p.id) }}>
+                      <Trash2 size={11}/>
+                    </button>
+                  )}
+                </div>
+              ) : isActive ? (
+                <span className="preset-active-dot" title="active"/>
+              ) : null}
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}```
+
+----
+
+# frontend/src/components/ResultCard.css
+```css
+/* ---- shared ---- */
+.result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.result-card:hover { border-color: var(--border2); }
+.result-card.selected { border-color: #4A8DFC; box-shadow: 0 0 0 1px #4A8DFC; }
+.result-card.selected.best { border-color: #FFE5F5; box-shadow: 0 0 0 1px #FFE5F5; }
+.result-card.best:not(.selected) { border-color: #FFFF72; box-shadow: 0 0 0 1px #FFFF72; }
+
+.result-name { font-family: var(--mono); font-size: 12px; font-weight: 500; }
+.result-colors { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+/* inline best badge — sits in the flow, no absolute positioning */
+
+/* ---- grid mode ---- */
+.result-header { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+/* push colors to right but keep best tag after it */
+.result-header .result-colors { margin-right: auto; }
+
+.grid-footer { display: flex; flex-direction: column; gap: 6px; }
+
+/* ---- list mode ---- */
+.result-card.list-mode { gap: 10px; }
+
+.list-row-1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+.list-palette { flex: 1; min-width: 0; }
+
+.list-row-2 {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  height: 160px;
+}
+.list-zoom { flex: 1; min-width: 0; overflow: hidden; }
+.list-zoom .zoomable-wrap { height: 100%; }
+.list-zoom .zoomable-scroll { max-height: calc(160px - 32px); }
+.list-mode .walk-animation { height: 100%; justify-content: center; }
+.list-mode .walk-canvas { height: 100% !important; width: auto !important; }
+
+/* ---- buttons ---- */
+.btn-download { padding: 5px 10px; background: transparent; border: 1px solid var(--border); border-radius: 4px; font-family: var(--mono); font-size: 11px; color: var(--muted); cursor: pointer; transition: color 0.1s, border-color 0.1s; white-space: nowrap; flex-shrink: 0; }
+.btn-download:hover { color: var(--accent); border-color: var(--accent); }
+.btn-download.full-width { width: 100%; text-align: center; }
+
+/* ---- frames ---- */
+.frames-row { display: flex; align-items: center; gap: 6px; }
+.split-row { display: flex; gap: 4px; align-items: center; }
+.frame-count-input { width: 44px; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--mono); font-size: 12px; padding: 4px 6px; text-align: center; }
+.frame-count-input:focus { outline: none; border-color: var(--accent); }
+.btn-split { padding: 4px 8px; background: transparent; border: 1px solid var(--border2); border-radius: 4px; color: var(--muted); font-family: var(--mono); font-size: 11px; cursor: pointer; transition: color 0.1s, border-color 0.1s; white-space: nowrap; }
+.btn-split:hover { color: var(--accent); border-color: var(--accent); }
+.btn-ghost { padding: 4px 8px; background: transparent; border: none; color: var(--muted); font-family: var(--mono); font-size: 11px; cursor: pointer; }
+.btn-ghost:hover { color: var(--text); }
+
+.frames-section { border-top: 1px solid var(--border); padding-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+.frame-strip { display: flex; flex-wrap: wrap; gap: 4px; }
+.frame-cell { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.frame-img { width: 32px; image-rendering: pixelated; image-rendering: crisp-edges; background: repeating-conic-gradient(#1c2330 0% 25%, #161b22 0% 50%) 0 0/8px 8px; }
+.frame-index { font-family: var(--mono); font-size: 9px; color: var(--muted); }```
+
+----
+
+# frontend/src/components/ResultCard.jsx
+```jsx
+import { useState, useEffect } from 'react'
+import './ResultCard.css'
+import { ZoomableImage } from './ZoomableImage'
+import { PaletteStrip } from './PaletteStrip'
+import { WalkAnimation } from './WalkAnimation'
+import { splitFrames } from '../utils'
+
+function detectOWSprite(b64) {
+  return new Promise(resolve => {
+    const img = new window.Image()
+    img.onload = () => resolve(img.width / img.height >= 7.5 && img.width / img.height <= 10.5)
+    img.src = `data:image/png;base64,${b64}`
+  })
+}
+
+function FramesSection({ b64, frameCount, setFrameCount }) {
+  const [frames, setFrames] = useState(null)
+  const [show, setShow] = useState(false)
+
+  const handleSplit = async (e) => {
+    e.stopPropagation()
+    const f = await splitFrames(b64, frameCount)
+    setFrames(f); setShow(true)
+  }
+
+  return (
+    <>
+      <div className="frames-row" onClick={e => e.stopPropagation()}>
+        <div className="split-row">
+          <input type="number" min={1} max={32} value={frameCount}
+            className="frame-count-input" title="frame count"
+            onChange={e => setFrameCount(Number(e.target.value))} />
+          <button className="btn-split" onClick={handleSplit}>
+            {show ? 'refresh' : 'show frames'}
+          </button>
+          {show && <button className="btn-ghost" onClick={e => { e.stopPropagation(); setShow(false) }}>hide</button>}
+        </div>
+      </div>
+      {show && frames && (
+        <div className="frames-section" onClick={e => e.stopPropagation()}>
+          <p className="section-label">frames ({frames.length})</p>
+          <div className="frame-strip">
+            {frames.map((f, i) => (
+              <div key={i} className="frame-cell">
+                <img src={`data:image/png;base64,${f}`} alt={`frame ${i}`}
+                  className="pixel-img frame-img" draggable={false} />
+                <span className="frame-index">{i}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
+export function ResultCard({ result, selected, onSelect, onDownload, listMode = false }) {
+  const [frameCount, setFrameCount] = useState(9)
+  const [isOWSprite, setIsOWSprite] = useState(false)
+
+  useEffect(() => {
+    detectOWSprite(result.image).then(setIsOWSprite)
+  }, [result.image])
+
+  const colorsLabel = `${result.colors_used}/16`
+
+  if (listMode) {
+    return (
+      <div
+        className={`result-card list-mode ${selected ? 'selected' : ''} ${result.best ? 'best' : ''}`}
+        onClick={onSelect}
+      >
+        {/* row 1: name -- colors -- best tag -- palette strip -- download */}
+        <div className="list-row-1" onClick={e => e.stopPropagation()}>
+          <span className="result-name">{result.palette_name.replace('.pal', '')}</span>
+          <span className="result-colors">{colorsLabel} colors</span>
+          <div className="list-palette">
+            <PaletteStrip colors={result.colors} usedIndices={result.used_indices} checkSize="50%" />
+          </div>
+          <button className="btn-download"
+            onClick={e => { e.stopPropagation(); onDownload(result.palette_name) }}>
+            download
+          </button>
+        </div>
+
+        {/* row 2: animation + zoom */}
+        <div className="list-row-2">
+          {isOWSprite && <WalkAnimation spriteB64={result.image} />}
+          <div className="list-zoom">
+            <ZoomableImage src={result.image} alt={result.palette_name} />
+          </div>
+        </div>
+
+        {/* row 3: frames */}
+        {isOWSprite && (
+          <FramesSection b64={result.image} frameCount={frameCount} setFrameCount={setFrameCount} />
+        )}
+      </div>
+    )
+  }
+
+  // grid mode
+  return (
+    <div
+      className={`result-card ${selected ? 'selected' : ''} ${result.best ? 'best' : ''}`}
+      onClick={onSelect}
+    >
+      {/* row 1: name -- colors -- best tag inline */}
+      <div className="result-header">
+        <span className="result-name">{result.palette_name.replace('.pal', '')}</span>
+        <span className="result-colors">{colorsLabel} colors</span>
+      </div>
+
+      {/* row 2: palette strip */}
+      <PaletteStrip colors={result.colors} usedIndices={result.used_indices} checkSize="100%" />
+
+      {/* row 3: full-width zoomable image */}
+      <ZoomableImage src={result.image} alt={result.palette_name} />
+
+      {/* row 4: animation */}
+      {isOWSprite && <WalkAnimation spriteB64={result.image} />}
+
+      {/* row 5: frames + download */}
+      <div className="grid-footer" onClick={e => e.stopPropagation()}>
+        {isOWSprite && (
+          <FramesSection b64={result.image} frameCount={frameCount} setFrameCount={setFrameCount} />
+        )}
+        <button className="btn-download full-width"
+          onClick={e => { e.stopPropagation(); onDownload(result.palette_name) }}>
+          download
+        </button>
+      </div>
+    </div>
+  )
+}```
+
+----
+
+# frontend/src/components/WalkAnimation.css
+```css
+.walk-animation { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.walk-canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  /* JS sets width/height style to DISPLAY_SIZE px — keeps it square */
+  background: repeating-conic-gradient(#1c2330 0% 25%, #161b22 0% 50%) 0 0/14px 14px;
+  border-radius: 4px;
+  display: block;
+  flex-shrink: 0;
+}
+.walk-loading { width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }```
+
+----
+
+# frontend/src/components/WalkAnimation.jsx
+```jsx
+import { useEffect, useRef, useState } from 'react'
+import './WalkAnimation.css'
+import { splitFrames } from '../utils'
+
+// 0: down
+// 1: up
+// 2: left (right is just flipped left)
+// 3: down step 1
+// 4: down step 2
+// 5: up step 1
+// 6: up step 2
+// 7: left step 1
+// 8: left step 2
+
+// 3,0,4,0,3,0,4,0 - walk down
+// 7,2,8,2,7,2,8,2 - walk left
+// 5,1,6,1,5,1,6,1 - walk up
+// 7f,2f,8f,2f,7f,2f,8f,2f - walk right (flip left frames)
+
+const SEQUENCE = [
+    { f: 3 }, { f: 0 }, { f: 4 }, { f: 0 }, // walk down
+    { f: 3 }, { f: 0 }, { f: 4 }, { f: 0 }, // walk down
+    // { f: 0 }, { f: 0 }, { f: 0 }, { f: 0 }, // idle down
+    { f: 7}, { f: 2 }, { f: 8 }, { f: 2 }, // walk left
+    { f: 7}, { f: 2 }, { f: 8 }, { f: 2 }, // walk left
+    // { f: 2}, { f: 2 }, { f: 2 }, { f: 2 }, // idle left
+    { f: 5 }, { f: 1 }, { f: 6 }, { f: 1 }, // walk up
+    { f: 5 }, { f: 1 }, { f: 6 }, { f: 1 }, // walk up
+    // { f: 1 }, { f: 1 }, { f: 1 }, { f: 1 }, // idle up
+    { f: 7, flip: true}, { f: 2, flip: true}, { f: 8, flip: true}, { f: 2, flip: true}, // walk right
+    { f: 7, flip: true}, { f: 2, flip: true}, { f: 8, flip: true}, { f: 2, flip: true}, // walk right
+    // { f: 2, flip: true}, { f: 2, flip: true}, { f: 2, flip: true}, { f: 2, flip: true}, // idle right
+]
+const FRAME_MS = 150
+const DISPLAY_SIZE = 120 // fixed square display in CSS px
+
+export function WalkAnimation({ spriteB64 }) {
+  const canvasRef = useRef()
+  const [status, setStatus] = useState('loading')
+
+  useEffect(() => {
+    let cancelled = false
+    let timer = null
+    setStatus('loading')
+
+    const run = async () => {
+      try {
+        const b64Frames = await splitFrames(spriteB64, 9)
+        if (cancelled) return
+        if (b64Frames.length < 9) { setStatus('error'); return }
+
+        // Draw each frame into an offscreen canvas — avoids XrayWrapper issues
+        const offscreens = await Promise.all(b64Frames.map(b64 => new Promise((resolve, reject) => {
+          const img = new Image()
+          img.onload = () => {
+            const c = document.createElement('canvas')
+            c.width = img.width
+            c.height = img.height
+            c.getContext('2d').drawImage(img, 0, 0)
+            resolve(c)
+          }
+          img.onerror = reject
+          img.src = `data:image/png;base64,${b64}`
+        })))
+
+        if (cancelled) return
+
+        const canvas = canvasRef.current
+        if (!canvas) return
+
+        const fw = offscreens[0].width
+        const fh = offscreens[0].height
+
+        // Canvas internal resolution = one frame (square)
+        canvas.width = fw
+        canvas.height = fh
+        // CSS display size = fixed square
+        canvas.style.width = `${DISPLAY_SIZE}px`
+        canvas.style.height = `${DISPLAY_SIZE}px`
+
+        const ctx = canvas.getContext('2d')
+        ctx.imageSmoothingEnabled = false
+
+        let seq = 0
+        const draw = () => {
+          const step = SEQUENCE[seq % SEQUENCE.length]
+          const src = offscreens[step.f]
+          ctx.clearRect(0, 0, fw, fh)
+          if (step.flip) {
+            ctx.save(); ctx.translate(fw, 0); ctx.scale(-1, 1)
+          }
+          ctx.drawImage(src, 0, 0)
+          if (step.flip) ctx.restore()
+          seq++
+        }
+
+        draw()
+        setStatus('ready')
+        timer = setInterval(draw, FRAME_MS)
+      } catch {
+        if (!cancelled) setStatus('error')
+      }
+    }
+
+    run()
+    return () => { cancelled = true; clearInterval(timer) }
+  }, [spriteB64])
+
+  if (status === 'error') return null
+
+  return (
+    <div className="walk-animation">
+      {status === 'loading' && <div className="walk-loading"><div className="spinner" style={{ width: 16, height: 16 }} /></div>}
+      <canvas ref={canvasRef} className="walk-canvas" style={{ display: status === 'ready' ? 'block' : 'none' }} />
+    </div>
+  )
+}```
+
+----
+
+# frontend/src/components/ZoomableImage.css
+```css
+.zoomable-wrap { background: repeating-conic-gradient(#1c2330 0% 25%, #161b22 0% 50%) 0 0/14px 14px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.zoom-controls { display: flex; align-items: center; gap: 4px; padding: 4px 6px; background: rgba(14,17,23,0.85); border-bottom: 1px solid var(--border); }
+.zoom-btn { width: 22px; height: 22px; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--mono); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color 0.1s; padding: 0; }
+.zoom-btn:hover { border-color: var(--accent); color: var(--accent); }
+.zoom-label { font-family: var(--mono); font-size: 11px; color: var(--muted); min-width: 24px; text-align: center; }
+.zoomable-scroll { overflow: auto; max-height: 220px; }
+
+/* picking mode */
+.zoomable-picking .zoomable-scroll { cursor: crosshair; }
+
+/* hidden canvas used only for getImageData sampling — never visible */
+.zoomable-sample-canvas { display: none; }```
+
+----
+
+# frontend/src/components/ZoomableImage.jsx
+```jsx
+import { useState, useRef, useCallback } from 'react'
+import './ZoomableImage.css'
+
+const ZOOM_LEVELS = [0.25, 0.5, 1, 2, 4, 8, 16, 32, 64]
+const MIN_ZOOM = ZOOM_LEVELS[0]
+const MAX_ZOOM = ZOOM_LEVELS[ZOOM_LEVELS.length - 1]
+
+export function ZoomableImage({ src, alt = '', picking = false, onPick }) {
+  const [zoom, setZoom] = useState(1)
+  const [hoverColor, setHoverColor] = useState(null)
+  const [hoverPos, setHoverPos] = useState(null)
+
+  const canvasRef = useRef()
+  const imgRef = useRef()
+
+  const canvasRefCallback = useCallback((canvas) => {
+    canvasRef.current = canvas
+    if (!canvas || !src) return
+
+    const img = new window.Image()
+    img.onload = () => {
+      canvas.width = img.naturalWidth
+      canvas.height = img.naturalHeight
+      canvas.getContext('2d').drawImage(img, 0, 0)
+    }
+
+    img.src = `data:image/png;base64,${src}`
+  }, [src])
+
+  const changeZoom = (delta) => {
+    setZoom((z) => {
+      const index = ZOOM_LEVELS.indexOf(z)
+      const nextIndex = index + (delta > 0 ? 1 : -1)
+
+      if (nextIndex < 0 || nextIndex >= ZOOM_LEVELS.length) return z
+      return ZOOM_LEVELS[nextIndex]
+    })
+  }
+
+  const getColorAtEvent = (e) => {
+    const canvas = canvasRef.current
+    if (!canvas) return null
+
+    const rect = imgRef.current.getBoundingClientRect()
+
+    const scaleX = canvas.width / rect.width
+    const scaleY = canvas.height / rect.height
+
+    const x = Math.floor((e.clientX - rect.left) * scaleX)
+    const y = Math.floor((e.clientY - rect.top) * scaleY)
+
+    if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return null
+
+    const [r, g, b] = canvas.getContext('2d').getImageData(x, y, 1, 1).data
+
+    return `#${r.toString(16).padStart(2, '0')}${g
+      .toString(16)
+      .padStart(2, '0')}${b.toString(16).padStart(2, '0')}`.toUpperCase()
+  }
+
+  const handleMouseMove = (e) => {
+    if (!picking) return
+
+    setHoverPos({ x: e.clientX, y: e.clientY })
+    setHoverColor(getColorAtEvent(e))
+  }
+
+  const handleMouseLeave = () => {
+    setHoverPos(null)
+    setHoverColor(null)
+  }
+
+  const handleClick = (e) => {
+    if (!picking || !onPick) return
+
+    e.stopPropagation()
+
+    const hex = getColorAtEvent(e)
+    if (hex) onPick(hex)
+  }
+
+  return (
+    <>
+      <div className={`zoomable-wrap ${picking ? 'zoomable-picking' : ''}`}>
+        <div className="zoom-controls">
+          <button className="zoom-btn" onClick={() => changeZoom(1)}>+</button>
+          <span className="zoom-label">{zoom}×</span>
+          <button className="zoom-btn" onClick={() => changeZoom(-1)}>−</button>
+          <button
+            className="zoom-btn"
+            onClick={() => setZoom(1)}
+            title="reset"
+          >
+            ⟳
+          </button>
+        </div>
+
+        <div className="zoomable-scroll">
+          <img
+            ref={imgRef}
+            src={`data:image/png;base64,${src}`}
+            alt={alt}
+            className="pixel-img"
+            style={{ width: `${zoom * 100}%`, maxWidth: 'none' }}
+            draggable={false}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            onClick={handleClick}
+          />
+        </div>
+
+        <canvas
+          ref={canvasRefCallback}
+          className="zoomable-sample-canvas"
+        />
+      </div>
+
+      {picking && hoverPos && hoverColor && (
+        <div
+          className="pipette-preview"
+          style={{
+            left: hoverPos.x + 16,
+            top: hoverPos.y + 16
+          }}
+        >
+          <div
+            className="pipette-swatch"
+            style={{ background: hoverColor }}
+          />
+          <span className="pipette-hex">{hoverColor}</span>
+        </div>
+      )}
+    </>
+  )
+}```
+
+----
+
+# frontend/src/main.jsx
+```jsx
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './App.css'
+import App from './App.jsx'
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
+```
+
+----
+
+# frontend/src/tabs/BatchTab.css
+```css
+.batch-layout { display: flex; flex-direction: column; gap: 18px; max-width: 480px; }
+.file-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.file-chip { font-family: var(--mono); font-size: 11px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 3px 8px; border-radius: 4px; }
+```
+
+----
+
+# frontend/src/tabs/BatchTab.jsx
+```jsx
+import { useState, useRef } from 'react'
+import { useFetch } from '../hooks/useFetch'
+import './BatchTab.css'
+import { downloadBlob } from '../utils'
+
+const API = '/api'
+
+export function BatchTab({ palettes }) {
+  const [files, setFiles] = useState([])
+  const [paletteName, setPaletteName] = useState('')
+  const { loading, error, run } = useFetch()
+  const inputRef = useRef()
+
+  const handleBatch = async () => {
+    const fd = new FormData()
+    files.forEach(f => fd.append('files', f))
+    fd.append('palette_name', paletteName)
+    await run(async () => {
+      const res = await fetch(`${API}/batch`, { method: 'POST', body: fd })
+      if (!res.ok) throw new Error(await res.text())
+      downloadBlob(await res.blob(), 'batch_output.zip')
+    })
+  }
+
+  return (
+    <div className="tab-content">
+      <div className="batch-layout">
+
+        <div className="field">
+          <label className="field-label">sprites</label>
+          <button className="btn-secondary" onClick={() => inputRef.current.click()}>
+            select files ({files.length} selected)
+          </button>
+          <input
+            ref={inputRef}
+            type="file"
+            multiple
+            accept="image/*"
+            style={{ display: 'none' }}
+            onChange={e => setFiles(Array.from(e.target.files))}
+          />
+        </div>
+
+        {files.length > 0 && (
+          <div className="file-list">
+            {files.map(f => (
+              <span key={f.name} className="file-chip">{f.name}</span>
+            ))}
+          </div>
+        )}
+
+        <div className="field">
+          <label className="field-label">target palette</label>
+          <select
+            className="field-input"
+            value={paletteName}
+            onChange={e => setPaletteName(e.target.value)}
+          >
+            <option value="">select palette…</option>
+            {palettes.map(p => (
+              <option key={p.name} value={p.name}>{p.name.replace('.pal', '')}</option>
+            ))}
+          </select>
+        </div>
+
+        <button
+          className="btn-primary"
+          disabled={files.length === 0 || !paletteName || loading}
+          onClick={handleBatch}
+        >
+          {loading ? 'processing…' : `convert ${files.length} sprites → zip`}
+        </button>
+
+        {error && <p className="error-msg">{error}</p>}
+
+      </div>
+    </div>
+  )
+}
+```
+
+----
+
+# frontend/src/tabs/ConvertTab.css
+```css
+.convert-layout { display: grid; grid-template-columns: 280px 1fr; gap: 28px; align-items: start; }
+.convert-left { display: flex; flex-direction: column; gap: 14px; }
+.convert-right { min-height: 400px; display: flex; flex-direction: column; gap: 12px; }
+
+/* original preview */
+.original-preview { display: flex; flex-direction: column; gap: 8px; }
+
+/* toolbar */
+.results-toolbar { display: flex; align-items: center; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.results-count { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.toolbar-right { display: flex; align-items: center; gap: 8px; }
+.view-toggle { display: flex; gap: 2px; }
+.view-btn { width: 28px; height: 28px; background: transparent; border: 1px solid var(--border); border-radius: var(--radius); color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.1s, border-color 0.1s, background 0.1s; }
+.view-btn:hover { color: var(--text); border-color: var(--border2); }
+.view-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(88,166,255,0.08); }
+
+/* results */
+.results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.results-list { display: flex; flex-direction: column; gap: 8px; }
+
+/* palette manager button */
+.palette-mgr-btn { display: flex; align-items: center; gap: 5px; padding: 4px 8px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); font-family: var(--mono); font-size: 11px; color: var(--muted); cursor: pointer; transition: color 0.1s, border-color 0.1s; }
+.palette-mgr-btn:hover { color: var(--text); border-color: var(--border2); }
+.palette-mgr-btn.filtered { color: var(--accent); border-color: var(--accent); background: rgba(88,166,255,0.08); }
+.palette-mgr-badge { font-size: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0 5px; color: var(--muted); }
+.palette-mgr-btn.filtered .palette-mgr-badge { color: var(--accent); border-color: var(--accent); }
+
+/* icon buttons */
+.icon-btn { width: 24px; height: 24px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.1s, border-color 0.1s; flex-shrink: 0; }
+.icon-btn:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
+.icon-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.icon-btn--danger:hover:not(:disabled) { color: var(--danger); border-color: var(--danger); }
+.hidden-input { display: none; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinning { animation: spin 0.7s linear infinite; }
+
+/* palette modal */
+.modal-palettes { width: 520px; max-height: 75vh; }
+.modal-header-actions { display: flex; align-items: center; gap: 6px; }
+.palette-empty { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.6; }
+.palette-empty code { background: var(--surface2); padding: 1px 4px; border-radius: 3px; }
+.palette-select-all { padding-bottom: 8px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+.palette-checkbox-row { display: flex; align-items: center; gap: 7px; cursor: pointer; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.palette-checkbox-row:hover { color: var(--text); }
+.palette-checkbox-row input[type="checkbox"] { accent-color: var(--accent); cursor: pointer; }
+.palette-count-badge { margin-left: auto; font-size: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 1px 7px; color: var(--muted); }
+.palette-list { display: flex; flex-direction: column; gap: 2px; }
+.palette-row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: var(--radius); border: 1px solid transparent; transition: background 0.1s, border-color 0.1s; }
+.palette-row:hover { background: var(--surface2); }
+.palette-row.active { border-color: var(--border); background: var(--surface2); }
+.palette-row-label { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; cursor: pointer; }
+.palette-row-label input[type="checkbox"] { accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+.palette-row-info { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+.palette-name { font-family: var(--mono); font-size: 11px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }```
+
+----
+
+# frontend/src/tabs/ExtractTab.css
+```css
+/* ── Layout ── */
+.extract-layout { display: grid; grid-template-columns: 260px 1fr; gap: 28px; align-items: start; }
+.extract-left { display: flex; flex-direction: column; gap: 14px; }
+.extract-right { display: flex; flex-direction: column; gap: 20px; min-height: 400px; }
+
+.extract-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.extract-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Previews ── */
+.extract-previews { display: flex; flex-direction: column; gap: 20px; }
+.extract-preview-section { display: flex; flex-direction: column; gap: 8px; }
+
+.extract-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+/* ── Transparent bg color picker ── */
+.bg-mode-row { display: flex; gap: 4px; flex-wrap: wrap; }
+.bg-mode-btn {
+  display: flex; align-items: center; gap: 4px;
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+  cursor: pointer;
+  transition: color 0.1s, border-color 0.1s, background 0.1s;
+}
+.bg-mode-btn:hover { color: var(--text); border-color: var(--border2); }
+.bg-mode-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(88,166,255,0.08); }
+.bg-mode-btn.picking { color: #EF9F27; border-color: #EF9F27; background: rgba(239,159,39,0.1); }
+
+.bg-color-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.bg-swatch { width: 20px; height: 20px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.15); flex-shrink: 0; }
+.field-hint { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.bg-mode-tag { font-family: var(--mono); font-size: 10px; color: var(--muted); opacity: 0.7; }
+.field-error { border-color: var(--danger) !important; }
+.field-hint-error { font-family: var(--mono); font-size: 11px; color: var(--danger); margin-top: 4px; }
+
+/* ── Pipette ── */
+.pick-hint { color: #EF9F27; font-size: 10px; margin-left: 8px; }
+
+.pipette-preview {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.pipette-swatch {
+  width: 16px; height: 16px;
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.15);
+  flex-shrink: 0;
+}
+.pipette-hex { font-family: var(--mono); font-size: 11px; color: var(--text); }
+
+/* ── Palette strip ── */
+.palette-strip-wrap { position: relative; }
+
+/* ── Buttons ── */
+.btn-primary-sm {
+  padding: 5px 12px;
+  background: var(--accent); color: var(--bg);
+  border: none; border-radius: var(--radius);
+  font-family: var(--mono); font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: opacity 0.15s; white-space: nowrap;
+}
+.btn-primary-sm:hover:not(:disabled) { opacity: 0.85; }
+.btn-primary-sm:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.btn-dl {
+  padding: 3px 8px;
+  background: transparent;
+  border: 1px solid var(--border2); border-radius: var(--radius);
+  color: var(--muted);
+  font-family: var(--mono); font-size: 11px;
+  cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-dl:hover { border-color: var(--accent); color: var(--accent); }
+
+.help-btn {
+  width: 28px; height: 28px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: color 0.1s, border-color 0.1s;
+  flex-shrink: 0;
+}
+.help-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── Modal ── */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 500;
+}
+.modal-box {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  width: 480px; max-width: 95vw; max-height: 85vh;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-title { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--text); }
+.modal-close {
+  background: none; border: none; color: var(--muted);
+  cursor: pointer; padding: 2px;
+  display: flex; align-items: center; border-radius: 3px;
+}
+.modal-close:hover { color: var(--text); }
+.modal-body {
+  padding: 16px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.modal-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+/* ── Help modal content ── */
+.help-steps { display: flex; flex-direction: column; gap: 14px; }
+.help-step { display: flex; gap: 12px; align-items: flex-start; }
+.help-step-num {
+  width: 22px; height: 22px; flex-shrink: 0;
+  background: var(--accent); color: var(--bg);
+  border-radius: 50%;
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+.help-step strong { font-size: 13px; color: var(--text); display: block; margin-bottom: 3px; }
+.help-step p { font-size: 12px; color: var(--muted); line-height: 1.5; margin: 0; }
+.help-list {
+  margin: 6px 0 0 0; padding-left: 0;
+  list-style: none;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.help-list li { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.help-tag {
+  font-family: var(--mono); font-size: 10px;
+  background: var(--surface2); color: var(--text);
+  border: 1px solid var(--border2);
+  padding: 1px 5px; border-radius: 3px; margin-right: 4px;
+}
+.help-step code {
+  font-family: var(--mono); font-size: 11px;
+  background: var(--surface2); padding: 1px 4px; border-radius: 3px; color: var(--text);
+}
+.help-note {
+  font-size: 12px; color: var(--muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 12px; line-height: 1.5;
+}
+.help-note strong { color: var(--text); }```
+
+----
+
+# frontend/src/tabs/ExtractTab.jsx
+```jsx
+import { useState, useEffect } from 'react'
+import './ExtractTab.css'
+import { DropZone } from '../components/DropZone'
+import { ZoomableImage } from '../components/ZoomableImage'
+import { PaletteStrip } from '../components/PaletteStrip'
+import { useFetch } from '../hooks/useFetch'
+import { Info, Pipette, PaintBucket, X, Eclipse, Palette, Scan } from 'lucide-react'
+import { ColorSwatch } from '../components/ColorSwatch'
+
+const API = '/api'
+const GBA_TRANSPARENT = '#73C5A4'
+const MAX_COLORS = 16
+const MAX_EXTRA_COLORS = MAX_COLORS - 1
+
+// ---------------------------------------------------------------------------
+// Corner-based background color detection
+// Samples the 4 corners, returns the majority color.
+// Falls back to top-left if all 4 differ.
+// ---------------------------------------------------------------------------
+function detectBgColor(imageB64) {
+  return new Promise(resolve => {
+    const img = new window.Image()
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = img.naturalWidth
+      canvas.height = img.naturalHeight
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(img, 0, 0)
+      const w = canvas.width - 1
+      const h = canvas.height - 1
+      const corners = [
+        ctx.getImageData(0, 0, 1, 1).data,
+        ctx.getImageData(w, 0, 1, 1).data,
+        ctx.getImageData(0, h, 1, 1).data,
+        ctx.getImageData(w, h, 1, 1).data,
+      ].map(d => {
+        if (d[3] < 128) return null  // skip transparent corners
+        return `#${d[0].toString(16).padStart(2,'0')}${d[1].toString(16).padStart(2,'0')}${d[2].toString(16).padStart(2,'0')}`
+      })
+      const counts = {}
+      for (const c of corners) {
+        if (c) counts[c] = (counts[c] || 0) + 1
+      }
+      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1])
+      resolve(sorted.length > 0 ? sorted[0][0] : GBA_TRANSPARENT)
+    }
+    img.src = `data:image/png;base64,${imageB64}`
+  })
+}
+
+// ---------------------------------------------------------------------------
+// Help modal
+// ---------------------------------------------------------------------------
+function HelpModal({ onClose }) {
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-box" onClick={e => e.stopPropagation()}>
+        <div className="modal-header">
+          <span className="modal-title">palette extraction</span>
+          <button className="modal-close" onClick={onClose}><X size={16}/></button>
+        </div>
+        <div className="modal-body">
+          <p className="modal-desc">
+            Extracts a GBA-compatible 16-color palette from any sprite using k-means clustering.
+            Both color spaces are shown so you can pick the best result.
+          </p>
+          <div className="help-steps">
+            <div className="help-step">
+              <span className="help-step-num">1</span>
+              <div>
+                <strong>Drop a sprite</strong>
+                <p>Any PNG or image with the colors you want to extract.</p>
+              </div>
+            </div>
+            <div className="help-step">
+              <span className="help-step-num">2</span>
+              <div>
+                <strong>Set the transparent color (slot 0)</strong>
+                <p>This color will always be first in the palette. The GBA uses slot 0 as the background/transparent color.</p>
+                <ul className="help-list">
+                  <li><span className="help-tag">auto <Scan size={8} /></span> samples the 4 corners and picks the majority color — works for most sprites</li>
+                  <li><span className="help-tag">default <Eclipse size={8} /></span> uses <code><ColorSwatch hex="#73C5A4" />#73C5A4</code>, the standard GBA transparent green</li>
+                  <li><span className="help-tag">custom <PaintBucket size={8} /></span> lets you type any hex value</li>
+                  <li><span className="help-tag">pipette <Pipette size={8} /></span> click any pixel on your sprite to sample it directly</li>
+                </ul>
+              </div>
+            </div>
+            <div className="help-step">
+              <span className="help-step-num">3</span>
+              <div>
+                <strong>Choose color count</strong>
+                <p>Max 15 sprite colors + 1 transparent = 16 total. GBA palettes are hard-limited to 16 colors per palette bank.</p>
+              </div>
+            </div>
+            <div className="help-step">
+              <span className="help-step-num">4</span>
+              <div>
+                <strong>Compare & Download</strong>
+                <p>
+                  <strong>Oklab:</strong> Clusters by perceptual similarity. <b>RECOMMENDED.</b>{' '}
+                  <strong>RGB:</strong> Clusters by raw channel distance. (Less faithful to original colors.)
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="help-note">
+            <strong>JASC-PAL format</strong> — compatible with Porypal, Usenti, and most GBA sprite editors.
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Remap preview
+// ---------------------------------------------------------------------------
+function hexToRgb(hex) {
+  const h = hex.replace('#', '')
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)]
+}
+
+function remapToPalette(imageB64, paletteHexColors) {
+  return new Promise(resolve => {
+    const img = new window.Image()
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = img.naturalWidth
+      canvas.height = img.naturalHeight
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(img, 0, 0)
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      const data = imageData.data
+      const palette = paletteHexColors.map(hexToRgb)
+      const [tr, tg, tb] = palette[0]
+      for (let i = 0; i < data.length; i += 4) {
+        if (data[i+3] < 128) {
+          data[i] = tr; data[i+1] = tg; data[i+2] = tb; data[i+3] = 255
+          continue
+        }
+        const r = data[i], g = data[i+1], b = data[i+2]
+        let bestIdx = 0, bestDist = Infinity
+        for (let j = 0; j < palette.length; j++) {
+          const [pr,pg,pb] = palette[j]
+          const dist = (r-pr)**2 + (g-pg)**2 + (b-pb)**2
+          if (dist < bestDist) { bestDist = dist; bestIdx = j }
+        }
+        ;[data[i], data[i+1], data[i+2]] = palette[bestIdx]
+      }
+      ctx.putImageData(imageData, 0, 0)
+      resolve(canvas.toDataURL('image/png').split(',')[1])
+    }
+    img.src = `data:image/png;base64,${imageB64}`
+  })
+}
+
+// ---------------------------------------------------------------------------
+// Tab
+// ---------------------------------------------------------------------------
+export function ExtractTab() {
+  const [file, setFile]               = useState(null)
+  const [originalB64, setOriginalB64] = useState(null)
+  const [nColors, setNColors]         = useState(15)
+  const [bgColor, setBgColor]         = useState(GBA_TRANSPARENT)
+  const [bgMode, setBgMode]           = useState('default')
+  const [imageSize, setImageSize]     = useState(null)
+
+  const [resultOklab, setResultOklab]   = useState(null)
+  const [resultRgb, setResultRgb]       = useState(null)
+  const [previewOklab, setPreviewOklab] = useState(null)
+  const [previewRgb, setPreviewRgb]     = useState(null)
+
+  const [picking, setPicking]   = useState(false)
+  const [showHelp, setShowHelp] = useState(false)
+
+  const { loading, error, run } = useFetch()
+
+  useEffect(() => {
+    if (!originalB64) return
+    const img = new window.Image()
+    img.onload = () => setImageSize({ w: img.naturalWidth, h: img.naturalHeight })
+    img.src = `data:image/png;base64,${originalB64}`
+  }, [originalB64])
+
+  useEffect(() => {
+    if (!originalB64) return
+    if (resultOklab?.colors?.length > 1)
+      remapToPalette(originalB64, resultOklab.colors).then(setPreviewOklab)
+    else
+      setPreviewOklab(null)
+    if (resultRgb?.colors?.length > 1)
+      remapToPalette(originalB64, resultRgb.colors).then(setPreviewRgb)
+    else
+      setPreviewRgb(null)
+  }, [resultOklab, resultRgb, originalB64])
+
+  const handleFile = (f) => {
+    setFile(f)
+    setResultOklab(null); setResultRgb(null)
+    setPreviewOklab(null); setPreviewRgb(null)
+    const reader = new FileReader()
+    reader.onload = e => {
+      const b64 = e.target.result.split(',')[1]
+      setOriginalB64(b64)
+      // Auto-detect bg color from corners on every new file
+      detectBgColor(b64).then(detected => {
+        setBgColor(detected)
+        setBgMode('auto')
+      })
+    }
+    reader.readAsDataURL(f)
+  }
+
+  const runExtract = async (space) => {
+    const fd = new FormData()
+    fd.append('file', file)
+    fd.append('n_colors', nColors)
+    fd.append('bg_color', bgColor)
+    fd.append('color_space', space)
+    const res = await fetch(`${API}/extract`, { method: 'POST', body: fd })
+    if (!res.ok) throw new Error(await res.text())
+    return res.json()
+  }
+
+  const handleExtract = () => {
+    if (!file) return
+    run(async () => {
+      const [oklab, rgb] = await Promise.all([runExtract('oklab'), runExtract('rgb')])
+      setResultOklab(oklab)
+      setResultRgb(rgb)
+    })
+  }
+
+  const downloadPal = (result) => {
+    const blob = new Blob([result.pal_content], { type: 'text/plain' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `${result.name}_${result.color_space}.pal`
+    a.click()
+  }
+
+  const handlePick = (hex) => {
+    setBgColor(hex)
+    setBgMode('pick')
+    setPicking(false)
+  }
+
+  const tooMany = nColors > MAX_EXTRA_COLORS
+
+  return (
+    <div className="tab-content">
+      {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
+
+      <div className="extract-layout">
+
+        {/* ── Left: controls ── */}
+        <div className="extract-left">
+          <DropZone onFile={handleFile} label="Drop sprite to extract palette" />
+
+          <div className="field">
+            <label className="field-label">colors (max 15 + transparent = 16 for GBA)</label>
+            <input
+              type="number"
+              className={`field-input ${tooMany ? 'field-error' : ''}`}
+              min={1} max={MAX_EXTRA_COLORS}
+              value={nColors}
+              onChange={e => setNColors(Number(e.target.value))}
+            />
+            {tooMany && (
+              <p className="field-hint-error">
+                GBA supports max 16 colors — slot 0 is reserved for transparent, leaving 15 for sprite colors
+              </p>
+            )}
+          </div>
+
+          <div className="field">
+            <label className="field-label">transparent color (slot 0)</label>
+            <div className="bg-mode-row">
+              {originalB64 && (
+                <button
+                  className={`bg-mode-btn ${bgMode === 'auto' ? 'active' : ''}`}
+                  onClick={() =>
+                    detectBgColor(originalB64).then(detected => {
+                      setBgColor(detected); setBgMode('auto')
+                    })
+                  }
+                  title="detect from image corners"
+                >auto <Scan size={8} /></button>
+              )}
+              <button
+                className={`bg-mode-btn ${bgMode === 'default' ? 'active' : ''}`}
+                onClick={() => { setBgMode('default'); setBgColor(GBA_TRANSPARENT) }}
+              >default <Eclipse size={8} /></button>
+              <button
+                className={`bg-mode-btn ${bgMode === 'custom' ? 'active' : ''}`}
+                onClick={() => setBgMode('custom')}
+              >custom <PaintBucket size={8} /></button>
+              {originalB64 && (
+                <button
+                  className={`bg-mode-btn ${picking ? 'picking' : ''}`}
+                  onClick={() => setPicking(p => !p)}
+                  title="click a pixel on the image to pick its color"
+                >pipette <Pipette size={8} /></button>
+              )}
+            </div>
+
+            <div className="bg-color-row">
+              <div className="bg-swatch" style={{ background: bgColor }} />
+              {bgMode === 'custom' || bgMode === 'pick' ? (
+                <input
+                  className="field-input field-mono"
+                  value={bgColor}
+                  onChange={e => setBgColor(e.target.value)}
+                  placeholder="#73C5A4"
+                  maxLength={7}
+                />
+              ) : (
+                <span className="field-hint">
+                  {bgColor}
+                  {bgMode === 'auto'    && <span className="bg-mode-tag"> auto-detected</span>}
+                  {bgMode === 'default' && <span className="bg-mode-tag"> GBA default</span>}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="extract-actions">
+            <button
+              className="btn-primary"
+              disabled={!file || loading || tooMany}
+              onClick={handleExtract}
+            >
+              {loading ? 'extracting… ' : 'extract palette '}
+              <Palette size={10} />
+            </button>
+          </div>
+
+          {error && <p className="error-msg">{error}</p>}
+        </div>
+
+        {/* ── Right: stacked previews ── */}
+        <div className="extract-right">
+
+          <div className="extract-toolbar">
+            <span className="section-label">
+              {resultOklab
+                ? `${resultOklab.name} — ${resultOklab.colors.length} colors`
+                : 'preview'}
+            </span>
+            <button className="help-btn" onClick={() => setShowHelp(true)} title="Help">
+              <Info size={15}/>
+            </button>
+          </div>
+
+          {!originalB64 && (
+            <div className="empty-state">
+              drop a sprite to extract a GBA-compatible palette
+            </div>
+          )}
+
+          {originalB64 && (
+            <div className="extract-previews">
+
+              <div className="extract-preview-section">
+                <p className="section-label">
+                  original{imageSize ? ` — ${imageSize.w}×${imageSize.h}px` : ''}
+                  {picking && <span className="pick-hint"> · click to pick bg color</span>}
+                </p>
+                <ZoomableImage
+                  src={originalB64}
+                  alt="source sprite"
+                  picking={picking}
+                  onPick={handlePick}
+                />
+              </div>
+
+              {previewOklab && resultOklab && (
+                <div className="extract-preview-section">
+                  <div className="extract-section-header">
+                    <p className="section-label">oklab — recommended</p>
+                    <button className="btn-dl" onClick={() => downloadPal(resultOklab)}>↓ .pal</button>
+                  </div>
+                  <ZoomableImage src={previewOklab} alt="oklab preview" />
+                  <div className="palette-strip-wrap">
+                    <PaletteStrip
+                      colors={resultOklab.colors}
+                      usedIndices={resultOklab.colors.map((_, i) => i)}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {previewRgb && resultRgb && (
+                <div className="extract-preview-section">
+                  <div className="extract-section-header">
+                    <p className="section-label">rgb</p>
+                    <button className="btn-dl" onClick={() => downloadPal(resultRgb)}>↓ .pal</button>
+                  </div>
+                  <ZoomableImage src={previewRgb} alt="rgb preview" />
+                  <div className="palette-strip-wrap">
+                    <PaletteStrip
+                      colors={resultRgb.colors}
+                      usedIndices={resultRgb.colors.map((_, i) => i)}
+                    />
+                  </div>
+                </div>
+              )}
+
+            </div>
+          )}
+
+        </div>
+
+      </div>
+    </div>
+  )
+}```
+
+----
+
+# frontend/src/tabs/TilesetTab.css
+```css
+.tileset-layout { display: grid; grid-template-columns: 260px 1fr; gap: 28px; align-items: start; }
+.tileset-left { display: flex; flex-direction: column; gap: 14px; }
+.tileset-right { display: flex; flex-direction: column; gap: 16px; min-height: 400px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.field-mono { font-family: var(--mono) !important; }
+
+/* toolbar */
+.tileset-toolbar { display: flex; align-items: center; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.help-btn { background: transparent; border: 1px solid var(--border); border-radius: var(--radius); color: var(--muted); cursor: pointer; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; transition: color 0.1s, border-color 0.1s; }
+.help-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+/* place hint */
+.place-hint { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 10px; background: rgba(74,141,252,0.1); border: 1px solid rgba(74,141,252,0.3); border-radius: var(--radius); font-family: var(--mono); font-size: 12px; color: #4A8DFC; }
+
+/* source sheet */
+.source-section { display: flex; flex-direction: column; gap: 6px; }
+.source-sheet-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: repeating-conic-gradient(#1c2330 0% 25%, #161b22 0% 50%) 0 0/14px 14px; }
+.source-img { width: 100%; height: auto; display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+.source-grid-container { position: relative; display: block; width: 100%; }
+.source-tile-grid {
+  position: absolute; inset: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--src-cols), 1fr);
+  grid-template-rows: repeat(var(--src-rows), 1fr);
+}
+.source-tile {
+  border: 0.5px solid rgba(255,255,255,0.15);
+  cursor: pointer;
+  transition: background 0.08s;
+}
+.source-tile:hover { background: rgba(255,255,255,0.12); }
+.source-tile.selected { background: rgba(74,141,252,0.4); outline: 2px solid #4A8DFC; outline-offset: -1px; }
+.selected-hint { color: var(--accent); font-size: 10px; margin-left: 6px; }
+
+/* output grid = preview */
+.output-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 9), 1fr);
+  gap: 3px;
+}
+
+.output-slot {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; padding: 3px;
+  border-radius: 4px;
+  border: 1px dashed var(--border2);
+  cursor: pointer; position: relative;
+  transition: border-color 0.1s, background 0.1s;
+  aspect-ratio: 1;
+}
+.output-slot.empty { background: var(--surface2); }
+.output-slot.droppable { border-color: var(--accent); background: rgba(88,166,255,0.08); }
+.output-slot.droppable:hover { background: rgba(88,166,255,0.15); }
+.output-slot.filled { border-style: solid; border-color: var(--border); background: var(--surface); }
+.output-slot.filled:hover { border-color: var(--border2); }
+
+.slot-img { width: 100%; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; display: block; background: repeating-conic-gradient(#1c2330 0% 25%, #161b22 0% 50%) 0 0/6px 6px; border-radius: 2px; }
+.slot-plus { font-size: 16px; color: var(--border2); line-height: 1; }
+.slot-label { font-family: var(--mono); font-size: 8px; color: var(--muted); text-align: center; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; }
+.slot-clear { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.6); border: none; border-radius: 3px; color: var(--muted); cursor: pointer; padding: 1px; display: flex; align-items: center; opacity: 0; transition: opacity 0.1s; }
+.output-slot:hover .slot-clear { opacity: 1; }
+.slot-clear:hover { color: var(--danger); }
+
+/* presets */
+.preset-section { display: flex; flex-direction: column; gap: 8px; }
+.preset-list { display: flex; flex-direction: column; gap: 2px; }
+.preset-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; border-radius: 4px;
+  border: 1px solid var(--border);
+  cursor: pointer; background: var(--surface2);
+  transition: border-color 0.1s, background 0.1s;
+}
+.preset-row:hover { border-color: var(--border2); background: var(--surface); }
+.preset-row.active { border-color: var(--accent); background: rgba(88,166,255,0.08); }
+.preset-name { font-family: var(--mono); font-size: 12px; color: var(--text); flex: 1; }
+.preset-meta { font-family: var(--mono); font-size: 10px; color: var(--muted); flex-shrink: 0; }
+.preset-delete { background: transparent; border: none; color: var(--muted); cursor: pointer; padding: 2px; display: flex; align-items: center; flex-shrink: 0; opacity: 0; transition: opacity 0.1s, color 0.1s; }
+.preset-row:hover .preset-delete { opacity: 1; }
+.preset-delete:hover { color: var(--danger); }
+.preset-save-btn { display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+/* small primary */
+.btn-primary-sm { padding: 5px 12px; background: var(--accent); color: var(--bg); border: none; border-radius: var(--radius); font-family: var(--mono); font-size: 12px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; white-space: nowrap; }
+.btn-primary-sm:hover:not(:disabled) { opacity: 0.85; }
+.btn-primary-sm:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* modal */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+.modal-box { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; width: 520px; max-width: 90vw; max-height: 80vh; display: flex; flex-direction: column; overflow: hidden; }
+.modal-sm { width: 360px; }
+.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.modal-title { font-family: var(--mono); font-size: 13px; font-weight: 500; }
+.modal-close { background: transparent; border: none; color: var(--muted); cursor: pointer; padding: 2px; display: flex; align-items: center; }
+.modal-close:hover { color: var(--text); }
+.modal-body { padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+.modal-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.modal-note { font-size: 12px; color: var(--muted); font-style: italic; border-left: 2px solid var(--border2); padding-left: 10px; }
+.frame-reference { display: flex; flex-direction: column; gap: 2px; }
+.frame-ref-row { display: flex; align-items: center; gap: 12px; padding: 5px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface2); }
+.frame-ref-idx { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--accent); width: 20px; flex-shrink: 0; }
+.frame-ref-label { font-family: var(--mono); font-size: 12px; }
+.modal-examples { display: flex; flex-direction: column; gap: 10px; }
+.example-imgs { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+.example-img-wrap { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+.example-img { image-rendering: pixelated; image-rendering: crisp-edges; background: repeating-conic-gradient(#1c2330 0% 25%, #161b22 0% 50%) 0 0/8px 8px; border: 1px solid var(--border); border-radius: 4px; width: 100%; height: auto; display: block; }
+.example-caption { font-family: var(--mono); font-size: 10px; color: var(--muted); }```
+
+----
+
+# frontend/src/tabs/TilesetTab.jsx
+```jsx
+import { useState, useEffect } from 'react'
+import './TilesetTab.css'
+import { DropZone } from '../components/DropZone'
+import { useFetch } from '../hooks/useFetch'
+import { downloadBlob } from '../utils'
+import { Info, X, Save } from 'lucide-react'
+import { PresetList } from '../components/PresetList'
+
+const API = '/api'
+
+const OW_LABELS = [
+  'down idle','up idle','left idle',
+  'down walk 1','down walk 2',
+  'up walk 1','up walk 2',
+  'left walk 1','left walk 2',
+]
+
+function useDebounce(value, delay) {
+  const [d, setD] = useState(value)
+  useEffect(() => { const t = setTimeout(() => setD(value), delay); return () => clearTimeout(t) }, [value, delay])
+  return d
+}
+
+// ---- Help Modal ----
+function HelpModal({ onClose }) {
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-box" onClick={e => e.stopPropagation()}>
+        <div className="modal-header">
+          <span className="modal-title">Overworld sprite format</span>
+          <button className="modal-close" onClick={onClose}><X size={16}/></button>
+        </div>
+        <div className="modal-body">
+          <p className="modal-desc">Gen 3 overworld sprites are 9-frame spritesheets arranged horizontally:</p>
+          <div className="frame-reference">
+            {OW_LABELS.map((label, i) => (
+              <div key={i} className="frame-ref-row">
+                <span className="frame-ref-idx">{i}</span>
+                <span className="frame-ref-label">{label}</span>
+              </div>
+            ))}
+          </div>
+          <p className="modal-note">Right-facing frames are generated by flipping left-facing frames at runtime.</p>
+          <div className="modal-examples">
+            <p className="section-label" style={{ marginBottom: 8 }}>examples</p>
+            <div className="example-imgs">
+              <div className="example-img-wrap">
+                <img src="/example/e4.png" alt="e4" className="example-img" draggable={false}/>
+                <span className="example-caption">NDS styled sprite</span>
+              </div>
+              <div className="example-img-wrap">
+                <img src="/example/waiter_f.png" alt="waiter" className="example-img" draggable={false}/>
+                <span className="example-caption">waiter_f.png</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ---- Save preset modal ----
+function SaveModal({ onSave, onClose }) {
+  const [name, setName] = useState('')
+  const [id, setId] = useState('')
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-box modal-sm" onClick={e => e.stopPropagation()}>
+        <div className="modal-header">
+          <span className="modal-title">save preset</span>
+          <button className="modal-close" onClick={onClose}><X size={16}/></button>
+        </div>
+        <div className="modal-body" style={{ gap: 12 }}>
+          <div className="field">
+            <label className="field-label">name</label>
+            <input className="field-input" value={name}
+              onChange={e => { setName(e.target.value); setId(e.target.value.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'')) }}
+              placeholder="My custom preset" />
+          </div>
+          <div className="field">
+            <label className="field-label">id</label>
+            <input className="field-input field-mono" value={id}
+              onChange={e => setId(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g,''))}
+              placeholder="my_custom_preset" />
+          </div>
+          <button className="btn-primary" disabled={!name || !id} onClick={() => onSave(id, name)}>save</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ---- Source sheet — plain div grid over the image ----
+function SourceSheet({ b64, sourceW, sourceH, tileW, tileH, selectedTile, onTileClick }) {
+  if (!b64) return null
+  const cols = Math.max(1, Math.floor(sourceW / tileW))
+  const rows = Math.max(1, Math.floor(sourceH / tileH))
+  const total = cols * rows
+
+  return (
+    <div className="source-sheet-wrap">
+      <div className="source-grid-container">
+        <img src={`data:image/png;base64,${b64}`} alt="source" className="source-img" draggable={false}/>
+        <div className="source-tile-grid" style={{ '--src-cols': cols, '--src-rows': rows }}>
+          {Array.from({ length: total }).map((_, idx) => (
+            <div
+              key={idx}
+              className={`source-tile ${selectedTile === idx ? 'selected' : ''}`}
+              onClick={() => onTileClick(idx)}
+              title={`tile ${idx}`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ---- Output grid ----
+function OutputGrid({ slots, setSlots, cols, rows, tiles, selectedTile, setSelectedTile, slotLabels }) {
+  const handleSlotClick = (idx) => {
+    if (selectedTile !== null) {
+      // place selected tile into this slot
+      setSlots(prev => { const s = [...prev]; s[idx] = selectedTile; return s })
+      setSelectedTile(null)
+    } else if (slots[idx] !== null && slots[idx] !== undefined) {
+      // pick tile back out of slot
+      setSelectedTile(slots[idx])
+      setSlots(prev => { const s = [...prev]; s[idx] = null; return s })
+    }
+  }
+
+  const clearSlot = (e, idx) => {
+    e.stopPropagation()
+    setSlots(prev => { const s = [...prev]; s[idx] = null; return s })
+  }
+
+  const canPlace = selectedTile !== null
+
+  return (
+    <div className="output-grid" style={{ '--cols': cols }}>
+      {Array.from({ length: cols * rows }).map((_, idx) => {
+        const tileIdx = slots[idx]
+        const hasTile = tileIdx !== null && tileIdx !== undefined
+        const label = slotLabels?.[idx] ?? String(idx)
+
+        return (
+          <div
+            key={idx}
+            className={`output-slot ${hasTile ? 'filled' : 'empty'} ${canPlace && !hasTile ? 'droppable' : ''}`}
+            onClick={() => handleSlotClick(idx)}
+          >
+            {hasTile && tiles?.[tileIdx]
+              ? <img src={`data:image/png;base64,${tiles[tileIdx]}`} alt={label} className="slot-img" draggable={false}/>
+              : <span className="slot-plus">+</span>
+            }
+            <span className="slot-label">{label}</span>
+            {hasTile && (
+              <button className="slot-clear" onClick={e => clearSlot(e, idx)}><X size={9}/></button>
+            )}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+// ---- Download: assemble canvas client-side ----
+function buildAndDownload(tiles, slots, cols, rows, tileW, tileH, filename) {
+  const canvas = document.createElement('canvas')
+  canvas.width = cols * tileW
+  canvas.height = rows * tileH
+  const ctx = canvas.getContext('2d')
+  ctx.imageSmoothingEnabled = false
+
+  Promise.all(slots.map((tileIdx, pos) => {
+    if (tileIdx === null || tileIdx === undefined || !tiles[tileIdx]) return Promise.resolve()
+    return new Promise(res => {
+      const img = new Image()
+      img.onload = () => {
+        ctx.drawImage(img, (pos % cols) * tileW, Math.floor(pos / cols) * tileH, tileW, tileH)
+        res()
+      }
+      img.src = `data:image/png;base64,${tiles[tileIdx]}`
+    })
+  })).then(() => canvas.toBlob(blob => downloadBlob(blob, filename), 'image/png'))
+}
+
+// ---- Main ----
+export function TilesetTab() {
+  const [file, setFile] = useState(null)
+  const [tileW, setTileW] = useState(32)
+  const [tileH, setTileH] = useState(32)
+  const [cols, setCols] = useState(9)
+  const [rows, setRows] = useState(1)
+  const [slotLabels, setSlotLabels] = useState([])
+  const [result, setResult] = useState(null)
+  const [slots, setSlots] = useState(Array(9).fill(null))
+  const [selectedTile, setSelectedTile] = useState(null)
+  const [showHelp, setShowHelp] = useState(false)
+  const [showSave, setShowSave] = useState(false)
+  const [presets, setPresets] = useState([])
+  const [activePresetId, setActivePresetId] = useState(null)
+  const [defaultIds, setDefaultIds] = useState(new Set())
+  const { loading, error, run } = useFetch()
+
+  const dTileW = useDebounce(tileW, 500)
+  const dTileH = useDebounce(tileH, 500)
+
+  const fetchPresets = () =>
+    fetch(`${API}/presets`).then(r => r.json()).then(p => {
+      setPresets(p)
+      setDefaultIds(new Set(p.filter(x => x.is_default).map(x => x.id)))
+    }).catch(() => {})
+
+  useEffect(() => { fetchPresets() }, [])
+
+  useEffect(() => {
+    if (file) slice(file, dTileW, dTileH)
+  }, [dTileW, dTileH])
+
+  const resetSlots = (c, r) => setSlots(Array(c * r).fill(null))
+
+  const slice = async (f, tw, th) => {
+    const fd = new FormData()
+    fd.append('file', f)
+    fd.append('tile_width', tw ?? tileW)
+    fd.append('tile_height', th ?? tileH)
+    const data = await run(async () => {
+      const res = await fetch(`${API}/tileset/slice`, { method: 'POST', body: fd })
+      if (!res.ok) throw new Error(await res.text())
+      return res.json()
+    })
+    if (data) { setResult(data); setSelectedTile(null) }
+  }
+
+  const handleFile = (f) => {
+    setFile(f); setResult(null); resetSlots(cols, rows); slice(f)
+  }
+
+  const handleColsChange = (v) => { setCols(v); resetSlots(v, rows) }
+  const handleRowsChange = (v) => { setRows(v); resetSlots(cols, v) }
+
+  const handleLoadPreset = async (id) => {
+    const p = await fetch(`${API}/presets/${id}`).then(r => r.json())
+    setTileW(p.tile_w); setTileH(p.tile_h)
+    setCols(p.cols); setRows(p.rows)
+    setSlots(p.slots?.length === p.cols * p.rows ? p.slots : Array(p.cols * p.rows).fill(null))
+    setSlotLabels(p.slot_labels || [])
+    setActivePresetId(id)
+    if (file) slice(file, p.tile_w, p.tile_h)
+  }
+
+  const handleSavePreset = async (id, name) => {
+    const body = { name, tile_w: tileW, tile_h: tileH, cols, rows, slots, slot_labels: slotLabels.length ? slotLabels : undefined }
+    await fetch(`${API}/presets/${id}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+    fetchPresets(); setActivePresetId(id); setShowSave(false)
+  }
+
+  const handleDeletePreset = async (id) => {
+    if (defaultIds.has(id)) return
+    await fetch(`${API}/presets/${id}`, { method: 'DELETE' })
+    fetchPresets()
+    if (activePresetId === id) setActivePresetId(null)
+  }
+
+  return (
+    <div className="tab-content">
+      {showHelp && <HelpModal onClose={() => setShowHelp(false)}/>}
+      {showSave && <SaveModal onSave={handleSavePreset} onClose={() => setShowSave(false)}/>}
+
+      <div className="tileset-layout">
+        <div className="tileset-left">
+          <DropZone onFile={handleFile} label="Drop tileset image"/>
+
+          <div className="field-row">
+            <div className="field"><label className="field-label">tile w</label>
+              <input type="number" className="field-input" value={tileW} min={8} max={256}
+                onChange={e => setTileW(Number(e.target.value))}/></div>
+            <div className="field"><label className="field-label">tile h</label>
+              <input type="number" className="field-input" value={tileH} min={8} max={256}
+                onChange={e => setTileH(Number(e.target.value))}/></div>
+          </div>
+
+          <div className="field-row">
+            <div className="field"><label className="field-label">cols</label>
+              <input type="number" className="field-input" value={cols} min={1} max={32}
+                onChange={e => handleColsChange(Number(e.target.value))}/></div>
+            <div className="field"><label className="field-label">rows</label>
+              <input type="number" className="field-input" value={rows} min={1} max={32}
+                onChange={e => handleRowsChange(Number(e.target.value))}/></div>
+          </div>
+
+          <div className="preset-section">
+            <p className="section-label">presets</p>
+            <PresetList
+              presets={presets}
+              defaultIds={defaultIds}
+              activePresetId={activePresetId}
+              onLoad={handleLoadPreset}
+              onDelete={handleDeletePreset}
+              currentState={{ tileW, tileH, cols, rows, slots }}
+            />
+            <button className="btn-secondary preset-save-btn" onClick={() => setShowSave(true)}>
+              <Save size={12}/> save as preset
+            </button>
+          </div>
+
+          {error && <p className="error-msg">{error}</p>}
+
+          {result && (
+            <div className="source-section">
+              <p className="section-label">
+                source — {result.tile_count} tiles
+                {selectedTile !== null
+                  ? <span className="selected-hint"> · tile {selectedTile} selected — click a slot</span>
+                  : <span className="selected-hint"> · click a tile to select</span>
+                }
+              </p>
+              <SourceSheet
+                b64={result.source}
+                sourceW={result.source_w}
+                sourceH={result.source_h}
+                tileW={result.tile_width}
+                tileH={result.tile_height}
+                selectedTile={selectedTile}
+                onTileClick={i => setSelectedTile(prev => prev === i ? null : i)}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="tileset-right">
+          <div className="tileset-toolbar">
+            <span className="section-label">
+              {result ? `output — ${cols}×${rows}` : 'no tileset loaded'}
+            </span>
+            <div style={{ display: 'flex', gap: 6 }}>
+              {result && <>
+                <button className="btn-ghost" onClick={() => resetSlots(cols, rows)}>clear</button>
+                <button className="btn-primary-sm" onClick={() =>
+                  buildAndDownload(result.tiles, slots, cols, rows, result.tile_width, result.tile_height,
+                    `${file.name.replace(/\.[^.]+$/, '')}_arranged.png`)}
+                  disabled={slots.every(s => s === null)}>
+                  download
+                </button>
+              </>}
+              <button className="help-btn" onClick={() => setShowHelp(true)}><Info size={15}/></button>
+            </div>
+          </div>
+
+          {!result && !loading && <div className="empty-state"><p>drop a tileset to start arranging</p></div>}
+          {loading && <div className="empty-state"><div className="spinner"/><p>slicing…</p></div>}
+
+          {result && (
+            <>
+              {selectedTile !== null && (
+                <div className="place-hint">
+                  tile {selectedTile} selected — click a slot to place it
+                  <button className="btn-ghost" onClick={() => setSelectedTile(null)}>cancel</button>
+                </div>
+              )}
+              <OutputGrid
+                slots={slots} setSlots={setSlots}
+                cols={cols} rows={rows}
+                tiles={result.tiles}
+                selectedTile={selectedTile} setSelectedTile={setSelectedTile}
+                slotLabels={slotLabels}
+              />
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}```
+
+----
+
+# frontend/src/tabs/convertTab.jsx
+```jsx
+import { useState, useEffect, useRef } from 'react'
+import './ConvertTab.css'
+import { DropZone } from '../components/DropZone'
+import { ZoomableImage } from '../components/ZoomableImage'
+import { WalkAnimation } from '../components/WalkAnimation'
+import { ResultCard } from '../components/ResultCard'
+import { PaletteStrip } from '../components/PaletteStrip'
+import { useFetch } from '../hooks/useFetch'
+import { downloadBlob } from '../utils'
+import { X, Upload, Trash2, RefreshCw, Layers } from 'lucide-react'
+
+const API = '/api'
+
+function GridIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+      <rect x="0" y="0" width="6" height="6" rx="1"/>
+      <rect x="8" y="0" width="6" height="6" rx="1"/>
+      <rect x="0" y="8" width="6" height="6" rx="1"/>
+      <rect x="8" y="8" width="6" height="6" rx="1"/>
+    </svg>
+  )
+}
+
+function ListIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+      <rect x="0" y="1" width="14" height="3" rx="1"/>
+      <rect x="0" y="6" width="14" height="3" rx="1"/>
+      <rect x="0" y="11" width="14" height="3" rx="1"/>
+    </svg>
+  )
+}
+
+// ---- Palette Management Modal ----
+function PaletteModal({ palettes, selected, onToggle, onSelectAll, onDeselectAll, onReload, onUpload, onDelete, onClose, reloading }) {
+  const fileRef = useRef()
+  const allSelected = palettes.length > 0 && palettes.every(p => selected.has(p.name))
+
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-box modal-palettes" onClick={e => e.stopPropagation()}>
+
+        <div className="modal-header">
+          <span className="modal-title">manage palettes</span>
+          <div className="modal-header-actions">
+            <button
+              className="icon-btn"
+              title="reload from disk"
+              onClick={onReload}
+              disabled={reloading}
+            >
+              <RefreshCw size={12} className={reloading ? 'spinning' : ''} />
+            </button>
+            <button
+              className="icon-btn"
+              title="upload .pal files"
+              onClick={() => fileRef.current?.click()}
+            >
+              <Upload size={12} />
+            </button>
+            <input
+              ref={fileRef}
+              type="file"
+              accept=".pal"
+              multiple
+              className="hidden-input"
+              onChange={e => { onUpload(e.target.files); e.target.value = '' }}
+            />
+            <button className="modal-close" onClick={onClose}><X size={16} /></button>
+          </div>
+        </div>
+
+        <div className="modal-body">
+          {palettes.length === 0 ? (
+            <p className="palette-empty">
+              no palettes loaded — drop <code>.pal</code> files into <code>palettes/</code> or upload above
+            </p>
+          ) : (
+            <>
+              <div className="palette-select-all">
+                <label className="palette-checkbox-row">
+                  <input
+                    type="checkbox"
+                    checked={allSelected}
+                    onChange={e => e.target.checked ? onSelectAll() : onDeselectAll()}
+                  />
+                  <span>{allSelected ? 'deselect all' : 'select all'}</span>
+                  <span className="palette-count-badge">{selected.size}/{palettes.length} active</span>
+                </label>
+              </div>
+
+              <div className="palette-list">
+                {palettes.map(p => (
+                  <div key={p.name} className={`palette-row ${selected.has(p.name) ? 'active' : ''}`}>
+                    <label className="palette-row-label">
+                      <input
+                        type="checkbox"
+                        checked={selected.has(p.name)}
+                        onChange={() => onToggle(p.name)}
+                      />
+                      <div className="palette-row-info">
+                        <span className="palette-name">{p.name.replace('.pal', '')}</span>
+                        <PaletteStrip colors={p.colors} usedIndices={p.colors.map((_, i) => i)} />
+                      </div>
+                    </label>
+                    <button
+                      className="icon-btn icon-btn--danger"
+                      title="delete palette"
+                      onClick={() => onDelete(p.name)}
+                    >
+                      <Trash2 size={11} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+      </div>
+    </div>
+  )
+}
+
+// ---- Main ----
+export function ConvertTab() {
+  const [file, setFile] = useState(null)
+  const [originalB64, setOriginalB64] = useState(null)
+  const [results, setResults] = useState([])
+  const [selected, setSelected] = useState(null)
+  const [viewMode, setViewMode] = useState('grid')
+  const [isOWSprite, setIsOWSprite] = useState(false)
+
+  const [palettes, setPalettes] = useState([])
+  const [selectedPalettes, setSelectedPalettes] = useState(new Set())
+  const [reloading, setReloading] = useState(false)
+  const [showPaletteModal, setShowPaletteModal] = useState(false)
+
+  const { loading, error, run } = useFetch()
+
+  const fetchPalettes = async () => {
+    const data = await fetch(`${API}/palettes`).then(r => r.json()).catch(() => [])
+    setPalettes(data)
+    // Auto-select any newly discovered palettes
+    setSelectedPalettes(prev => {
+      const next = new Set(prev)
+      data.forEach(p => { if (!next.has(p.name)) next.add(p.name) })
+      return next
+    })
+  }
+
+  useEffect(() => { fetchPalettes() }, [])
+
+  useEffect(() => {
+    if (!originalB64) { setIsOWSprite(false); return }
+    const img = new window.Image()
+    img.onload = () => setIsOWSprite(img.width / img.height >= 7.5 && img.width / img.height <= 10.5)
+    img.src = `data:image/png;base64,${originalB64}`
+  }, [originalB64])
+
+  const convert = async (f) => {
+    if (selectedPalettes.size === 0) return
+    const fd = new FormData()
+    fd.append('file', f)
+    const data = await run(async () => {
+      const res = await fetch(`${API}/convert`, { method: 'POST', body: fd })
+      if (!res.ok) throw new Error(await res.text())
+      return res.json()
+    })
+    if (data) {
+      setOriginalB64(data.original)
+      const filtered = data.results.filter(r => selectedPalettes.has(r.palette_name))
+      setResults(filtered)
+      setSelected(filtered.findIndex(r => r.best))
+    }
+  }
+
+  const handleFile = (f) => {
+    setFile(f); setResults([]); setSelected(null); setOriginalB64(null)
+    convert(f)
+  }
+
+  const handleReload = async () => {
+    setReloading(true)
+    await fetch(`${API}/palettes/reload`, { method: 'POST' })
+    await fetchPalettes()
+    setReloading(false)
+  }
+
+  const handleUpload = async (files) => {
+    await Promise.all(Array.from(files).map(async (f) => {
+      const fd = new FormData()
+      fd.append('file', f)
+      await fetch(`${API}/palettes/upload`, { method: 'POST', body: fd }).catch(() => {})
+    }))
+    await handleReload()
+  }
+
+  const handleDelete = async (name) => {
+    await fetch(`${API}/palettes/${encodeURIComponent(name)}`, { method: 'DELETE' }).catch(() => {})
+    setSelectedPalettes(prev => { const n = new Set(prev); n.delete(name); return n })
+    await fetchPalettes()
+  }
+
+  const handleToggle = (name) => {
+    setSelectedPalettes(prev => {
+      const next = new Set(prev)
+      next.has(name) ? next.delete(name) : next.add(name)
+      return next
+    })
+  }
+
+  const handleDownload = async (paletteName) => {
+    const fd = new FormData()
+    fd.append('file', file); fd.append('palette_name', paletteName)
+    const res = await fetch(`${API}/convert/download`, { method: 'POST', body: fd })
+    if (!res.ok) return
+    downloadBlob(await res.blob(), `${file.name.replace(/\.[^.]+$/, '')}_${paletteName.replace('.pal', '')}.png`)
+  }
+
+  const handleDownloadAll = async () => {
+    const fd = new FormData()
+    fd.append('file', file)
+    const res = await fetch(`${API}/convert/download-all`, { method: 'POST', body: fd })
+    if (!res.ok) return
+    downloadBlob(await res.blob(), `${file.name.replace(/\.[^.]+$/, '')}_all_palettes.zip`)
+  }
+
+  return (
+    <div className="tab-content">
+      {showPaletteModal && (
+        <PaletteModal
+          palettes={palettes}
+          selected={selectedPalettes}
+          onToggle={handleToggle}
+          onSelectAll={() => setSelectedPalettes(new Set(palettes.map(p => p.name)))}
+          onDeselectAll={() => setSelectedPalettes(new Set())}
+          onReload={handleReload}
+          onUpload={handleUpload}
+          onDelete={handleDelete}
+          onClose={() => setShowPaletteModal(false)}
+          reloading={reloading}
+        />
+      )}
+
+      <div className="convert-layout">
+
+        <div className="convert-left">
+          <DropZone onFile={handleFile} label="Drop your sprite" />
+
+          {originalB64 && (
+            <div className="original-preview">
+              <p className="section-label">original</p>
+              <ZoomableImage src={originalB64} alt="original" />
+              {isOWSprite && <WalkAnimation spriteB64={originalB64} />}
+            </div>
+          )}
+
+          {results.length > 0 && (
+            <button className="btn-secondary" onClick={handleDownloadAll}>
+              download all as zip
+            </button>
+          )}
+          <button className="btn-ghost-subtle" disabled={!file || loading || selectedPalettes.size === 0} onClick={() => convert(file)}>
+            {loading ? 'converting…' : '↺ re-process'}
+          </button>
+          {error && <p className="error-msg">{error}</p>}
+        </div>
+
+        <div className="convert-right">
+          <div className="results-toolbar">
+            <span className="results-count">
+              {results.length > 0 ? `${results.length} palettes` : ''}
+            </span>
+            <div className="toolbar-right">
+              <button
+                className={`palette-mgr-btn ${selectedPalettes.size < palettes.length ? 'filtered' : ''}`}
+                onClick={() => setShowPaletteModal(true)}
+                title="manage palettes"
+              >
+                <Layers size={12} />
+                <span>palettes</span>
+                <span className="palette-mgr-badge">{selectedPalettes.size}/{palettes.length}</span>
+              </button>
+              {results.length > 0 && (
+                <div className="view-toggle">
+                  <button className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                    onClick={() => setViewMode('grid')} title="grid view"><GridIcon /></button>
+                  <button className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
+                    onClick={() => setViewMode('list')} title="list view"><ListIcon /></button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {results.length === 0 && !loading && (
+            <div className="empty-state"><p>drop a sprite to see all palette conversions</p></div>
+          )}
+          {loading && (
+            <div className="empty-state"><div className="spinner" /><p>processing…</p></div>
+          )}
+
+          <div className={viewMode === 'grid' ? 'results-grid' : 'results-list'}>
+            {results.map((r, i) => (
+              <ResultCard
+                key={r.palette_name}
+                result={r}
+                selected={selected === i}
+                onSelect={() => setSelected(i)}
+                onDownload={handleDownload}
+                listMode={viewMode === 'list'}
+              />
+            ))}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  )
+}```
+
+----
+
 # main.py
 ```python
 #!/usr/bin/env python3
@@ -13339,7 +6600,9 @@ class Palette:
 model/palette_extractor.py
 
 Extract a GBA-compatible palette from any sprite using k-means clustering.
-This is the v3 "Extract" pillar — the feature that was missing vs Pylette.
+Supports two color spaces for clustering:
+  - 'oklab'  (default) — perceptually uniform, groups colors as humans see them
+  - 'rgb'              — raw euclidean distance in sRGB space
 
 Usage:
     extractor = PaletteExtractor()
@@ -13358,6 +6621,74 @@ from sklearn.cluster import KMeans
 from model.palette import Color, Palette
 
 
+# ---------------------------------------------------------------------------
+# Oklab conversion (vectorized numpy)
+# Reference: https://bottosson.github.io/posts/oklab/
+# ---------------------------------------------------------------------------
+
+def _srgb_to_linear(c: np.ndarray) -> np.ndarray:
+    """sRGB gamma → linear (in-place safe, float32 input expected, 0–1 range)."""
+    return np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
+
+
+def _linear_to_srgb(c: np.ndarray) -> np.ndarray:
+    """Linear → sRGB gamma (0–1 range)."""
+    return np.where(c <= 0.0031308, 12.92 * c, 1.055 * c ** (1.0 / 2.4) - 0.055)
+
+
+def rgb_to_oklab(pixels: np.ndarray) -> np.ndarray:
+    """
+    Convert (N, 3) uint8 RGB → (N, 3) float32 Oklab.
+    L in ~[0, 1], a/b in ~[-0.5, 0.5].
+    """
+    rgb = pixels.astype(np.float32) / 255.0
+    lin = _srgb_to_linear(rgb)
+
+    # Linear RGB → LMS cone responses
+    l = 0.4122214708 * lin[:, 0] + 0.5363325363 * lin[:, 1] + 0.0514459929 * lin[:, 2]
+    m = 0.2119034982 * lin[:, 0] + 0.6806995451 * lin[:, 1] + 0.1073969566 * lin[:, 2]
+    s = 0.0883024619 * lin[:, 0] + 0.2817188376 * lin[:, 1] + 0.6299787005 * lin[:, 2]
+
+    # Cube root (avoid NaN on negatives, though values should be ≥ 0)
+    l_ = np.cbrt(np.maximum(l, 0))
+    m_ = np.cbrt(np.maximum(m, 0))
+    s_ = np.cbrt(np.maximum(s, 0))
+
+    L =  0.2104542553 * l_ + 0.7936177850 * m_ - 0.0040720468 * s_
+    a =  1.9779984951 * l_ - 2.4285922050 * m_ + 0.4505937099 * s_
+    b =  0.0259040371 * l_ + 0.7827717662 * m_ - 0.8086757660 * s_
+
+    return np.stack([L, a, b], axis=1).astype(np.float32)
+
+
+def oklab_to_rgb(lab: np.ndarray) -> np.ndarray:
+    """
+    Convert (N, 3) float32 Oklab → (N, 3) uint8 RGB.
+    Values are clamped to valid range.
+    """
+    L, a, b = lab[:, 0], lab[:, 1], lab[:, 2]
+
+    l_ = L + 0.3963377774 * a + 0.2158037573 * b
+    m_ = L - 0.1055613458 * a - 0.0638541728 * b
+    s_ = L - 0.0894841775 * a - 1.2914855480 * b
+
+    l = l_ ** 3
+    m = m_ ** 3
+    s = s_ ** 3
+
+    r =  4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s
+    g = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s
+    b_ = -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
+
+    rgb = np.stack([r, g, b_], axis=1)
+    rgb = _linear_to_srgb(np.clip(rgb, 0, 1))
+    return (np.clip(rgb, 0, 1) * 255 + 0.5).astype(np.uint8)
+
+
+# ---------------------------------------------------------------------------
+# Extractor
+# ---------------------------------------------------------------------------
+
 class PaletteExtractor:
     """
     Extract a palette from a sprite using k-means clustering.
@@ -13365,7 +6696,13 @@ class PaletteExtractor:
     Slot 0 is always the explicit bg_color (the transparent color).
     n_colors refers to the number of *non-transparent* colors to cluster,
     so the final palette has n_colors + 1 entries total (max 16 for GBA).
+
+    color_space controls the space in which distance is measured:
+      'oklab'  — perceptually uniform (default, recommended)
+      'rgb'    — raw sRGB euclidean distance
     """
+
+    VALID_COLOR_SPACES = ("oklab", "rgb")
 
     def __init__(self, random_state: int = 42):
         self.random_state = random_state
@@ -13375,18 +6712,19 @@ class PaletteExtractor:
         image_path: str | Path,
         n_colors: int = 15,
         bg_color: str = "#73C5A4",
+        color_space: str = "oklab",
         name: str | None = None,
     ) -> Palette:
         """
         Extract a palette from image_path.
 
         Args:
-            image_path: Path to any image Pillow can open.
-            n_colors:   Number of sprite colors to cluster (NOT including transparent).
-                        Final palette size = n_colors + 1. Max 15 for GBA (16 total).
-            bg_color:   Hex string for the transparent color forced into slot 0.
-                        e.g. "#73C5A4" (GBA default) or whatever the user picked.
-            name:       Palette name. Defaults to the image filename stem.
+            image_path:   Path to any image Pillow can open.
+            n_colors:     Number of sprite colors to cluster (NOT including transparent).
+                          Final palette size = n_colors + 1. Max 15 for GBA (16 total).
+            bg_color:     Hex string for the transparent color forced into slot 0.
+            color_space:  'oklab' (default) or 'rgb'.
+            name:         Palette name. Defaults to the image filename stem.
 
         Returns:
             A Palette with (n_colors + 1) entries, index 0 = bg_color.
@@ -13395,34 +6733,43 @@ class PaletteExtractor:
         if not path.exists():
             raise FileNotFoundError(f"Image not found: {path}")
 
+        if color_space not in self.VALID_COLOR_SPACES:
+            raise ValueError(f"color_space must be one of {self.VALID_COLOR_SPACES}, got {color_space!r}")
+
         max_sprite_colors = Palette.MAX_COLORS - 1  # 15
         if n_colors < 1 or n_colors > max_sprite_colors:
             raise ValueError(f"n_colors must be 1–{max_sprite_colors}, got {n_colors}")
 
         transparent_color = self._parse_hex(bg_color)
-        transparent_rgb = (transparent_color.r, transparent_color.g, transparent_color.b)
+        transparent_rgb = np.array(
+            [transparent_color.r, transparent_color.g, transparent_color.b],
+            dtype=np.float32,
+        )
 
         img = Image.open(path).convert("RGBA")
-        pixels = np.array(img)  # (H, W, 4)
+        pixels = np.array(img)          # (H, W, 4)
         alpha = pixels[:, :, 3]
-        rgb = pixels[:, :, :3]
+        rgb   = pixels[:, :, :3]
 
-        # Collect opaque pixels, excluding any that exactly match the transparent color
+        # Collect fully opaque pixels, excluding the transparent color
         opaque_mask = alpha.flatten() >= 255
         flat_rgb = rgb.reshape(-1, 3)
         opaque_pixels = flat_rgb[opaque_mask].astype(np.float32)
 
-        # Remove pixels that are already the transparent color
-        tr = np.array(transparent_rgb, dtype=np.float32)
-        non_transparent_mask = ~np.all(opaque_pixels == tr, axis=1)
-        sprite_pixels = opaque_pixels[non_transparent_mask]
+        non_transparent_mask = ~np.all(opaque_pixels == transparent_rgb, axis=1)
+        sprite_pixels_rgb = opaque_pixels[non_transparent_mask].astype(np.uint8)
 
-        if len(sprite_pixels) == 0:
+        if len(sprite_pixels_rgb) == 0:
             logging.warning("Image has no sprite pixels — returning palette with transparent only")
             return Palette(name=name or path.stem, colors=[transparent_color])
 
-        # Clamp clusters to number of unique colors actually present
-        unique_colors = len(np.unique(sprite_pixels, axis=0))
+        # Convert to clustering space
+        if color_space == "oklab":
+            cluster_pixels = rgb_to_oklab(sprite_pixels_rgb)
+        else:
+            cluster_pixels = sprite_pixels_rgb.astype(np.float32)
+
+        unique_colors = len(np.unique(sprite_pixels_rgb, axis=0))
         actual_clusters = min(n_colors, unique_colors)
 
         kmeans = KMeans(
@@ -13430,16 +6777,21 @@ class PaletteExtractor:
             random_state=self.random_state,
             n_init="auto",
         )
-        kmeans.fit(sprite_pixels)
-        centers = kmeans.cluster_centers_.astype(np.uint8)
+        kmeans.fit(cluster_pixels)
+        centers = kmeans.cluster_centers_   # float, in cluster space
 
-        # Sort by cluster size (most prominent first)
+        # Convert centroids back to uint8 RGB
+        if color_space == "oklab":
+            centers_rgb = oklab_to_rgb(centers.astype(np.float32))
+        else:
+            centers_rgb = np.clip(centers, 0, 255).astype(np.uint8)
+
+        # Sort by cluster size (most-used color first)
         labels = kmeans.labels_
         cluster_sizes = np.bincount(labels, minlength=actual_clusters)
         order = np.argsort(-cluster_sizes)
-        sorted_centers = centers[order]
+        sorted_centers = centers_rgb[order]
 
-        # Slot 0 = transparent, slots 1..n = clustered sprite colors
         colors = [transparent_color] + [
             Color(int(c[0]), int(c[1]), int(c[2])) for c in sorted_centers
         ]
@@ -13447,7 +6799,8 @@ class PaletteExtractor:
         palette = Palette(name=name or path.stem, colors=colors)
         logging.info(
             f"Extracted {len(colors)} colors from '{path.name}' "
-            f"(transparent={bg_color}, {len(sprite_pixels)} sprite pixels, {actual_clusters} clusters)"
+            f"(space={color_space}, transparent={bg_color}, "
+            f"{len(sprite_pixels_rgb)} sprite pixels, {actual_clusters} clusters)"
         )
         return palette
 
@@ -13456,12 +6809,13 @@ class PaletteExtractor:
         image_paths: list[Path],
         n_colors: int = 15,
         bg_color: str = "#73C5A4",
+        color_space: str = "oklab",
     ) -> list[Palette]:
         """Extract palettes from a list of images. Returns one Palette per image."""
         results = []
         for path in image_paths:
             try:
-                results.append(self.extract(path, n_colors=n_colors, bg_color=bg_color))
+                results.append(self.extract(path, n_colors=n_colors, bg_color=bg_color, color_space=color_space))
             except Exception as e:
                 logging.error(f"Failed to extract palette from {path}: {e}")
         return results
@@ -13803,269 +7157,41 @@ class TilesetManager:
 
 ----
 
-# server/app.py
+# server/api/__init__.py
+```python
+# server/api/__init__.py```
+
+----
+
+# server/api/batch.py
 ```python
 """
-server/app.py
+server/api/batch.py
 
-FastAPI server for Porypal v3.
-Wraps the pure-Python model layer and exposes it as a REST API.
-All image data is transferred as base64 PNG to avoid file system coupling with the browser.
+Routes: /api/batch
 """
 
 from __future__ import annotations
-import base64
 import io
-import logging
 import os
 import tempfile
 import zipfile
 from pathlib import Path
-from typing import Annotated
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
-from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
-from PIL import Image
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi.responses import StreamingResponse
 
-from model.palette import Palette
-from model.palette_manager import PaletteManager
-from model.image_manager import ImageManager, ConversionResult
-from model.palette_extractor import PaletteExtractor
+from server.state import state
 
-logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
-log = logging.getLogger(__name__)
-
-app = FastAPI(title="Porypal API", version="3.0.0")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# ---------- helpers ----------
-
-def pil_to_b64(img: Image.Image) -> str:
-    """Convert a PIL image to a base64-encoded PNG string."""
-    buf = io.BytesIO()
-    img.convert("RGBA").save(buf, format="PNG")
-    return base64.b64encode(buf.getvalue()).decode()
-
-def load_config() -> dict:
-    cfg_path = Path("config.yaml")
-    if cfg_path.exists():
-        import yaml
-        return yaml.safe_load(cfg_path.read_text()) or {}
-    return {}
-
-# ---------- shared state ----------
-# Simple in-process state — fine for a single-user local tool.
-
-class AppState:
-    def __init__(self):
-        self.config = load_config()
-        self.palette_manager = PaletteManager(self.config)
-        self.image_manager = ImageManager(self.config)
-        self.extractor = PaletteExtractor()
-
-state = AppState()
-
-# ---------- routes ----------
-
-@app.get("/api/palettes")
-def list_palettes():
-    """Return all loaded palettes with their colors as hex strings."""
-    return [
-        {
-            "name": p.name,
-            "colors": [c.to_hex() for c in p.colors],
-            "count": len(p.colors),
-        }
-        for p in state.palette_manager.get_palettes()
-    ]
+router = APIRouter(prefix="/api/batch", tags=["batch"])
 
 
-@app.post("/api/palettes/reload")
-def reload_palettes():
-    """Reload palettes from the palettes/ directory."""
-    state.palette_manager.reload()
-    return {"loaded": len(state.palette_manager.get_palettes())}
-
-
-@app.post("/api/convert")
-async def convert(
-    file: UploadFile = File(...),
-    palette_name: str | None = Form(default=None),
-):
-    """
-    Convert an uploaded sprite against all (or one specific) palette(s).
-    Returns base64 PNG previews + color counts for each result.
-    """
-    data = await file.read()
-    try:
-        img = Image.open(io.BytesIO(data))
-    except Exception as e:
-        raise HTTPException(400, f"Cannot open image: {e}")
-
-    # Write to a temp file so ImageManager can use its path-based loader
-    with tempfile.NamedTemporaryFile(suffix=Path(file.filename).suffix, delete=False) as tmp:
-        tmp.write(data)
-        tmp_path = tmp.name
-
-    try:
-        state.image_manager.load_image(tmp_path)
-
-        palettes = state.palette_manager.get_palettes()
-        if palette_name:
-            palettes = [p for p in palettes if p.name == palette_name]
-            if not palettes:
-                raise HTTPException(404, f"Palette '{palette_name}' not found")
-
-        results = state.image_manager.process_all_palettes(palettes)
-        best = state.image_manager.get_best_indices()
-
-        return {
-            "original": pil_to_b64(state.image_manager._original_rgba),
-            "results": [
-                {
-                    "palette_name": r.palette.name,
-                    "colors_used": r.colors_used,
-                    "used_indices": sorted(r.used_indices),
-                    "colors": [c.to_hex() for c in r.palette.colors],
-                    "image": pil_to_b64(r.image.convert("RGBA")),
-                    "best": i in best,
-                }
-                for i, r in enumerate(results)
-            ],
-        }
-    finally:
-        os.unlink(tmp_path)
-
-
-@app.post("/api/convert/download")
-async def download_converted(
-    file: UploadFile = File(...),
-    palette_name: str = Form(...),
-):
-    """
-    Convert and return a single GBA-compatible indexed PNG for download.
-    """
-    data = await file.read()
-    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-        tmp.write(data)
-        tmp_path = tmp.name
-
-    try:
-        state.image_manager.load_image(tmp_path)
-        palette = state.palette_manager.get_palette_by_name(palette_name)
-        if not palette:
-            raise HTTPException(404, f"Palette '{palette_name}' not found")
-
-        results = state.image_manager.process_all_palettes([palette])
-        result = results[0]
-
-        out_buf = io.BytesIO()
-        result.image.save(out_buf, format="PNG", bits=4, optimize=True)
-        out_buf.seek(0)
-
-        stem = Path(file.filename).stem
-        pal_stem = Path(palette_name).stem
-        filename = f"{stem}_{pal_stem}.png"
-
-        return StreamingResponse(
-            out_buf,
-            media_type="image/png",
-            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
-        )
-    finally:
-        os.unlink(tmp_path)
-
-
-@app.post("/api/convert/download-all")
-async def download_all_converted(file: UploadFile = File(...)):
-    """
-    Convert against all palettes and return a zip of all results.
-    """
-    data = await file.read()
-    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-        tmp.write(data)
-        tmp_path = tmp.name
-
-    try:
-        state.image_manager.load_image(tmp_path)
-        results = state.image_manager.process_all_palettes(
-            state.palette_manager.get_palettes()
-        )
-
-        zip_buf = io.BytesIO()
-        stem = Path(file.filename).stem
-        with zipfile.ZipFile(zip_buf, "w", zipfile.ZIP_DEFLATED) as zf:
-            for r in results:
-                pal_stem = Path(r.palette.name).stem
-                img_buf = io.BytesIO()
-                r.image.save(img_buf, format="PNG", bits=4, optimize=True)
-                zf.writestr(f"{stem}_{pal_stem}.png", img_buf.getvalue())
-        zip_buf.seek(0)
-
-        return StreamingResponse(
-            zip_buf,
-            media_type="application/zip",
-            headers={"Content-Disposition": f'attachment; filename="{stem}_all_palettes.zip"'},
-        )
-    finally:
-        os.unlink(tmp_path)
-
-
-@app.post("/api/extract")
-async def extract_palette(
-    file: UploadFile = File(...),
-    n_colors: int = Form(default=15),
-    bg_color: str | None = Form(default="#73C5A4"),
-):
-    """
-    Extract a GBA palette from the uploaded sprite using k-means.
-    Returns the palette as hex colors + a downloadable .pal file as base64.
-    """
-    data = await file.read()
-    with tempfile.NamedTemporaryFile(suffix=Path(file.filename).suffix, delete=False) as tmp:
-        tmp.write(data)
-        tmp_path = tmp.name
-
-    try:
-        palette = state.extractor.extract(tmp_path, n_colors=n_colors, bg_color=bg_color)
-
-        # bg_color is slot 0 — extractor must return it first
-        if len(palette.colors) > 16:
-            raise HTTPException(400, f"Image has too many colors ({len(palette.colors)}); max 16 for GBA")
-
-        pal_buf = io.StringIO()
-        pal_buf.write("JASC-PAL\n0100\n")
-        pal_buf.write(f"{len(palette.colors)}\n")
-        for c in palette.colors:
-            pal_buf.write(f"{c.r} {c.g} {c.b}\n")
-
-        return {
-            "name": palette.name,
-            "colors": [c.to_hex() for c in palette.colors],
-            "pal_content": pal_buf.getvalue(),
-        }
-    finally:
-        os.unlink(tmp_path)
-
-
-@app.post("/api/batch")
+@router.post("")
 async def batch_convert(
     files: list[UploadFile] = File(...),
     palette_name: str = Form(...),
 ):
-    """
-    Convert multiple sprites against one palette.
-    Returns a zip of all converted images.
-    """
+    """Convert multiple sprites against one palette. Returns a zip of all results."""
     palette = state.palette_manager.get_palette_by_name(palette_name)
     if not palette:
         raise HTTPException(404, f"Palette '{palette_name}' not found")
@@ -14100,60 +7226,365 @@ async def batch_convert(
         zip_buf,
         media_type="application/zip",
         headers={"Content-Disposition": 'attachment; filename="batch_output.zip"'},
-    )
+    )```
+
+----
+
+# server/api/convert.py
+```python
+"""
+server/api/convert.py
+
+Routes: /api/convert
+"""
+
+from __future__ import annotations
+import io
+import os
+import tempfile
+import zipfile
+from pathlib import Path
+
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi.responses import StreamingResponse
+from PIL import Image
+
+from server.helpers import pil_to_b64
+from server.state import state
+
+router = APIRouter(prefix="/api/convert", tags=["convert"])
 
 
-@app.get("/api/health")
+@router.post("")
+async def convert(
+    file: UploadFile = File(...),
+    palette_name: str | None = Form(default=None),
+):
+    """
+    Convert an uploaded sprite against all (or one specific) palette(s).
+    Returns base64 PNG previews + color counts for each result.
+    """
+    data = await file.read()
+    try:
+        Image.open(io.BytesIO(data))
+    except Exception as e:
+        raise HTTPException(400, f"Cannot open image: {e}")
+
+    with tempfile.NamedTemporaryFile(suffix=Path(file.filename).suffix, delete=False) as tmp:
+        tmp.write(data)
+        tmp_path = tmp.name
+
+    try:
+        state.image_manager.load_image(tmp_path)
+
+        palettes = state.palette_manager.get_palettes()
+        if palette_name:
+            palettes = [p for p in palettes if p.name == palette_name]
+            if not palettes:
+                raise HTTPException(404, f"Palette '{palette_name}' not found")
+
+        results = state.image_manager.process_all_palettes(palettes)
+        best = state.image_manager.get_best_indices()
+
+        return {
+            "original": pil_to_b64(state.image_manager._original_rgba),
+            "results": [
+                {
+                    "palette_name": r.palette.name,
+                    "colors_used": r.colors_used,
+                    "used_indices": sorted(r.used_indices),
+                    "colors": [c.to_hex() for c in r.palette.colors],
+                    "image": pil_to_b64(r.image.convert("RGBA")),
+                    "best": i in best,
+                }
+                for i, r in enumerate(results)
+            ],
+        }
+    finally:
+        os.unlink(tmp_path)
+
+
+@router.post("/download")
+async def download_converted(
+    file: UploadFile = File(...),
+    palette_name: str = Form(...),
+):
+    """Convert and return a single GBA-compatible indexed PNG for download."""
+    data = await file.read()
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+        tmp.write(data)
+        tmp_path = tmp.name
+
+    try:
+        state.image_manager.load_image(tmp_path)
+        palette = state.palette_manager.get_palette_by_name(palette_name)
+        if not palette:
+            raise HTTPException(404, f"Palette '{palette_name}' not found")
+
+        results = state.image_manager.process_all_palettes([palette])
+        result = results[0]
+
+        out_buf = io.BytesIO()
+        result.image.save(out_buf, format="PNG", bits=4, optimize=True)
+        out_buf.seek(0)
+
+        stem = Path(file.filename).stem
+        pal_stem = Path(palette_name).stem
+        filename = f"{stem}_{pal_stem}.png"
+
+        return StreamingResponse(
+            out_buf,
+            media_type="image/png",
+            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        )
+    finally:
+        os.unlink(tmp_path)
+
+
+@router.post("/download-all")
+async def download_all_converted(file: UploadFile = File(...)):
+    """Convert against all palettes and return a zip of all results."""
+    data = await file.read()
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+        tmp.write(data)
+        tmp_path = tmp.name
+
+    try:
+        state.image_manager.load_image(tmp_path)
+        results = state.image_manager.process_all_palettes(
+            state.palette_manager.get_palettes()
+        )
+
+        zip_buf = io.BytesIO()
+        stem = Path(file.filename).stem
+        with zipfile.ZipFile(zip_buf, "w", zipfile.ZIP_DEFLATED) as zf:
+            for r in results:
+                pal_stem = Path(r.palette.name).stem
+                img_buf = io.BytesIO()
+                r.image.save(img_buf, format="PNG", bits=4, optimize=True)
+                zf.writestr(f"{stem}_{pal_stem}.png", img_buf.getvalue())
+        zip_buf.seek(0)
+
+        return StreamingResponse(
+            zip_buf,
+            media_type="application/zip",
+            headers={"Content-Disposition": f'attachment; filename="{stem}_all_palettes.zip"'},
+        )
+    finally:
+        os.unlink(tmp_path)```
+
+----
+
+# server/api/extract.py
+```python
+"""
+server/api/extract.py
+
+Routes: /api/extract
+"""
+
+from __future__ import annotations
+import io
+import os
+import tempfile
+from pathlib import Path
+
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+
+from server.state import state
+
+router = APIRouter(prefix="/api/extract", tags=["extract"])
+
+
+def _make_pal_content(palette) -> str:
+    buf = io.StringIO()
+    buf.write("JASC-PAL\n0100\n")
+    buf.write(f"{len(palette.colors)}\n")
+    for c in palette.colors:
+        buf.write(f"{c.r} {c.g} {c.b}\n")
+    return buf.getvalue()
+
+
+@router.post("")
+async def extract_palette(
+    file: UploadFile = File(...),
+    n_colors: int = Form(default=15),
+    bg_color: str | None = Form(default="#73C5A4"),
+    color_space: str = Form(default="oklab"),
+):
+    """
+    Extract a GBA palette from the uploaded sprite using k-means.
+    color_space: 'oklab' (default, perceptually uniform) or 'rgb'.
+    Returns the palette as hex colors + JASC .pal content.
+    """
+    if color_space not in ("oklab", "rgb"):
+        raise HTTPException(400, f"color_space must be 'oklab' or 'rgb', got {color_space!r}")
+
+    data = await file.read()
+    with tempfile.NamedTemporaryFile(suffix=Path(file.filename).suffix, delete=False) as tmp:
+        tmp.write(data)
+        tmp_path = tmp.name
+
+    try:
+        palette = state.extractor.extract(
+            tmp_path,
+            n_colors=n_colors,
+            bg_color=bg_color,
+            color_space=color_space,
+        )
+
+        if len(palette.colors) > 16:
+            raise HTTPException(400, f"Image has too many colors ({len(palette.colors)}); max 16 for GBA")
+
+        return {
+            "name": palette.name,
+            "colors": [c.to_hex() for c in palette.colors],
+            "pal_content": _make_pal_content(palette),
+            "color_space": color_space,
+        }
+    finally:
+        os.unlink(tmp_path)
+
+
+@router.post("/save")
+async def save_extracted_palette(
+    name: str = Form(...),
+    pal_content: str = Form(...),
+):
+    """
+    Save an in-memory extracted palette into palettes/user/.
+    Called from the Extract tab after a successful extraction.
+    """
+    dest_dir = Path("palettes") / "user"
+    dest_dir.mkdir(parents=True, exist_ok=True)
+
+    filename = name if name.endswith(".pal") else f"{name}.pal"
+    dest = dest_dir / filename
+
+    # Avoid clobbering — append suffix if name already exists
+    counter = 1
+    while dest.exists():
+        stem = filename.removesuffix(".pal")
+        dest = dest_dir / f"{stem}_{counter}.pal"
+        counter += 1
+
+    dest.write_text(pal_content, encoding="utf-8")
+    state.palette_manager.reload()
+    return {"saved": dest.name}```
+
+----
+
+# server/api/health.py
+```python
+"""
+server/api/health.py
+
+Routes: /api/health
+"""
+
+from fastapi import APIRouter
+from server.state import state
+
+router = APIRouter(prefix="/api", tags=["health"])
+
+
+@router.get("/health")
 def health():
-    return {"status": "ok", "palettes_loaded": len(state.palette_manager.get_palettes())}
+    return {"status": "ok", "palettes_loaded": len(state.palette_manager.get_palettes())}```
 
-@app.post("/api/palettes/upload")
+----
+
+# server/api/palettes.py
+```python
+"""
+server/api/palettes.py
+
+Routes: /api/palettes
+"""
+
+from __future__ import annotations
+from pathlib import Path
+
+from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi.responses import FileResponse, StreamingResponse
+
+from server.state import state
+
+router = APIRouter(prefix="/api/palettes", tags=["palettes"])
+
+
+@router.get("")
+def list_palettes():
+    """Return all loaded palettes with their colors as hex strings."""
+    return [
+        {
+            "name": p.name,
+            "colors": [c.to_hex() for c in p.colors],
+            "count": len(p.colors),
+        }
+        for p in state.palette_manager.get_palettes()
+    ]
+
+
+@router.post("/reload")
+def reload_palettes():
+    """Reload palettes from the palettes/ directory."""
+    state.palette_manager.reload()
+    return {"loaded": len(state.palette_manager.get_palettes())}
+
+
+@router.post("/upload")
 async def upload_palette(file: UploadFile = File(...)):
+    """Upload a .pal file into the palettes/ directory."""
     dest = Path("palettes") / file.filename
     dest.write_bytes(await file.read())
     state.palette_manager.reload()
     return {"uploaded": file.filename}
 
-@app.delete("/api/palettes/{name}")
-async def delete_palette(name: str):
+
+@router.get("/{name}/download")
+def download_palette(name: str):
+    """Stream a .pal file back to the client for download."""
+    path = Path("palettes") / name
+    if not path.exists():
+        raise HTTPException(404, f"Palette '{name}' not found")
+    return FileResponse(
+        path=str(path),
+        media_type="text/plain",
+        headers={"Content-Disposition": f'attachment; filename="{name}"'},
+    )
+
+
+@router.delete("/{name}")
+def delete_palette(name: str):
+    """Delete a user palette. Refuses if marked as default."""
     path = Path("palettes") / name
     if not path.exists():
         raise HTTPException(404, f"Palette '{name}' not found")
     path.unlink()
     state.palette_manager.reload()
-    return {"deleted": name}
+    return {"deleted": name}```
 
+----
 
-# ---------- serve frontend in production ----------
-example_dir = Path(__file__).parent.parent / "example"
-frontend_dist = Path(__file__).parent.parent / "frontend" / "dist"
-if example_dir.exists():
-    app.mount("/example", StaticFiles(directory=str(example_dir)), name="example")
+# server/api/presets.py
+```python
+"""
+server/api/presets.py
 
-if frontend_dist.exists():
-    app.mount("/", StaticFiles(directory=str(frontend_dist), html=True), name="frontend")
+Routes: /api/presets
+"""
 
-
-
-# ---------- tileset routes ----------
-
-from model.tileset_manager import TilesetManager
-from server.presets import list_presets, load_preset, save_preset, delete_preset
-from pydantic import BaseModel
+from __future__ import annotations
 from typing import Optional
 
-# -- presets --
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
 
-@app.get("/api/presets")
-def get_presets():
-    return list_presets()
+from server.presets import list_presets, load_preset, save_preset, delete_preset
 
-@app.get("/api/presets/{preset_id}")
-def get_preset(preset_id: str):
-    p = load_preset(preset_id)
-    if not p:
-        raise HTTPException(404, f"Preset '{preset_id}' not found")
-    return p
+router = APIRouter(prefix="/api/presets", tags=["presets"])
+
 
 class PresetBody(BaseModel):
     name: str
@@ -14164,11 +7595,26 @@ class PresetBody(BaseModel):
     slots: list
     slot_labels: Optional[list] = None
 
-@app.post("/api/presets/{preset_id}")
+
+@router.get("")
+def get_presets():
+    return list_presets()
+
+
+@router.get("/{preset_id}")
+def get_preset(preset_id: str):
+    p = load_preset(preset_id)
+    if not p:
+        raise HTTPException(404, f"Preset '{preset_id}' not found")
+    return p
+
+
+@router.post("/{preset_id}")
 def upsert_preset(preset_id: str, body: PresetBody):
     return save_preset(preset_id, body.model_dump())
 
-@app.delete("/api/presets/{preset_id}")
+
+@router.delete("/{preset_id}")
 def remove_preset(preset_id: str):
     p = load_preset(preset_id)
     if not p:
@@ -14177,12 +7623,35 @@ def remove_preset(preset_id: str):
         raise HTTPException(403, f"Preset '{preset_id}' is a default preset and cannot be deleted")
     if not delete_preset(preset_id):
         raise HTTPException(500, "Failed to delete preset")
-    return {"deleted": preset_id}
+    return {"deleted": preset_id}```
+
+----
+
+# server/api/tileset.py
+```python
+"""
+server/api/tileset.py
+
+Routes: /api/tileset
+"""
+
+from __future__ import annotations
+import io
+import os
+import tempfile
+from pathlib import Path
+
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi.responses import StreamingResponse
+from PIL import Image as PILImage
+
+from model.tileset_manager import TilesetManager
+from server.helpers import pil_to_b64
+
+router = APIRouter(prefix="/api/tileset", tags=["tileset"])
 
 
-# -- tileset --
-
-@app.post("/api/tileset/slice")
+@router.post("/slice")
 async def tileset_slice(
     file: UploadFile = File(...),
     tile_width: int = Form(default=32),
@@ -14191,7 +7660,8 @@ async def tileset_slice(
     """Slice a tileset into individual tiles. Returns source image + all tile images as base64."""
     data = await file.read()
     with tempfile.NamedTemporaryFile(suffix=Path(file.filename).suffix, delete=False) as tmp:
-        tmp.write(data); tmp_path = tmp.name
+        tmp.write(data)
+        tmp_path = tmp.name
     try:
         config = {
             "tileset": {
@@ -14203,7 +7673,6 @@ async def tileset_slice(
             },
             "output": {"output_width": tile_width, "output_height": tile_height},
         }
-        from PIL import Image as PILImage
         source_img = PILImage.open(tmp_path).convert("RGBA")
         source_w, source_h = source_img.size
 
@@ -14224,7 +7693,7 @@ async def tileset_slice(
         os.unlink(tmp_path)
 
 
-@app.post("/api/tileset/arrange")
+@router.post("/arrange")
 async def tileset_arrange(
     file: UploadFile = File(...),
     tile_width: int = Form(default=32),
@@ -14236,7 +7705,8 @@ async def tileset_arrange(
     """Arrange tiles by order string and return a downloadable PNG."""
     data = await file.read()
     with tempfile.NamedTemporaryFile(suffix=Path(file.filename).suffix, delete=False) as tmp:
-        tmp.write(data); tmp_path = tmp.name
+        tmp.write(data)
+        tmp_path = tmp.name
     try:
         order = [int(x.strip()) for x in sprite_order.split(",") if x.strip()]
         config = {
@@ -14261,14 +7731,56 @@ async def tileset_arrange(
         buf.seek(0)
         stem = Path(file.filename).stem
         return StreamingResponse(
-            buf, media_type="image/png",
+            buf,
+            media_type="image/png",
             headers={"Content-Disposition": f'attachment; filename="{stem}_arranged.png"'},
         )
     finally:
-        os.unlink(tmp_path)
+        os.unlink(tmp_path)```
 
+----
 
-# ---------- serve static ----------
+# server/app.py
+```python
+"""
+server/app.py
+
+FastAPI entrypoint — mounts routers and middleware only.
+All route logic lives in server/api/*.py.
+"""
+
+from __future__ import annotations
+import logging
+from pathlib import Path
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+
+from server.api import palettes, convert, extract, batch, tileset, presets, health
+
+logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
+
+app = FastAPI(title="Porypal API", version="3.0.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ---------- routers ----------
+
+app.include_router(palettes.router)
+app.include_router(convert.router)
+app.include_router(extract.router)
+app.include_router(batch.router)
+app.include_router(tileset.router)
+app.include_router(presets.router)
+app.include_router(health.router)
+
+# ---------- static files ----------
 
 example_dir = Path(__file__).parent.parent / "example"
 frontend_dist = Path(__file__).parent.parent / "frontend" / "dist"
@@ -14278,6 +7790,29 @@ if example_dir.exists():
 
 if frontend_dist.exists():
     app.mount("/", StaticFiles(directory=str(frontend_dist), html=True), name="frontend")```
+
+----
+
+# server/helpers.py
+```python
+"""
+server/helpers.py
+
+Shared utility functions used across routers.
+"""
+
+from __future__ import annotations
+import base64
+import io
+
+from PIL import Image
+
+
+def pil_to_b64(img: Image.Image) -> str:
+    """Convert a PIL image to a base64-encoded PNG string."""
+    buf = io.BytesIO()
+    img.convert("RGBA").save(buf, format="PNG")
+    return base64.b64encode(buf.getvalue()).decode()```
 
 ----
 
@@ -14345,6 +7880,43 @@ def delete_preset(preset_id: str) -> bool:
         f.unlink()
         return True
     return False```
+
+----
+
+# server/state.py
+```python
+"""
+server/state.py
+
+Shared application state — single instance imported by all routers.
+Keeps PaletteManager, ImageManager, and PaletteExtractor alive across requests.
+"""
+
+from __future__ import annotations
+from pathlib import Path
+
+from model.palette_manager import PaletteManager
+from model.image_manager import ImageManager
+from model.palette_extractor import PaletteExtractor
+
+
+def _load_config() -> dict:
+    cfg_path = Path("config.yaml")
+    if cfg_path.exists():
+        import yaml
+        return yaml.safe_load(cfg_path.read_text()) or {}
+    return {}
+
+
+class AppState:
+    def __init__(self):
+        self.config = _load_config()
+        self.palette_manager = PaletteManager(self.config)
+        self.image_manager = ImageManager(self.config)
+        self.extractor = PaletteExtractor()
+
+
+state = AppState()```
 
 ----
 
@@ -15597,6 +9169,3 @@ class ZoomableGraphicsView(QGraphicsView):
             self.initial_transform = self.transform()
             self.check_reset_button_visibility()
 ```
-
-----
-

@@ -52,6 +52,7 @@ async def extract_palette(
             n_colors=n_colors,
             bg_color=bg_color,
             color_space=color_space,
+            name=Path(file.filename).stem,
         )
 
         if len(palette.colors) > 16:

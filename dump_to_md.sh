@@ -4,9 +4,8 @@ ROOT="${1:-.}"
 OUT="$ROOT/porypal_dump.md"
 > "$OUT"
 
-EXTENSIONS=("py" "yaml" "yml" "json" "sh")
-EXCLUDE_DIRS=(".venv" "__pycache__" ".git" "build" "dist")
-
+EXTENSIONS=("py" "yaml" "yml" "json" "sh" "jsx" "css")
+EXCLUDE_DIRS=(".venv" "__pycache__" ".git" "build" "dist" "node_modules")
 find "$ROOT" -type f | sort | while read -r file; do
     rel="${file#$ROOT/}"
 

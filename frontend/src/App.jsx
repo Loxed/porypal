@@ -3,27 +3,36 @@ import { ConvertTab } from './tabs/ConvertTab'
 import { ExtractTab } from './tabs/ExtractTab'
 import { BatchTab } from './tabs/BatchTab'
 import { TilesetTab } from './tabs/TilesetTab'
+import { PalettesTab } from './tabs/PalettesTab'
 import './App.css'
 
 const API = '/api'
-const TABS = ['convert', 'extract', 'batch', 'tileset']
+const TABS = ['convert', 'extract', 'batch', 'tileset', 'palettes']
 
 export default function App() {
   const [tab, setTab] = useState('convert')
   const [palettes, setPalettes] = useState([])
 
-  useEffect(() => {
+  const fetchPalettes = () => {
     fetch(`${API}/palettes`)
       .then(r => r.json())
       .then(setPalettes)
       .catch(() => {})
-  }, [])
+  }
+
+  useEffect(() => { fetchPalettes() }, [])
+
+  const handleTabChange = (t) => {
+    setTab(t)
+    // Re-sync palette list when switching to tabs that use it
+    if (t === 'convert' || t === 'batch') fetchPalettes()
+  }
 
   return (
     <div className="app">
       <header className="header">
         <div className="header-inner">
-          <a className="logo" href='#' onClick={() => setTab('convert')}>
+          <a className="logo" href='#' onClick={() => handleTabChange('convert')}>
             <img src="/porypal.ico" alt="Porypal" className="logo-icon" />
           </a>
           <nav className="nav">
@@ -31,7 +40,7 @@ export default function App() {
               <button
                 key={t}
                 className={`nav-tab ${tab === t ? 'active' : ''}`}
-                onClick={() => setTab(t)}
+                onClick={() => handleTabChange(t)}
               >
                 {t}
               </button>
@@ -53,10 +62,11 @@ export default function App() {
         </div>
       </header>
       <main className="main">
-        {tab === 'convert' && <ConvertTab />}
-        {tab === 'extract' && <ExtractTab />}
-        {tab === 'batch'   && <BatchTab palettes={palettes} />}
-        {tab === 'tileset' && <TilesetTab />}
+        {tab === 'convert'  && <ConvertTab />}
+        {tab === 'extract'  && <ExtractTab />}
+        {tab === 'batch'    && <BatchTab palettes={palettes} />}
+        {tab === 'tileset'  && <TilesetTab />}
+        {tab === 'palettes' && <PalettesTab />}
       </main>
     </div>
   )

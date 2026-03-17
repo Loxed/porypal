@@ -22,3 +22,5 @@ venv/
 *.puml
 
 example/
+
+palette_library/*

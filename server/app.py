@@ -13,7 +13,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from server.api import palettes, convert, extract, batch, tileset, presets, health
+from server.api import palettes, convert, extract, batch, tileset, presets, health, library
 
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
@@ -35,6 +35,7 @@ app.include_router(batch.router)
 app.include_router(tileset.router)
 app.include_router(presets.router)
 app.include_router(health.router)
+app.include_router(library.router)
 
 # ---------- static files ----------
 

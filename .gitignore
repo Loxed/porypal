@@ -24,3 +24,4 @@ venv/
 example/
 
 palette_library/*
+palettes/user/*

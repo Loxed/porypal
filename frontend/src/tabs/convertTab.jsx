@@ -9,6 +9,7 @@ import { useFetch } from '../hooks/useFetch'
 import { downloadBlob, detectBgColor} from '../utils'
 import { X, Upload, Trash2, RefreshCw, Layers, Grid, List } from 'lucide-react'
 import { BgColorPicker } from '../components/BgColorPicker'
+import { Modal } from '../components/Modal'
 
 
 const API = '/api'
@@ -27,77 +28,54 @@ function PaletteModal({ palettes, selected, onToggle, onSelectAll, onDeselectAll
   const fileRef = useRef()
   const allSelected = palettes.length > 0 && palettes.every(p => selected.has(p.name))
 
-  return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-box modal-palettes" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <span className="modal-title">manage palettes</span>
-          <div className="modal-header-actions">
-            <button className="icon-btn" title="reload from disk" onClick={onReload} disabled={reloading}>
-              <RefreshCw size={12} className={reloading ? 'spinning' : ''} />
-            </button>
-            <button className="icon-btn" title="upload .pal files" onClick={() => fileRef.current?.click()}>
-              <Upload size={12} />
-            </button>
-            <input
-              ref={fileRef}
-              type="file"
-              accept=".pal"
-              multiple
-              className="hidden-input"
-              onChange={e => { onUpload(e.target.files); e.target.value = '' }}
-            />
-            <button className="modal-close" onClick={onClose}><X size={16} /></button>
-          </div>
-        </div>
+  const actions = (
+    <>
+      <button className="icon-btn" title="reload from disk" onClick={onReload} disabled={reloading}>
+        <RefreshCw size={12} className={reloading ? 'spinning' : ''} />
+      </button>
+      <button className="icon-btn" title="upload .pal files" onClick={() => fileRef.current?.click()}>
+        <Upload size={12} />
+      </button>
+      <input ref={fileRef} type="file" accept=".pal" multiple className="hidden-input"
+        onChange={e => { onUpload(e.target.files); e.target.value = '' }} />
+    </>
+  )
 
-        <div className="modal-body">
-          {palettes.length === 0 ? (
-            <p className="palette-empty">
-              no palettes loaded — drop <code>.pal</code> files into <code>palettes/</code> or upload above
-            </p>
-          ) : (
-            <>
-              <div className="palette-select-all">
-                <label className="palette-checkbox-row">
-                  <input
-                    type="checkbox"
-                    checked={allSelected}
-                    onChange={e => e.target.checked ? onSelectAll() : onDeselectAll()}
-                  />
-                  <span>{allSelected ? 'deselect all' : 'select all'}</span>
-                  <span className="palette-count-badge">{selected.size}/{palettes.length} active</span>
-                </label>
-              </div>
-              <div className="palette-list">
-                {palettes.map(p => (
-                  <div key={p.name} className={`palette-row ${selected.has(p.name) ? 'active' : ''}`}>
-                    <label className="palette-row-label">
-                      <input
-                        type="checkbox"
-                        checked={selected.has(p.name)}
-                        onChange={() => onToggle(p.name)}
-                      />
-                      <div className="palette-row-info">
-                        <span className="palette-name">{p.name.replace('.pal', '')}</span>
-                        <PaletteStrip colors={p.colors} usedIndices={p.colors.map((_, i) => i)} />
-                      </div>
-                    </label>
-                    <button
-                      className="icon-btn icon-btn--danger"
-                      title="delete palette"
-                      onClick={() => onDelete(p.name)}
-                    >
-                      <Trash2 size={11} />
-                    </button>
+  return (
+    <Modal title="manage palettes" onClose={onClose} size="lg" actions={actions}>
+      {palettes.length === 0 ? (
+        <p className="palette-empty">
+          no palettes loaded — drop <code>.pal</code> files into <code>palettes/</code> or upload above
+        </p>
+      ) : (
+        <>
+          <div className="palette-select-all">
+            <label className="palette-checkbox-row">
+              <input type="checkbox" checked={allSelected}
+                onChange={e => e.target.checked ? onSelectAll() : onDeselectAll()} />
+              <span>{allSelected ? 'deselect all' : 'select all'}</span>
+              <span className="palette-count-badge">{selected.size}/{palettes.length} active</span>
+            </label>
+          </div>
+          <div className="palette-list">
+            {palettes.map(p => (
+              <div key={p.name} className={`palette-row ${selected.has(p.name) ? 'active' : ''}`}>
+                <label className="palette-row-label">
+                  <input type="checkbox" checked={selected.has(p.name)} onChange={() => onToggle(p.name)} />
+                  <div className="palette-row-info">
+                    <span className="palette-name">{p.name.replace('.pal', '')}</span>
+                    <PaletteStrip colors={p.colors} usedIndices={p.colors.map((_, i) => i)} />
                   </div>
-                ))}
+                </label>
+                <button className="icon-btn icon-btn--danger" title="delete palette" onClick={() => onDelete(p.name)}>
+                  <Trash2 size={11} />
+                </button>
               </div>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
+            ))}
+          </div>
+        </>
+      )}
+    </Modal>
   )
 }
 

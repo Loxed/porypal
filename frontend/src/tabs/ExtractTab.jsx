@@ -7,6 +7,7 @@ import { BgColorPicker } from '../components/BgColorPicker'
 import { useFetch } from '../hooks/useFetch'
 import { Info, Pipette, PaintBucket, X, Eclipse, Palette, Scan, ChevronDown, Download, Save, Check } from 'lucide-react'
 import { ColorSwatch } from '../components/ColorSwatch'
+import { Modal } from '../components/Modal'
 import { detectBgColor } from '../utils'
 
 const API = '/api'
@@ -114,62 +115,54 @@ function ExportDropdown({ result }) {
 // ---------------------------------------------------------------------------
 function HelpModal({ onClose }) {
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-box" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <span className="modal-title">palette extraction</span>
-          <button className="modal-close" onClick={onClose}><X size={16}/></button>
-        </div>
-        <div className="modal-body">
-          <p className="modal-desc">
-            Extracts a GBA-compatible 16-color palette from any sprite using k-means clustering.
-            Both color spaces are shown so you can pick the best result.
-          </p>
-          <div className="help-steps">
-            <div className="help-step">
-              <span className="help-step-num">1</span>
-              <div>
-                <strong>Drop a sprite</strong>
-                <p>Any PNG or image with the colors you want to extract.</p>
-              </div>
-            </div>
-            <div className="help-step">
-              <span className="help-step-num">2</span>
-              <div>
-                <strong>Set the transparent color (slot 0)</strong>
-                <p>This color will always be first in the palette. The GBA uses slot 0 as the background/transparent color.</p>
-                <ul className="help-list">
-                  <li><span className="help-tag">auto <Scan size={8} /></span> samples the 4 corners and picks the majority color — works for most sprites</li>
-                  <li><span className="help-tag">default <Eclipse size={8} /></span> uses <code><ColorSwatch hex="#73C5A4" />#73C5A4</code>, the standard GBA transparent green</li>
-                  <li><span className="help-tag">custom <PaintBucket size={8} /></span> lets you type any hex value</li>
-                  <li><span className="help-tag">pipette <Pipette size={8} /></span> click any pixel on your sprite to sample it directly</li>
-                </ul>
-              </div>
-            </div>
-            <div className="help-step">
-              <span className="help-step-num">3</span>
-              <div>
-                <strong>Choose color count</strong>
-                <p>Max 15 sprite colors + 1 transparent = 16 total. GBA palettes are hard-limited to 16 colors per palette bank.</p>
-              </div>
-            </div>
-            <div className="help-step">
-              <span className="help-step-num">4</span>
-              <div>
-                <strong>Compare & Download</strong>
-                <p>
-                  <strong>Oklab:</strong> Clusters by perceptual similarity. <b>RECOMMENDED.</b>{' '}
-                  <strong>RGB:</strong> Clusters by raw channel distance. (Less faithful to original colors.)
-                </p>
-              </div>
-            </div>
+    <Modal title="palette extraction" onClose={onClose}>
+      <p className="modal-desc">
+        Extracts a GBA-compatible 16-color palette from any sprite using k-means clustering.
+        Both color spaces are shown so you can pick the best result.
+      </p>
+      <div className="help-steps">
+        <div className="help-step">
+          <span className="help-step-num">1</span>
+          <div>
+            <strong>Drop a sprite</strong>
+            <p>Any PNG or image with the colors you want to extract.</p>
           </div>
-          <div className="help-note">
-            <strong>JASC-PAL format</strong> — compatible with Porypal, Usenti, and most GBA sprite editors.
+        </div>
+        <div className="help-step">
+          <span className="help-step-num">2</span>
+          <div>
+            <strong>Set the transparent color (slot 0)</strong>
+            <p>This color will always be first in the palette. The GBA uses slot 0 as the background/transparent color.</p>
+            <ul className="help-list">
+              <li><span className="help-tag">auto <Scan size={8} /></span> samples the 4 corners and picks the majority color — works for most sprites</li>
+              <li><span className="help-tag">default <Eclipse size={8} /></span> uses <code><ColorSwatch hex="#73C5A4" />#73C5A4</code>, the standard GBA transparent green</li>
+              <li><span className="help-tag">custom <PaintBucket size={8} /></span> lets you type any hex value</li>
+              <li><span className="help-tag">pipette <Pipette size={8} /></span> click any pixel on your sprite to sample it directly</li>
+            </ul>
+          </div>
+        </div>
+        <div className="help-step">
+          <span className="help-step-num">3</span>
+          <div>
+            <strong>Choose color count</strong>
+            <p>Max 15 sprite colors + 1 transparent = 16 total. GBA palettes are hard-limited to 16 colors per palette bank.</p>
+          </div>
+        </div>
+        <div className="help-step">
+          <span className="help-step-num">4</span>
+          <div>
+            <strong>Compare & Download</strong>
+            <p>
+              <strong>Oklab:</strong> Clusters by perceptual similarity. <b>RECOMMENDED.</b>{' '}
+              <strong>RGB:</strong> Clusters by raw channel distance. (Less faithful to original colors.)
+            </p>
           </div>
         </div>
       </div>
-    </div>
+      <div className="help-note">
+        <strong>JASC-PAL format</strong> — compatible with Porypal, Usenti, and most GBA sprite editors.
+      </div>
+    </Modal>
   )
 }
 

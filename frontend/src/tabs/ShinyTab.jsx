@@ -3,15 +3,13 @@ import './ShinyTab.css'
 import { DropZone } from '../components/DropZone'
 import { ZoomableImage } from '../components/ZoomableImage'
 import { PaletteStrip } from '../components/PaletteStrip'
+import { Modal } from '../components/Modal'
 import { remapToShinyPalette, detectBgColor } from '../utils'
 import { X, Download, Check } from 'lucide-react'
 
 const API = '/api'
 const GBA_TRANSPARENT = '#73C5A4'
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
 function fileToB64(file) {
   return new Promise(resolve => {
     const reader = new FileReader()
@@ -33,30 +31,22 @@ function downloadPal(palContent, filename) {
 // ---------------------------------------------------------------------------
 function PalettePickerModal({ palettes, current, onPick, onClose }) {
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-box" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <span className="modal-title">select palette</span>
-          <button className="modal-close" onClick={onClose}><X size={16}/></button>
-        </div>
-        <div className="modal-body">
-          <div className="pal-select-list">
-            {palettes.map(p => (
-              <div
-                key={p.name}
-                className={`pal-select-row ${current === p.name ? 'active' : ''}`}
-                onClick={() => { onPick(p); onClose() }}
-              >
-                <span className="pal-select-row-name">{p.name.replace('.pal', '')}</span>
-                <div className="pal-select-row-strip">
-                  <PaletteStrip colors={p.colors} usedIndices={p.colors.map((_, i) => i)} checkSize="50%" />
-                </div>
-              </div>
-            ))}
+    <Modal title="select palette" onClose={onClose}>
+      <div className="pal-select-list">
+        {palettes.map(p => (
+          <div
+            key={p.name}
+            className={`pal-select-row ${current === p.name ? 'active' : ''}`}
+            onClick={() => { onPick(p); onClose() }}
+          >
+            <span className="pal-select-row-name">{p.name.replace('.pal', '')}</span>
+            <div className="pal-select-row-strip">
+              <PaletteStrip colors={p.colors} usedIndices={p.colors.map((_, i) => i)} checkSize="50%" />
+            </div>
           </div>
-        </div>
+        ))}
       </div>
-    </div>
+    </Modal>
   )
 }
 
@@ -94,15 +84,14 @@ function ExportPalBtn({ label, palContent, filename }) {
 // Mode 1: Apply shiny palette to sprite
 // ---------------------------------------------------------------------------
 function ApplyShinyMode({ palettes }) {
-  const [spriteB64, setSpriteB64]       = useState(null)
-  const [bgColor, setBgColor]           = useState(GBA_TRANSPARENT)
-  const [normalPal, setNormalPal]       = useState(null)
-  const [shinyPal, setShinyPal]         = useState(null)
+  const [spriteB64, setSpriteB64]         = useState(null)
+  const [bgColor, setBgColor]             = useState(GBA_TRANSPARENT)
+  const [normalPal, setNormalPal]         = useState(null)
+  const [shinyPal, setShinyPal]           = useState(null)
   const [normalPreview, setNormalPreview] = useState(null)
   const [shinyPreview, setShinyPreview]   = useState(null)
-  const [pickingFor, setPickingFor]     = useState(null) // 'normal' | 'shiny' | null
+  const [pickingFor, setPickingFor]       = useState(null) // 'normal' | 'shiny' | null
 
-  // Recompute previews whenever sprite or palettes change
   useEffect(() => {
     if (!spriteB64 || !normalPal) { setNormalPreview(null); return }
     remapToShinyPalette(spriteB64, normalPal.colors, normalPal.colors).then(setNormalPreview)
@@ -142,16 +131,10 @@ function ApplyShinyMode({ palettes }) {
               <span className="pal-pick-name">
                 {normalPal ? normalPal.name.replace('.pal','') : 'none selected'}
               </span>
-              <button className="pal-pick-btn" onClick={() => setPickingFor('normal')}>
-                pick
-              </button>
+              <button className="pal-pick-btn" onClick={() => setPickingFor('normal')}>pick</button>
             </div>
             {normalPal && (
-              <PaletteStrip
-                colors={normalPal.colors}
-                usedIndices={normalPal.colors.map((_,i) => i)}
-                checkSize="50%"
-              />
+              <PaletteStrip colors={normalPal.colors} usedIndices={normalPal.colors.map((_,i) => i)} checkSize="50%" />
             )}
           </div>
 
@@ -161,16 +144,10 @@ function ApplyShinyMode({ palettes }) {
               <span className="pal-pick-name">
                 {shinyPal ? shinyPal.name.replace('.pal','') : 'none selected'}
               </span>
-              <button className="pal-pick-btn" onClick={() => setPickingFor('shiny')}>
-                pick
-              </button>
+              <button className="pal-pick-btn" onClick={() => setPickingFor('shiny')}>pick</button>
             </div>
             {shinyPal && (
-              <PaletteStrip
-                colors={shinyPal.colors}
-                usedIndices={shinyPal.colors.map((_,i) => i)}
-                checkSize="50%"
-              />
+              <PaletteStrip colors={shinyPal.colors} usedIndices={shinyPal.colors.map((_,i) => i)} checkSize="50%" />
             )}
           </div>
         </div>
@@ -190,11 +167,7 @@ function ApplyShinyMode({ palettes }) {
                   : <div className="empty-state" style={{ minHeight: 120 }}>pick normal palette</div>
                 }
                 {normalPal && (
-                  <PaletteStrip
-                    colors={normalPal.colors}
-                    usedIndices={normalPal.colors.map((_,i) => i)}
-                    checkSize="100%"
-                  />
+                  <PaletteStrip colors={normalPal.colors} usedIndices={normalPal.colors.map((_,i) => i)} checkSize="100%" />
                 )}
               </div>
 
@@ -205,11 +178,7 @@ function ApplyShinyMode({ palettes }) {
                   : <div className="empty-state" style={{ minHeight: 120 }}>pick shiny palette</div>
                 }
                 {shinyPal && (
-                  <PaletteStrip
-                    colors={shinyPal.colors}
-                    usedIndices={shinyPal.colors.map((_,i) => i)}
-                    checkSize="100%"
-                  />
+                  <PaletteStrip colors={shinyPal.colors} usedIndices={shinyPal.colors.map((_,i) => i)} checkSize="100%" />
                 )}
               </div>
             </div>
@@ -224,17 +193,15 @@ function ApplyShinyMode({ palettes }) {
 // Mode 2: Extract matched palettes from normal + shiny sprites
 // ---------------------------------------------------------------------------
 function ExtractMatchedMode() {
-  const [normalFile, setNormalFile]   = useState(null)
-  const [shinyFile, setShinyFile]     = useState(null)
-  const [normalB64, setNormalB64]     = useState(null)
-  const [shinyB64, setShinyB64]       = useState(null)
-  const [nColors, setNColors]         = useState(15)
-  const [bgColor, setBgColor]         = useState(GBA_TRANSPARENT)
-  const [result, setResult]           = useState(null)
-  const [loading, setLoading]         = useState(false)
-  const [error, setError]             = useState(null)
-
-  // Preview the extracted palettes applied to the sprites
+  const [normalFile, setNormalFile]       = useState(null)
+  const [shinyFile, setShinyFile]         = useState(null)
+  const [normalB64, setNormalB64]         = useState(null)
+  const [shinyB64, setShinyB64]           = useState(null)
+  const [nColors, setNColors]             = useState(15)
+  const [bgColor, setBgColor]             = useState(GBA_TRANSPARENT)
+  const [result, setResult]               = useState(null)
+  const [loading, setLoading]             = useState(false)
+  const [error, setError]                 = useState(null)
   const [normalPreview, setNormalPreview] = useState(null)
   const [shinyPreview, setShinyPreview]   = useState(null)
 
@@ -303,34 +270,20 @@ function ExtractMatchedMode() {
 
         <div className="field">
           <label className="field-label">colors (max 15)</label>
-          <input
-            type="number"
-            className="field-input"
-            min={1} max={15}
-            value={nColors}
-            onChange={e => setNColors(Number(e.target.value))}
-          />
+          <input type="number" className="field-input" min={1} max={15} value={nColors}
+            onChange={e => setNColors(Number(e.target.value))} />
         </div>
 
         <div className="field">
           <label className="field-label">bg color</label>
           <div className="bg-color-row">
             <div className="bg-swatch" style={{ background: bgColor }} />
-            <input
-              className="field-input field-mono"
-              value={bgColor}
-              onChange={e => setBgColor(e.target.value)}
-              maxLength={7}
-              placeholder="#73C5A4"
-            />
+            <input className="field-input field-mono" value={bgColor}
+              onChange={e => setBgColor(e.target.value)} maxLength={7} placeholder="#73C5A4" />
           </div>
         </div>
 
-        <button
-          className="btn-primary"
-          disabled={!normalFile || !shinyFile || loading}
-          onClick={handleExtract}
-        >
+        <button className="btn-primary" disabled={!normalFile || !shinyFile || loading} onClick={handleExtract}>
           {loading ? 'extracting…' : 'extract matched palettes'}
         </button>
 
@@ -338,16 +291,8 @@ function ExtractMatchedMode() {
 
         {result && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <ExportPalBtn
-              label="download normal.pal"
-              palContent={result.normal.pal_content}
-              filename={result.normal.name}
-            />
-            <ExportPalBtn
-              label="download shiny.pal"
-              palContent={result.shiny.pal_content}
-              filename={`${result.shiny.name}_shiny`}
-            />
+            <ExportPalBtn label="download normal.pal" palContent={result.normal.pal_content} filename={result.normal.name} />
+            <ExportPalBtn label="download shiny.pal"  palContent={result.shiny.pal_content}  filename={`${result.shiny.name}_shiny`} />
           </div>
         )}
       </div>
@@ -355,9 +300,7 @@ function ExtractMatchedMode() {
       {/* ── Right ── */}
       <div className="shiny-right">
         {!result && (
-          <div className="empty-state">
-            drop both sprites and extract to see matched palettes
-          </div>
+          <div className="empty-state">drop both sprites and extract to see matched palettes</div>
         )}
 
         {result && (
@@ -365,21 +308,13 @@ function ExtractMatchedMode() {
             <div className="shiny-preview-section">
               <p className="section-label">normal — {result.normal.colors.length} colors</p>
               {normalPreview && <ZoomableImage src={normalPreview} alt="normal preview" />}
-              <PaletteStrip
-                colors={result.normal.colors}
-                usedIndices={result.normal.colors.map((_,i) => i)}
-                checkSize="100%"
-              />
+              <PaletteStrip colors={result.normal.colors} usedIndices={result.normal.colors.map((_,i) => i)} checkSize="100%" />
             </div>
 
             <div className="shiny-preview-section">
               <p className="section-label">shiny — {result.shiny.colors.length} colors</p>
               {shinyPreview && <ZoomableImage src={shinyPreview} alt="shiny preview" />}
-              <PaletteStrip
-                colors={result.shiny.colors}
-                usedIndices={result.shiny.colors.map((_,i) => i)}
-                checkSize="100%"
-              />
+              <PaletteStrip colors={result.shiny.colors} usedIndices={result.shiny.colors.map((_,i) => i)} checkSize="100%" />
             </div>
           </div>
         )}
@@ -392,7 +327,7 @@ function ExtractMatchedMode() {
 // Tab root
 // ---------------------------------------------------------------------------
 export function ShinyTab() {
-  const [mode, setMode] = useState('apply')   // 'apply' | 'extract'
+  const [mode, setMode] = useState('apply')
   const [palettes, setPalettes] = useState([])
 
   useEffect(() => {
@@ -403,22 +338,16 @@ export function ShinyTab() {
     <div className="tab-content">
       <div style={{ marginBottom: 20 }}>
         <div className="mode-toggle">
-          <button
-            className={`mode-btn ${mode === 'apply' ? 'active' : ''}`}
-            onClick={() => setMode('apply')}
-          >
+          <button className={`mode-btn ${mode === 'apply' ? 'active' : ''}`} onClick={() => setMode('apply')}>
             Create shiny sprite
             <div style={{ fontSize: 9, opacity: 0.8, marginTop: 2 }}>
               sprite.png + normal.pal + shiny.pal = shiny_sprite.png
             </div>
           </button>
-          <button
-            className={`mode-btn ${mode === 'extract' ? 'active' : ''}`}
-            onClick={() => setMode('extract')}
-          >
+          <button className={`mode-btn ${mode === 'extract' ? 'active' : ''}`} onClick={() => setMode('extract')}>
             Create palette pair
             <div style={{ fontSize: 9, opacity: 0.8, marginTop: 2 }}>
-                normal.png + shiny.png = normal.pal + shiny.pal
+              normal.png + shiny.png = normal.pal + shiny.pal
             </div>
           </button>
         </div>

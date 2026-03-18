@@ -148,6 +148,11 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 | 8 | `frontend/src/tabs/ConvertTab.jsx` | Use `BgColorPicker` |
 | 9 | `frontend/src/tabs/ItemsTab.jsx` | Use `BgColorPicker` |
 | 10 | `frontend/src/components/VariantsPanel.jsx` | Use `BgColorPicker`, fix missing `Eclipse`/`PaintBucket` imports |
+| 11 | `frontend/src/components/Modal.jsx` + `.css` | New component — single modal shell with `title`, `size`, `actions`, `children` props + Escape key support |
+| 12 | `frontend/src/tabs/ExtractTab.jsx` + `.css` | Use `Modal`, remove duplicate modal CSS |
+| 13 | `frontend/src/tabs/TilesetTab.jsx` | Use `Modal` for both `HelpModal` and `SaveModal` |
+| 14 | `frontend/src/tabs/ShinyTab.jsx` | Use `Modal` for `PalettePickerModal` |
+| 15 | `frontend/src/tabs/ConvertTab.jsx` | Use `Modal` for `PaletteModal`, header actions passed via `actions` prop |
 
 ---
 
@@ -174,6 +179,6 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 ## Refactor queue
 
 - [x] `BgColorPicker` component — extracted from 4 tabs
-- [ ] `Modal` shell component — duplicated in `ExtractTab.css`, `TilesetTab.css`, `ShinyTab.css`
+- [x] `Modal` shell component — extracted from `ExtractTab`, `TilesetTab`, `ShinyTab`, `ConvertTab`
 - [ ] `ViewToggle` component — duplicated in `ConvertTab` and `ItemsTab`
 - [ ] Consolidate shared CSS (`btn-primary-sm`, `spinning`, modal shells) into `App.css`

@@ -5,91 +5,76 @@ import { ZoomableImage } from '../components/ZoomableImage'
 import { WalkAnimation } from '../components/WalkAnimation'
 import { ResultCard } from '../components/ResultCard'
 import { PaletteStrip } from '../components/PaletteStrip'
+import { PalettePicker } from '../components/PalettePicker'
 import { useFetch } from '../hooks/useFetch'
-import { downloadBlob, detectBgColor} from '../utils'
-import { X, Upload, Trash2, RefreshCw, Layers } from 'lucide-react'
+import { downloadBlob, detectBgColor } from '../utils'
+import { X, RefreshCw, Layers } from 'lucide-react'
 import { BgColorPicker } from '../components/BgColorPicker'
 import { Modal } from '../components/Modal'
 import { ViewToggle } from '../components/ViewToggle'
 
-
 const API = '/api'
 const GBA_TRANSPARENT = '#73C5A4'
 
-// ---- Palette Management Modal ----
-function PaletteModal({ palettes, selected, onToggle, onSelectAll, onDeselectAll, onReload, onUpload, onDelete, onClose, reloading }) {
+// ── Palette Management Modal ──────────────────────────────────────────────────
+
+function PaletteModal({ palettes, selected, onChange, onReload, onUpload, onClose, reloading }) {
   const fileRef = useRef()
-  const allSelected = palettes.length > 0 && palettes.every(p => selected.has(p.name))
 
   const actions = (
     <>
-      <button className="icon-btn" title="reload from disk" onClick={onReload} disabled={reloading}>
-        <RefreshCw size={12} className={reloading ? 'spinning' : ''} />
+      <button
+        style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '4px 8px', background: 'transparent', border: '1px solid var(--border)', borderRadius: 'var(--radius)', color: 'var(--muted)', fontFamily: 'var(--mono)', fontSize: 11, cursor: 'pointer', transition: 'color 0.1s, border-color 0.1s' }}
+        title="reload from disk"
+        onClick={onReload}
+        disabled={reloading}
+      >
+        <RefreshCw size={12} className={reloading ? 'spinning' : ''} /> reload
       </button>
-      <button className="icon-btn" title="upload .pal files" onClick={() => fileRef.current?.click()}>
-        <Upload size={12} />
-      </button>
-      <input ref={fileRef} type="file" accept=".pal" multiple className="hidden-input"
-        onChange={e => { onUpload(e.target.files); e.target.value = '' }} />
     </>
   )
 
+  const handleImportFile = async (file) => {
+    const fd = new FormData()
+    fd.append('file', file)
+    await fetch(`${API}/palettes/upload`, { method: 'POST', body: fd }).catch(() => {})
+    onUpload()
+  }
+
   return (
     <Modal title="manage palettes" onClose={onClose} size="lg" actions={actions}>
-      {palettes.length === 0 ? (
-        <p className="palette-empty">
-          no palettes loaded — drop <code>.pal</code> files into <code>palettes/</code> or upload above
-        </p>
-      ) : (
-        <>
-          <div className="palette-select-all">
-            <label className="palette-checkbox-row">
-              <input type="checkbox" checked={allSelected}
-                onChange={e => e.target.checked ? onSelectAll() : onDeselectAll()} />
-              <span>{allSelected ? 'deselect all' : 'select all'}</span>
-              <span className="palette-count-badge">{selected.size}/{palettes.length} active</span>
-            </label>
-          </div>
-          <div className="palette-list">
-            {palettes.map(p => (
-              <div key={p.name} className={`palette-row ${selected.has(p.name) ? 'active' : ''}`}>
-                <label className="palette-row-label">
-                  <input type="checkbox" checked={selected.has(p.name)} onChange={() => onToggle(p.name)} />
-                  <div className="palette-row-info">
-                    <span className="palette-name">{p.name.replace('.pal', '')}</span>
-                    <PaletteStrip colors={p.colors} usedIndices={p.colors.map((_, i) => i)} />
-                  </div>
-                </label>
-                <button className="icon-btn icon-btn--danger" title="delete palette" onClick={() => onDelete(p.name)}>
-                  <Trash2 size={11} />
-                </button>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
+      <PalettePicker
+        palettes={palettes}
+        mode="multi"
+        selected={selected}
+        onChange={onChange}
+        onImportFile={handleImportFile}
+        showSelectAll={true}
+      />
     </Modal>
   )
 }
 
-// ---- Main ----
+// ── Main ──────────────────────────────────────────────────────────────────────
+
 export function ConvertTab() {
-  const [file, setFile] = useState(null)
+  const [file, setFile]         = useState(null)
   const [originalB64, setOriginalB64] = useState(null)
-  const [results, setResults] = useState([])
+  const [results, setResults]   = useState([])
   const [selected, setSelected] = useState(null)
   const [viewMode, setViewMode] = useState('grid')
 
-  const [bgColor, setBgColor] = useState(GBA_TRANSPARENT)
-  const [bgMode, setBgMode]   = useState('auto')
-  const [picking, setPicking] = useState(false)
+  const [bgColor, setBgColor]   = useState(GBA_TRANSPARENT)
+  const [bgMode, setBgMode]     = useState('auto')
+  const [picking, setPicking]   = useState(false)
 
-  const [palettes, setPalettes] = useState([])
+  const [palettes, setPalettes]           = useState([])
   const [selectedPalettes, setSelectedPalettes] = useState(new Set())
-  const [reloading, setReloading] = useState(false)
+  const [reloading, setReloading]         = useState(false)
   const [showPaletteModal, setShowPaletteModal] = useState(false)
 
   const { loading, error, run } = useFetch()
+  const isMounted = useRef(false)
 
   const fetchPalettes = async () => {
     const data = await fetch(`${API}/palettes`).then(r => r.json()).catch(() => [])
@@ -101,12 +86,8 @@ export function ConvertTab() {
     })
   }
 
-  const isMounted = useRef(false)
-
   useEffect(() => { fetchPalettes() }, [])
 
-  // Auto-reprocess whenever the palette selection changes, but only after
-  // a file has been loaded and after the initial mount settles.
   useEffect(() => {
     if (!isMounted.current) { isMounted.current = true; return }
     if (file) convert(file)
@@ -137,8 +118,7 @@ export function ConvertTab() {
     reader.onload = e => {
       const b64 = e.target.result.split(',')[1]
       detectBgColor(b64).then(detected => {
-        setBgColor(detected)
-        setBgMode('auto')
+        setBgColor(detected); setBgMode('auto')
         convert(f, detected)
       })
     }
@@ -150,29 +130,6 @@ export function ConvertTab() {
     await fetch(`${API}/palettes/reload`, { method: 'POST' })
     await fetchPalettes()
     setReloading(false)
-  }
-
-  const handleUpload = async (files) => {
-    await Promise.all(Array.from(files).map(async (f) => {
-      const fd = new FormData()
-      fd.append('file', f)
-      await fetch(`${API}/palettes/upload`, { method: 'POST', body: fd }).catch(() => {})
-    }))
-    await handleReload()
-  }
-
-  const handleDelete = async (name) => {
-    await fetch(`${API}/palettes/${encodeURIComponent(name)}`, { method: 'DELETE' }).catch(() => {})
-    setSelectedPalettes(prev => { const n = new Set(prev); n.delete(name); return n })
-    await fetchPalettes()
-  }
-
-  const handleToggle = (name) => {
-    setSelectedPalettes(prev => {
-      const next = new Set(prev)
-      next.has(name) ? next.delete(name) : next.add(name)
-      return next
-    })
   }
 
   const handleDownload = async (paletteName) => {
@@ -189,7 +146,6 @@ export function ConvertTab() {
     const fd = new FormData()
     fd.append('file', file)
     if (bgColor) fd.append('bg_color', bgColor)
-    // derive names from what's currently shown — always matches the UI exactly
     fd.append('palette_names', JSON.stringify(results.map(r => r.palette_name)))
     const res = await fetch(`${API}/convert/download-all`, { method: 'POST', body: fd })
     if (!res.ok) return
@@ -202,30 +158,24 @@ export function ConvertTab() {
         <PaletteModal
           palettes={palettes}
           selected={selectedPalettes}
-          onToggle={handleToggle}
-          onSelectAll={() => setSelectedPalettes(new Set(palettes.map(p => p.name)))}
-          onDeselectAll={() => setSelectedPalettes(new Set())}
+          onChange={setSelectedPalettes}
           onReload={handleReload}
-          onUpload={handleUpload}
-          onDelete={handleDelete}
+          onUpload={async () => { await handleReload() }}
           onClose={() => setShowPaletteModal(false)}
           reloading={reloading}
         />
       )}
 
       <div className="convert-layout">
-
         <div className="convert-left">
           <DropZone onFile={handleFile} label="Drop your sprite" />
 
           {originalB64 && (
             <>
-              {/* ── Transparent color picker ── */}
               <div className="field">
                 <label className="field-label">transparent color (slot 0)</label>
                 <BgColorPicker
-                  color={bgColor}
-                  mode={bgMode}
+                  color={bgColor} mode={bgMode}
                   onChange={({ color, mode }) => { setBgColor(color); setBgMode(mode) }}
                   onCommit={color => convert(file, color)}
                   showAuto={!!originalB64}
@@ -235,30 +185,22 @@ export function ConvertTab() {
                   onPipetteToggle={() => setPicking(p => !p)}
                 />
               </div>
-
-              {/* ── Original preview ── */}
               <div className="original-preview">
                 <p className="section-label">
                   original
                   {picking && <span className="pick-hint"> · click to pick bg color</span>}
                 </p>
                 <ZoomableImage
-                  src={originalB64}
-                  alt="original"
+                  src={originalB64} alt="original"
                   picking={picking}
-                  onPick={hex => {
-                    setBgColor(hex); setBgMode('pick'); setPicking(false)
-                    convert(file, hex)
-                  }}
+                  onPick={hex => { setBgColor(hex); setBgMode('pick'); setPicking(false); convert(file, hex) }}
                 />
               </div>
             </>
           )}
 
           {results.length > 0 && (
-            <button className="btn-secondary" onClick={handleDownloadAll}>
-              download all as zip
-            </button>
+            <button className="btn-secondary" onClick={handleDownloadAll}>download all as zip</button>
           )}
           <button
             className="btn-ghost-subtle"
@@ -272,9 +214,7 @@ export function ConvertTab() {
 
         <div className="convert-right">
           <div className="results-toolbar">
-            <span className="results-count">
-              {results.length > 0 ? `${results.length} palettes` : ''}
-            </span>
+            <span className="results-count">{results.length > 0 ? `${results.length} palettes` : ''}</span>
             <div className="toolbar-right">
               <button
                 className={`palette-mgr-btn ${selectedPalettes.size < palettes.length ? 'filtered' : ''}`}
@@ -292,9 +232,7 @@ export function ConvertTab() {
           {results.length === 0 && !loading && (
             <div className="empty-state"><p>drop a sprite to see all palette conversions</p></div>
           )}
-          {loading && (
-            <div className="empty-state"><div className="spinner" /><p>processing…</p></div>
-          )}
+          {loading && <div className="empty-state"><div className="spinner" /><p>processing…</p></div>}
 
           <div className={viewMode === 'grid' ? 'results-grid' : 'results-list'}>
             {results.map((r, i) => (
@@ -309,7 +247,6 @@ export function ConvertTab() {
             ))}
           </div>
         </div>
-
       </div>
     </div>
   )

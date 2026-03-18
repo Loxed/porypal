@@ -1,0 +1,135 @@
+/* frontend/src/components/PalettePicker.css */
+
+/* ── Container ── */
+.pal-picker { display: flex; flex-direction: column; gap: 8px; }
+
+/* ── Search bar ── */
+.pal-picker-search-wrap {
+  position: relative; display: flex; align-items: center;
+}
+.pal-picker-search {
+  width: 100%;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text);
+  font-family: var(--mono); font-size: 12px;
+  padding: 6px 28px 6px 10px;
+  transition: border-color 0.15s;
+}
+.pal-picker-search:focus { outline: none; border-color: var(--accent); }
+.pal-picker-search::placeholder { color: var(--muted); }
+.pal-picker-search-clear {
+  position: absolute; right: 6px;
+  background: transparent; border: none; color: var(--muted);
+  cursor: pointer; padding: 2px; display: flex; align-items: center;
+  border-radius: 3px; transition: color 0.1s;
+}
+.pal-picker-search-clear:hover { color: var(--text); }
+
+/* ── Header actions row ── */
+.pal-picker-actions {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.pal-picker-import-btn {
+  display: flex; align-items: center; gap: 4px;
+  padding: 4px 10px;
+  background: transparent; border: 1px solid var(--border2);
+  border-radius: var(--radius); color: var(--muted);
+  font-family: var(--mono); font-size: 11px; cursor: pointer;
+  transition: color 0.1s, border-color 0.1s;
+  white-space: nowrap;
+}
+.pal-picker-import-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+.pal-picker-select-all {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px; margin-left: auto;
+  background: transparent; border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--muted);
+  font-family: var(--mono); font-size: 11px; cursor: pointer;
+  transition: color 0.1s, border-color 0.1s;
+}
+.pal-picker-select-all:hover { color: var(--text); border-color: var(--border2); }
+
+.pal-picker-count {
+  margin-left: auto;
+  font-family: var(--mono); font-size: 10px; color: var(--muted);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 1px 8px;
+}
+
+/* ── List ── */
+.pal-picker-list {
+  display: flex; flex-direction: column; gap: 1px;
+  max-height: var(--picker-max-height, 320px); overflow-y: auto;
+  /* styled scrollbar */
+  scrollbar-width: thin; scrollbar-color: var(--border2) var(--surface);
+}
+.pal-picker-list::-webkit-scrollbar       { width: 5px; }
+.pal-picker-list::-webkit-scrollbar-track { background: var(--surface); }
+.pal-picker-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* ── Folder section ── */
+.pal-picker-folder { display: flex; flex-direction: column; }
+.pal-picker-folder-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 8px; border-radius: var(--radius);
+  background: transparent; border: none;
+  color: var(--muted); font-family: var(--mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  cursor: pointer; width: 100%; text-align: left;
+  transition: color 0.1s, background 0.1s;
+}
+.pal-picker-folder-header:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+.pal-picker-folder-name { flex: 1; }
+.pal-picker-folder-count {
+  font-size: 10px; color: var(--muted);
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 0 6px;
+}
+.pal-picker-folder-body { display: flex; flex-direction: column; gap: 1px; padding-left: 10px; }
+
+/* ── Palette row ── */
+.pal-picker-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 8px;
+  border-radius: var(--radius); border: 1px solid transparent;
+  background: var(--surface2);
+  cursor: pointer; transition: background 0.1s, border-color 0.1s;
+  min-height: 36px;
+}
+.pal-picker-row:hover { background: var(--surface); border-color: var(--border); }
+.pal-picker-row.active { border-color: var(--accent); background: rgba(88,166,255,0.07); }
+
+/* checkbox (multi mode) */
+.pal-picker-check {
+  width: 14px; height: 14px; flex-shrink: 0;
+  accent-color: var(--accent); cursor: pointer;
+}
+
+/* radio dot (single mode) */
+.pal-picker-radio {
+  width: 14px; height: 14px; flex-shrink: 0;
+  accent-color: var(--accent); cursor: pointer;
+}
+
+.pal-picker-name {
+  font-family: var(--mono); font-size: 11px; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  min-width: 0; flex: 0 0 120px;
+}
+.pal-picker-strip-wrap { flex: 1; min-width: 0; }
+
+/* ── Empty state ── */
+.pal-picker-empty {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 24px 16px; color: var(--muted);
+  font-family: var(--mono); font-size: 12px; text-align: center;
+}
+.pal-picker-empty code {
+  background: var(--surface2); border: 1px solid var(--border2);
+  padding: 1px 5px; border-radius: 3px;
+}
+
+/* ── Compact mode (used in BatchTab pipeline step) ── */
+.pal-picker.compact .pal-picker-list { --picker-max-height: 140px; }
+.pal-picker.compact .pal-picker-name { flex: 0 0 90px; }

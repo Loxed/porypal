@@ -120,12 +120,9 @@ function TilesetConfig({ config, onChange, presets }) {
 
 function ConvertConfig({ config, onChange, palettes, hasExtractBefore }) {
   const set = (k, v) => onChange({ ...config, [k]: v })
-  const togglePalette = (name) => {
-    const sel = config.selected_palettes.includes(name)
-      ? config.selected_palettes.filter(n => n !== name)
-      : [...config.selected_palettes, name]
-    set('selected_palettes', sel)
-  }
+
+  const selectedSet = new Set(config.selected_palettes ?? [])
+
   return (
     <div className="step-config">
       <div className="step-config-row">
@@ -141,25 +138,27 @@ function ConvertConfig({ config, onChange, palettes, hasExtractBefore }) {
           </button>
         </div>
       </div>
+
       {config.palette_source === 'loaded' && (
-        <div className="step-config-row step-config-row--col">
-          <label className="step-config-label">palettes</label>
+        <div className="step-config-row step-config-row--col" style={{ width: '100%' }}>
+          <label className="step-config-label" style={{ marginBottom: 4 }}>palettes</label>
           {palettes.length === 0
             ? <span className="step-config-hint">No palettes loaded</span>
             : (
-              <div className="step-palette-list">
-                {palettes.map(p => (
-                  <label key={p.name} className="step-pal-check">
-                    <input type="checkbox" checked={config.selected_palettes.includes(p.name)}
-                      onChange={() => togglePalette(p.name)} />
-                    <span>{p.name.replace('.pal', '')}</span>
-                  </label>
-                ))}
-              </div>
+              // Import PalettePicker at top of BatchTab.jsx
+              <PalettePicker
+                palettes={palettes}
+                mode="multi"
+                selected={selectedSet}
+                onChange={next => set('selected_palettes', Array.from(next))}
+                compact={true}
+                showSelectAll={false}
+              />
             )
           }
         </div>
       )}
+
       <div className="step-config-row">
         <label className="step-config-label">on tie</label>
         <div className="step-toggle-row">

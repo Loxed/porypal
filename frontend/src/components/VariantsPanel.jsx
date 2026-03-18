@@ -403,16 +403,17 @@ function ExtractMode({ nColors, outputBg, outputBgMode, setOutputBg, setOutputBg
 // ===========================================================================
 // MODE 2 — Apply: 1 sprite + N palettes → N recolored sprites
 // ===========================================================================
+
 function ApplyMode({ nColors, outputBg, outputBgMode, setOutputBg, setOutputBgMode }) {
-  const [spriteFile, setSpriteFile]     = useState(null)
-  const [spriteB64, setSpriteB64]       = useState(null)
+  const [spriteFile, setSpriteFile]         = useState(null)
+  const [spriteB64, setSpriteB64]           = useState(null)
   const [loadedPalettes, setLoadedPalettes] = useState([])
-  const [selectedPals, setSelectedPals] = useState([])   // { name, colors }
-  const [refPalName, setRefPalName]     = useState(null)
-  const [results, setResults]           = useState([])   // { name, colors, preview }
-  const [rendering, setRendering]       = useState(false)
-  const [viewMode, setViewMode]         = useState('grid')
-  const [downloading, setDownloading]   = useState(false)
+  const [selectedPals, setSelectedPals]     = useState([])   // { name, colors }
+  const [refPalName, setRefPalName]         = useState(null)
+  const [results, setResults]               = useState([])
+  const [rendering, setRendering]           = useState(false)
+  const [viewMode, setViewMode]             = useState('grid')
+  const [downloading, setDownloading]       = useState(false)
 
   const spriteRef  = useRef()
   const palFileRef = useRef()
@@ -430,12 +431,12 @@ function ApplyMode({ nColors, outputBg, outputBgMode, setOutputBg, setOutputBgMo
     Promise.all(
       selectedPals.map(async pal => {
         const preview = await remapToShinyPalette(spriteB64, refPal.colors, pal.colors)
-        return { name: pal.name.replace(/\.pal$/, ''), colors: pal.colors, preview, palName: pal.name }
+        return { name: pal.name.replace(/\.pal$/, '').split('/').pop(), colors: pal.colors, preview, palName: pal.name }
       })
     ).then(r => { setResults(r); setRendering(false) })
   }, [spriteB64, refPalName, selectedPals, outputBg])
 
-  // Slot mismatch: compare each non-ref variant's palette against the ref palette
+  // Slot mismatch
   const slotMatches = useMemo(() => {
     const refPal = selectedPals.find(p => p.name === refPalName)
     if (!refPal) return {}
@@ -449,35 +450,42 @@ function ApplyMode({ nColors, outputBg, outputBgMode, setOutputBg, setOutputBgMo
 
   const handleSprite = async (f) => {
     setSpriteFile(f)
-    const b64 = await fileToB64(f)
-    setSpriteB64(b64)
+    setSpriteB64(await fileToB64(f))
     setResults([])
   }
 
-  const toggleLoadedPal = (pal) => {
-    setSelectedPals(prev => {
-      const exists = prev.find(p => p.name === pal.name)
-      if (exists) {
-        if (refPalName === pal.name) setRefPalName(null)
-        return prev.filter(p => p.name !== pal.name)
-      }
-      return [...prev, { name: pal.name, colors: pal.colors }]
-    })
-  }
+  // PalettePicker selection: a Set of palette names
+  const selectedSet = useMemo(() => new Set(selectedPals.map(p => p.name)), [selectedPals])
 
-  const handleImportPalFile = (e) => {
-    Array.from(e.target.files).forEach(f => {
-      const reader = new FileReader()
-      reader.onload = ev => {
-        const colors = parsePalFile(ev.target.result)
-        if (colors.length > 0) {
-          const name = f.name
-          setSelectedPals(prev => prev.find(p => p.name === name) ? prev : [...prev, { name, colors }])
+  const handlePickerChange = (newSet) => {
+    // Add newly selected
+    const toAdd = [...newSet].filter(n => !selectedSet.has(n))
+    const toRemove = [...selectedSet].filter(n => !newSet.has(n))
+
+    setSelectedPals(prev => {
+      let next = prev.filter(p => !toRemove.includes(p.name))
+      for (const name of toAdd) {
+        const pal = loadedPalettes.find(p => p.name === name)
+        if (pal && !next.find(p => p.name === name)) {
+          next = [...next, { name: pal.name, colors: pal.colors }]
         }
       }
-      reader.readAsText(f)
+      return next
     })
-    e.target.value = ''
+
+    if (toRemove.includes(refPalName)) setRefPalName(null)
+  }
+
+  const handleImportPalFile = (file) => {
+    const reader = new FileReader()
+    reader.onload = ev => {
+      const colors = parsePalFile(ev.target.result)
+      if (colors.length > 0) {
+        const name = file.name
+        setSelectedPals(prev => prev.find(p => p.name === name) ? prev : [...prev, { name, colors }])
+      }
+    }
+    reader.readAsText(file)
   }
 
   const removeSelectedPal = (name) => {
@@ -489,62 +497,20 @@ function ApplyMode({ nColors, outputBg, outputBgMode, setOutputBg, setOutputBgMo
     if (results.length === 0) return
     setDownloading(true)
     try {
-      // Build zip client-side using a simple approach: one fetch per image blob
-      const zipEntries = []
-      for (const r of results) {
-        const imgRes  = await fetch(`data:image/png;base64,${r.preview}`)
-        const imgBlob = await imgRes.blob()
-        zipEntries.push({ path: `sprites/${r.name}.png`, blob: imgBlob })
-
-        // Also write the palette
-        const palObj = selectedPals.find(p => p.name === r.palName || p.name.replace(/\.pal$/, '') === r.name)
-        if (palObj) {
-          const lines = ['JASC-PAL', '0100', String(palObj.colors.length),
-            ...palObj.colors.map(h => {
-              const hx = h.replace('#', '')
-              return `${parseInt(hx.slice(0,2),16)} ${parseInt(hx.slice(2,4),16)} ${parseInt(hx.slice(4,6),16)}`
-            })]
-          const palBlob = new Blob([lines.join('\n') + '\n'], { type: 'text/plain' })
-          zipEntries.push({ path: `palettes/${r.name}.pal`, blob: palBlob })
-        }
-      }
-
-      const manifest = {
-        reference_palette: refPalName ?? '',
-        sprite: spriteFile?.name ?? '',
-        files: results.map(r => ({
-          name:    r.name,
-          sprite:  `sprites/${r.name}.png`,
-          palette: `palettes/${r.name}.pal`,
-        })),
-      }
-      const manifestBlob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' })
-      zipEntries.push({ path: 'manifest.json', blob: manifestBlob })
-
-      // Use the existing download-all zip endpoint pattern:
-      // We can't use JSZip without installing it, so POST to the backend instead.
-      // Build a FormData with all images + palettes and use the shiny apply/download endpoint
-      // which already does this. But we have N palettes here, not just 2.
-      // Simpler: post to a new endpoint. For now, download individually if zip unavailable.
-      // Actually — use the browser's native approach: create a zip via the backend
-      // by posting the sprite + all palettes.
       const fd = new FormData()
       if (spriteFile) fd.append('sprite_file', spriteFile)
       const refPal = selectedPals.find(p => p.name === refPalName)
       if (refPal) fd.append('ref_pal', JSON.stringify(refPal.colors))
       selectedPals.forEach(p => {
-        fd.append('pal_names', p.name.replace(/\.pal$/, ''))
+        fd.append('pal_names', p.name.replace(/\.pal$/, '').split('/').pop())
         fd.append('pal_colors', JSON.stringify(p.colors))
       })
-
       const res = await fetch(`${API}/items/apply-variants/download`, { method: 'POST', body: fd })
       if (res.ok) {
         const stem = spriteFile?.name.replace(/\.[^.]+$/, '') ?? 'sprite'
         downloadBlob(await res.blob(), `${stem}_variants.zip`)
       }
-    } finally {
-      setDownloading(false)
-    }
+    } finally { setDownloading(false) }
   }
 
   const refPal = selectedPals.find(p => p.name === refPalName)
@@ -579,28 +545,17 @@ function ApplyMode({ nColors, outputBg, outputBgMode, setOutputBg, setOutputBgMo
           />
         </div>
 
-        {/* Palette queue */}
-        <div className="field">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-            <label className="field-label">palettes ({selectedPals.length})</label>
-            <button
-              className="bg-mode-btn"
-              style={{ display: 'flex', alignItems: 'center', gap: 4 }}
-              onClick={() => palFileRef.current?.click()}
-            >
-              <Upload size={9} /> import .pal
-            </button>
-            <input ref={palFileRef} type="file" accept=".pal" multiple style={{ display: 'none' }}
-              onChange={handleImportPalFile} />
-          </div>
-
-          {selectedPals.length > 0 && (
+        {/* Selected palettes queue — ref assignment */}
+        {selectedPals.length > 0 && (
+          <div className="field">
+            <label className="field-label" style={{ marginBottom: 4 }}>selected ({selectedPals.length}) — set ref</label>
             <div className="variants-sprite-queue" style={{ marginBottom: 6 }}>
               {selectedPals.map(pal => {
                 const isRef = pal.name === refPalName
+                const displayName = pal.name.replace(/\.pal$/, '').split('/').pop()
                 return (
                   <div key={pal.name} className={`variants-queue-row ${isRef ? 'is-ref' : ''}`}>
-                    <span className="sprite-queue-name">{pal.name.replace(/\.pal$/, '')}</span>
+                    <span className="sprite-queue-name">{displayName}</span>
                     <MiniStrip colors={pal.colors} />
                     {isRef
                       ? <span className="variants-ref-badge">ref</span>
@@ -613,29 +568,21 @@ function ApplyMode({ nColors, outputBg, outputBgMode, setOutputBg, setOutputBgMo
                 )
               })}
             </div>
-          )}
+          </div>
+        )}
 
-          {/* Loaded palettes picker */}
-          {loadedPalettes.length > 0 && (
-            <>
-              <span className="field-label" style={{ marginBottom: 4, display: 'block' }}>add from loaded</span>
-              <div className="apply-pal-picker">
-                {loadedPalettes.map(p => {
-                  const checked = !!selectedPals.find(s => s.name === p.name)
-                  return (
-                    <div
-                      key={p.name}
-                      className={`apply-pal-pick-row ${checked ? 'checked' : ''}`}
-                      onClick={() => toggleLoadedPal(p)}
-                    >
-                      <span className="apply-pal-pick-name">{p.name.replace(/\.pal$/, '')}</span>
-                      <MiniStrip colors={p.colors} />
-                    </div>
-                  )
-                })}
-              </div>
-            </>
-          )}
+        {/* Palette picker */}
+        <div className="field">
+          <label className="field-label" style={{ marginBottom: 4 }}>add palettes</label>
+          <PalettePicker
+            palettes={loadedPalettes}
+            mode="multi"
+            selected={selectedSet}
+            onChange={handlePickerChange}
+            onImportFile={handleImportPalFile}
+            compact={true}
+            showSelectAll={false}
+          />
         </div>
 
         {selectedPals.length > 0 && !refPalName && (
@@ -661,7 +608,7 @@ function ApplyMode({ nColors, outputBg, outputBgMode, setOutputBg, setOutputBgMo
       <div className="variants-right">
         <div className="items-toolbar">
           <span className="items-count">
-            {results.length > 0 ? `${results.length} variant${results.length !== 1 ? 's' : ''}${refPalName ? ` · ref: ${refPalName.replace(/\.pal$/, '')}` : ''}` : ''}
+            {results.length > 0 ? `${results.length} variant${results.length !== 1 ? 's' : ''}${refPalName ? ` · ref: ${refPalName.replace(/\.pal$/, '').split('/').pop()}` : ''}` : ''}
           </span>
           {results.length > 0 && <ViewToggle value={viewMode} onChange={setViewMode} />}
         </div>

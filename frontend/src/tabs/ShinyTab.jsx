@@ -3,10 +3,11 @@ import './ShinyTab.css'
 import { DropZone } from '../components/DropZone'
 import { ZoomableImage } from '../components/ZoomableImage'
 import { PaletteStrip } from '../components/PaletteStrip'
+import { PalettePicker } from '../components/PalettePicker'
 import { Modal } from '../components/Modal'
 import { ExportDropdown } from '../components/ExportDropdown'
 import { remapToShinyPalette, detectBgColor, downloadBlob } from '../utils'
-import { Download, Upload } from 'lucide-react'
+import { Download } from 'lucide-react'
 
 const API = '/api'
 const GBA_TRANSPARENT = '#73C5A4'
@@ -34,52 +35,37 @@ function parsePalFile(text) {
   return colors
 }
 
-// ---------------------------------------------------------------------------
-// Palette picker modal — loaded palettes + import from file
-// ---------------------------------------------------------------------------
-function PalettePickerModal({ palettes, current, onPick, onClose }) {
-  const fileRef = useRef()
+// ── Palette picker modal ──────────────────────────────────────────────────────
 
-  const handleImportFile = (e) => {
-    const f = e.target.files[0]
-    if (!f) return
+function PalettePickerModal({ palettes, currentName, onPick, onClose }) {
+  const [localPalettes, setLocalPalettes] = useState(palettes)
+
+  const handleImportFile = (file) => {
     const reader = new FileReader()
     reader.onload = ev => {
       const colors = parsePalFile(ev.target.result)
-      if (colors.length > 0) { onPick({ name: f.name, colors }); onClose() }
+      if (colors.length > 0) {
+        const p = { name: file.name, path: file.name, folder: null, colors, count: colors.length, is_default: false, source: 'user' }
+        onPick(p)
+        onClose()
+      }
     }
-    reader.readAsText(f)
-    e.target.value = ''
+    reader.readAsText(file)
   }
 
   return (
-    <Modal title="select palette" onClose={onClose} actions={
-      <>
-        <button className="btn-primary-sm" onClick={() => fileRef.current?.click()}>
-          <Upload size={11} /> import .pal
-        </button>
-        <input ref={fileRef} type="file" accept=".pal" style={{ display: 'none' }} onChange={handleImportFile} />
-      </>
-    }>
-      {palettes.length === 0 && (
-        <p style={{ fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--muted)' }}>
-          No palettes loaded — upload one above or add .pal files to palettes/user/
-        </p>
-      )}
-      <div className="pal-select-list">
-        {palettes.map(p => (
-          <div
-            key={p.name}
-            className={`pal-select-row ${current === p.name ? 'active' : ''}`}
-            onClick={() => { onPick(p); onClose() }}
-          >
-            <span className="pal-select-row-name">{p.name.replace('.pal', '')}</span>
-            <div className="pal-select-row-strip">
-              <PaletteStrip colors={p.colors} usedIndices={p.colors.map((_, i) => i)} checkSize="50%" />
-            </div>
-          </div>
-        ))}
-      </div>
+    <Modal title="select palette" onClose={onClose}>
+      <PalettePicker
+        palettes={localPalettes}
+        mode="single"
+        selected={currentName}
+        onChange={name => {
+          const p = localPalettes.find(x => x.name === name)
+          if (p) { onPick(p); onClose() }
+        }}
+        onImportFile={handleImportFile}
+        showSelectAll={false}
+      />
     </Modal>
   )
 }
@@ -89,7 +75,7 @@ function PalPickRow({ label, palette, onPick }) {
     <div className="field">
       <label className="field-label">{label}</label>
       <div className="pal-pick-row">
-        <span className="pal-pick-name">{palette ? palette.name.replace('.pal', '') : 'none selected'}</span>
+        <span className="pal-pick-name">{palette ? palette.name.replace(/\.pal$/, '').split('/').pop() : 'none selected'}</span>
         <button className="pal-pick-btn" onClick={onPick}>pick</button>
       </div>
       {palette && (
@@ -99,9 +85,8 @@ function PalPickRow({ label, palette, onPick }) {
   )
 }
 
-// ---------------------------------------------------------------------------
-// Mode 1: Apply shiny palette to sprite
-// ---------------------------------------------------------------------------
+// ── Mode 1: Apply shiny palette ───────────────────────────────────────────────
+
 function ApplyShinyMode({ palettes }) {
   const [spriteFile, setSpriteFile]       = useState(null)
   const [spriteB64, setSpriteB64]         = useState(null)
@@ -122,10 +107,7 @@ function ApplyShinyMode({ palettes }) {
     remapToShinyPalette(spriteB64, normalPal.colors, shinyPal.colors).then(setShinyPreview)
   }, [spriteB64, normalPal, shinyPal])
 
-  const handleSprite = async (f) => {
-    setSpriteFile(f)
-    setSpriteB64(await fileToB64(f))
-  }
+  const handleSprite = async (f) => { setSpriteFile(f); setSpriteB64(await fileToB64(f)) }
 
   const handleDownloadZip = async () => {
     if (!spriteFile || !normalPal || !shinyPal) return
@@ -141,40 +123,33 @@ function ApplyShinyMode({ palettes }) {
       const res = await fetch(`${API}/shiny/apply/download`, { method: 'POST', body: fd })
       if (!res.ok) return
       downloadBlob(await res.blob(), `${spriteFile.name.replace(/\.[^.]+$/, '')}_shiny.zip`)
-    } finally {
-      setDownloading(false)
-    }
+    } finally { setDownloading(false) }
   }
-
-  const canDownload = spriteFile && normalPal && shinyPal && shinyPreview
 
   return (
     <>
       {pickingFor && (
         <PalettePickerModal
           palettes={palettes}
-          current={pickingFor === 'normal' ? normalPal?.name : shinyPal?.name}
+          currentName={pickingFor === 'normal' ? normalPal?.name : shinyPal?.name}
           onPick={p => pickingFor === 'normal' ? setNormalPal(p) : setShinyPal(p)}
           onClose={() => setPickingFor(null)}
         />
       )}
-
       <div className="shiny-layout">
         <div className="shiny-left">
           <DropZone onFile={handleSprite} label="Drop sprite" />
           <PalPickRow label="normal palette" palette={normalPal} onPick={() => setPickingFor('normal')} />
           <PalPickRow label="shiny palette"  palette={shinyPal}  onPick={() => setPickingFor('shiny')} />
-
           <button
             className="btn-secondary"
-            disabled={!canDownload || downloading}
+            disabled={!spriteFile || !normalPal || !shinyPal || !shinyPreview || downloading}
             onClick={handleDownloadZip}
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
           >
             <Download size={11} /> {downloading ? 'downloading…' : 'download zip'}
           </button>
         </div>
-
         <div className="shiny-right">
           {!spriteB64 && <div className="empty-state">drop a sprite and select palettes to preview</div>}
           {spriteB64 && (
@@ -201,9 +176,8 @@ function ApplyShinyMode({ palettes }) {
   )
 }
 
-// ---------------------------------------------------------------------------
-// Mode 2: Extract matched palettes from normal + shiny sprites
-// ---------------------------------------------------------------------------
+// ── Mode 2: Extract matched palettes ─────────────────────────────────────────
+
 function ExtractMatchedMode() {
   const [normalFile, setNormalFile]       = useState(null)
   const [shinyFile, setShinyFile]         = useState(null)
@@ -241,35 +215,25 @@ function ExtractMatchedMode() {
     setLoading(true); setError(null); setResult(null)
     try {
       const fd = new FormData()
-      fd.append('normal_file', normalFile)
-      fd.append('shiny_file', shinyFile)
-      fd.append('n_colors', nColors)
-      fd.append('bg_color', bgColor)
+      fd.append('normal_file', normalFile); fd.append('shiny_file', shinyFile)
+      fd.append('n_colors', nColors); fd.append('bg_color', bgColor)
       const res = await fetch(`${API}/shiny/extract-matched`, { method: 'POST', body: fd })
       if (!res.ok) throw new Error(await res.text())
       setResult(await res.json())
-    } catch (e) {
-      setError(e.message)
-    } finally {
-      setLoading(false)
-    }
+    } catch (e) { setError(e.message) }
+    finally { setLoading(false) }
   }
 
   const handleDownloadZip = async () => {
-    if (!normalFile || !shinyFile) return
     setDownloading(true)
     try {
       const fd = new FormData()
-      fd.append('normal_file', normalFile)
-      fd.append('shiny_file', shinyFile)
-      fd.append('n_colors', nColors)
-      fd.append('bg_color', bgColor)
+      fd.append('normal_file', normalFile); fd.append('shiny_file', shinyFile)
+      fd.append('n_colors', nColors); fd.append('bg_color', bgColor)
       const res = await fetch(`${API}/shiny/extract-matched/download`, { method: 'POST', body: fd })
       if (!res.ok) return
       downloadBlob(await res.blob(), `${normalFile.name.replace(/\.[^.]+$/, '')}_shiny_pair.zip`)
-    } finally {
-      setDownloading(false)
-    }
+    } finally { setDownloading(false) }
   }
 
   return (
@@ -280,19 +244,16 @@ function ExtractMatchedMode() {
           <DropZone onFile={handleNormalFile} label="drop normal sprite" />
           {normalB64 && <div className="sprite-thumb"><img src={`data:image/png;base64,${normalB64}`} alt="normal" /></div>}
         </div>
-
         <div className="sprite-pair">
           <span className="sprite-pair-label">shiny sprite</span>
           <DropZone onFile={handleShinyFile} label="drop shiny sprite" />
           {shinyB64 && <div className="sprite-thumb"><img src={`data:image/png;base64,${shinyB64}`} alt="shiny" /></div>}
         </div>
-
         <div className="field">
           <label className="field-label">colors (max 15)</label>
           <input type="number" className="field-input" min={1} max={15} value={nColors}
             onChange={e => setNColors(Number(e.target.value))} />
         </div>
-
         <div className="field">
           <label className="field-label">bg color</label>
           <div className="bg-color-row">
@@ -301,22 +262,15 @@ function ExtractMatchedMode() {
               onChange={e => setBgColor(e.target.value)} maxLength={7} placeholder="#73C5A4" />
           </div>
         </div>
-
         <button className="btn-primary" disabled={!normalFile || !shinyFile || loading} onClick={handleExtract}>
           {loading ? 'extracting…' : 'extract matched palettes'}
         </button>
-
         {result && (
-          <button
-            className="btn-secondary"
-            disabled={downloading}
-            onClick={handleDownloadZip}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
-          >
+          <button className="btn-secondary" disabled={downloading} onClick={handleDownloadZip}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
             <Download size={11} /> {downloading ? 'downloading…' : 'download zip'}
           </button>
         )}
-
         {error && <p className="error-msg">{error}</p>}
       </div>
 
@@ -330,7 +284,7 @@ function ExtractMatchedMode() {
                 <ExportDropdown name={result.normal.name} palContent={result.normal.pal_content} />
               </div>
               {normalPreview && <ZoomableImage src={normalPreview} alt="normal preview" />}
-              <PaletteStrip colors={result.normal.colors} usedIndices={result.normal.colors.map((_,i) => i)} checkSize="100%" />
+              <PaletteStrip colors={result.normal.colors} usedIndices={result.normal.colors.map((_,i)=>i)} checkSize="100%" />
             </div>
             <div className="shiny-preview-section">
               <div className="shiny-preview-header">
@@ -338,7 +292,7 @@ function ExtractMatchedMode() {
                 <ExportDropdown name={result.shiny.name + '_shiny'} palContent={result.shiny.pal_content} />
               </div>
               {shinyPreview && <ZoomableImage src={shinyPreview} alt="shiny preview" />}
-              <PaletteStrip colors={result.shiny.colors} usedIndices={result.shiny.colors.map((_,i) => i)} checkSize="100%" />
+              <PaletteStrip colors={result.shiny.colors} usedIndices={result.shiny.colors.map((_,i)=>i)} checkSize="100%" />
             </div>
           </div>
         )}
@@ -347,9 +301,8 @@ function ExtractMatchedMode() {
   )
 }
 
-// ---------------------------------------------------------------------------
-// Tab root
-// ---------------------------------------------------------------------------
+// ── Tab root ──────────────────────────────────────────────────────────────────
+
 export function ShinyTab() {
   const [mode, setMode]         = useState('apply')
   const [palettes, setPalettes] = useState([])
@@ -372,7 +325,6 @@ export function ShinyTab() {
           </button>
         </div>
       </div>
-
       {mode === 'apply'   && <ApplyShinyMode palettes={palettes} />}
       {mode === 'extract' && <ExtractMatchedMode />}
     </div>

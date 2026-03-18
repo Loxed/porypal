@@ -46,7 +46,7 @@ function ThresholdSlider({ value, onChange }) {
 // ItemsTab
 // ---------------------------------------------------------------------------
 export function ItemsTab() {
-  const [mode, setMode]                         = useState('group')
+  const [mode, setMode]                         = useState('variants') // 'variants' | 'group'
   const [sprites, setSprites]                   = useState([])
   const [nColors, setNColors]                   = useState(15)
   const [outputBg, setOutputBg]                 = useState(GBA_TRANSPARENT)
@@ -229,16 +229,16 @@ export function ItemsTab() {
       {/* ── Mode switcher ── */}
       <div className="items-mode-switcher">
         <button
+          className={`items-mode-btn ${mode === 'variants' ? 'active' : ''}`}
+          onClick={() => setMode('variants')}
+        >
+          item variants
+        </button>
+        <button
           className={`items-mode-btn ${mode === 'group' ? 'active' : ''}`}
           onClick={() => setMode('group')}
         >
           group extract
-        </button>
-        <button
-          className={`items-mode-btn ${mode === 'variants' ? 'active' : ''}`}
-          onClick={() => setMode('variants')}
-        >
-          variants
         </button>
       </div>
 

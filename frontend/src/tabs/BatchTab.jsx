@@ -58,48 +58,32 @@ function ExtractConfig({ config, onChange }) {
     <div className="step-config">
       <div className="step-config-row">
         <label className="step-config-label">colors</label>
-        <input
-          type="number" min={1} max={15}
-          className="step-input-num"
-          value={config.n_colors}
-          onChange={e => set('n_colors', Number(e.target.value))}
-        />
+        <input type="number" min={1} max={15} className="step-input-num" value={config.n_colors}
+          onChange={e => set('n_colors', Number(e.target.value))} />
         <span className="step-config-hint">max 15 (+ transparent)</span>
       </div>
-
       <div className="step-config-row">
         <label className="step-config-label">color space</label>
         <div className="step-toggle-row">
           {['oklab', 'rgb'].map(s => (
-            <button key={s}
-              className={`step-toggle ${config.color_space === s ? 'active' : ''}`}
-              onClick={() => set('color_space', s)}
-            >{s}</button>
+            <button key={s} className={`step-toggle ${config.color_space === s ? 'active' : ''}`}
+              onClick={() => set('color_space', s)}>{s}</button>
           ))}
         </div>
       </div>
-
       <div className="step-config-row">
         <label className="step-config-label">bg color</label>
         <div className="step-toggle-row">
           {['auto', 'default', 'fixed'].map(m => (
-            <button key={m}
-              className={`step-toggle ${config.bg_mode === m ? 'active' : ''}`}
-              onClick={() => set('bg_mode', m)}
-            >{m}</button>
+            <button key={m} className={`step-toggle ${config.bg_mode === m ? 'active' : ''}`}
+              onClick={() => set('bg_mode', m)}>{m}</button>
           ))}
         </div>
         {config.bg_mode === 'fixed' && (
-          <input
-            className="step-input-hex"
-            value={config.bg_color}
-            maxLength={7}
-            onChange={e => set('bg_color', e.target.value)}
-            placeholder="#73C5A4"
-          />
+          <input className="step-input-hex" value={config.bg_color} maxLength={7}
+            onChange={e => set('bg_color', e.target.value)} placeholder="#73C5A4" />
         )}
       </div>
-
       <div className="step-config-row">
         <label className="step-config-label">save palette</label>
         <label className="step-checkbox">
@@ -118,23 +102,15 @@ function TilesetConfig({ config, onChange, presets }) {
     <div className="step-config">
       <div className="step-config-row">
         <label className="step-config-label">preset</label>
-        <select
-          className="step-select"
-          value={config.preset_id}
-          onChange={e => set('preset_id', e.target.value)}
-        >
+        <select className="step-select" value={config.preset_id}
+          onChange={e => set('preset_id', e.target.value)}>
           <option value="">select preset…</option>
-          {presets.map(p => (
-            <option key={p.id} value={p.id}>{p.name}</option>
-          ))}
+          {presets.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
         </select>
       </div>
       {config.preset_id && (
         <div className="step-config-hint-block">
-          {(() => {
-            const p = presets.find(x => x.id === config.preset_id)
-            return p ? `${p.cols}×${p.rows} grid · ${p.tile_w}px tiles` : ''
-          })()}
+          {(() => { const p = presets.find(x => x.id === config.preset_id); return p ? `${p.cols}×${p.rows} grid · ${p.tile_w}px tiles` : '' })()}
         </div>
       )}
     </div>
@@ -143,31 +119,27 @@ function TilesetConfig({ config, onChange, presets }) {
 
 function ConvertConfig({ config, onChange, palettes, hasExtractBefore }) {
   const set = (k, v) => onChange({ ...config, [k]: v })
-
   const togglePalette = (name) => {
     const sel = config.selected_palettes.includes(name)
       ? config.selected_palettes.filter(n => n !== name)
       : [...config.selected_palettes, name]
     set('selected_palettes', sel)
   }
-
   return (
     <div className="step-config">
       <div className="step-config-row">
         <label className="step-config-label">palette source</label>
         <div className="step-toggle-row">
-          <button
-            className={`step-toggle ${config.palette_source === 'loaded' ? 'active' : ''}`}
-            onClick={() => set('palette_source', 'loaded')}
-          >loaded palettes</button>
+          <button className={`step-toggle ${config.palette_source === 'loaded' ? 'active' : ''}`}
+            onClick={() => set('palette_source', 'loaded')}>loaded palettes</button>
           <button
             className={`step-toggle ${config.palette_source === 'extracted' ? 'active' : ''} ${!hasExtractBefore ? 'disabled' : ''}`}
             onClick={() => hasExtractBefore && set('palette_source', 'extracted')}
-            title={!hasExtractBefore ? 'Add an Extract step before this one' : ''}
-          >from extract step</button>
+            title={!hasExtractBefore ? 'Add an Extract step before this one' : ''}>
+            from extract step
+          </button>
         </div>
       </div>
-
       {config.palette_source === 'loaded' && (
         <div className="step-config-row step-config-row--col">
           <label className="step-config-label">palettes</label>
@@ -177,11 +149,8 @@ function ConvertConfig({ config, onChange, palettes, hasExtractBefore }) {
               <div className="step-palette-list">
                 {palettes.map(p => (
                   <label key={p.name} className="step-pal-check">
-                    <input
-                      type="checkbox"
-                      checked={config.selected_palettes.includes(p.name)}
-                      onChange={() => togglePalette(p.name)}
-                    />
+                    <input type="checkbox" checked={config.selected_palettes.includes(p.name)}
+                      onChange={() => togglePalette(p.name)} />
                     <span>{p.name.replace('.pal', '')}</span>
                   </label>
                 ))}
@@ -190,20 +159,17 @@ function ConvertConfig({ config, onChange, palettes, hasExtractBefore }) {
           }
         </div>
       )}
-
       <div className="step-config-row">
         <label className="step-config-label">on tie</label>
         <div className="step-toggle-row">
-          <button
-            className={`step-toggle ${config.conflict_mode === 'auto_first' ? 'active' : ''}`}
-            onClick={() => set('conflict_mode', 'auto_first')}
-            title="Automatically pick first alphabetically"
-          >auto-resolve</button>
-          <button
-            className={`step-toggle ${config.conflict_mode === 'flag' ? 'active' : ''}`}
-            onClick={() => set('conflict_mode', 'flag')}
-            title="Mark as conflict in summary"
-          >flag conflict</button>
+          <button className={`step-toggle ${config.conflict_mode === 'auto_first' ? 'active' : ''}`}
+            onClick={() => set('conflict_mode', 'auto_first')} title="Automatically pick first alphabetically">
+            auto-resolve
+          </button>
+          <button className={`step-toggle ${config.conflict_mode === 'flag' ? 'active' : ''}`}
+            onClick={() => set('conflict_mode', 'flag')} title="Mark as conflict in summary">
+            flag conflict
+          </button>
         </div>
       </div>
     </div>
@@ -236,22 +202,13 @@ function StepCard({ step, index, total, allSteps, onChange, onMove, onDelete, pa
           <X size={12}/>
         </button>
       </div>
-
       {expanded && (
         <div className="step-card-body">
-          {step.type === 'extract' && (
-            <ExtractConfig config={step.config} onChange={c => onChange(index, c)} />
-          )}
-          {step.type === 'tileset' && (
-            <TilesetConfig config={step.config} onChange={c => onChange(index, c)} presets={presets} />
-          )}
+          {step.type === 'extract' && <ExtractConfig config={step.config} onChange={c => onChange(index, c)} />}
+          {step.type === 'tileset' && <TilesetConfig config={step.config} onChange={c => onChange(index, c)} presets={presets} />}
           {step.type === 'convert' && (
-            <ConvertConfig
-              config={step.config}
-              onChange={c => onChange(index, c)}
-              palettes={palettes}
-              hasExtractBefore={hasExtractBefore}
-            />
+            <ConvertConfig config={step.config} onChange={c => onChange(index, c)}
+              palettes={palettes} hasExtractBefore={hasExtractBefore} />
           )}
         </div>
       )}
@@ -264,14 +221,10 @@ function StepCard({ step, index, total, allSteps, onChange, onMove, onDelete, pa
 // ---------------------------------------------------------------------------
 function ProgressPanel({ status, jobId, onReset }) {
   const pct = status.total > 0 ? Math.round((status.done / status.total) * 100) : 0
-  const ok       = status.results.filter(r => r.status === 'ok').length
+  const ok        = status.results.filter(r => r.status === 'ok').length
   const conflicts = status.results.filter(r => r.status === 'conflict').length
-  const errors   = status.results.filter(r => r.status === 'error').length
-  const isDone   = status.status === 'done'
-
-  const handleDownload = () => {
-    window.location.href = `${API}/pipeline/download/${jobId}`
-  }
+  const errors    = status.results.filter(r => r.status === 'error').length
+  const isDone    = status.status === 'done'
 
   return (
     <div className="progress-panel">
@@ -281,7 +234,7 @@ function ProgressPanel({ status, jobId, onReset }) {
         </span>
         {isDone && (
           <div className="progress-header-actions">
-            <button className="btn-primary-sm" onClick={handleDownload}>
+            <button className="btn-primary-sm" onClick={() => { window.location.href = `${API}/pipeline/download/${jobId}` }}>
               <Download size={12}/> download results.zip
             </button>
             <button className="progress-reset-btn" onClick={onReset} title="new job">
@@ -290,15 +243,12 @@ function ProgressPanel({ status, jobId, onReset }) {
           </div>
         )}
       </div>
-
       <div className="progress-bar-wrap">
         <div className="progress-bar" style={{ width: `${pct}%` }} />
       </div>
-
       {!isDone && status.current_file && (
-        <p className="progress-current">⟳ {status.current_file}</p>
+        <p className="progress-current">⌛ {status.current_file}</p>
       )}
-
       {isDone && (
         <div className="progress-stats">
           <span className="progress-stat stat--ok"><Check size={11}/> {ok} ok</span>
@@ -306,7 +256,6 @@ function ProgressPanel({ status, jobId, onReset }) {
           {errors    > 0 && <span className="progress-stat stat--error"><X size={11}/> {errors} error</span>}
         </div>
       )}
-
       {status.results.length > 0 && (
         <div className="progress-results">
           {status.results.map((r, i) => (
@@ -330,8 +279,9 @@ function ProgressPanel({ status, jobId, onReset }) {
 // Main tab
 // ---------------------------------------------------------------------------
 export function BatchTab() {
-  const [files, setFiles]     = useState([])
-  const [steps, setSteps]     = useState([])
+  const [files, setFiles]       = useState([])
+  const [dragging, setDragging] = useState(false)
+  const [steps, setSteps]       = useState([])
   const [palettes, setPalettes] = useState([])
   const [presets, setPresets]   = useState([])
 
@@ -340,16 +290,15 @@ export function BatchTab() {
   const [running, setRunning]     = useState(false)
   const [runError, setRunError]   = useState(null)
 
-  const fileInputRef = useRef()
-  const pollRef      = useRef(null)
+  const fileInputRef   = useRef()  // individual files
+  const folderInputRef = useRef()  // whole folder
+  const pollRef        = useRef(null)
 
-  // Fetch palettes + presets on mount
   useEffect(() => {
     fetch(`${API}/palettes`).then(r => r.json()).then(setPalettes).catch(() => {})
     fetch(`${API}/presets`).then(r => r.json()).then(setPresets).catch(() => {})
   }, [])
 
-  // Poll job status while running
   useEffect(() => {
     if (!jobId || !running) return
     pollRef.current = setInterval(async () => {
@@ -365,8 +314,8 @@ export function BatchTab() {
     return () => clearInterval(pollRef.current)
   }, [jobId, running])
 
-  const handleFolderPick = (e) => {
-    const picked = Array.from(e.target.files).filter(f =>
+  const handleFiles = (fileList) => {
+    const picked = Array.from(fileList).filter(f =>
       /\.(png|jpg|jpeg|bmp|gif)$/i.test(f.name)
     )
     setFiles(picked)
@@ -399,16 +348,11 @@ export function BatchTab() {
   const canRun = files.length > 0 && stepsValid && !running
 
   const handleRun = async () => {
-    setRunError(null)
-    setRunning(true)
-    setJobId(null)
-    setJobStatus(null)
-
+    setRunError(null); setRunning(true); setJobId(null); setJobStatus(null)
     try {
       const fd = new FormData()
       files.forEach(f => fd.append('files', f))
       fd.append('steps', JSON.stringify(steps.map(s => ({ type: s.type, ...s.config }))))
-
       const res = await fetch(`${API}/pipeline/run`, { method: 'POST', body: fd })
       if (!res.ok) throw new Error(await res.text())
       const { job_id } = await res.json()
@@ -432,22 +376,44 @@ export function BatchTab() {
 
         {/* ── Left: files ── */}
         <div className="batch-left">
-          <button className="batch-folder-btn" onClick={() => fileInputRef.current?.click()}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+          {/* drag + drop / click to pick individual files */}
+          <div
+            className={`dropzone ${dragging ? 'dragging' : ''}`}
+            onDragOver={e => { e.preventDefault(); setDragging(true) }}
+            onDragLeave={() => setDragging(false)}
+            onDrop={e => {
+              e.preventDefault(); setDragging(false)
+              if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files)
+            }}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--muted)' }}>
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
             </svg>
-            {files.length > 0 ? `${files.length} images loaded` : 'select folder'}
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            multiple
+            <p className="dropzone-label">
+              {files.length > 0 ? `${files.length} images loaded` : 'drop sprites here'}
+            </p>
+            <p className="dropzone-hint">PNG, JPG, BMP · click or drag</p>
+          </div>
+
+          {/* hidden file inputs */}
+          <input ref={fileInputRef} type="file" multiple accept="image/*" style={{ display: 'none' }}
+            onChange={e => { if (e.target.files.length) handleFiles(e.target.files); e.target.value = '' }} />
+          <input ref={folderInputRef} type="file" multiple
             // @ts-ignore
             webkitdirectory="true"
-            accept="image/*"
-            style={{ display: 'none' }}
-            onChange={handleFolderPick}
-          />
+            accept="image/*" style={{ display: 'none' }}
+            onChange={e => { if (e.target.files.length) handleFiles(e.target.files); e.target.value = '' }} />
+
+          {/* folder fallback button */}
+          <button className="batch-folder-btn" onClick={() => folderInputRef.current?.click()}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+            select folder instead
+          </button>
 
           {files.length > 0 && (
             <div className="batch-file-list">
@@ -465,7 +431,7 @@ export function BatchTab() {
 
           {files.length === 0 && (
             <div className="batch-left-hint">
-              <p>Select a folder of sprites or tilesets to process them through the pipeline.</p>
+              <p>Drop individual sprites, multi-select files, or pick a whole folder.</p>
               <p>Supported: PNG, JPG, BMP, GIF</p>
             </div>
           )}
@@ -473,17 +439,12 @@ export function BatchTab() {
 
         {/* ── Right: pipeline ── */}
         <div className="batch-right">
-
           <div className="batch-toolbar">
             <span className="section-label">
               pipeline
               {steps.length > 0 && <span className="batch-step-count">{steps.length} steps</span>}
             </span>
-            <button
-              className="btn-run"
-              disabled={!canRun}
-              onClick={handleRun}
-            >
+            <button className="btn-run" disabled={!canRun} onClick={handleRun}>
               {running
                 ? <><Loader size={12} className="spinning"/> running…</>
                 : <><Play size={12}/> run {files.length > 0 ? `(${files.length})` : ''}</>
@@ -493,52 +454,33 @@ export function BatchTab() {
 
           {runError && <p className="error-msg">{runError}</p>}
 
-          {/* Step cards */}
           {steps.length === 0 && !showProgress && (
             <div className="batch-empty">
               <p>Add steps below to build your pipeline.</p>
-              <p>Steps run in order on every image in the folder.</p>
+              <p>Steps run in order on every image.</p>
             </div>
           )}
 
           <div className="step-list">
             {steps.map((step, i) => (
-              <StepCard
-                key={step.id}
-                step={step}
-                index={i}
-                total={steps.length}
-                allSteps={steps}
-                onChange={updateStepConfig}
-                onMove={moveStep}
-                onDelete={deleteStep}
-                palettes={palettes}
-                presets={presets}
-              />
+              <StepCard key={step.id} step={step} index={i} total={steps.length} allSteps={steps}
+                onChange={updateStepConfig} onMove={moveStep} onDelete={deleteStep}
+                palettes={palettes} presets={presets} />
             ))}
           </div>
 
-          {/* Add step row */}
           {!showProgress && (
             <div className="add-step-row">
               <span className="add-step-label">add step</span>
-              <button className="add-step-btn add-step-btn--extract" onClick={() => addStep('extract')}>
-                + extract
-              </button>
-              <button className="add-step-btn add-step-btn--tileset" onClick={() => addStep('tileset')}>
-                + tileset
-              </button>
-              <button className="add-step-btn add-step-btn--convert" onClick={() => addStep('convert')}>
-                + convert
-              </button>
+              <button className="add-step-btn add-step-btn--extract" onClick={() => addStep('extract')}>+ extract palette</button>
+              <button className="add-step-btn add-step-btn--tileset" onClick={() => addStep('tileset')}>+ apply preset</button>
+              <button className="add-step-btn add-step-btn--convert" onClick={() => addStep('convert')}>+ apply palette</button>
             </div>
           )}
 
-          {/* Progress */}
           {showProgress && jobStatus && (
             <ProgressPanel status={jobStatus} jobId={jobId} onReset={handleReset} />
           )}
-
         </div>
       </div>
     </div>

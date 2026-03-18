@@ -2,20 +2,6 @@
 server/api/items.py
 
 Routes: /api/items
-
-Silhouette-based grouping: sprites with identical opaque/transparent pixel masks
-are grouped together by default. The user can override group membership by sending
-a group_assignments JSON map (sprite_name -> group_id) from the frontend.
-
-Within each group, palettes are index-aligned on shared colors (above the
-configurable shared_threshold) but each sprite keeps its own unique colors
-without cross-sprite clustering.
-
-Strategy:
-  1. Each sprite gets its own palette extracted independently (no cross-sprite k-means)
-  2. Colors present in >= shared_threshold fraction of the group get fixed shared slots
-  3. Each sprite fills remaining slots independently with its own colors
-  4. Only if a single sprite has > n_colors unique colors does it get k-means reduced
 """
 
 from __future__ import annotations
@@ -41,10 +27,27 @@ DEFAULT_THRESHOLD = 0.6
 
 
 def _make_pal_content(colors: list[Color]) -> str:
+    """
+    Write a JASC-PAL string, trimming any trailing colors that are
+    identical to slot 0 (the transparent/bg color). This prevents
+    palettes with e.g. 12 real colors being padded out to 16 slots
+    of repeated bg color.
+    """
+    if not colors:
+        return "JASC-PAL\n0100\n0\n"
+
+    bg = colors[0]
+    # Find the last index that is NOT the bg color
+    last_real = 0
+    for i, c in enumerate(colors):
+        if c != bg:
+            last_real = i
+    trimmed = colors[:last_real + 1]
+
     buf = io.StringIO()
     buf.write("JASC-PAL\n0100\n")
-    buf.write(f"{len(colors)}\n")
-    for c in colors:
+    buf.write(f"{len(trimmed)}\n")
+    for c in trimmed:
         buf.write(f"{c.r} {c.g} {c.b}\n")
     return buf.getvalue()
 
@@ -59,10 +62,6 @@ def _load_rgba(data: bytes) -> np.ndarray:
 
 
 def _silhouette_key(px: np.ndarray, input_bg_rgb: np.ndarray) -> tuple:
-    """
-    Returns a hashable key representing the opaque/transparent mask of a sprite.
-    Two sprites with the same silhouette will have the same key.
-    """
     alpha = px[:, :, 3]
     rgb   = px[:, :, :3]
     opaque = alpha >= 255
@@ -76,11 +75,6 @@ def _extract_sprite_colors(
     input_bg_rgb: np.ndarray,
     n_colors: int,
 ) -> list[tuple[int, int, int]]:
-    """
-    Extract up to n_colors unique colors from a single sprite's opaque pixels
-    (excluding bg). If more than n_colors unique colors exist, k-means reduces
-    just this sprite. Returns list of RGB tuples, sorted by frequency descending.
-    """
     alpha      = px[:, :, 3]
     rgb        = px[:, :, :3]
     flat_rgb   = rgb.reshape(-1, 3).astype(np.uint8)
@@ -100,7 +94,6 @@ def _extract_sprite_colors(
     if len(unique_sorted) <= n_colors:
         return [tuple(c) for c in unique_sorted]
 
-    # K-means only on this single sprite
     actual_clusters = min(n_colors, len(unique_sorted))
     lab    = rgb_to_oklab(sprite_pixels)
     kmeans = KMeans(n_clusters=actual_clusters, random_state=42, n_init="auto")
@@ -117,37 +110,14 @@ def _build_aligned_palette(
     output_bg: Color,
     shared_threshold: float = DEFAULT_THRESHOLD,
 ) -> list[dict[tuple, int]]:
-    """
-    Build per-sprite slot maps with two-phase slot assignment.
-
-    shared_threshold: fraction of sprites that must contain a color for it to
-    earn a fixed shared slot.
-      0.0 → any color present in ≥1 sprite gets a shared slot
-      0.5 → strict majority
-      1.0 → only colors in every single sprite
-
-    Phase 1 — Shared slots (reserved at the front):
-      Colors present in >= shared_threshold fraction of sprites get fixed slot
-      indices, sorted by prevalence descending. Same index in every palette.
-
-    Phase 2 — Per-sprite local slots:
-      Each sprite independently fills remaining slots with its own unique
-      colors sorted by pixel frequency. No cross-sprite influence.
-
-    Returns: (per_sprite_slot_maps, shared_indices)
-      per_sprite_slot_maps: list of dicts mapping rgb_tuple -> 1-based slot index
-      shared_indices: sorted list of 1-based slot indices that are shared (Phase 1)
-    """
     n         = len(per_sprite_colors)
     threshold = max(2, round(shared_threshold * n)) if n > 1 else 1
 
-    # Count how many sprites contain each color
     color_prevalence: dict[tuple, int] = {}
     for colors in per_sprite_colors:
         for c in set(colors):
             color_prevalence[c] = color_prevalence.get(c, 0) + 1
 
-    # Phase 1: colors meeting the threshold, sorted by prevalence desc
     majority_colors = [
         c for c, count in color_prevalence.items()
         if count >= threshold
@@ -164,7 +134,6 @@ def _build_aligned_palette(
 
     n_shared = next_shared_slot - 1
 
-    # Phase 2: each sprite fills remaining slots independently
     per_sprite_slot_maps: list[dict[tuple, int]] = []
 
     for sprite_colors in per_sprite_colors:
@@ -175,7 +144,6 @@ def _build_aligned_palette(
             if color in slot_map:
                 continue
             if local_slot > n_colors:
-                # Overflow — map to nearest already-assigned color
                 assigned = list(slot_map.items())
                 if assigned:
                     nearest = min(
@@ -201,7 +169,6 @@ def _render_sprite(
     palette_colors: list[Color],
     output_bg: Color,
 ) -> Image.Image:
-    """Render a sprite to a PIL indexed image using the given slot map."""
     h, w       = px.shape[:2]
     alpha      = px[:, :, 3]
     rgb        = px[:, :, :3]
@@ -247,12 +214,6 @@ def _extract_group(
     output_bg: Color,
     shared_threshold: float = DEFAULT_THRESHOLD,
 ) -> dict:
-    """
-    Process a silhouette group:
-    1. Extract colors independently per sprite (per-sprite k-means only if needed)
-    2. Align shared colors to the same slot indices using shared_threshold
-    3. Render each sprite with its own aligned palette
-    """
     h, w = sprites[0]["px"].shape[:2]
 
     per_sprite_colors: list[list[tuple]] = []
@@ -267,7 +228,6 @@ def _extract_group(
     per_sprite_slot_maps, shared_indices = _build_aligned_palette(
         per_sprite_colors, n_colors, output_bg, shared_threshold
     )
-    # Slot 0 (transparent) is always shared
     shared_indices_set = {0} | set(shared_indices)
 
     all_colors: set[tuple] = set()
@@ -298,21 +258,18 @@ def _extract_group(
         results.append({
             "name":        sprite["name"],
             "colors":      [c.to_hex() for c in sprite_palette],
-            "pal_content": _make_pal_content(sprite_palette),
+            "pal_content": _make_pal_content(sprite_palette),  # trims trailing bg dupes
             "preview":     pil_to_b64(out_img.convert("RGBA")),
             "exact":       len(sprite_colors) <= n_colors,
         })
 
     results.sort(key=lambda r: r["name"].lower())
 
-    # Build the shared palette strip: for each of the 16 slots, provide the hex color
-    # from the first result (shared slots are identical across sprites; local slots vary).
-    # Also report which slot indices are shared vs local.
     representative_colors = results[0]["colors"] if results else []
     shared_slot_colors = [
         {"hex": representative_colors[i] if i < len(representative_colors) else "#000000",
          "shared": i in shared_indices_set}
-        for i in range(n_colors + 1)  # slot 0 + n_colors slots
+        for i in range(n_colors + 1)
     ]
 
     return {
@@ -321,8 +278,8 @@ def _extract_group(
         "n_unique":      n_unique,
         "exact":         exact,
         "results":       results,
-        "shared_slots":  shared_slot_colors,   # [{hex, shared}, ...] len = n_colors+1
-        "n_shared":      len(shared_indices),  # excludes slot 0
+        "shared_slots":  shared_slot_colors,
+        "n_shared":      len(shared_indices),
     }
 
 
@@ -333,24 +290,14 @@ def _build_groups(
     shared_threshold: float = DEFAULT_THRESHOLD,
     group_assignments: dict[str, str] | None = None,
 ) -> list[dict]:
-    """
-    Group sprites and extract palettes per group.
-
-    group_assignments: optional dict mapping sprite name -> group_id.
-      When provided, overrides the silhouette-based auto-grouping for those sprites.
-      Sprites not mentioned fall back to silhouette grouping.
-      This lets the user manually move outliers (ultraball etc.) into an existing group.
-    """
     groups: dict[str, list[dict]] = {}
 
     for sprite in sprites:
         bg_rgb = np.array(_parse_hex(sprite["input_bg"]).to_tuple(), dtype=np.uint8)
 
         if group_assignments and sprite["name"] in group_assignments:
-            # User-assigned group id (string key)
             gid = f"manual_{group_assignments[sprite['name']]}"
         else:
-            # Auto-group by silhouette (bytes key → stable string)
             sil_key = _silhouette_key(sprite["px"], bg_rgb)
             gid     = f"sil_{hash(sil_key) & 0xFFFFFFFF}"
 
@@ -361,7 +308,6 @@ def _build_groups(
         group_data = _extract_group(group_sprites, n_colors, output_bg, shared_threshold)
         unsorted.append(group_data)
 
-    # Sort groups: most sprites first
     unsorted.sort(key=lambda g: -len(g["results"]))
 
     result_groups = []
@@ -383,7 +329,7 @@ async def extract_item_palettes(
     input_bg_colors: str    = Form(default="[]"),
     output_bg_color: str    = Form(default=DEFAULT_BG),
     shared_threshold: float = Form(default=DEFAULT_THRESHOLD),
-    group_assignments: str  = Form(default="{}"),  # JSON: { sprite_name: group_id }
+    group_assignments: str  = Form(default="{}"),
 ):
     if not files:
         raise HTTPException(400, "At least one file required")
@@ -489,51 +435,33 @@ async def download_all_item_palettes(
         headers={"Content-Disposition": 'attachment; filename="item_palettes.zip"'},
     )
 
+
 # ---------------------------------------------------------------------------
-# Variant extraction — N sprites share the same pixel layout, different hues
+# Variant extraction
 # ---------------------------------------------------------------------------
 
 def _extract_variants(
-    sprites: list[dict],   # [{name, px, input_bg}]
+    sprites: list[dict],
     n_colors: int,
     output_bg: Color,
 ) -> list[dict]:
-    """
-    Given N sprites that are recolor variants of the same base sprite:
-    1. Extract the reference palette from sprite[0] (k-means if needed)
-    2. For every other sprite, build a matched palette slot-by-slot:
-       for each reference color, find what color occupies those same pixels
-       in the variant → that becomes the variant's color at that slot.
-    3. Render each sprite with its matched palette.
-
-    Returns a list of results (one per sprite) each with:
-      name, colors, pal_content, preview, slot_index (1-based slot in reference)
-    """
     if not sprites:
         return []
 
     ref = sprites[0]
     ref_bg_rgb = np.array(_parse_hex(ref["input_bg"]).to_tuple(), dtype=np.uint8)
 
-    # ── Step 1: extract reference palette ──────────────────────────────────
     ref_colors = _extract_sprite_colors(ref["px"], ref_bg_rgb, n_colors)
-    # ref_colors is sorted by pixel frequency, index 0 = most frequent
-
-    # Build slot map for reference: color_tuple -> 1-based slot
     ref_slot_map: dict[tuple, int] = {c: i + 1 for i, c in enumerate(ref_colors)}
 
-    # Full reference palette (slot 0 = output_bg)
     ref_palette = [output_bg] + [Color(c[0], c[1], c[2]) for c in ref_colors]
-    # Pad to 16 slots
     while len(ref_palette) < n_colors + 1:
         ref_palette.append(output_bg)
 
-    # ── Step 2: build pixel→ref_slot map from reference image ──────────────
     h, w = ref["px"].shape[:2]
     ref_rgb   = ref["px"][:, :, :3]
     ref_alpha = ref["px"][:, :, 3]
 
-    # For each pixel, store which slot it belongs to (0 = transparent/bg)
     ref_slot_image = np.zeros((h, w), dtype=np.int32)
     for row in range(h):
         for col in range(w):
@@ -544,7 +472,6 @@ def _extract_variants(
             elif px_rgb in ref_slot_map:
                 ref_slot_image[row, col] = ref_slot_map[px_rgb]
             else:
-                # Nearest ref color (handles k-means reduced refs)
                 best_slot, best_dist = 1, float('inf')
                 r, g, b = px_rgb
                 for rc, slot in ref_slot_map.items():
@@ -553,7 +480,6 @@ def _extract_variants(
                         best_dist, best_slot = d, slot
                 ref_slot_image[row, col] = best_slot
 
-    # ── Step 3: for each variant, find color-per-slot via pixel sampling ───
     results = []
 
     for sprite in sprites:
@@ -561,8 +487,6 @@ def _extract_variants(
         sp_rgb    = sprite["px"][:, :, :3]
         sp_alpha  = sprite["px"][:, :, 3]
 
-        # For each slot (1..n_colors), collect all variant pixel colors at
-        # positions where the reference had that slot → take the most common one
         slot_colors: dict[int, dict[tuple, int]] = {i: {} for i in range(1, len(ref_colors) + 1)}
 
         for row in range(h):
@@ -578,7 +502,6 @@ def _extract_variants(
                     continue
                 slot_colors[slot][c] = slot_colors[slot].get(c, 0) + 1
 
-        # Pick the most frequent color for each slot; fall back to ref color if empty
         variant_palette: list[Color] = [output_bg]
         for slot_i in range(1, len(ref_colors) + 1):
             freq = slot_colors[slot_i]
@@ -586,17 +509,12 @@ def _extract_variants(
                 best_color = max(freq, key=freq.get)
                 variant_palette.append(Color(best_color[0], best_color[1], best_color[2]))
             else:
-                # No pixels found for this slot — keep reference color
                 rc = ref_colors[slot_i - 1]
                 variant_palette.append(Color(rc[0], rc[1], rc[2]))
 
-        # Pad to 16 slots
         while len(variant_palette) < n_colors + 1:
             variant_palette.append(output_bg)
 
-        # Build slot map for rendering this variant
-        # Map: variant_color -> slot_i (invert variant_palette)
-        # We use ref_slot_image directly — same pixel layout, same slots
         out_img = Image.new("P", (w, h))
         pal_data = list(output_bg.to_tuple())
         for c in variant_palette[1:]:
@@ -608,7 +526,7 @@ def _extract_variants(
         results.append({
             "name":        sprite["name"],
             "colors":      [c.to_hex() for c in variant_palette],
-            "pal_content": _make_pal_content(variant_palette),
+            "pal_content": _make_pal_content(variant_palette),  # trims trailing bg dupes
             "preview":     pil_to_b64(out_img.convert("RGBA")),
         })
 
@@ -624,14 +542,6 @@ async def extract_variants(
     output_bg_color: str    = Form(default=DEFAULT_BG),
     reference_index: int    = Form(default=0),
 ):
-    """
-    Extract index-compatible palettes from N recolor variants of the same sprite.
-
-    All sprites must have the same dimensions. The sprite at reference_index
-    establishes the palette slot order; all others are matched to it pixel-by-pixel.
-
-    Returns: { reference, results: [{name, colors, pal_content, preview}] }
-    """
     if not files:
         raise HTTPException(400, "At least one file required")
 
@@ -651,7 +561,6 @@ async def extract_variants(
             "input_bg": input_bgs[i] if i < len(input_bgs) else DEFAULT_BG,
         })
 
-    # Validate all same dimensions
     h0, w0 = sprites[0]["px"].shape[:2]
     for s in sprites[1:]:
         h, w = s["px"].shape[:2]
@@ -662,7 +571,6 @@ async def extract_variants(
                 f"'{sprites[0]['name']}' is {w0}×{h0} but '{s['name']}' is {w}×{h}."
             )
 
-    # Put reference first
     ref_idx = max(0, min(reference_index, len(sprites) - 1))
     if ref_idx != 0:
         sprites.insert(0, sprites.pop(ref_idx))
@@ -686,7 +594,6 @@ async def download_variants(
     output_bg_color: str    = Form(default=DEFAULT_BG),
     reference_index: int    = Form(default=0),
 ):
-    """Download all variant palettes as a zip."""
     if not files:
         raise HTTPException(400, "At least one file required")
 

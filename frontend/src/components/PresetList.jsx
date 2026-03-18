@@ -11,8 +11,8 @@ export function PresetList({ presets, defaultIds, activePresetId, onLoad, onDele
     return (
       currentState.tileW !== preset.tile_w ||
       currentState.tileH !== preset.tile_h ||
-      currentState.cols !== preset.cols ||
-      currentState.rows !== preset.rows ||
+      currentState.cols  !== preset.cols   ||
+      currentState.rows  !== preset.rows   ||
       currentState.slots.some(s => s !== null)
     )
   }
@@ -27,10 +27,16 @@ export function PresetList({ presets, defaultIds, activePresetId, onLoad, onDele
   return (
     <div className="preset-list">
       {presets.map(p => {
-        const isActive = activePresetId === p.id
+        const isActive  = activePresetId === p.id
         const isHovered = hoveredId === p.id
         const isLoading = loadingId === p.id
-        const dirty = isDirty(p)
+        const dirty     = isDirty(p)
+
+        const inW  = p.tile_w
+        const inH  = p.tile_h
+        const outW = p.out_tile_w ?? inW
+        const outH = p.out_tile_h ?? inH
+        const hasTileResize = outW !== inW || outH !== inH
 
         return (
           <div
@@ -41,7 +47,25 @@ export function PresetList({ presets, defaultIds, activePresetId, onLoad, onDele
           >
             <div className="preset-info">
               <span className="preset-name">{p.name}</span>
-              <span className="preset-meta">{p.cols}×{p.rows} · {p.tile_w}px</span>
+              <span className="preset-meta">
+                <span className="preset-meta-key">layout</span>
+                <span className="preset-meta-val">
+                  {(p.src_cols && p.src_rows)
+                    ? <>{p.src_cols}×{p.src_rows}<span className="preset-arrow"> → </span>{p.cols}×{p.rows}</>
+                    : <>{p.cols}×{p.rows}</>
+                  }
+                </span>
+              </span>
+              <span className="preset-meta">
+                <span className="preset-meta-key">tile</span>
+                <span className="preset-meta-val">
+                  {inW}×{inH}px
+                  {hasTileResize && <>
+                    <span className="preset-arrow"> → </span>
+                    <span className="preset-dim--out">{outW}×{outH}px</span>
+                  </>}
+                </span>
+              </span>
             </div>
 
             <div className="preset-actions">

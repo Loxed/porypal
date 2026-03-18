@@ -60,8 +60,7 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 - [x] Click tile, click slot -- tile placed correctly
 - [x] Save preset -- appears in preset list
 - [x] Load preset -- layout restored
-- [x] Download PNG -- correct arrangement
-> empty slots should be filled with detected bg color, not left transparent
+- [x] Download PNG -- correct arrangement, transparency preserved (no bg fill) — tileset arranger outputs raw transparency, palette handling is upstream's responsibility
 
 **Pipeline**
 - [x] Load folder
@@ -144,7 +143,7 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 | 29 | `server/api/pipeline.py` | `_execute_job` now writes `sprites/` + `palettes/` zip structure + rich `manifest.json` |
 | 30 | `frontend/src/tabs/BatchTab.jsx` | `PreviewStrip` + `PreviewCard` components; debounced preview fetch on config change |
 | 31 | `frontend/src/tabs/BatchTab.css` | Preview strip styles — scrollable, step-colour accent bars, palette swatch row |
-| 32 | `frontend/src/tabs/BatchTab.jsx` | Extract step's preview card shows palette swatches; error cards show server error message |
+
 ---
 
 ## Refactor queue
@@ -174,8 +173,8 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 - [ ] Mode 2 (extract): same download options
 
 ### Tileset
-- [ ] Grid lines: thicker, contrasting color, better hover state
-- [ ] Download: detect bg color + fill empty slots before export
+- [x] Grid lines: thicker, contrasting color, better hover state
+- [x] Download: transparency preserved — no bg color forced on export
 
 ### Pipeline
 - [x] Show first-sprite preview per step so you can verify config before running

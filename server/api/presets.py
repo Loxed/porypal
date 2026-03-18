@@ -19,10 +19,18 @@ class PresetBody(BaseModel):
     name: str
     tile_w: int = 32
     tile_h: int = 32
+    out_tile_w: Optional[int] = None   # output tile width  (None = same as tile_w)
+    out_tile_h: Optional[int] = None   # output tile height (None = same as tile_h)
     cols: int = 9
     rows: int = 1
     slots: list
     slot_labels: Optional[list] = None
+    src_cols: Optional[int] = None
+    src_rows: Optional[int] = None
+    # Legacy resize fields — accepted so old presets can be re-saved cleanly
+    resize_tile_w: Optional[int] = None
+    resize_tile_h: Optional[int] = None
+    resize_interpolation: Optional[str] = None
 
 
 @router.get("")
@@ -40,7 +48,26 @@ def get_preset(preset_id: str):
 
 @router.post("/{preset_id}")
 def upsert_preset(preset_id: str, body: PresetBody):
-    return save_preset(preset_id, body.model_dump())
+    data = body.model_dump(exclude_none=False)
+
+    # Normalise: if out_tile_w/h not set but legacy resize fields are, migrate them
+    if data.get("out_tile_w") is None and data.get("resize_tile_w"):
+        data["out_tile_w"] = data["resize_tile_w"]
+    if data.get("out_tile_h") is None and data.get("resize_tile_h"):
+        data["out_tile_h"] = data["resize_tile_h"]
+
+    # Drop legacy keys so the stored JSON stays clean
+    data.pop("resize_tile_w", None)
+    data.pop("resize_tile_h", None)
+    data.pop("resize_interpolation", None)
+
+    # Drop None out_tile_w/h if they match tile_w/h (no-op resize)
+    if data.get("out_tile_w") == data["tile_w"]:
+        data["out_tile_w"] = None
+    if data.get("out_tile_h") == data["tile_h"]:
+        data["out_tile_h"] = None
+
+    return save_preset(preset_id, data)
 
 
 @router.delete("/{preset_id}")

@@ -18,11 +18,69 @@ const OW_LABELS = [
 
 function useDebounce(value, delay) {
   const [d, setD] = useState(value)
-  useEffect(() => { const t = setTimeout(() => setD(value), delay); return () => clearTimeout(t) }, [value, delay])
+  useEffect(() => {
+    const t = setTimeout(() => setD(value), delay)
+    return () => clearTimeout(t)
+  }, [value, delay])
   return d
 }
 
-// ---- Help Modal ----
+// ---------------------------------------------------------------------------
+// Nearest-neighbor scale — pixel-exact, never calls drawImage for the resize
+// ---------------------------------------------------------------------------
+function nearestNeighborScale(srcCanvas, dstW, dstH) {
+  const srcW = srcCanvas.width
+  const srcH = srcCanvas.height
+  const src  = srcCanvas.getContext('2d').getImageData(0, 0, srcW, srcH).data
+
+  const out  = document.createElement('canvas')
+  out.width  = dstW
+  out.height = dstH
+  const octx = out.getContext('2d')
+  const id   = octx.createImageData(dstW, dstH)
+  const d    = id.data
+  const xR   = srcW / dstW
+  const yR   = srcH / dstH
+
+  for (let y = 0; y < dstH; y++) {
+    const sy = Math.floor(y * yR)
+    for (let x = 0; x < dstW; x++) {
+      const sx  = Math.floor(x * xR)
+      const si  = (sy * srcW + sx) * 4
+      const di  = (y  * dstW + x)  * 4
+      d[di]     = src[si]
+      d[di + 1] = src[si + 1]
+      d[di + 2] = src[si + 2]
+      d[di + 3] = src[si + 3]
+    }
+  }
+  octx.putImageData(id, 0, 0)
+  return out
+}
+
+function scaleFileBlob(file, scaleX, scaleY) {
+  return new Promise(resolve => {
+    const img = new window.Image()
+    const url = URL.createObjectURL(file)
+    img.onload = () => {
+      const srcW = img.naturalWidth
+      const srcH = img.naturalHeight
+      const dstW = Math.max(1, Math.round(srcW * scaleX))
+      const dstH = Math.max(1, Math.round(srcH * scaleY))
+      const tmp  = document.createElement('canvas')
+      tmp.width  = srcW
+      tmp.height = srcH
+      tmp.getContext('2d').drawImage(img, 0, 0)
+      URL.revokeObjectURL(url)
+      nearestNeighborScale(tmp, dstW, dstH).toBlob(b => resolve(b), 'image/png')
+    }
+    img.src = url
+  })
+}
+
+// ---------------------------------------------------------------------------
+// Help modal
+// ---------------------------------------------------------------------------
 function HelpModal({ onClose }) {
   return (
     <Modal title="Overworld sprite format" onClose={onClose}>
@@ -53,10 +111,12 @@ function HelpModal({ onClose }) {
   )
 }
 
-// ---- Save preset modal ----
+// ---------------------------------------------------------------------------
+// Save preset modal
+// ---------------------------------------------------------------------------
 function SaveModal({ onSave, onClose }) {
   const [name, setName] = useState('')
-  const [id, setId] = useState('')
+  const [id, setId]     = useState('')
   return (
     <Modal title="save preset" onClose={onClose} size="sm">
       <div className="field">
@@ -79,19 +139,19 @@ function SaveModal({ onSave, onClose }) {
   )
 }
 
-// ---- Source sheet — plain div grid over the image ----
+// ---------------------------------------------------------------------------
+// Source sheet with tile grid overlay
+// ---------------------------------------------------------------------------
 function SourceSheet({ b64, sourceW, sourceH, tileW, tileH, selectedTile, onTileClick }) {
   if (!b64) return null
-  const cols = Math.max(1, Math.floor(sourceW / tileW))
-  const rows = Math.max(1, Math.floor(sourceH / tileH))
-  const total = cols * rows
-
+  const cols  = Math.max(1, Math.floor(sourceW / tileW))
+  const rows  = Math.max(1, Math.floor(sourceH / tileH))
   return (
     <div className="source-sheet-wrap">
       <div className="source-grid-container">
         <img src={`data:image/png;base64,${b64}`} alt="source" className="source-img" draggable={false}/>
         <div className="source-tile-grid" style={{ '--src-cols': cols, '--src-rows': rows }}>
-          {Array.from({ length: total }).map((_, idx) => (
+          {Array.from({ length: cols * rows }).map((_, idx) => (
             <div
               key={idx}
               className={`source-tile ${selectedTile === idx ? 'selected' : ''}`}
@@ -105,32 +165,30 @@ function SourceSheet({ b64, sourceW, sourceH, tileW, tileH, selectedTile, onTile
   )
 }
 
-// ---- Output grid ----
+// ---------------------------------------------------------------------------
+// Output slot grid
+// ---------------------------------------------------------------------------
 function OutputGrid({ slots, setSlots, cols, rows, tiles, selectedTile, setSelectedTile, slotLabels }) {
   const handleSlotClick = (idx) => {
     if (selectedTile !== null) {
       setSlots(prev => { const s = [...prev]; s[idx] = selectedTile; return s })
       setSelectedTile(null)
-    } else if (slots[idx] !== null && slots[idx] !== undefined) {
+    } else if (slots[idx] != null) {
       setSelectedTile(slots[idx])
       setSlots(prev => { const s = [...prev]; s[idx] = null; return s })
     }
   }
-
   const clearSlot = (e, idx) => {
     e.stopPropagation()
     setSlots(prev => { const s = [...prev]; s[idx] = null; return s })
   }
-
   const canPlace = selectedTile !== null
-
   return (
     <div className="output-grid" style={{ '--cols': cols }}>
       {Array.from({ length: cols * rows }).map((_, idx) => {
         const tileIdx = slots[idx]
-        const hasTile = tileIdx !== null && tileIdx !== undefined
-        const label = slotLabels?.[idx] ?? String(idx)
-
+        const hasTile = tileIdx != null
+        const label   = slotLabels?.[idx] ?? String(idx)
         return (
           <div
             key={idx}
@@ -152,47 +210,64 @@ function OutputGrid({ slots, setSlots, cols, rows, tiles, selectedTile, setSelec
   )
 }
 
-// ---- Download: assemble canvas client-side ----
-function buildAndDownload(tiles, slots, cols, rows, tileW, tileH, filename) {
+// ---------------------------------------------------------------------------
+// Download — pixel-exact, transparency preserved
+// ---------------------------------------------------------------------------
+async function buildAndDownload(tiles, slots, cols, rows, tileW, tileH, filename) {
   const canvas = document.createElement('canvas')
-  canvas.width = cols * tileW
+  canvas.width  = cols * tileW
   canvas.height = rows * tileH
   const ctx = canvas.getContext('2d')
   ctx.imageSmoothingEnabled = false
+  // Transparent by default — bg colour is not this tool's responsibility
 
-  Promise.all(slots.map((tileIdx, pos) => {
-    if (tileIdx === null || tileIdx === undefined || !tiles[tileIdx]) return Promise.resolve()
+  await Promise.all(slots.map((tileIdx, pos) => {
+    if (tileIdx == null || !tiles[tileIdx]) return Promise.resolve()
+    const x = (pos % cols) * tileW
+    const y = Math.floor(pos / cols) * tileH
     return new Promise(res => {
       const img = new Image()
       img.onload = () => {
-        ctx.drawImage(img, (pos % cols) * tileW, Math.floor(pos / cols) * tileH, tileW, tileH)
+        ctx.drawImage(img, 0, 0, tileW, tileH, x, y, tileW, tileH)
         res()
       }
       img.src = `data:image/png;base64,${tiles[tileIdx]}`
     })
-  })).then(() => canvas.toBlob(blob => downloadBlob(blob, filename), 'image/png'))
+  }))
+
+  canvas.toBlob(blob => downloadBlob(blob, filename), 'image/png')
 }
 
-// ---- Main ----
+// ---------------------------------------------------------------------------
+// Main tab
+// ---------------------------------------------------------------------------
 export function TilesetTab() {
-  const [file, setFile] = useState(null)
-  const [tileW, setTileW] = useState(32)
-  const [tileH, setTileH] = useState(32)
-  const [cols, setCols] = useState(9)
-  const [rows, setRows] = useState(1)
+  const [file, setFile]         = useState(null)
+  // Source tile size (how big tiles are in the uploaded image)
+  const [inTileW, setInTileW]   = useState(32)
+  const [inTileH, setInTileH]   = useState(32)
+  // Output tile size (what size tiles should be in the result)
+  const [outTileW, setOutTileW] = useState(32)
+  const [outTileH, setOutTileH] = useState(32)
+  const [cols, setCols]         = useState(9)
+  const [rows, setRows]         = useState(1)
   const [slotLabels, setSlotLabels] = useState([])
-  const [result, setResult] = useState(null)
-  const [slots, setSlots] = useState(Array(9).fill(null))
-  const [selectedTile, setSelectedTile] = useState(null)
-  const [showHelp, setShowHelp] = useState(false)
-  const [showSave, setShowSave] = useState(false)
-  const [presets, setPresets] = useState([])
-  const [activePresetId, setActivePresetId] = useState(null)
-  const [defaultIds, setDefaultIds] = useState(new Set())
-  const { loading, error, run } = useFetch()
 
-  const dTileW = useDebounce(tileW, 500)
-  const dTileH = useDebounce(tileH, 500)
+  const [result, setResult]               = useState(null)
+  const [slots, setSlots]                 = useState(Array(9).fill(null))
+  const [selectedTile, setSelectedTile]   = useState(null)
+  const [showHelp, setShowHelp]           = useState(false)
+  const [showSave, setShowSave]           = useState(false)
+  const [presets, setPresets]             = useState([])
+  const [activePresetId, setActivePresetId] = useState(null)
+  const [defaultIds, setDefaultIds]       = useState(new Set())
+  const { loading, error, run }           = useFetch()
+
+  // Debounce everything that triggers a re-slice
+  const dInW  = useDebounce(inTileW,  500)
+  const dInH  = useDebounce(inTileH,  500)
+  const dOutW = useDebounce(outTileW, 500)
+  const dOutH = useDebounce(outTileH, 500)
 
   const fetchPresets = () =>
     fetch(`${API}/presets`).then(r => r.json()).then(p => {
@@ -203,16 +278,30 @@ export function TilesetTab() {
   useEffect(() => { fetchPresets() }, [])
 
   useEffect(() => {
-    if (file) slice(file, dTileW, dTileH)
-  }, [dTileW, dTileH])
+    if (file) doSlice(file, dInW, dInH, dOutW, dOutH)
+  }, [dInW, dInH, dOutW, dOutH])
 
   const resetSlots = (c, r) => setSlots(Array(c * r).fill(null))
 
-  const slice = async (f, tw, th) => {
+  // ---------------------------------------------------------------------------
+  // Slice — scale client-side if in≠out, then POST to backend
+  // ---------------------------------------------------------------------------
+  const doSlice = async (f, iw, ih, ow, oh) => {
+    const needsScale = iw !== ow || ih !== oh
+    const scaleX     = ow / iw
+    const scaleY     = oh / ih
+
+    let fileToSend = f
+    if (needsScale) {
+      const blob = await scaleFileBlob(f, scaleX, scaleY)
+      fileToSend = new File([blob], f.name, { type: 'image/png' })
+    }
+
     const fd = new FormData()
-    fd.append('file', f)
-    fd.append('tile_width', tw ?? tileW)
-    fd.append('tile_height', th ?? tileH)
+    fd.append('file', fileToSend)
+    fd.append('tile_width',  needsScale ? ow : iw)
+    fd.append('tile_height', needsScale ? oh : ih)
+
     const data = await run(async () => {
       const res = await fetch(`${API}/tileset/slice`, { method: 'POST', body: fd })
       if (!res.ok) throw new Error(await res.text())
@@ -222,25 +311,57 @@ export function TilesetTab() {
   }
 
   const handleFile = (f) => {
-    setFile(f); setResult(null); resetSlots(cols, rows); slice(f)
+    setFile(f); setResult(null); resetSlots(cols, rows)
+    doSlice(f, inTileW, inTileH, outTileW, outTileH)
   }
 
   const handleColsChange = (v) => { setCols(v); resetSlots(v, rows) }
   const handleRowsChange = (v) => { setRows(v); resetSlots(cols, v) }
 
+  // Sync outTileW/H when in changes (unless user has already diverged them)
+  const handleInTileW = (v) => {
+    if (inTileW === outTileW) setOutTileW(v)
+    setInTileW(v)
+  }
+  const handleInTileH = (v) => {
+    if (inTileH === outTileH) setOutTileH(v)
+    setInTileH(v)
+  }
+
+  // ---------------------------------------------------------------------------
+  // Presets
+  // ---------------------------------------------------------------------------
   const handleLoadPreset = async (id) => {
     const p = await fetch(`${API}/presets/${id}`).then(r => r.json())
-    setTileW(p.tile_w); setTileH(p.tile_h)
-    setCols(p.cols); setRows(p.rows)
+    setInTileW(p.tile_w);   setInTileH(p.tile_h)
+    setOutTileW(p.out_tile_w ?? p.tile_w)
+    setOutTileH(p.out_tile_h ?? p.tile_h)
+    setCols(p.cols);         setRows(p.rows)
     setSlots(p.slots?.length === p.cols * p.rows ? p.slots : Array(p.cols * p.rows).fill(null))
     setSlotLabels(p.slot_labels || [])
     setActivePresetId(id)
-    if (file) slice(file, p.tile_w, p.tile_h)
+    if (file) doSlice(file, p.tile_w, p.tile_h, p.out_tile_w ?? p.tile_w, p.out_tile_h ?? p.tile_h)
   }
 
   const handleSavePreset = async (id, name) => {
-    const body = { name, tile_w: tileW, tile_h: tileH, cols, rows, slots, slot_labels: slotLabels.length ? slotLabels : undefined }
-    await fetch(`${API}/presets/${id}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+    const srcCols = result ? Math.floor(result.source_w / result.tile_width)  : undefined
+    const srcRows = result ? Math.floor(result.source_h / result.tile_height) : undefined
+    const body = {
+      name,
+      tile_w:     inTileW,
+      tile_h:     inTileH,
+      out_tile_w: outTileW,
+      out_tile_h: outTileH,
+      cols, rows, slots,
+      slot_labels: slotLabels.length ? slotLabels : undefined,
+      src_cols:   srcCols,
+      src_rows:   srcRows,
+    }
+    await fetch(`${API}/presets/${id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
     fetchPresets(); setActivePresetId(id); setShowSave(false)
   }
 
@@ -251,33 +372,73 @@ export function TilesetTab() {
     if (activePresetId === id) setActivePresetId(null)
   }
 
+  const needsScale  = inTileW !== outTileW || inTileH !== outTileH
+  const scaleLabel  = needsScale
+    ? `${inTileW}×${inTileH} → ${outTileW}×${outTileH}`
+    : `${outTileW}×${outTileH}px`
+
   return (
     <div className="tab-content">
       {showHelp && <HelpModal onClose={() => setShowHelp(false)}/>}
       {showSave && <SaveModal onSave={handleSavePreset} onClose={() => setShowSave(false)}/>}
 
       <div className="tileset-layout">
+
+        {/* ── Left panel ── */}
         <div className="tileset-left">
           <DropZone onFile={handleFile} label="Drop tileset image"/>
 
-          <div className="field-row">
-            <div className="field"><label className="field-label">tile w</label>
-              <input type="number" className="field-input" value={tileW} min={8} max={256}
-                onChange={e => setTileW(Number(e.target.value))}/></div>
-            <div className="field"><label className="field-label">tile h</label>
-              <input type="number" className="field-input" value={tileH} min={8} max={256}
-                onChange={e => setTileH(Number(e.target.value))}/></div>
+          {/* Tile dimensions */}
+          <div className="tile-dim-grid">
+            <span className="tile-dim-label">input tile</span>
+            <input type="number" className="field-input" min={1} max={512}
+              value={inTileW} onChange={e => handleInTileW(Number(e.target.value))}/>
+            <span className="tile-dim-sep">×</span>
+            <input type="number" className="field-input" min={1} max={512}
+              value={inTileH} onChange={e => handleInTileH(Number(e.target.value))}/>
+
+            <span className="tile-dim-label">output tile</span>
+            <input type="number" className={`field-input ${needsScale ? 'field-input--accent' : ''}`}
+              min={1} max={512}
+              value={outTileW} onChange={e => setOutTileW(Number(e.target.value))}/>
+            <span className="tile-dim-sep">×</span>
+            <input type="number" className={`field-input ${needsScale ? 'field-input--accent' : ''}`}
+              min={1} max={512}
+              value={outTileH} onChange={e => setOutTileH(Number(e.target.value))}/>
           </div>
 
-          <div className="field-row">
-            <div className="field"><label className="field-label">cols</label>
-              <input type="number" className="field-input" value={cols} min={1} max={32}
-                onChange={e => handleColsChange(Number(e.target.value))}/></div>
-            <div className="field"><label className="field-label">rows</label>
-              <input type="number" className="field-input" value={rows} min={1} max={32}
-                onChange={e => handleRowsChange(Number(e.target.value))}/></div>
+          {/* Quick scale buttons — only shown when tiles differ */}
+          {needsScale && (
+            <div className="tile-quick-row">
+              {[0.25, 0.5, 1, 2, 4].map(f => (
+                <button key={f} className="tile-quick-btn"
+                  onClick={() => { setOutTileW(Math.max(1,Math.round(inTileW*f))); setOutTileH(Math.max(1,Math.round(inTileH*f))) }}>
+                  {f < 1 ? `${f}×` : `${f}×`}
+                </button>
+              ))}
+              <button className="tile-quick-btn tile-quick-btn--reset"
+                onClick={() => { setOutTileW(inTileW); setOutTileH(inTileH) }}>
+                reset
+              </button>
+            </div>
+          )}
+
+          {/* Cols / rows */}
+          <div className="tile-dim-grid">
+            <span className="tile-dim-label">cols</span>
+            <input type="number" className="field-input" min={1} max={32}
+              value={cols} onChange={e => handleColsChange(Number(e.target.value))}/>
+            <span className="tile-dim-sep"/>
+            <span/>
+
+            <span className="tile-dim-label">rows</span>
+            <input type="number" className="field-input" min={1} max={32}
+              value={rows} onChange={e => handleRowsChange(Number(e.target.value))}/>
+            <span className="tile-dim-sep"/>
+            <span/>
           </div>
 
+          {/* Presets */}
           <div className="preset-section">
             <p className="section-label">presets</p>
             <PresetList
@@ -286,7 +447,7 @@ export function TilesetTab() {
               activePresetId={activePresetId}
               onLoad={handleLoadPreset}
               onDelete={handleDeletePreset}
-              currentState={{ tileW, tileH, cols, rows, slots }}
+              currentState={{ tileW: inTileW, tileH: inTileH, cols, rows, slots }}
             />
             <button className="btn-secondary preset-save-btn" onClick={() => setShowSave(true)}>
               <Save size={12}/> save as preset
@@ -295,13 +456,14 @@ export function TilesetTab() {
 
           {error && <p className="error-msg">{error}</p>}
 
+          {/* Source preview */}
           {result && (
             <div className="source-section">
               <p className="section-label">
                 source — {result.tile_count} tiles
                 {selectedTile !== null
-                  ? <span className="selected-hint"> · tile {selectedTile} selected — click a slot</span>
-                  : <span className="selected-hint"> · click a tile to select</span>
+                  ? <span className="selected-hint"> · {selectedTile} selected</span>
+                  : <span className="selected-hint"> · click to select</span>
                 }
               </p>
               <SourceSheet
@@ -317,18 +479,22 @@ export function TilesetTab() {
           )}
         </div>
 
+        {/* ── Right panel ── */}
         <div className="tileset-right">
           <div className="tileset-toolbar">
             <span className="section-label">
-              {result ? `output — ${cols}×${rows}` : 'no tileset loaded'}
+              {result ? `output — ${cols}×${rows} · ${scaleLabel}` : 'no tileset loaded'}
             </span>
             <div style={{ display: 'flex', gap: 6 }}>
               {result && <>
                 <button className="btn-ghost" onClick={() => resetSlots(cols, rows)}>clear</button>
-                <button className="btn-primary-sm" onClick={() =>
-                  buildAndDownload(result.tiles, slots, cols, rows, result.tile_width, result.tile_height,
-                    `${file.name.replace(/\.[^.]+$/, '')}_arranged.png`)}
-                  disabled={slots.every(s => s === null)}>
+                <button className="btn-primary-sm"
+                  disabled={slots.every(s => s == null)}
+                  onClick={() => buildAndDownload(
+                    result.tiles, slots, cols, rows,
+                    result.tile_width, result.tile_height,
+                    `${file.name.replace(/\.[^.]+$/,'')}_arranged.png`,
+                  )}>
                   download
                 </button>
               </>}

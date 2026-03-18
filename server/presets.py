@@ -2,7 +2,6 @@
 server/presets.py
 
 Preset management — load/save JSON presets from the presets/ folder.
-Each preset stores: name, tile_w, tile_h, cols, rows, slots (list of tile indices or null).
 """
 
 from __future__ import annotations
@@ -24,14 +23,18 @@ def list_presets() -> list[dict]:
         try:
             data = json.loads(f.read_text())
             result.append({
-                "id": f.stem,
-                "name": data.get("name", f.stem),
-                "tile_w": data.get("tile_w", 32),
-                "tile_h": data.get("tile_h", 32),
-                "cols": data.get("cols", 9),
-                "rows": data.get("rows", 1),
-                "slots": data.get("slots", []),
-                "is_default": data.get("is_default", False),
+                "id":           f.stem,
+                "name":         data.get("name", f.stem),
+                "tile_w":       data.get("tile_w", 32),
+                "tile_h":       data.get("tile_h", 32),
+                "out_tile_w":   data.get("out_tile_w"),   # None if not set
+                "out_tile_h":   data.get("out_tile_h"),   # None if not set
+                "cols":         data.get("cols", 9),
+                "rows":         data.get("rows", 1),
+                "slots":        data.get("slots", []),
+                "src_cols":     data.get("src_cols"),
+                "src_rows":     data.get("src_rows"),
+                "is_default":   data.get("is_default", False),
             })
         except Exception as e:
             logging.warning(f"Could not read preset {f.name}: {e}")

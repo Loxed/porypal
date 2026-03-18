@@ -6,17 +6,31 @@
   border: 1px solid var(--border);
   background: var(--surface2);
   transition: border-color 0.1s, background 0.1s;
-  min-height: 36px;
+  min-height: 52px;
 }
 .preset-row:hover { border-color: var(--border2); background: var(--surface); }
 .preset-row.active { border-color: var(--accent); background: rgba(88,166,255,0.07); }
 
 .preset-info { display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 0; }
 .preset-name { font-family: var(--mono); font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.preset-meta { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+/* meta lines */
+.preset-meta {
+  font-family: var(--mono); font-size: 10px; color: var(--muted);
+  display: flex; align-items: baseline; gap: 5px;
+  white-space: nowrap; overflow: hidden;
+  line-height: 1.5;
+}
+.preset-meta-key {
+  color: var(--muted); opacity: 0.55;
+  font-size: 9px; text-transform: uppercase; letter-spacing: 0.04em;
+  flex-shrink: 0; width: 34px;
+}
+.preset-meta-val  { color: var(--text); }
+.preset-dim--out  { color: var(--accent); }
+.preset-arrow     { color: var(--muted); opacity: 0.5; }
 
 .preset-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-
 .preset-hover-actions { display: flex; align-items: center; gap: 4px; }
 
 .preset-apply {
@@ -37,10 +51,7 @@
 }
 .preset-delete:hover { color: var(--danger); }
 
-.preset-warn {
-  color: #EF9F27; display: flex; align-items: center;
-  cursor: default;
-}
+.preset-warn { color: #EF9F27; display: flex; align-items: center; cursor: default; }
 
 .preset-active-dot {
   width: 6px; height: 6px; border-radius: 50%;

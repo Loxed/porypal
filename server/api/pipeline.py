@@ -128,7 +128,12 @@ def _run_extract_step(
 
 
 def _run_tileset_step(img: Image.Image, step: dict) -> Image.Image:
-    """Rearrange tiles according to a preset. Returns new image."""
+    """Rearrange tiles according to a preset. Returns new image.
+
+    Respects resize_tile_w / resize_tile_h / resize_interpolation preset fields:
+    the source image is scaled (nearest-neighbour by default) before slicing so
+    that the output tiles match the target tile dimensions.
+    """
     preset_id = step.get("preset_id")
     if not preset_id:
         raise ValueError("Tileset step has no preset_id")
@@ -143,22 +148,44 @@ def _run_tileset_step(img: Image.Image, step: dict) -> Image.Image:
     rows   = preset["rows"]
     slots  = preset.get("slots", [])
 
+    # ── Resize support ────────────────────────────────────────────────────────
+    # Presets saved with the new UI use out_tile_w/out_tile_h.
+    # Presets saved with the old UI used resize_tile_w/resize_tile_h — keep
+    # both names so existing presets continue to work.
+    out_tile_w = preset.get("out_tile_w") or preset.get("resize_tile_w")
+    out_tile_h = preset.get("out_tile_h") or preset.get("resize_tile_h")
+
     src = img.convert("RGBA")
-    src_cols = max(1, src.width  // tile_w)
-    src_rows = max(1, src.height // tile_h)
+
+    if out_tile_w and out_tile_h and (out_tile_w != tile_w or out_tile_h != tile_h):
+        scale_x  = out_tile_w / tile_w
+        scale_y  = out_tile_h / tile_h
+        new_w    = max(1, round(src.width  * scale_x))
+        new_h    = max(1, round(src.height * scale_y))
+        src      = src.resize((new_w, new_h), Image.NEAREST)
+        slice_tile_w = out_tile_w
+        slice_tile_h = out_tile_h
+    else:
+        slice_tile_w = tile_w
+        slice_tile_h = tile_h
+    # ──────────────────────────────────────────────────────────────────────────
+
+    src_cols = max(1, src.width  // slice_tile_w)
+    src_rows = max(1, src.height // slice_tile_h)
     tiles: list[Image.Image] = []
     for r in range(src_rows):
         for c in range(src_cols):
-            tile = src.crop((c * tile_w, r * tile_h, (c+1) * tile_w, (r+1) * tile_h))
+            tile = src.crop((c * slice_tile_w, r * slice_tile_h,
+                             (c+1) * slice_tile_w, (r+1) * slice_tile_h))
             tiles.append(tile)
 
-    out = Image.new("RGBA", (cols * tile_w, rows * tile_h), (0, 0, 0, 0))
+    out = Image.new("RGBA", (cols * slice_tile_w, rows * slice_tile_h), (0, 0, 0, 0))
     for slot_pos, tile_idx in enumerate(slots):
         if tile_idx is None or tile_idx >= len(tiles):
             continue
         out_col = slot_pos % cols
         out_row = slot_pos // cols
-        out.paste(tiles[tile_idx], (out_col * tile_w, out_row * tile_h))
+        out.paste(tiles[tile_idx], (out_col * slice_tile_w, out_row * slice_tile_h))
 
     return out
 

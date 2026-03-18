@@ -2,6 +2,8 @@
   "name": "Gen 4 OW Sprites",
   "tile_w": 64,
   "tile_h": 64,
+  "out_tile_w": 32,
+  "out_tile_h": 32,
   "cols": 9,
   "rows": 1,
   "slots": [
@@ -16,5 +18,7 @@
     7
   ],
   "slot_labels": null,
-  "is_default": false
+  "src_cols": 4,
+  "src_rows": 4,
+  "is_default": true
 }

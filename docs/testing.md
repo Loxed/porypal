@@ -85,11 +85,11 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 > same as above also rename the add step names to match the current thigns we have in the app.
 - [x] Run on a folder -- progress shows, zip downloads
 > currently errors to: ERROR:root:Pipeline [fe2684b9-e4a7-45b7-b00d-2644416623da] error on OW Sprites Gen4/trchar052.png: ImageManager.__init__() takes 1 positional argument but 2 were given probably due to refactoring stuff we did before. somethign to do with config.yaml being removed.
-
+> we
 **Palettes tab**
-- [ ] Loaded palettes list shows up
-- [ ] Upload a `.pal` file -- appears in list
-- [ ] Delete a user palette -- gone from list and disk
+- [x] Loaded palettes list shows up
+- [x] Upload a `.pal` file -- appears in list
+- [x] Delete a user palette -- gone from list and disk
 - [ ] Browse library -- tree loads
 - [ ] Import from library -- appears in user palettes
 > this needs an overhaul. we need to be able to have a file explorer essentially.

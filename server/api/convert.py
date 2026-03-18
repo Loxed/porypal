@@ -6,6 +6,7 @@ Routes: /api/convert
 
 from __future__ import annotations
 import io
+import json
 import os
 import tempfile
 import zipfile
@@ -113,18 +114,37 @@ async def download_converted(
 async def download_all_converted(
     file: UploadFile = File(...),
     bg_color: str | None = Form(default=None),
+    palette_names: str = Form(default="[]"),  # JSON array of selected palette names
 ):
-    """Convert against all palettes and return a zip of all results."""
+    """
+    Convert against the selected palettes and return a zip of all results.
+    palette_names: JSON-encoded list of palette name strings. If empty, uses all loaded palettes.
+    """
     data = await file.read()
+
+    try:
+        selected = json.loads(palette_names)
+    except Exception:
+        selected = []
+
     with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
         tmp.write(data)
         tmp_path = tmp.name
 
     try:
         state.image_manager.load_image(tmp_path, bg_color=bg_color)
-        results = state.image_manager.process_all_palettes(
-            state.palette_manager.get_palettes()
-        )
+
+        all_palettes = state.palette_manager.get_palettes()
+        if selected:
+            selected_set = set(selected)
+            palettes = [p for p in all_palettes if p.name in selected_set]
+        else:
+            palettes = all_palettes
+
+        if not palettes:
+            raise HTTPException(400, "No matching palettes found")
+
+        results = state.image_manager.process_all_palettes(palettes)
 
         zip_buf = io.BytesIO()
         stem = Path(file.filename).stem

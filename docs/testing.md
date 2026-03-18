@@ -19,11 +19,9 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 - [x] Import a sprite -- all loaded palettes show up
 - [x] Best match is highlighted
 - [x] Download single result works
-- [ ] Download all as zip works
-
->  the download all as zip feature doesnt account for loaded/unloaded palettes. it downloaded the sprite with EVERY palette applied, instead of just the ones that were loaded.
-
-> the selection of palettes is also jank, it doesnt auto-update everytime, we need to click on reprocess. This will be fixed at a later date, when the palettetab's enhanced features are added, but for now we should just make sure the thing auto-updates when we load/unload palettes.
+- [x] Download all as zip works -- respects current palette selection
+- [x] Auto-reprocesses when palette selection changes 
+> (not exactly but close to working, a ui overhaul will come from palette management later on so dont touch for now)
 
 ---
 
@@ -49,7 +47,7 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 > propose a /palettes and /sprites folder within the zip, so its more organised. currently its just a flat zip with all the palettes, no resampled sprites, and no manifest.
 
 **Shiny → Create Shiny Palette**
-> UI it terribly designed right now, not using space. make it make sense. we have 1. normal sprite + normal palette + shiny palette which should produce normal and shiny sprites side by side, with download buttons for each (and a zip with both sprites in /sprites and both palettes in /palettes). 2. a bit better, we have normal sprite + shiny sprite which should produce both normal and shiny palettes. same as previous option, allow for dloading sprites and palettes separately or together as a zip. right now its just a mess of buttons and inputs that dont make sense.
+> UI is terribly designed right now, not using space. make it make sense. we have 1. normal sprite + normal palette + shiny palette which should produce normal and shiny sprites side by side, with download buttons for each (and a zip with both sprites in /sprites and both palettes in /palettes). 2. a bit better, we have normal sprite + shiny sprite which should produce both normal and shiny palettes. same as previous option, allow for dloading sprites and palettes separately or together as a zip. right now its just a mess of buttons and inputs that dont make sense.
 
 - [x] Drop normal + shiny sprite -- produces 2 palettes
 - [x] Palettes are index-aligned (same structure)
@@ -64,7 +62,6 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 
 **Tileset**
 - [x] Drop a spritesheet -- tiles appear
-
 > cant see tiles' grid easily. make it thicker and have a contrasting color to the sprite, maybe inverted from the sprite's palette or something. same for the hover state, make it more visible.
 - [x] Click tile, click slot -- tile placed correctly
 - [x] Save preset -- appears in preset list
@@ -75,13 +72,13 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 **Pipeline**
 - [x] Load folder
 > works on windows, gotta check on linux/mac
-> right now we dont see what's a folder and how many files we're loading. maybe adda preview that show the first sprite in the folder, and a count of how many sprites are being loaded?
+> right now we dont see what's a folder and how many files we're loading. maybe add a preview that shows the first sprite in the folder, and a count of how many sprites are being loaded?
 - [x] Add Extract step -- configurable
 > it works, but i'd love to see an example of it on the first sprite in the folder, so we can be sure the preset is being applied correctly before running the whole batch.
 - [x] Add Tileset step -- preset picker shows saved presets
 > same as above, preview!
 - [x] Add Apply Palette step -- palette picker shows loaded palettes
-> same as above also rename the add step names to match the current thigns we have in the app.
+> same as above. also rename the add step names to match the current things we have in the app.
 - [x] Run on a folder -- progress shows, zip downloads
 
 **Palettes tab**
@@ -93,7 +90,7 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 > this needs an overhaul. we need to be able to have a file explorer essentially.
 > CRUD folder operations (Create, remove, rename, delete) in the user palettes.
 > CRUD Palette operations (Create, remove, rename, delete) in the user palettes, with a preview of the palette colors when hovering or clicking on a palette in the list. same for the library palettes, we should be able to preview them before importing.
-> as said before, we need to be able to edit and reorder palettes, rename, put them in folder n stuff.
+> as said before, we need to be able to edit and reorder palettes, rename, put them in folders n stuff.
 > browse library is empty rn and i dont really like the way it is. i think i'll keep the structure like emerald/ and firered/ but we'll rename the palette library to porypal_library. essentially, it should have folders like pokemon/ that contain abomasnow/ with the different sprites and palettes it has.
 
 > Heres what a pokemon file looks like:
@@ -122,11 +119,10 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 └── shiny.pal
 
 2 directories, 19 files
-(base) lox@lox-legion:~/projects/pokeemerald-expansion/graphics/pokemon/abomasnow$
 ```
 > This is for pokeemerald-expansion. The base game (pokeemerald) doesn't have the exact same structure (no mega folder for example).
 
-> we'll see how we plan this refactor, its not gonna be just a palette library. the palette folder tho, needs it's previously mentioned CRUD features, and we need to make sure the palettes are being loaded and applied correctly in the different features across the app.
+> we'll see how we plan this refactor, its not gonna be just a palette library. the palette folder tho, needs its previously mentioned CRUD features, and we need to make sure the palettes are being loaded and applied correctly in the different features across the app.
 
 ---
 
@@ -144,17 +140,20 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 |---|------|--------|
 | 1 | `server/api/pipeline.py` | `ImageManager({})` → `ImageManager()` in `_run_convert_step` |
 | 2 | `server/app.py` | Added `shiny` to imports + `app.include_router(shiny.router)` |
+| 3 | `server/api/convert.py` | `download_all_converted` now accepts + filters by `palette_names` |
+| 4 | `frontend/src/tabs/ConvertTab.jsx` | `handleDownloadAll` sends `results.map(r => r.palette_name)` instead of `selectedPalettes` |
+| 5 | `frontend/src/tabs/ConvertTab.jsx` | `useEffect` on `selectedPalettes` auto-reprocesses when selection changes |
+
+---
 
 ## Backlog (not bugs, future work)
 
-- [ ] Download all as zip (Apply Palette) should respect selected/deselected palettes
-- [ ] Apply Palette should auto-reprocess when palettes are loaded/unloaded
-- [ ] Group drag-and-drop should accept drop anywhere on group section, not just header
-- [ ] Groups should persist across re-extracts (only update palettes, not reset structure)
-- [ ] Threshold slider should trigger re-extract after first extract
-- [ ] Per-group download zip button
+- [ ] Group drag-and-drop: accept drop on entire group section, not just header
+- [ ] Groups: persist across re-extracts (update palettes only, don't reset structure)
+- [ ] Groups: threshold slider triggers re-extract after first extract
+- [ ] Groups: per-group download zip button
 - [ ] Variants zip: organise into `/palettes` and `/sprites` with manifest
-- [ ] Variants UI: replace star-as-reference with an explicit "set as reference" button
+- [ ] Variants UI: replace star-as-reference with explicit "set as reference" button
 - [ ] Shiny UI overhaul (both modes underuse space, missing download options)
 - [ ] Shiny zip: `/sprites` and `/palettes` folders
 - [ ] Tileset: thicker grid lines with contrasting color, better hover state

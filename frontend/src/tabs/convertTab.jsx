@@ -128,7 +128,16 @@ export function ConvertTab() {
     })
   }
 
+  const isMounted = useRef(false)
+
   useEffect(() => { fetchPalettes() }, [])
+
+  // Auto-reprocess whenever the palette selection changes, but only after
+  // a file has been loaded and after the initial mount settles.
+  useEffect(() => {
+    if (!isMounted.current) { isMounted.current = true; return }
+    if (file) convert(file)
+  }, [selectedPalettes])
 
   const convert = async (f, overrideBg) => {
     if (selectedPalettes.size === 0) return
@@ -151,7 +160,6 @@ export function ConvertTab() {
 
   const handleFile = (f) => {
     setFile(f); setResults([]); setSelected(null); setOriginalB64(null)
-    // Auto-detect bg color from the file before converting
     const reader = new FileReader()
     reader.onload = e => {
       const b64 = e.target.result.split(',')[1]
@@ -208,6 +216,8 @@ export function ConvertTab() {
     const fd = new FormData()
     fd.append('file', file)
     if (bgColor) fd.append('bg_color', bgColor)
+    // derive names from what's currently shown — always matches the UI exactly
+    fd.append('palette_names', JSON.stringify(results.map(r => r.palette_name)))
     const res = await fetch(`${API}/convert/download-all`, { method: 'POST', body: fd })
     if (!res.ok) return
     downloadBlob(await res.blob(), `${file.name.replace(/\.[^.]+$/, '')}_all_palettes.zip`)

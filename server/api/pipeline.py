@@ -182,7 +182,7 @@ def _run_convert_step(
             raise ValueError("Convert step has no valid palettes selected")
 
     # Save PIL image to temp so ImageManager can load it
-    img_mgr = ImageManager({})
+    img_mgr = ImageManager()  # fixed: was ImageManager({})
     with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
         img.save(tmp.name, format="PNG")
         tmp_path = tmp.name

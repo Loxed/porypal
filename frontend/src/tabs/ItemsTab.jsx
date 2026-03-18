@@ -1,10 +1,11 @@
 import { useState, useRef, useCallback } from 'react'
 import './ItemsTab.css'
 import { BgColorCell } from '../components/BgColorCell'
+import { BgColorPicker } from '../components/BgColorPicker'
 import { GroupSection } from '../components/GroupSection'
 import { VariantsPanel } from '../components/VariantsPanel'
 import { downloadBlob, detectBgColor } from '../utils'
-import { X, Download, Grid, List, Eclipse, PaintBucket } from 'lucide-react'
+import { X, Download, Grid, List } from 'lucide-react'
 
 const API = '/api'
 const GBA_TRANSPARENT = '#73C5A4'
@@ -22,7 +23,7 @@ function fileToB64(file) {
 }
 
 // ---------------------------------------------------------------------------
-// ThresholdSlider — items-specific, stays in tab
+// ThresholdSlider
 // ---------------------------------------------------------------------------
 function ThresholdSlider({ value, onChange }) {
   const pct   = Math.round(value * 100)
@@ -47,7 +48,7 @@ function ThresholdSlider({ value, onChange }) {
 // ItemsTab
 // ---------------------------------------------------------------------------
 export function ItemsTab() {
-  const [mode, setMode]                         = useState('group') // 'group' | 'variants'
+  const [mode, setMode]                         = useState('group')
   const [sprites, setSprites]                   = useState([])
   const [nColors, setNColors]                   = useState(15)
   const [outputBg, setOutputBg]                 = useState(GBA_TRANSPARENT)
@@ -128,7 +129,7 @@ export function ItemsTab() {
   }, [doExtract, groupingEnabled])
 
   // ---------------------------------------------------------------------------
-  // File import — sorted alphabetically
+  // File import
   // ---------------------------------------------------------------------------
   const handleFiles = async (fileList) => {
     const sorted = Array.from(fileList).sort((a, b) =>
@@ -166,7 +167,7 @@ export function ItemsTab() {
   }
 
   // ---------------------------------------------------------------------------
-  // Group editing — all trigger auto-extract
+  // Group editing
   // ---------------------------------------------------------------------------
   const handleDropSprite = useCallback((spriteName, fromGroupId, toGroupId) => {
     setResults(prev => {
@@ -228,20 +229,20 @@ export function ItemsTab() {
   return (
     <div className="tab-content">
       {/* ── Mode switcher ── */}
-            <div className="items-mode-switcher">
-              <button
-                className={`items-mode-btn ${mode === 'group' ? 'active' : ''}`}
-                onClick={() => setMode('group')}
-              >
-                group extract
-              </button>
-              <button
-                className={`items-mode-btn ${mode === 'variants' ? 'active' : ''}`}
-                onClick={() => setMode('variants')}
-              >
-                variants
-              </button>
-            </div>
+      <div className="items-mode-switcher">
+        <button
+          className={`items-mode-btn ${mode === 'group' ? 'active' : ''}`}
+          onClick={() => setMode('group')}
+        >
+          group extract
+        </button>
+        <button
+          className={`items-mode-btn ${mode === 'variants' ? 'active' : ''}`}
+          onClick={() => setMode('variants')}
+        >
+          variants
+        </button>
+      </div>
 
       {mode === 'variants' && (
         <VariantsPanel
@@ -255,158 +256,147 @@ export function ItemsTab() {
 
       {mode === 'group' && (
         <div className="items-layout">
-        <div className="items-left">
+          <div className="items-left">
 
-          <div
-            onDragOver={e => e.preventDefault()}
-            onDrop={e => { e.preventDefault(); if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files) }}
-          >
-            <div className="dropzone" onClick={() => inputRef.current?.click()}>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--muted)' }}>
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="17 8 12 3 7 8"/>
-                <line x1="12" y1="3" x2="12" y2="15"/>
-              </svg>
-              <p className="dropzone-label">Drop sprites here</p>
-              <p className="dropzone-hint">PNG · click or drag · sorted A–Z</p>
-            </div>
-            <input ref={inputRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
-              onChange={e => { if (e.target.files.length) handleFiles(e.target.files); e.target.value = '' }} />
-          </div>
-
-          {sprites.length > 0 && (
-            <>
-              <div className="sprite-queue">
-                {sprites.map((s, i) => (
-                  <div key={s.name} className="sprite-queue-row">
-                    <img src={`data:image/png;base64,${s.b64}`} alt={s.name} className="sprite-queue-thumb" />
-                    <span className="sprite-queue-name">{s.name}</span>
-                    <BgColorCell color={s.inputBg} onChange={color => updateInputBg(i, color)} />
-                    <div className="sprite-queue-actions">
-                      <button className="sprite-queue-btn danger" title="remove" onClick={() => removeSprite(i)}>
-                        <X size={10} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="field">
-                <label className="field-label">input bg — set all</label>
-                <div className="bg-mode-row">
-                  <button className="bg-mode-btn" onClick={() => setAllInputBg('auto')}>re-detect all</button>
-                  <button className="bg-mode-btn" onClick={() => setAllInputBg('default')}>set all #73C5A4</button>
-                </div>
-              </div>
-            </>
-          )}
-
-          <div className="field">
-            <label className="field-label">output transparent (slot 0)</label>
-            <div className="bg-mode-row">
-              <button className={`bg-mode-btn ${outputBgMode === 'default' ? 'active' : ''}`}
-                onClick={() => { setOutputBg(GBA_TRANSPARENT); setOutputBgMode('default') }}>
-                default <Eclipse size={8} /></button>
-              <button className={`bg-mode-btn ${outputBgMode === 'custom' ? 'active' : ''}`}
-                onClick={() => setOutputBgMode('custom')}>
-                custom <PaintBucket size={8} /></button>
-            </div>
-            <div className="bg-color-row">
-              <div className="bg-swatch" style={{ background: outputBg }} />
-              {outputBgMode === 'custom'
-                ? <input className="field-input field-mono" value={outputBg}
-                    onChange={e => setOutputBg(e.target.value)} maxLength={7} placeholder="#73C5A4" />
-                : <span className="field-hint">{outputBg} <span className="bg-mode-tag">GBA default</span></span>
-              }
-            </div>
-          </div>
-
-          <div className="field">
-            <label className="field-label">colors per palette (max 15)</label>
-            <input type="number" className="field-input" min={1} max={15} value={nColors}
-              onChange={e => setNColors(Number(e.target.value))} />
-          </div>
-
-          <div className="grouping-toggle-row">
-            <span className="field-label">group by silhouette</span>
-            <button
-              className={`grouping-toggle-btn ${groupingEnabled ? 'on' : 'off'}`}
-              onClick={() => {
-                const next = !groupingEnabled
-                setGroupingEnabled(next)
-                clearTimeout(autoExtractTimer.current)
-                if (results) doExtract(results.groups, next)
-              }}
+            <div
+              onDragOver={e => e.preventDefault()}
+              onDrop={e => { e.preventDefault(); if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files) }}
             >
-              {groupingEnabled ? 'on' : 'off'}
+              <div className="dropzone" onClick={() => inputRef.current?.click()}>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--muted)' }}>
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <p className="dropzone-label">Drop sprites here</p>
+                <p className="dropzone-hint">PNG · click or drag · sorted A–Z</p>
+              </div>
+              <input ref={inputRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
+                onChange={e => { if (e.target.files.length) handleFiles(e.target.files); e.target.value = '' }} />
+            </div>
+
+            {sprites.length > 0 && (
+              <>
+                <div className="sprite-queue">
+                  {sprites.map((s, i) => (
+                    <div key={s.name} className="sprite-queue-row">
+                      <img src={`data:image/png;base64,${s.b64}`} alt={s.name} className="sprite-queue-thumb" />
+                      <span className="sprite-queue-name">{s.name}</span>
+                      <BgColorCell color={s.inputBg} onChange={color => updateInputBg(i, color)} />
+                      <div className="sprite-queue-actions">
+                        <button className="sprite-queue-btn danger" title="remove" onClick={() => removeSprite(i)}>
+                          <X size={10} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="field">
+                  <label className="field-label">input bg — set all</label>
+                  <div className="bg-mode-row">
+                    <button className="bg-mode-btn" onClick={() => setAllInputBg('auto')}>re-detect all</button>
+                    <button className="bg-mode-btn" onClick={() => setAllInputBg('default')}>set all #73C5A4</button>
+                  </div>
+                </div>
+              </>
+            )}
+
+            <div className="field">
+              <label className="field-label">output transparent (slot 0)</label>
+              <BgColorPicker
+                color={outputBg}
+                mode={outputBgMode}
+                onChange={({ color, mode }) => { setOutputBg(color); setOutputBgMode(mode) }}
+              />
+            </div>
+
+            <div className="field">
+              <label className="field-label">colors per palette (max 15)</label>
+              <input type="number" className="field-input" min={1} max={15} value={nColors}
+                onChange={e => setNColors(Number(e.target.value))} />
+            </div>
+
+            <div className="grouping-toggle-row">
+              <span className="field-label">group by silhouette</span>
+              <button
+                className={`grouping-toggle-btn ${groupingEnabled ? 'on' : 'off'}`}
+                onClick={() => {
+                  const next = !groupingEnabled
+                  setGroupingEnabled(next)
+                  clearTimeout(autoExtractTimer.current)
+                  if (results) doExtract(results.groups, next)
+                }}
+              >
+                {groupingEnabled ? 'on' : 'off'}
+              </button>
+            </div>
+
+            <ThresholdSlider value={sharedThreshold} onChange={setSharedThreshold} />
+
+            <button className="btn-primary" disabled={sprites.length === 0 || loading} onClick={handleExtract}>
+              {loading ? 'extracting…' : `extract ${sprites.length > 0 ? `${sprites.length} sprite${sprites.length > 1 ? 's' : ''}` : ''}`}
             </button>
+
+            {results && (
+              <button className="btn-secondary" onClick={handleDownloadAll}>
+                <Download size={11} /> download all as zip
+              </button>
+            )}
+
+            {error && <p className="error-msg">{error}</p>}
           </div>
 
-          <ThresholdSlider value={sharedThreshold} onChange={setSharedThreshold} />
-
-          <button className="btn-primary" disabled={sprites.length === 0 || loading} onClick={handleExtract}>
-            {loading ? 'extracting…' : `extract ${sprites.length > 0 ? `${sprites.length} sprite${sprites.length > 1 ? 's' : ''}` : ''}`}
-          </button>
-
-          {results && (
-            <button className="btn-secondary" onClick={handleDownloadAll}>
-              <Download size={11} /> download all as zip
-            </button>
-          )}
-
-          {error && <p className="error-msg">{error}</p>}
-        </div>
-
-        <div className="items-right">
-          <div className="items-toolbar">
-            <span className="items-count">
-              {results
-                ? `${results.groups.length} group${results.groups.length !== 1 ? 's' : ''} · ${results.groups.reduce((n, g) => n + g.results.length, 0)} sprites`
-                : ''
-              }
-            </span>
-            {results && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                {loading && <span className="auto-extract-indicator">re-extracting…</span>}
-                <div className="view-toggle">
-                  <button className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`} onClick={() => setViewMode('grid')}><GridIcon /></button>
-                  <button className={`view-btn ${viewMode === 'list' ? 'active' : ''}`} onClick={() => setViewMode('list')}><ListIcon /></button>
+          <div className="items-right">
+            <div className="items-toolbar">
+              <span className="items-count">
+                {results
+                  ? `${results.groups.length} group${results.groups.length !== 1 ? 's' : ''} · ${results.groups.reduce((n, g) => n + g.results.length, 0)} sprites`
+                  : ''
+                }
+              </span>
+              {results && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  {loading && <span className="auto-extract-indicator">re-extracting…</span>}
+                  <div className="view-toggle">
+                    <button className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`} onClick={() => setViewMode('grid')}><GridIcon /></button>
+                    <button className={`view-btn ${viewMode === 'list' ? 'active' : ''}`} onClick={() => setViewMode('list')}><ListIcon /></button>
+                  </div>
                 </div>
+              )}
+            </div>
+
+            {!results && !loading && (
+              <div className="empty-state">
+                <p>drop sprites — auto-grouped by silhouette</p>
+                <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 6 }}>
+                  drag cards or use merge button to reorganise · re-extracts automatically
+                </p>
+              </div>
+            )}
+            {loading && !results && <div className="empty-state"><div className="spinner" /><p>grouping and extracting…</p></div>}
+
+            {results && (
+              <div className="groups-list">
+                {results.groups.map(group => (
+                  <GroupSection
+                    key={group.group_id}
+                    group={group}
+                    groupName={groupNames[group.group_id] ?? group.group_id}
+                    onRename={name => setGroupNames(prev => ({ ...prev, [group.group_id]: name }))}
+                    onDropSprite={handleDropSprite}
+                    onMergeGroup={handleMergeGroup}
+                    allGroups={results.groups}
+                    groupNames={groupNames}
+                    viewMode={viewMode}
+                    exact={group.exact}
+                    nUnique={group.n_unique}
+                    sharedSlots={group.shared_slots}
+                    nShared={group.n_shared}
+                  />
+                ))}
               </div>
             )}
           </div>
-
-          {!results && !loading && (
-            <div className="empty-state">
-              <p>drop sprites — auto-grouped by silhouette</p>
-              <p style={{ fontSize: 11, color: 'var(--muted)', marginTop: 6 }}>
-                drag cards or use merge button to reorganise · re-extracts automatically
-              </p>
-            </div>
-          )}
-          {loading && !results && <div className="empty-state"><div className="spinner" /><p>grouping and extracting…</p></div>}
-
-          {results && (
-            <div className="groups-list">
-              {results.groups.map(group => (
-                <GroupSection
-                  key={group.group_id}
-                  group={group}
-                  groupName={groupNames[group.group_id] ?? group.group_id}
-                  onRename={name => setGroupNames(prev => ({ ...prev, [group.group_id]: name }))}
-                  onDropSprite={handleDropSprite}
-                  onMergeGroup={handleMergeGroup}
-                  allGroups={results.groups}
-                  groupNames={groupNames}
-                  viewMode={viewMode}
-                  exact={group.exact}
-                  nUnique={group.n_unique}
-                  sharedSlots={group.shared_slots}
-                  nShared={group.n_shared}
-                />
-              ))}
-            </div>
-          )}
-        </div>
         </div>
       )}
 

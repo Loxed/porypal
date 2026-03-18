@@ -22,29 +22,6 @@
   margin-bottom: 6px;
 }
 
-/* ── Transparent bg color picker ── */
-.bg-mode-row { display: flex; gap: 4px; flex-wrap: wrap; }
-.bg-mode-btn {
-  display: flex; align-items: center; gap: 4px;
-  padding: 4px 10px;
-  background: transparent;
-  border: 1px solid var(--border2);
-  border-radius: var(--radius);
-  font-family: var(--mono); font-size: 11px; color: var(--muted);
-  cursor: pointer;
-  transition: color 0.1s, border-color 0.1s, background 0.1s;
-}
-.bg-mode-btn:hover { color: var(--text); border-color: var(--border2); }
-.bg-mode-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(88,166,255,0.08); }
-.bg-mode-btn.picking { color: #EF9F27; border-color: #EF9F27; background: rgba(239,159,39,0.1); }
-
-.bg-color-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
-.bg-swatch { width: 20px; height: 20px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.15); flex-shrink: 0; }
-.field-hint { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-.bg-mode-tag { font-family: var(--mono); font-size: 10px; color: var(--muted); opacity: 0.7; }
-.field-error { border-color: var(--danger) !important; }
-.field-hint-error { font-family: var(--mono); font-size: 11px; color: var(--danger); margin-top: 4px; }
-
 /* ── Pipette ── */
 .pick-hint { color: #EF9F27; font-size: 10px; margin-left: 8px; }
 
@@ -109,7 +86,6 @@
   gap: 4px;
 }
 
-/* rename field inside menu */
 .export-rename {
   display: flex;
   flex-direction: column;
@@ -147,7 +123,6 @@
   margin: 2px 0;
 }
 
-/* menu action buttons */
 .export-item {
   display: flex;
   align-items: center;
@@ -207,6 +182,10 @@
   flex-shrink: 0;
 }
 .help-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── Field extras ── */
+.field-error       { border-color: var(--danger) !important; }
+.field-hint-error  { font-family: var(--mono); font-size: 11px; color: var(--danger); margin-top: 4px; }
 
 /* ── Modal ── */
 .modal-backdrop {

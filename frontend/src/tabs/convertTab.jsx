@@ -7,7 +7,8 @@ import { ResultCard } from '../components/ResultCard'
 import { PaletteStrip } from '../components/PaletteStrip'
 import { useFetch } from '../hooks/useFetch'
 import { downloadBlob, detectBgColor} from '../utils'
-import { X, Upload, Trash2, RefreshCw, Layers, Grid, List, Scan, Eclipse, PaintBucket } from 'lucide-react'
+import { X, Upload, Trash2, RefreshCw, Layers, Grid, List } from 'lucide-react'
+import { BgColorPicker } from '../components/BgColorPicker'
 
 
 const API = '/api'
@@ -250,42 +251,14 @@ export function ConvertTab() {
               {/* ── Transparent color picker ── */}
               <div className="field">
                 <label className="field-label">transparent color (slot 0)</label>
-                <div className="bg-mode-row">
-                  <button
-                    className={`bg-mode-btn ${bgMode === 'auto' ? 'active' : ''}`}
-                    onClick={() => detectBgColor(originalB64).then(d => {
-                      setBgColor(d); setBgMode('auto'); convert(file, d)
-                    })}
-                    title="detect from image corners"
-                  >auto <Scan size={8} /></button>
-                  <button
-                    className={`bg-mode-btn ${bgMode === 'default' ? 'active' : ''}`}
-                    onClick={() => { setBgColor(GBA_TRANSPARENT); setBgMode('default'); convert(file, GBA_TRANSPARENT) }}
-                  >default <Eclipse size={8} /></button>
-                  <button
-                    className={`bg-mode-btn ${bgMode === 'custom' ? 'active' : ''}`}
-                    onClick={() => setBgMode('custom')}
-                  >custom <PaintBucket size={8} /></button>
-                </div>
-                <div className="bg-color-row">
-                  <div className="bg-swatch" style={{ background: bgColor }} />
-                  {bgMode === 'custom' ? (
-                    <input
-                      className="field-input field-mono"
-                      value={bgColor}
-                      onChange={e => setBgColor(e.target.value)}
-                      onBlur={() => bgColor?.length === 7 && convert(file)}
-                      placeholder="#73C5A4"
-                      maxLength={7}
-                    />
-                  ) : (
-                    <span className="field-hint">
-                      {bgColor}
-                      {bgMode === 'auto'    && <span className="bg-mode-tag"> auto-detected</span>}
-                      {bgMode === 'default' && <span className="bg-mode-tag"> GBA default</span>}
-                    </span>
-                  )}
-                </div>
+                <BgColorPicker
+                  color={bgColor}
+                  mode={bgMode}
+                  onChange={({ color, mode }) => { setBgColor(color); setBgMode(mode) }}
+                  onCommit={color => convert(file, color)}
+                  showAuto={!!originalB64}
+                  onAutoDetect={() => detectBgColor(originalB64)}
+                />
               </div>
 
               {/* ── Original preview ── */}

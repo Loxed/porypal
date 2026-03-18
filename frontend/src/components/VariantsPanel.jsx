@@ -3,6 +3,7 @@ import { Download, X, Star } from 'lucide-react'
 import { ZoomableImage } from './ZoomableImage'
 import { PaletteStrip } from './PaletteStrip'
 import { BgColorCell } from './BgColorCell'
+import { BgColorPicker } from './BgColorPicker'
 import { detectBgColor, downloadBlob } from '../utils'
 import './VariantsPanel.css'
 
@@ -140,6 +141,15 @@ export function VariantsPanel({ nColors, outputBg, outputBgMode, setOutputBg, se
           </div>
         )}
 
+        <div className="field">
+          <label className="field-label">output transparent (slot 0)</label>
+          <BgColorPicker
+            color={outputBg}
+            mode={outputBgMode}
+            onChange={({ color, mode }) => { setOutputBg(color); setOutputBgMode(mode) }}
+          />
+        </div>
+
         <button className="btn-primary" disabled={sprites.length < 1 || loading} onClick={handleExtract}>
           {loading ? 'extracting…' : `extract ${sprites.length} variant${sprites.length !== 1 ? 's' : ''}`}
         </button>
@@ -190,7 +200,7 @@ export function VariantsPanel({ nColors, outputBg, outputBgMode, setOutputBg, se
 
         {results && (
           <div className={viewMode === 'grid' ? 'variants-results-grid' : 'variants-results-list'}>
-            {results.results.map((r, i) => (
+            {results.results.map((r) => (
               <div key={r.name} className={`variant-card ${r.name === results.reference ? 'is-reference' : ''} ${viewMode === 'list' ? 'list-mode' : ''}`}>
                 {viewMode === 'list' ? (
                   <>

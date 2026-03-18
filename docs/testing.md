@@ -20,7 +20,7 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 - [x] Best match is highlighted
 - [x] Download single result works
 - [x] Download all as zip works -- respects current palette selection
-- [x] Auto-reprocesses when palette selection changes 
+- [x] Auto-reprocesses when palette selection changes
 > (not exactly but close to working, a ui overhaul will come from palette management later on so dont touch for now)
 
 ---
@@ -143,6 +143,11 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 | 3 | `server/api/convert.py` | `download_all_converted` now accepts + filters by `palette_names` |
 | 4 | `frontend/src/tabs/ConvertTab.jsx` | `handleDownloadAll` sends `results.map(r => r.palette_name)` instead of `selectedPalettes` |
 | 5 | `frontend/src/tabs/ConvertTab.jsx` | `useEffect` on `selectedPalettes` auto-reprocesses when selection changes |
+| 6 | `frontend/src/components/BgColorPicker.jsx` + `.css` | New component — extracted bg picker from 4 tabs |
+| 7 | `frontend/src/tabs/ExtractTab.jsx` + `.css` | Use `BgColorPicker`, remove duplicate bg-* styles |
+| 8 | `frontend/src/tabs/ConvertTab.jsx` | Use `BgColorPicker` |
+| 9 | `frontend/src/tabs/ItemsTab.jsx` | Use `BgColorPicker` |
+| 10 | `frontend/src/components/VariantsPanel.jsx` | Use `BgColorPicker`, fix missing `Eclipse`/`PaintBucket` imports |
 
 ---
 
@@ -163,3 +168,12 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 - [ ] Palettes tab: full CRUD (folders, rename, reorder, edit colors)
 - [ ] Palettes tab: palette library overhaul → `porypal_library/`, pokeemerald structure
 - [ ] Dashboard/home tab
+
+---
+
+## Refactor queue
+
+- [x] `BgColorPicker` component — extracted from 4 tabs
+- [ ] `Modal` shell component — duplicated in `ExtractTab.css`, `TilesetTab.css`, `ShinyTab.css`
+- [ ] `ViewToggle` component — duplicated in `ConvertTab` and `ItemsTab`
+- [ ] Consolidate shared CSS (`btn-primary-sm`, `spinning`, modal shells) into `App.css`

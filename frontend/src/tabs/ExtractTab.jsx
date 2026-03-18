@@ -3,10 +3,11 @@ import './ExtractTab.css'
 import { DropZone } from '../components/DropZone'
 import { ZoomableImage } from '../components/ZoomableImage'
 import { PaletteStrip } from '../components/PaletteStrip'
+import { BgColorPicker } from '../components/BgColorPicker'
 import { useFetch } from '../hooks/useFetch'
 import { Info, Pipette, PaintBucket, X, Eclipse, Palette, Scan, ChevronDown, Download, Save, Check } from 'lucide-react'
 import { ColorSwatch } from '../components/ColorSwatch'
-import {detectBgColor } from '../utils'
+import { detectBgColor } from '../utils'
 
 const API = '/api'
 const GBA_TRANSPARENT = '#73C5A4'
@@ -23,12 +24,10 @@ function ExportDropdown({ result }) {
   const [saveState, setSaveState] = useState('idle') // idle | saving | saved | error
   const ref = useRef()
 
-  // Pre-fill name when result arrives
   useEffect(() => {
     if (result) setSaveName(`${result.name}_${result.color_space}`)
   }, [result?.name, result?.color_space])
 
-  // Close on outside click
   useEffect(() => {
     if (!open) return
     const handler = (e) => { if (!ref.current?.contains(e.target)) setOpen(false) }
@@ -289,6 +288,7 @@ export function ExtractTab() {
     })
   }
 
+  // Called by ZoomableImage when picking is active and user clicks a pixel
   const handlePick = (hex) => {
     setBgColor(hex); setBgMode('pick'); setPicking(false)
   }
@@ -323,48 +323,16 @@ export function ExtractTab() {
 
           <div className="field">
             <label className="field-label">transparent color (slot 0)</label>
-            <div className="bg-mode-row">
-              {originalB64 && (
-                <button
-                  className={`bg-mode-btn ${bgMode === 'auto' ? 'active' : ''}`}
-                  onClick={() => detectBgColor(originalB64).then(d => { setBgColor(d); setBgMode('auto') })}
-                  title="detect from image corners"
-                >auto <Scan size={8} /></button>
-              )}
-              <button
-                className={`bg-mode-btn ${bgMode === 'default' ? 'active' : ''}`}
-                onClick={() => { setBgMode('default'); setBgColor(GBA_TRANSPARENT) }}
-              >default <Eclipse size={8} /></button>
-              <button
-                className={`bg-mode-btn ${bgMode === 'custom' ? 'active' : ''}`}
-                onClick={() => setBgMode('custom')}
-              >custom <PaintBucket size={8} /></button>
-              {originalB64 && (
-                <button
-                  className={`bg-mode-btn ${picking ? 'picking' : ''}`}
-                  onClick={() => setPicking(p => !p)}
-                  title="click a pixel on the image to pick its color"
-                >pipette <Pipette size={8} /></button>
-              )}
-            </div>
-            <div className="bg-color-row">
-              <div className="bg-swatch" style={{ background: bgColor }} />
-              {bgMode === 'custom' || bgMode === 'pick' ? (
-                <input
-                  className="field-input field-mono"
-                  value={bgColor}
-                  onChange={e => setBgColor(e.target.value)}
-                  placeholder="#73C5A4"
-                  maxLength={7}
-                />
-              ) : (
-                <span className="field-hint">
-                  {bgColor}
-                  {bgMode === 'auto'    && <span className="bg-mode-tag"> auto-detected</span>}
-                  {bgMode === 'default' && <span className="bg-mode-tag"> GBA default</span>}
-                </span>
-              )}
-            </div>
+            <BgColorPicker
+              color={bgColor}
+              mode={bgMode}
+              onChange={({ color, mode }) => { setBgColor(color); setBgMode(mode) }}
+              showAuto={!!originalB64}
+              onAutoDetect={() => detectBgColor(originalB64)}
+              showPipette={!!originalB64}
+              picking={picking}
+              onPipetteToggle={() => setPicking(p => !p)}
+            />
           </div>
 
           <div className="extract-actions">

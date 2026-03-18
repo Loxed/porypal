@@ -160,3 +160,86 @@ export function detectBgColor(imageB64) {
     img.src = `data:image/png;base64,${imageB64}`
   })
 }
+
+
+/**
+ * Compare two base64 PNG images pixel by pixel in Oklab space.
+ * Returns a score between 0 (identical) and 1 (completely different).
+ * Only compares opaque pixels that aren't the bg color in the reference.
+ *
+ * @param {string} refB64      - reference image base64
+ * @param {string} variantB64  - variant image base64
+ * @param {string} bgHex       - transparent/bg color hex to skip
+ * @returns {Promise<{score: number, mismatchedPixels: number, totalPixels: number}>}
+ */
+export function compareVariantPixels(refB64, variantB64, bgHex = '#73c5a4') {
+  const hexToRgb = (hex) => {
+    const h = hex.replace('#', '')
+    return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)]
+  }
+
+  // sRGB → linear
+  const toLinear = (c) => {
+    const v = c / 255
+    return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
+  }
+
+  // RGB (0-255) → Oklab
+  const toOklab = (r, g, b) => {
+    const lr = toLinear(r), lg = toLinear(g), lb = toLinear(b)
+    const l = Math.cbrt(0.4122214708*lr + 0.5363325363*lg + 0.0514459929*lb)
+    const m = Math.cbrt(0.2119034982*lr + 0.6806995451*lg + 0.1073969566*lb)
+    const s = Math.cbrt(0.0883024619*lr + 0.2817188376*lg + 0.6299787005*lb)
+    return [
+      0.2104542553*l + 0.7936177850*m - 0.0040720468*s,
+      1.9779984951*l - 2.4285922050*m + 0.4505937099*s,
+      0.0259040371*l + 0.7827717662*m - 0.8086757660*s,
+    ]
+  }
+
+  const oklabDist = (a, b) =>
+    Math.sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2 + (a[2]-b[2])**2)
+
+  // Threshold: Oklab distance above which we call pixels "mismatched"
+  // 0.05 ≈ a just-noticeable hue shift; 0.15 ≈ clearly different color
+  const MISMATCH_THRESHOLD = 0.08
+
+  const loadPixels = (b64) => new Promise((resolve) => {
+    const img = new Image()
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width  = img.naturalWidth
+      canvas.height = img.naturalHeight
+      canvas.getContext('2d').drawImage(img, 0, 0)
+      resolve(canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height))
+    }
+    img.src = `data:image/png;base64,${b64}`
+  })
+
+  return Promise.all([loadPixels(refB64), loadPixels(variantB64)]).then(([refData, varData]) => {
+    const [bgR, bgG, bgB] = hexToRgb(bgHex)
+    const rd = refData.data
+    const vd = varData.data
+    const len = Math.min(rd.length, vd.length)
+
+    let totalPixels    = 0
+    let mismatchedPixels = 0
+
+    for (let i = 0; i < len; i += 4) {
+      const rA = rd[i+3]
+      // Skip transparent or bg-colored pixels in the reference
+      if (rA < 128) continue
+      const rR = rd[i], rG = rd[i+1], rB = rd[i+2]
+      if (rR === bgR && rG === bgG && rB === bgB) continue
+
+      totalPixels++
+
+      const vR = vd[i], vG = vd[i+1], vB = vd[i+2]
+      const dist = oklabDist(toOklab(rR, rG, rB), toOklab(vR, vG, vB))
+      if (dist > MISMATCH_THRESHOLD) mismatchedPixels++
+    }
+
+    const score = totalPixels === 0 ? 0 : mismatchedPixels / totalPixels
+    return { score, mismatchedPixels, totalPixels }
+  })
+}

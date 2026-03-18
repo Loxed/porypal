@@ -7,7 +7,27 @@
 .variants-left  { display: flex; flex-direction: column; gap: 14px; }
 .variants-right { display: flex; flex-direction: column; gap: 12px; min-height: 400px; }
 
-/* ── Sprite queue ── */
+/* ── Mode switcher (extract vs apply) ── */
+.variants-mode-switcher {
+  display: flex; gap: 3px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 3px; width: fit-content;
+  margin-bottom: 4px;
+}
+.variants-mode-btn {
+  padding: 4px 12px;
+  background: transparent; border: none;
+  border-radius: calc(var(--radius) - 1px);
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+  cursor: pointer; transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.variants-mode-btn:hover  { color: var(--text); }
+.variants-mode-btn.active { background: var(--accent); color: var(--bg); }
+
+/* ── Sprite / palette queue shared rows ── */
 .variants-sprite-queue {
   display: flex; flex-direction: column; gap: 3px;
   max-height: 280px; overflow-y: auto;
@@ -18,37 +38,66 @@
   border-radius: var(--radius); transition: border-color 0.1s;
 }
 .variants-queue-row.is-ref {
-  border-color: #e3b341;
-  background: rgba(227,179,65,0.06);
+  border-color: var(--accent);
+  background: rgba(88,166,255,0.06);
+}
+.variants-queue-row.dim-mismatch {
+  border-color: var(--danger);
+  background: rgba(248,81,73,0.05);
 }
 
-/* ── Reference star button ── */
-.ref-star-btn {
-  width: 20px; height: 20px;
-  background: transparent; border: none; color: var(--border2);
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  border-radius: 3px; transition: color 0.1s; padding: 0; flex-shrink: 0;
+/* ── Ref badge ── */
+.variants-ref-badge {
+  font-family: var(--mono); font-size: 9px; font-weight: 600;
+  color: var(--accent);
+  background: rgba(88,166,255,0.12);
+  border: 1px solid var(--accent);
+  border-radius: 3px; padding: 1px 5px;
+  flex-shrink: 0; white-space: nowrap;
 }
-.ref-star-btn:hover  { color: #e3b341; }
-.ref-star-btn.active { color: #e3b341; }
 
+/* ── "set ref" button ── */
+.variants-set-ref-btn {
+  flex-shrink: 0; padding: 2px 7px;
+  background: transparent;
+  border: 1px solid var(--border2); border-radius: 3px;
+  font-family: var(--mono); font-size: 9px; color: var(--muted);
+  cursor: pointer; white-space: nowrap;
+  transition: color 0.1s, border-color 0.1s, background 0.1s;
+}
+.variants-set-ref-btn:hover {
+  color: var(--accent); border-color: var(--accent);
+  background: rgba(88,166,255,0.08);
+}
+
+/* ── Dimension mismatch warning ── */
+.variants-dim-warn {
+  display: flex; align-items: flex-start; gap: 5px;
+  font-family: var(--mono); font-size: 10px; color: var(--danger);
+  background: rgba(248,81,73,0.08);
+  border: 1px solid rgba(248,81,73,0.3);
+  border-radius: var(--radius); padding: 5px 8px; line-height: 1.4;
+}
+
+/* ── Ref hint ── */
 .variants-ref-hint {
   font-family: var(--mono); font-size: 10px; color: var(--muted);
-  padding: 2px 4px;
+  padding: 2px 4px; line-height: 1.5;
 }
 
 /* ── Explainer ── */
 .variants-explainer {
   display: flex; flex-direction: column; gap: 6px;
   padding: 10px 12px;
-  background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius);
 }
 .variants-explainer p {
   font-family: var(--mono); font-size: 10px; color: var(--muted); line-height: 1.5;
 }
 .variants-explainer .section-label { margin-bottom: 2px; }
 
-/* ── Results ── */
+/* ── Result cards ── */
 .variants-results-grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px;
 }
@@ -60,8 +109,8 @@
   display: flex; flex-direction: column; gap: 8px;
   transition: border-color 0.15s;
 }
-.variant-card:hover      { border-color: var(--border2); }
-.variant-card.is-reference { border-color: #e3b341; }
+.variant-card:hover       { border-color: var(--border2); }
+.variant-card.is-reference { border-color: var(--accent); }
 
 .variant-card-header { display: flex; align-items: center; gap: 6px; }
 .variant-card-name {
@@ -69,7 +118,51 @@
   flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
-/* list mode */
 .variant-card.list-mode { flex-direction: row; align-items: center; gap: 12px; }
 .variant-card.list-mode .variant-card-preview { width: 80px; flex-shrink: 0; }
-.variant-card.list-mode .variant-card-body    { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.variant-card.list-mode .variant-card-body {
+  flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px;
+}
+
+/* ── Slot match warning on result cards ── */
+.variant-match-warn {
+  display: flex; align-items: flex-start; gap: 5px;
+  font-family: var(--mono); font-size: 10px;
+  border-radius: var(--radius); padding: 5px 7px; line-height: 1.4;
+}
+.variant-match-warn.warn-yellow {
+  color: #e3b341;
+  background: rgba(227,179,65,0.08);
+  border: 1px solid rgba(227,179,65,0.3);
+}
+.variant-match-warn.warn-red {
+  color: var(--danger);
+  background: rgba(248,81,73,0.08);
+  border: 1px solid rgba(248,81,73,0.3);
+}
+
+/* ── Apply mode: loaded palette picker ── */
+.apply-pal-picker {
+  display: flex; flex-direction: column; gap: 2px;
+  max-height: 200px; overflow-y: auto;
+}
+.apply-pal-pick-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 8px; border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  cursor: pointer; transition: border-color 0.1s, background 0.1s;
+}
+.apply-pal-pick-row:hover   { border-color: var(--border2); }
+.apply-pal-pick-row.checked { border-color: var(--accent); background: rgba(88,166,255,0.07); }
+.apply-pal-pick-name {
+  font-family: var(--mono); font-size: 11px; color: var(--text);
+  flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ── Mini swatch strip ── */
+.mini-strip { display: flex; gap: 2px; flex-shrink: 0; }
+.mini-swatch {
+  width: 8px; height: 8px; border-radius: 1px;
+  border: 1px solid rgba(255,255,255,0.08); flex-shrink: 0;
+}

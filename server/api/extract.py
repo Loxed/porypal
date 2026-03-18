@@ -12,18 +12,10 @@ from pathlib import Path
 
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 
+from server.helpers import make_pal_content
 from server.state import state
 
 router = APIRouter(prefix="/api/extract", tags=["extract"])
-
-
-def _make_pal_content(palette) -> str:
-    buf = io.StringIO()
-    buf.write("JASC-PAL\n0100\n")
-    buf.write(f"{len(palette.colors)}\n")
-    for c in palette.colors:
-        buf.write(f"{c.r} {c.g} {c.b}\n")
-    return buf.getvalue()
 
 
 @router.post("")
@@ -59,9 +51,9 @@ async def extract_palette(
             raise HTTPException(400, f"Image has too many colors ({len(palette.colors)}); max 16 for GBA")
 
         return {
-            "name": palette.name,
-            "colors": [c.to_hex() for c in palette.colors],
-            "pal_content": _make_pal_content(palette),
+            "name":        palette.name,
+            "colors":      [c.to_hex() for c in palette.colors],
+            "pal_content": make_pal_content(palette),
             "color_space": color_space,
         }
     finally:
@@ -83,7 +75,6 @@ async def save_extracted_palette(
     filename = name if name.endswith(".pal") else f"{name}.pal"
     dest = dest_dir / filename
 
-    # Avoid clobbering — append suffix if name already exists
     counter = 1
     while dest.exists():
         stem = filename.removesuffix(".pal")

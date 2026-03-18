@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import './ItemsTab.css'
 import { BgColorCell } from '../components/BgColorCell'
 import { BgColorPicker } from '../components/BgColorPicker'
@@ -125,6 +125,12 @@ export function ItemsTab() {
       doExtract(newGroups, groupingEnabled)
     }, AUTO_EXTRACT_DELAY_MS)
   }, [doExtract, groupingEnabled])
+
+  // Re-run extraction when the shared threshold changes, but only after
+  // a first extraction has already produced results.
+  useEffect(() => {
+    if (results) scheduleAutoExtract(results.groups)
+  }, [sharedThreshold])
 
   // ---------------------------------------------------------------------------
   // File import

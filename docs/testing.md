@@ -33,7 +33,7 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 - [ ] Drag sprite between groups triggers re-extract
 > only works when dragging over the group header, should be entire group section
 - [ ] Groups persist across re-extracts (should only update palettes, not reset structure)
-- [ ] Threshold slider triggers re-extract after first extract
+- [x] Threshold slider triggers re-extract after first extract
 - [ ] Per-group download zip button
 
 **Groups → Variants**
@@ -107,45 +107,6 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 - [x] Logo click returns to Extract Palette tab
 
 ---
-
-## Fixes applied
-
-| # | File | Change |
-|---|------|--------|
-| 1 | `server/api/pipeline.py` | `ImageManager({})` → `ImageManager()` in `_run_convert_step` |
-| 2 | `server/app.py` | Added `shiny` to imports + `app.include_router(shiny.router)` |
-| 3 | `server/api/convert.py` | `download_all_converted` filters by `palette_names` |
-| 4 | `frontend/src/tabs/ConvertTab.jsx` | `handleDownloadAll` sends `results.map(r => r.palette_name)` |
-| 5 | `frontend/src/tabs/ConvertTab.jsx` | `useEffect` on `selectedPalettes` auto-reprocesses |
-| 6 | `frontend/src/components/BgColorPicker.jsx` + `.css` | New component — extracted from 4 tabs |
-| 7 | `frontend/src/tabs/ExtractTab.jsx` + `.css` | Use `BgColorPicker` |
-| 8 | `frontend/src/tabs/ConvertTab.jsx` | Use `BgColorPicker` + pipette |
-| 9 | `frontend/src/tabs/ItemsTab.jsx` | Use `BgColorPicker` |
-| 10 | `frontend/src/components/VariantsPanel.jsx` | Use `BgColorPicker`, fix missing icon imports |
-| 11 | `frontend/src/components/Modal.jsx` + `.css` | New component — single modal shell, Escape key |
-| 12 | `frontend/src/tabs/ExtractTab.jsx` + `.css` | Use `Modal` |
-| 13 | `frontend/src/tabs/TilesetTab.jsx` | Use `Modal` for `HelpModal` and `SaveModal` |
-| 14 | `frontend/src/tabs/ShinyTab.jsx` | Use `Modal` for `PalettePickerModal` |
-| 15 | `frontend/src/tabs/ConvertTab.jsx` | Use `Modal` for `PaletteModal` |
-| 16 | `frontend/src/components/ViewToggle.jsx` + `.css` | New component — extracted from 3 places |
-| 17 | `frontend/src/tabs/ConvertTab.jsx` + `.css` | Use `ViewToggle` |
-| 18 | `frontend/src/tabs/ItemsTab.jsx` + `.css` | Use `ViewToggle` |
-| 19 | `frontend/src/components/VariantsPanel.jsx` | Use `ViewToggle` |
-| 20 | `frontend/src/App.css` | `btn-primary-sm`, `.spinning`, `@keyframes spin`, `.pick-hint` as globals |
-| 21 | `frontend/src/tabs/BatchTab.css` | Remove `btn-primary-sm`, `spinning` |
-| 22 | `frontend/src/tabs/ConvertTab.css` | Remove `spinning`, `view-toggle`/`view-btn` |
-| 23 | `frontend/src/tabs/ItemsTab.css` | Remove `spinning`, `view-toggle`/`view-btn` |
-| 24 | `frontend/src/tabs/TilesetTab.css` | Remove `btn-primary-sm`, modal shell styles |
-| 25 | `frontend/src/tabs/ExtractTab.css` | Remove `pick-hint` (now global) |
-| 26 | `server/api/items.py` | `_trim_palette` helper — strips trailing bg dupes from `colors` array and `.pal` output |
-| 27 | `frontend/src/tabs/BatchTab.jsx` | Drag+drop + individual file pick + folder pick; step labels renamed |
-| 28 | `server/api/pipeline.py` | New `POST /api/pipeline/preview` endpoint — dry-run on first file, per-step base64 frames |
-| 29 | `server/api/pipeline.py` | `_execute_job` now writes `sprites/` + `palettes/` zip structure + rich `manifest.json` |
-| 30 | `frontend/src/tabs/BatchTab.jsx` | `PreviewStrip` + `PreviewCard` components; debounced preview fetch on config change |
-| 31 | `frontend/src/tabs/BatchTab.css` | Preview strip styles — scrollable, step-colour accent bars, palette swatch row |
-
----
-
 ## Refactor queue
 
 - [x] `BgColorPicker` component
@@ -160,11 +121,11 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 ### Groups
 - [ ] Drag target should be entire group section, not just header
 - [ ] Re-extract should preserve group structure, only update palettes
-- [ ] Threshold slider triggers re-extract after first extract
+- [x] Threshold slider triggers re-extract after first extract
 - [ ] Per-group download zip button
 
 ### Variants
-- [ ] Zip: organise into `/palettes` and `/sprites` with manifest
+- [x] Zip: organise into `/palettes` and `/sprites` with manifest
 - [ ] UI: replace star-as-reference with explicit "set as reference" button
 
 ### Shiny

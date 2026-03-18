@@ -625,10 +625,30 @@ async def download_variants(
 
     results = _extract_variants(sprites, n_colors, output_bg)
 
+    reference_name = sprites[0]["name"]
+
     zip_buf = io.BytesIO()
     with zipfile.ZipFile(zip_buf, "w", zipfile.ZIP_DEFLATED) as zf:
         for r in results:
-            zf.writestr(f"{r['name']}.pal", r["pal_content"])
+            # palettes/
+            zf.writestr(f"palettes/{r['name']}.pal", r["pal_content"])
+            # sprites/ — decode the base64 preview PNG
+            import base64
+            zf.writestr(f"sprites/{r['name']}.png", base64.b64decode(r["preview"]))
+
+        manifest = {
+            "reference": reference_name,
+            "files": [
+                {
+                    "name":    r["name"],
+                    "palette": f"palettes/{r['name']}.pal",
+                    "sprite":  f"sprites/{r['name']}.png",
+                }
+                for r in results
+            ],
+        }
+        zf.writestr("manifest.json", json.dumps(manifest, indent=2))
+
     zip_buf.seek(0)
 
     return StreamingResponse(

@@ -1,12 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
-import { ChevronDown, ChevronRight, Pencil, Merge } from 'lucide-react'
+import { ChevronDown, ChevronRight, Pencil, Merge, Download } from 'lucide-react'
 import { ItemCard } from './ItemCard'
 import { SharedSlotsStrip } from './SharedSlotsStrip'
 import './GroupSection.css'
 
-// ---------------------------------------------------------------------------
-// MergeDropdown — local to GroupSection, not worth its own file
-// ---------------------------------------------------------------------------
 function MergeDropdown({ thisGroupId, allGroups, groupNames, onMerge }) {
   const [open, setOpen] = useState(false)
   const ref = useRef()
@@ -46,14 +43,13 @@ function MergeDropdown({ thisGroupId, allGroups, groupNames, onMerge }) {
   )
 }
 
-// ---------------------------------------------------------------------------
-// GroupSection
-// ---------------------------------------------------------------------------
 export function GroupSection({
   group, groupName, onRename, onDropSprite, onMergeGroup,
   allGroups, groupNames,
   viewMode, exact, nUnique,
   sharedSlots, nShared,
+  onDownloadGroup,
+  downloading,
 }) {
   const [open, setOpen]         = useState(true)
   const [editing, setEditing]   = useState(false)
@@ -68,12 +64,16 @@ export function GroupSection({
     setEditing(false)
   }
 
+  // Drag handlers on the OUTER section — accept drops from other groups
   const handleDragOver = (e) => {
+    // Only respond if the drag payload is a sprite card (has our JSON data)
+    if (!e.dataTransfer.types.includes('text/plain')) return
     e.preventDefault()
     e.dataTransfer.dropEffect = 'move'
     setDragOver(true)
   }
   const handleDragLeave = (e) => {
+    // Only clear when leaving the section entirely, not entering a child
     if (!e.currentTarget.contains(e.relatedTarget)) setDragOver(false)
   }
   const handleDrop = (e) => {
@@ -88,12 +88,13 @@ export function GroupSection({
   }
 
   return (
-    <div className={`group-section ${dragOver ? 'group-drop-target' : ''}`}>
-      <div className="group-header"
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-      >
+    <div
+      className={`group-section ${dragOver ? 'group-drop-target' : ''}`}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      <div className="group-header">
         <button className="group-collapse-btn" onClick={() => setOpen(o => !o)}>
           {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
         </button>
@@ -128,9 +129,17 @@ export function GroupSection({
             groupNames={groupNames}
             onMerge={onMergeGroup}
           />
+          <button
+            className="group-action-btn"
+            title="download group as zip"
+            onClick={onDownloadGroup}
+            disabled={downloading}
+          >
+            <Download size={11} />
+          </button>
         </div>
 
-        {dragOver && <span className="group-drop-hint">drop to merge</span>}
+        {dragOver && <span className="group-drop-hint">drop to move here</span>}
       </div>
 
       {open && sharedSlots && sharedSlots.length > 0 && (

@@ -26,11 +26,13 @@
 **Groups → Group Extract**
 - [x] Drop multiple sprites -- grouping by silhouette works
 - [x] Palette strip shows correct trimmed colors (no trailing bg dupes)
-- [ ] Drag sprite between groups triggers re-extract
-> only works when dragging over the group header, should be entire group section
-- [ ] Groups persist across re-extracts (should only update palettes, not reset structure)
+- [x] Drag sprite between groups triggers re-extract
+> drag target is now the entire group section, not just the header
+- [x] Re-extract button preserves current group structure, only updates palettes
+> first extract still does fresh silhouette grouping; adding new files resets groups
 - [x] Threshold slider triggers re-extract after first extract
-- [ ] Per-group download zip button
+- [x] Per-group download zip button
+> download icon in group header; zip contains `/palettes` + `/sprites` + manifest
 
 **Groups → Variants**
 - [x] Drop 3 recolored sprites, set reference -- produces 3 index-aligned palettes
@@ -117,10 +119,11 @@
 ## Backlog (future work, roughly prioritised)
 
 ### Groups
-- [ ] Drag target should be entire group section, not just header
-- [ ] Re-extract should preserve group structure, only update palettes
+- [x] Drag target should be entire group section, not just header
+- [x] Re-extract should preserve group structure, only update palettes
 - [x] Threshold slider triggers re-extract after first extract
-- [ ] Per-group download zip button
+- [x] Per-group download zip button
+- [x] Added search/filter feature 
 
 ### Variants
 - [x] Zip: organise into `/palettes` and `/sprites` with manifest

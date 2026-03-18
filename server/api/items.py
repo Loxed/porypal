@@ -435,6 +435,71 @@ async def download_all_item_palettes(
         headers={"Content-Disposition": 'attachment; filename="item_palettes.zip"'},
     )
 
+@router.post("/download-group")
+async def download_group_palettes(
+    files: list[UploadFile] = File(...),
+    n_colors: int           = Form(default=15),
+    input_bg_colors: str    = Form(default="[]"),
+    output_bg_color: str    = Form(default=DEFAULT_BG),
+    shared_threshold: float = Form(default=DEFAULT_THRESHOLD),
+    group_assignments: str  = Form(default="{}"),
+    group_name: str         = Form(default="group"),
+):
+    shared_threshold = max(0.0, min(1.0, shared_threshold))
+    try:
+        input_bgs        = json.loads(input_bg_colors)
+        group_assign_map = json.loads(group_assignments)
+    except Exception:
+        input_bgs        = []
+        group_assign_map = {}
+
+    output_bg = _parse_hex(output_bg_color)
+
+    sprites = []
+    for i, f in enumerate(files):
+        data = await f.read()
+        sprites.append({
+            "name":     Path(f.filename).stem,
+            "px":       _load_rgba(data),
+            "input_bg": input_bgs[i] if i < len(input_bgs) else DEFAULT_BG,
+        })
+
+    if not sprites:
+        raise HTTPException(400, "No sprites provided")
+
+    try:
+        group_data = _extract_group(sprites, n_colors, output_bg, shared_threshold)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+
+    label = group_name or "group"
+
+    zip_buf  = io.BytesIO()
+    with zipfile.ZipFile(zip_buf, "w", zipfile.ZIP_DEFLATED) as zf:
+        for r in group_data["results"]:
+            zf.writestr(f"palettes/{r['name']}.pal", r["pal_content"])
+            import base64
+            zf.writestr(f"sprites/{r['name']}.png", base64.b64decode(r["preview"]))
+        manifest = {
+            "group":     label,
+            "reference": group_data["reference"],
+            "files": [
+                {
+                    "name":    r["name"],
+                    "palette": f"palettes/{r['name']}.pal",
+                    "sprite":  f"sprites/{r['name']}.png",
+                }
+                for r in group_data["results"]
+            ],
+        }
+        zf.writestr("manifest.json", json.dumps(manifest, indent=2))
+
+    zip_buf.seek(0)
+    return StreamingResponse(
+        zip_buf,
+        media_type="application/zip",
+        headers={"Content-Disposition": f'attachment; filename="{label}.zip"'},
+    )
 
 # ---------------------------------------------------------------------------
 # Variant extraction

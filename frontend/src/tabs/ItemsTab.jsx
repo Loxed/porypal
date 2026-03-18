@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import './ItemsTab.css'
 import { BgColorCell } from '../components/BgColorCell'
 import { BgColorPicker } from '../components/BgColorPicker'
@@ -20,9 +20,6 @@ function fileToB64(file) {
   })
 }
 
-// ---------------------------------------------------------------------------
-// ThresholdSlider
-// ---------------------------------------------------------------------------
 function ThresholdSlider({ value, onChange }) {
   const pct   = Math.round(value * 100)
   const label = value <= 0.1 ? 'any shared' : value <= 0.4 ? 'loose' :
@@ -43,10 +40,27 @@ function ThresholdSlider({ value, onChange }) {
 }
 
 // ---------------------------------------------------------------------------
+// Wildcard matcher: * matches any sequence of characters (case-insensitive)
+// ---------------------------------------------------------------------------
+function wildcardMatch(pattern, str) {
+  // No wildcards — plain substring match
+  if (!pattern.includes('*') && !pattern.includes('?')) {
+    return str.toLowerCase().includes(pattern.toLowerCase())
+  }
+  // Convert wildcard pattern to regex:
+  //   * → .*   ? → .   escape everything else
+  const escaped = pattern
+    .split('*').map(seg =>
+      seg.split('?').map(s => s.replace(/[.+^${}()|[\]\\]/g, '\\$&')).join('.')
+    ).join('.*')
+  return new RegExp(`^${escaped}$`, 'i').test(str)
+}
+
+// ---------------------------------------------------------------------------
 // ItemsTab
 // ---------------------------------------------------------------------------
 export function ItemsTab() {
-  const [mode, setMode]                         = useState('variants') // 'variants' | 'group'
+  const [mode, setMode]                         = useState('variants')
   const [sprites, setSprites]                   = useState([])
   const [nColors, setNColors]                   = useState(15)
   const [outputBg, setOutputBg]                 = useState(GBA_TRANSPARENT)
@@ -59,9 +73,29 @@ export function ItemsTab() {
   const [loading, setLoading]                   = useState(false)
   const [error, setError]                       = useState(null)
   const [viewMode, setViewMode]                 = useState('grid')
+  const [downloadingGroup, setDownloadingGroup] = useState(null)
+  const [search, setSearch]                     = useState('')
 
   const inputRef         = useRef()
   const autoExtractTimer = useRef(null)
+
+  // ---------------------------------------------------------------------------
+  // Filtered groups — memoised so it only recomputes when results or search changes
+  // ---------------------------------------------------------------------------
+  const filteredGroups = useMemo(() => {
+    if (!results) return []
+    const q = search.trim()
+    if (!q) return results.groups
+    return results.groups
+      .map(group => ({
+        ...group,
+        results: group.results.filter(r => wildcardMatch(q, r.name)),
+      }))
+      .filter(group => group.results.length > 0)
+  }, [results, search])
+
+  const filteredTotal = filteredGroups.reduce((n, g) => n + g.results.length, 0)
+  const totalSprites  = results?.groups.reduce((n, g) => n + g.results.length, 0) ?? 0
 
   // ---------------------------------------------------------------------------
   // Helpers
@@ -74,9 +108,6 @@ export function ItemsTab() {
     return assignments
   }, [])
 
-  // ---------------------------------------------------------------------------
-  // Extract
-  // ---------------------------------------------------------------------------
   const doExtract = useCallback(async (displayedGroups, currentGrouping) => {
     if (sprites.length === 0) return
     setLoading(true)
@@ -115,8 +146,8 @@ export function ItemsTab() {
 
   const handleExtract = () => {
     clearTimeout(autoExtractTimer.current)
-    doExtract([], groupingEnabled)
-    setGroupAssignments({})
+    const currentGroups = results?.groups ?? []
+    doExtract(currentGroups, groupingEnabled)
   }
 
   const scheduleAutoExtract = useCallback((newGroups) => {
@@ -126,8 +157,6 @@ export function ItemsTab() {
     }, AUTO_EXTRACT_DELAY_MS)
   }, [doExtract, groupingEnabled])
 
-  // Re-run extraction when the shared threshold changes, but only after
-  // a first extraction has already produced results.
   useEffect(() => {
     if (results) scheduleAutoExtract(results.groups)
   }, [sharedThreshold])
@@ -227,12 +256,39 @@ export function ItemsTab() {
     downloadBlob(await res.blob(), 'item_palettes.zip')
   }
 
+  const handleDownloadGroup = useCallback(async (group) => {
+    const gid   = group.group_id
+    const label = groupNames[gid] ?? gid
+
+    const groupSpriteNames = new Set(group.results.map(r => r.name))
+    const groupSprites     = sprites.filter(s => groupSpriteNames.has(s.name))
+    if (groupSprites.length === 0) return
+
+    setDownloadingGroup(gid)
+    try {
+      const fd = new FormData()
+      groupSprites.forEach(s => fd.append('files', s.file))
+      fd.append('n_colors', nColors)
+      fd.append('input_bg_colors', JSON.stringify(groupSprites.map(s => s.inputBg)))
+      fd.append('output_bg_color', outputBg)
+      fd.append('shared_threshold', sharedThreshold)
+      fd.append('group_assignments', JSON.stringify(
+        Object.fromEntries(groupSprites.map(s => [s.name, gid]))
+      ))
+      fd.append('group_name', label)
+      const res = await fetch(`${API}/items/download-group`, { method: 'POST', body: fd })
+      if (!res.ok) return
+      downloadBlob(await res.blob(), `${label}.zip`)
+    } finally {
+      setDownloadingGroup(null)
+    }
+  }, [sprites, nColors, outputBg, sharedThreshold, groupNames])
+
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
   return (
     <div className="tab-content">
-      {/* ── Mode switcher ── */}
       <div className="items-mode-switcher">
         <button
           className={`items-mode-btn ${mode === 'variants' ? 'active' : ''}`}
@@ -261,7 +317,6 @@ export function ItemsTab() {
       {mode === 'group' && (
         <div className="items-layout">
           <div className="items-left">
-
             <div
               onDragOver={e => e.preventDefault()}
               onDrop={e => { e.preventDefault(); if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files) }}
@@ -354,7 +409,9 @@ export function ItemsTab() {
             <div className="items-toolbar">
               <span className="items-count">
                 {results
-                  ? `${results.groups.length} group${results.groups.length !== 1 ? 's' : ''} · ${results.groups.reduce((n, g) => n + g.results.length, 0)} sprites`
+                  ? search.trim()
+                    ? `${filteredTotal} of ${totalSprites} sprites`
+                    : `${results.groups.length} group${results.groups.length !== 1 ? 's' : ''} · ${totalSprites} sprites`
                   : ''
                 }
               </span>
@@ -366,6 +423,24 @@ export function ItemsTab() {
               )}
             </div>
 
+            {/* Search bar — only shown once we have results */}
+            {results && (
+              <div className="items-search">
+                <input
+                  className="items-search-input"
+                  placeholder="filter by name… (wildcards: *_ball, fire_*, *gem*)"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  spellCheck={false}
+                />
+                {search && (
+                  <button className="items-search-clear" onClick={() => setSearch('')}>
+                    <X size={11} />
+                  </button>
+                )}
+              </div>
+            )}
+
             {!results && !loading && (
               <div className="empty-state">
                 <p>drop sprites — auto-grouped by silhouette</p>
@@ -376,9 +451,15 @@ export function ItemsTab() {
             )}
             {loading && !results && <div className="empty-state"><div className="spinner" /><p>grouping and extracting…</p></div>}
 
+            {results && filteredGroups.length === 0 && search.trim() && (
+              <div className="empty-state">
+                <p>no sprites match <code style={{ fontFamily: 'var(--mono)', fontSize: 11 }}>{search}</code></p>
+              </div>
+            )}
+
             {results && (
               <div className="groups-list">
-                {results.groups.map(group => (
+                {filteredGroups.map(group => (
                   <GroupSection
                     key={group.group_id}
                     group={group}
@@ -393,6 +474,8 @@ export function ItemsTab() {
                     nUnique={group.n_unique}
                     sharedSlots={group.shared_slots}
                     nShared={group.n_shared}
+                    onDownloadGroup={() => handleDownloadGroup(group)}
+                    downloading={downloadingGroup === group.group_id}
                   />
                 ))}
               </div>
@@ -400,7 +483,6 @@ export function ItemsTab() {
           </div>
         </div>
       )}
-
     </div>
   )
 }

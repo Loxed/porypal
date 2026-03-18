@@ -13,7 +13,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from server.api import palettes, convert, extract, batch, tileset, presets, health, library, pipeline, items
+from server.api import palettes, convert, extract, batch, tileset, presets, health, library, pipeline, items, shiny
 
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
@@ -38,6 +38,7 @@ app.include_router(health.router)
 app.include_router(library.router)
 app.include_router(pipeline.router)
 app.include_router(items.router)
+app.include_router(shiny.router)  # fixed: was missing, caused 405 on shiny endpoints
 
 # ---------- static files ----------
 

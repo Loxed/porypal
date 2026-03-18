@@ -8,7 +8,7 @@ import { ItemsTab } from './tabs/ItemsTab'
 import { ShinyTab } from './tabs/ShinyTab'
 import './App.css'
 
-const TABS = ['extract palette', 'apply palette', 'groups', 'shiny', 'tileset', 'pipeline', 'palettes']
+const TABS = ['extract palette', 'apply palette', 'shiny', 'tileset', 'pipeline', 'groups', 'palettes']
 
 export default function App() {
   const [tab, setTab] = useState('extract palette')

@@ -70,6 +70,13 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 - [x] Add Tileset step (now labelled "apply preset") -- preset picker shows saved presets
 - [x] Add Apply Palette step (now labelled "apply palette") -- palette picker shows loaded palettes
 - [x] Run on a folder -- progress shows, zip downloads
+- [x] Preview strip appears after dropping a file + adding steps
+- [x] Preview updates (debounced) when step config changes
+- [x] Preview cards show correct image at each pipeline stage
+- [x] Extract card shows palette swatch row beneath image
+- [x] Error cards show the error message from the server
+- [x] Downloaded zip has `sprites/`, `palettes/`, `manifest.json` structure
+- [x] `manifest.json` includes step configs, per-file results, and summary
 
 **Palettes tab**
 - [x] Loaded palettes list shows up
@@ -91,8 +98,7 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 - [x] Variants: bg picker works, grid/list toggle works
 - [x] Shiny: palette picker modal opens, selects, closes
 - [x] Tileset: help modal opens, save preset modal opens + saves
-- [*] Pipeline: batch step still works end to end
-> works but needs re-test after file selection refactor
+- [x] Pipeline: batch step still works end to end (re-verified after preview + zip refactor)
 
 ---
 
@@ -134,7 +140,11 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 | 25 | `frontend/src/tabs/ExtractTab.css` | Remove `pick-hint` (now global) |
 | 26 | `server/api/items.py` | `_trim_palette` helper — strips trailing bg dupes from `colors` array and `.pal` output |
 | 27 | `frontend/src/tabs/BatchTab.jsx` | Drag+drop + individual file pick + folder pick; step labels renamed |
-
+| 28 | `server/api/pipeline.py` | New `POST /api/pipeline/preview` endpoint — dry-run on first file, per-step base64 frames |
+| 29 | `server/api/pipeline.py` | `_execute_job` now writes `sprites/` + `palettes/` zip structure + rich `manifest.json` |
+| 30 | `frontend/src/tabs/BatchTab.jsx` | `PreviewStrip` + `PreviewCard` components; debounced preview fetch on config change |
+| 31 | `frontend/src/tabs/BatchTab.css` | Preview strip styles — scrollable, step-colour accent bars, palette swatch row |
+| 32 | `frontend/src/tabs/BatchTab.jsx` | Extract step's preview card shows palette swatches; error cards show server error message |
 ---
 
 ## Refactor queue
@@ -168,7 +178,9 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 - [ ] Download: detect bg color + fill empty slots before export
 
 ### Pipeline
-- [ ] Show first-sprite preview per step so you can verify config before running
+- [x] Show first-sprite preview per step so you can verify config before running
+- [x] When downloading zip, include a manifest with details of each step and output files
+- [x] In zip, have a `/palettes` and `/sprites` folder instead of everything flat
 
 ### Palettes tab
 - [ ] Full CRUD: create/rename/delete folders, rename/reorder/edit palette colors

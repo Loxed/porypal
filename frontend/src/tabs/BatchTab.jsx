@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import './BatchTab.css'
 import { useFetch } from '../hooks/useFetch'
 import { Trash2, ChevronUp, ChevronDown, Play, Download, X, AlertTriangle, Check, Loader } from 'lucide-react'
 
 const API = '/api'
+const PREVIEW_DEBOUNCE_MS = 1200
 
 // ---------------------------------------------------------------------------
 // Defaults
@@ -217,6 +218,83 @@ function StepCard({ step, index, total, allSteps, onChange, onMove, onDelete, pa
 }
 
 // ---------------------------------------------------------------------------
+// Preview strip
+// ---------------------------------------------------------------------------
+
+/** Single preview card — original, extract, tileset, or convert */
+function PreviewCard({ frame }) {
+  const typeColors = {
+    original: 'var(--muted)',
+    extract:  '#58a6ff',
+    tileset:  '#d2a8ff',
+    convert:  '#3fb950',
+  }
+  const accent = typeColors[frame.type] ?? 'var(--muted)'
+  const hasError = !!frame.error
+
+  return (
+    <div className={`preview-card ${hasError ? 'preview-card--error' : ''}`}
+      style={{ '--card-accent': accent }}>
+      <div className="preview-card-img-wrap">
+        {frame.image
+          ? <img src={`data:image/png;base64,${frame.image}`} alt={frame.label} className="preview-card-img" draggable={false} />
+          : <span className="preview-card-placeholder">{hasError ? '!' : '?'}</span>
+        }
+      </div>
+      <span className="preview-card-label" style={{ color: hasError ? 'var(--danger)' : accent }}>
+        {frame.label}
+      </span>
+      {frame.palette && frame.palette.length > 0 && (
+        <div className="preview-palette-row">
+          {frame.palette.map((hex, i) => (
+            <div key={i} className="preview-palette-dot" style={{ background: hex }} title={hex} />
+          ))}
+        </div>
+      )}
+      {hasError && (
+        <span className="preview-card-error" title={frame.error}>
+          {frame.error.length > 40 ? frame.error.slice(0, 40) + '…' : frame.error}
+        </span>
+      )}
+      {frame.error && frame.type !== 'original' && frame.error.startsWith('conflict') && (
+        <span className="preview-card-warn">{frame.error}</span>
+      )}
+    </div>
+  )
+}
+
+function PreviewStrip({ previews, loading, filename }) {
+  if (!loading && !previews) return null
+
+  return (
+    <div className="preview-strip-wrap">
+      <div className="preview-strip-header">
+        <span className="section-label">
+          pipeline preview
+          {filename && <span className="preview-filename"> · {filename}</span>}
+        </span>
+        {loading && <div className="spinner" style={{ width: 14, height: 14 }} />}
+      </div>
+      {previews && (
+        <div className="preview-strip">
+          {previews.map((frame, i) => (
+            <div key={i} className="preview-strip-item">
+              {i > 0 && <span className="preview-arrow" style={{ marginTop: 60 }}>→</span>}
+              <PreviewCard frame={frame} />
+            </div>
+          ))}
+        </div>
+      )}
+      {loading && !previews && (
+        <div className="preview-strip-loading">
+          <span className="preview-strip-loading-text">computing preview…</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Progress panel
 // ---------------------------------------------------------------------------
 function ProgressPanel({ status, jobId, onReset }) {
@@ -247,7 +325,7 @@ function ProgressPanel({ status, jobId, onReset }) {
         <div className="progress-bar" style={{ width: `${pct}%` }} />
       </div>
       {!isDone && status.current_file && (
-        <p className="progress-current">⌛ {status.current_file}</p>
+        <p className="progress-current">▶ {status.current_file}</p>
       )}
       {isDone && (
         <div className="progress-stats">
@@ -255,6 +333,11 @@ function ProgressPanel({ status, jobId, onReset }) {
           {conflicts > 0 && <span className="progress-stat stat--conflict"><AlertTriangle size={11}/> {conflicts} conflict</span>}
           {errors    > 0 && <span className="progress-stat stat--error"><X size={11}/> {errors} error</span>}
         </div>
+      )}
+      {isDone && (
+        <p className="progress-zip-hint">
+          zip includes <code>sprites/</code>, <code>palettes/</code>, and <code>manifest.json</code>
+        </p>
       )}
       {status.results.length > 0 && (
         <div className="progress-results">
@@ -290,9 +373,14 @@ export function BatchTab() {
   const [running, setRunning]     = useState(false)
   const [runError, setRunError]   = useState(null)
 
-  const fileInputRef   = useRef()  // individual files
-  const folderInputRef = useRef()  // whole folder
+  // Preview state
+  const [previewData, setPreviewData]       = useState(null)
+  const [previewLoading, setPreviewLoading] = useState(false)
+
+  const fileInputRef   = useRef()
+  const folderInputRef = useRef()
   const pollRef        = useRef(null)
+  const previewTimer   = useRef(null)
 
   useEffect(() => {
     fetch(`${API}/palettes`).then(r => r.json()).then(setPalettes).catch(() => {})
@@ -314,12 +402,55 @@ export function BatchTab() {
     return () => clearInterval(pollRef.current)
   }, [jobId, running])
 
+  // ── Debounced preview ──────────────────────────────────────────────────────
+  // Stable key from step configs so we don't depend on the steps array reference
+  const pipelineKey = useMemo(
+    () => JSON.stringify(steps.map(s => ({ type: s.type, ...s.config }))),
+    [steps]
+  )
+  const firstFileName = files[0]?.name ?? ''
+
+  useEffect(() => {
+    clearTimeout(previewTimer.current)
+
+    if (files.length === 0 || steps.length === 0) {
+      setPreviewData(null)
+      setPreviewLoading(false)
+      return
+    }
+
+    setPreviewLoading(true)
+
+    previewTimer.current = setTimeout(async () => {
+      try {
+        const fd = new FormData()
+        fd.append('file', files[0])
+        fd.append('steps', pipelineKey)
+        const res = await fetch(`${API}/pipeline/preview`, { method: 'POST', body: fd })
+        if (res.ok) {
+          const data = await res.json()
+          setPreviewData(data.previews)
+        } else {
+          setPreviewData(null)
+        }
+      } catch {
+        setPreviewData(null)
+      } finally {
+        setPreviewLoading(false)
+      }
+    }, PREVIEW_DEBOUNCE_MS)
+
+    return () => clearTimeout(previewTimer.current)
+  }, [pipelineKey, firstFileName])
+  // ──────────────────────────────────────────────────────────────────────────
+
   const handleFiles = (fileList) => {
     const picked = Array.from(fileList).filter(f =>
       /\.(png|jpg|jpeg|bmp|gif)$/i.test(f.name)
     )
     setFiles(picked)
     setJobId(null); setJobStatus(null); setRunError(null)
+    setPreviewData(null)
   }
 
   const addStep = (type) => setSteps(prev => [...prev, makeStep(type)])
@@ -376,7 +507,6 @@ export function BatchTab() {
 
         {/* ── Left: files ── */}
         <div className="batch-left">
-          {/* drag + drop / click to pick individual files */}
           <div
             className={`dropzone ${dragging ? 'dragging' : ''}`}
             onDragOver={e => { e.preventDefault(); setDragging(true) }}
@@ -398,7 +528,6 @@ export function BatchTab() {
             <p className="dropzone-hint">PNG, JPG, BMP · click or drag</p>
           </div>
 
-          {/* hidden file inputs */}
           <input ref={fileInputRef} type="file" multiple accept="image/*" style={{ display: 'none' }}
             onChange={e => { if (e.target.files.length) handleFiles(e.target.files); e.target.value = '' }} />
           <input ref={folderInputRef} type="file" multiple
@@ -407,7 +536,6 @@ export function BatchTab() {
             accept="image/*" style={{ display: 'none' }}
             onChange={e => { if (e.target.files.length) handleFiles(e.target.files); e.target.value = '' }} />
 
-          {/* folder fallback button */}
           <button className="batch-folder-btn" onClick={() => folderInputRef.current?.click()}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
@@ -453,6 +581,13 @@ export function BatchTab() {
           </div>
 
           {runError && <p className="error-msg">{runError}</p>}
+
+          {/* ── Preview strip ── */}
+          <PreviewStrip
+            previews={previewData}
+            loading={previewLoading}
+            filename={firstFileName}
+          />
 
           {steps.length === 0 && !showProgress && (
             <div className="batch-empty">

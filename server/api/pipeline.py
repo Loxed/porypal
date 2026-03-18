@@ -13,6 +13,7 @@ Job lifecycle
 -------------
 POST   /api/pipeline/run               → { job_id }
 GET    /api/pipeline/status/{job_id}   → { status, done, total, current_file, results }
+POST   /api/pipeline/preview           → { previews }  ← NEW: dry-run on first file
 GET    /api/pipeline/download/{job_id} → zip stream
 DELETE /api/pipeline/{job_id}          → cleanup
 """
@@ -38,6 +39,7 @@ from PIL import Image
 from model.image_manager import ImageManager
 from model.palette_extractor import PaletteExtractor
 from model.tileset_manager import TilesetManager
+from server.helpers import pil_to_b64
 from server.presets import load_preset
 from server.state import state
 
@@ -46,6 +48,8 @@ router = APIRouter(prefix="/api/pipeline", tags=["pipeline"])
 # In-memory job store (single-user local tool)
 _jobs: dict[str, dict] = {}
 _jobs_lock = threading.Lock()
+
+PORYPAL_VERSION = "3.0.0"
 
 
 # ---------------------------------------------------------------------------
@@ -114,11 +118,10 @@ def _run_extract_step(
         while dest.exists():
             dest = pal_dir / f"{stem}_{color_space}_{counter}.pal"
             counter += 1
-        # Write JASC-PAL
         lines = ["JASC-PAL", "0100", str(len(palette.colors))]
         lines += [f"{c.r} {c.g} {c.b}" for c in palette.colors]
         dest.write_text("\n".join(lines) + "\n", encoding="utf-8")
-        # Also reload manager so the palette is immediately available
+        # Reload manager so the palette is immediately available
         state.palette_manager.reload()
 
     return img, palette
@@ -140,7 +143,6 @@ def _run_tileset_step(img: Image.Image, step: dict) -> Image.Image:
     rows   = preset["rows"]
     slots  = preset.get("slots", [])
 
-    # Slice source into tiles
     src = img.convert("RGBA")
     src_cols = max(1, src.width  // tile_w)
     src_rows = max(1, src.height // tile_h)
@@ -150,7 +152,6 @@ def _run_tileset_step(img: Image.Image, step: dict) -> Image.Image:
             tile = src.crop((c * tile_w, r * tile_h, (c+1) * tile_w, (r+1) * tile_h))
             tiles.append(tile)
 
-    # Arrange into output
     out = Image.new("RGBA", (cols * tile_w, rows * tile_h), (0, 0, 0, 0))
     for slot_pos, tile_idx in enumerate(slots):
         if tile_idx is None or tile_idx >= len(tiles):
@@ -181,8 +182,7 @@ def _run_convert_step(
         if not palettes:
             raise ValueError("Convert step has no valid palettes selected")
 
-    # Save PIL image to temp so ImageManager can load it
-    img_mgr = ImageManager()  # fixed: was ImageManager({})
+    img_mgr = ImageManager()
     with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
         img.save(tmp.name, format="PNG")
         tmp_path = tmp.name
@@ -204,10 +204,122 @@ def _run_convert_step(
         tied = sorted(r.palette.name for r in best)
         if conflict_mode == "flag":
             notes = f"conflict: {len(best)} palettes tied ({', '.join(tied)})"
-        # Either way, pick first alphabetically
         best.sort(key=lambda r: r.palette.name)
 
     return best[0].image.convert("RGBA"), notes
+
+
+# ---------------------------------------------------------------------------
+# Preview endpoint — dry-run on a single file, returns per-step images
+# ---------------------------------------------------------------------------
+
+@router.post("/preview")
+async def preview_pipeline(
+    file: UploadFile = File(...),
+    steps: str = Form(...),
+):
+    """
+    Dry-run the pipeline on a single file (no palette saving, no disk writes).
+    Returns an ordered list of preview frames: original + result after each step.
+
+    Each frame:
+      { type, label, image (base64 PNG | null), palette (hex[] | null), error (str | null) }
+    """
+    try:
+        parsed_steps = json.loads(steps)
+    except Exception:
+        raise HTTPException(400, "steps must be valid JSON")
+
+    data = await file.read()
+    try:
+        img = Image.open(io.BytesIO(data)).convert("RGBA")
+    except Exception as e:
+        raise HTTPException(400, f"Cannot open image: {e}")
+
+    stem = Path(file.filename).stem
+
+    previews = [{
+        "type":    "original",
+        "label":   "original",
+        "image":   pil_to_b64(img),
+        "palette": None,
+        "error":   None,
+    }]
+
+    extracted_palette = None
+    tmp_pal_dir = Path(tempfile.mkdtemp(prefix="porypal_preview_"))
+
+    try:
+        for step in parsed_steps:
+            stype = step.get("type", "unknown")
+            try:
+                if stype == "extract":
+                    # Never save during preview
+                    dry_step = {**step, "save_palette": False}
+                    img, extracted_palette = _run_extract_step(img, stem, dry_step, tmp_pal_dir)
+                    space = step.get("color_space", "oklab")
+                    previews.append({
+                        "type":    "extract",
+                        "label":   f"extract ({space})",
+                        "image":   pil_to_b64(img),
+                        "palette": [c.to_hex() for c in extracted_palette.colors] if extracted_palette else [],
+                        "error":   None,
+                    })
+
+                elif stype == "tileset":
+                    preset_id = step.get("preset_id", "")
+                    preset    = load_preset(preset_id) if preset_id else None
+                    preset_name = preset["name"] if preset else preset_id
+                    img = _run_tileset_step(img, step)
+                    previews.append({
+                        "type":    "tileset",
+                        "label":   f"tileset → {preset_name}",
+                        "image":   pil_to_b64(img),
+                        "palette": None,
+                        "error":   None,
+                    })
+
+                elif stype == "convert":
+                    img, notes = _run_convert_step(img, step, extracted_palette)
+                    if step.get("palette_source") == "extracted":
+                        label = "convert (extracted pal)"
+                    elif step.get("selected_palettes"):
+                        first = step["selected_palettes"][0].replace(".pal", "")
+                        rest  = len(step["selected_palettes"]) - 1
+                        label = f"convert → {first}" + (f" +{rest}" if rest else "")
+                    else:
+                        label = "convert"
+                    previews.append({
+                        "type":    "convert",
+                        "label":   label,
+                        "image":   pil_to_b64(img),
+                        "palette": None,
+                        "error":   notes or None,
+                    })
+
+                else:
+                    previews.append({
+                        "type":    stype,
+                        "label":   stype,
+                        "image":   None,
+                        "palette": None,
+                        "error":   f"Unknown step type: {stype}",
+                    })
+
+            except Exception as e:
+                previews.append({
+                    "type":    stype,
+                    "label":   stype,
+                    "image":   None,
+                    "palette": None,
+                    "error":   str(e),
+                })
+                # Continue — don't abort remaining steps, show all errors
+
+    finally:
+        shutil.rmtree(tmp_pal_dir, ignore_errors=True)
+
+    return {"previews": previews, "filename": file.filename}
 
 
 # ---------------------------------------------------------------------------
@@ -215,10 +327,10 @@ def _run_convert_step(
 # ---------------------------------------------------------------------------
 
 def _execute_job(job_id: str, file_data: list[tuple[str, bytes]], steps: list[dict]) -> None:
-    work_dir = Path(tempfile.mkdtemp(prefix=f"porypal_{job_id}_"))
-    out_dir  = work_dir / "processed"
-    pal_dir  = work_dir / "palettes"
-    out_dir.mkdir()
+    work_dir    = Path(tempfile.mkdtemp(prefix=f"porypal_{job_id}_"))
+    sprites_dir = work_dir / "sprites"    # processed images go here
+    pal_dir     = work_dir / "palettes"   # extracted .pal files go here
+    sprites_dir.mkdir()
     pal_dir.mkdir()
 
     with _jobs_lock:
@@ -248,7 +360,7 @@ def _execute_job(job_id: str, file_data: list[tuple[str, bytes]], steps: list[di
                         result["notes"] = notes
                         result["status"] = "conflict" if "conflict" in notes else "ok"
 
-            out_path = out_dir / f"{stem}_processed{ext}"
+            out_path = sprites_dir / f"{stem}_processed{ext}"
             img.save(str(out_path), format="PNG")
 
         except Exception as e:
@@ -260,15 +372,45 @@ def _execute_job(job_id: str, file_data: list[tuple[str, bytes]], steps: list[di
             _jobs[job_id]["results"].append(result)
             _jobs[job_id]["done"] = i + 1
 
-    # Build zip
+    # ── Copy loaded palettes used by convert steps into pal_dir ─────────────
+    # Extract steps already write to pal_dir directly. Convert steps that use
+    # loaded palettes don't — collect those names and copy the source files in.
+    already_in_pal_dir = {f.name for f in pal_dir.glob("*.pal")}
+    for step in steps:
+        if step.get("type") == "convert" and step.get("palette_source") == "loaded":
+            for pal_name in step.get("selected_palettes", []):
+                if pal_name in already_in_pal_dir:
+                    continue
+                src_path = state.palette_manager.get_path(pal_name)
+                if src_path and src_path.exists():
+                    dest = pal_dir / pal_name
+                    dest.write_bytes(src_path.read_bytes())
+                    already_in_pal_dir.add(pal_name)
+
+    # ── Build zip with organised structure ──────────────────────────────────
+    results_snapshot = _jobs[job_id]["results"]
+
     zip_path = work_dir / "results.zip"
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
-        for f in sorted(out_dir.glob("*")):
-            zf.write(f, f"processed/{f.name}")
+        # sprites/
+        for f in sorted(sprites_dir.glob("*")):
+            zf.write(f, f"sprites/{f.name}")
+        # palettes/
         for f in sorted(pal_dir.glob("*.pal")):
             zf.write(f, f"palettes/{f.name}")
-        summary = json.dumps(_jobs[job_id]["results"], indent=2)
-        zf.writestr("summary.json", summary)
+        # manifest.json
+        manifest = {
+            "porypal_version": PORYPAL_VERSION,
+            "steps": steps,
+            "summary": {
+                "total":    len(results_snapshot),
+                "ok":       sum(1 for r in results_snapshot if r["status"] == "ok"),
+                "conflict": sum(1 for r in results_snapshot if r["status"] == "conflict"),
+                "error":    sum(1 for r in results_snapshot if r["status"] == "error"),
+            },
+            "files": results_snapshot,
+        }
+        zf.writestr("manifest.json", json.dumps(manifest, indent=2))
 
     with _jobs_lock:
         _jobs[job_id]["status"]   = "done"
@@ -283,7 +425,7 @@ def _execute_job(job_id: str, file_data: list[tuple[str, bytes]], steps: list[di
 async def run_pipeline(
     background_tasks: BackgroundTasks,
     files: list[UploadFile] = File(...),
-    steps: str = Form(...),   # JSON-encoded list of step dicts
+    steps: str = Form(...),
 ):
     """Start a pipeline job. Returns job_id immediately."""
     try:
@@ -294,7 +436,6 @@ async def run_pipeline(
     if not parsed_steps:
         raise HTTPException(400, "steps cannot be empty")
 
-    # Read all file bytes eagerly (UploadFile is consumed in async context)
     file_data: list[tuple[str, bytes]] = []
     for f in files:
         raw = await f.read()

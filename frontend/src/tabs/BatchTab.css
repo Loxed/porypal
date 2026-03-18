@@ -291,6 +291,14 @@
 .stat--conflict { color: #e3b341; }
 .stat--error    { color: var(--danger); }
 
+.progress-zip-hint {
+  font-family: var(--mono); font-size: 10px; color: var(--muted);
+}
+.progress-zip-hint code {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 0 4px; border-radius: 3px;
+}
+
 .progress-results {
   display: flex; flex-direction: column; gap: 2px;
   max-height: 200px; overflow-y: auto;
@@ -307,3 +315,132 @@
 .pres-icon { flex-shrink: 0; display: flex; align-items: center; }
 .pres-file { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pres-notes { font-size: 10px; color: inherit; opacity: 0.8; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+
+
+/* ════════════════════════════════════════════════════════════════
+   Pipeline preview strip
+   ════════════════════════════════════════════════════════════════ */
+
+.preview-strip-wrap {
+  display: flex; flex-direction: column; gap: 12px;
+  padding: 14px 16px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  animation: fadeIn 0.15s ease;
+}
+
+.preview-strip-header {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.preview-filename {
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+}
+
+/* horizontal scrollable row of cards + arrows */
+.preview-strip {
+  display: flex; align-items: flex-start; gap: 0;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  /* styled scrollbar so it's clearly visible */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border2) var(--surface);
+}
+.preview-strip::-webkit-scrollbar       { height: 6px; }
+.preview-strip::-webkit-scrollbar-track { background: var(--surface); border-radius: 3px; }
+.preview-strip::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+.preview-strip::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+.preview-strip-item {
+  display: flex; align-items: flex-start; gap: 0; flex-shrink: 0;
+}
+
+.preview-arrow {
+  font-family: var(--mono); font-size: 14px; color: var(--border2);
+  padding: 0 10px;
+  margin-top: 66px; /* vertically centres against card image */
+  flex-shrink: 0; user-select: none;
+}
+
+/* ── Individual card ── */
+.preview-card {
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  width: 148px; flex-shrink: 0;
+}
+
+.preview-card-img-wrap {
+  width: 148px; height: 120px;
+  background: repeating-conic-gradient(#1c2330 0% 25%, #161b22 0% 50%) 0 0/12px 12px;
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--card-accent, var(--border));
+  border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.preview-card-img-wrap:hover {
+  border-color: var(--card-accent, var(--border2));
+  box-shadow: 0 0 0 1px var(--card-accent, var(--border2));
+}
+
+.preview-card--error .preview-card-img-wrap {
+  border-color: var(--danger);
+  border-top-color: var(--danger);
+  background: rgba(248,81,73,0.06);
+}
+
+.preview-card-img {
+  max-width: 100%; max-height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  display: block;
+}
+
+.preview-card-placeholder {
+  font-family: var(--mono); font-size: 28px;
+  color: var(--danger); opacity: 0.6;
+}
+
+.preview-card-label {
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  text-align: center;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  width: 100%; padding: 0 4px;
+  line-height: 1.3;
+}
+
+.preview-card-error {
+  font-family: var(--mono); font-size: 10px; color: var(--danger);
+  text-align: center; line-height: 1.4;
+  width: 100%; padding: 0 4px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.preview-card-warn {
+  font-family: var(--mono); font-size: 10px; color: #e3b341;
+  text-align: center; line-height: 1.4;
+  width: 100%; padding: 0 4px;
+}
+
+/* palette swatch row shown under extract cards */
+.preview-palette-row {
+  display: flex; gap: 2px; width: 100%; height: 8px;
+  border-radius: 3px; overflow: hidden;
+}
+.preview-palette-dot {
+  flex: 1; height: 100%; min-width: 5px;
+  cursor: default;
+  transition: transform 0.1s;
+}
+.preview-palette-dot:hover { transform: scaleY(1.6); }
+
+/* loading state before first fetch */
+.preview-strip-loading {
+  display: flex; align-items: center; justify-content: center;
+  height: 120px;
+}
+.preview-strip-loading-text {
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+}

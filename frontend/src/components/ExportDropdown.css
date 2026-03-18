@@ -1,0 +1,117 @@
+/* frontend/src/components/ExportDropdown.css */
+
+.export-dropdown {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.btn-export {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.btn-export:hover,
+.btn-export.open {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.export-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  z-index: 200;
+  min-width: 190px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 8px;
+  gap: 4px;
+}
+
+.export-rename {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 4px;
+}
+
+.export-rename-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.export-rename-input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 5px 8px;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+.export-rename-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.export-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 2px 0;
+}
+
+.export-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  padding: 6px 8px;
+  background: transparent;
+  border: none;
+  border-radius: calc(var(--radius) - 1px);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s, color 0.1s;
+}
+.export-item:hover:not(:disabled) {
+  background: var(--surface2);
+  color: var(--text);
+}
+.export-item--save:hover:not(:disabled) {
+  color: var(--best);
+}
+.export-item--save.saved {
+  color: var(--best);
+  pointer-events: none;
+}
+.export-item--save.error {
+  color: var(--danger);
+  pointer-events: none;
+}
+.export-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

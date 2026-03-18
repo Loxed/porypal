@@ -1,11 +1,12 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import './ExtractTab.css'
 import { DropZone } from '../components/DropZone'
 import { ZoomableImage } from '../components/ZoomableImage'
 import { PaletteStrip } from '../components/PaletteStrip'
 import { BgColorPicker } from '../components/BgColorPicker'
+import { ExportDropdown } from '../components/ExportDropdown'
 import { useFetch } from '../hooks/useFetch'
-import { Info, Pipette, PaintBucket, X, Eclipse, Palette, Scan, ChevronDown, Download, Save, Check } from 'lucide-react'
+import { Info, Pipette, PaintBucket, Eclipse, Palette, Scan } from 'lucide-react'
 import { ColorSwatch } from '../components/ColorSwatch'
 import { Modal } from '../components/Modal'
 import { detectBgColor } from '../utils'
@@ -14,101 +15,6 @@ const API = '/api'
 const GBA_TRANSPARENT = '#73C5A4'
 const MAX_COLORS = 16
 const MAX_EXTRA_COLORS = MAX_COLORS - 1
-
-
-// ---------------------------------------------------------------------------
-// Export dropdown — download .pal or save to app with optional rename
-// ---------------------------------------------------------------------------
-function ExportDropdown({ result }) {
-  const [open, setOpen] = useState(false)
-  const [saveName, setSaveName] = useState('')
-  const [saveState, setSaveState] = useState('idle') // idle | saving | saved | error
-  const ref = useRef()
-
-  useEffect(() => {
-    if (result) setSaveName(`${result.name}_${result.color_space}`)
-  }, [result?.name, result?.color_space])
-
-  useEffect(() => {
-    if (!open) return
-    const handler = (e) => { if (!ref.current?.contains(e.target)) setOpen(false) }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [open])
-
-  const handleDownload = () => {
-    const blob = new Blob([result.pal_content], { type: 'text/plain' })
-    const a = document.createElement('a')
-    a.href = URL.createObjectURL(blob)
-    a.download = `${saveName || result.name}.pal`
-    a.click()
-    setOpen(false)
-  }
-
-  const handleSave = async () => {
-    if (saveState === 'saving') return
-    setSaveState('saving')
-    try {
-      const fd = new FormData()
-      fd.append('name', saveName || `${result.name}_${result.color_space}`)
-      fd.append('pal_content', result.pal_content)
-      const res = await fetch(`${API}/extract/save`, { method: 'POST', body: fd })
-      if (!res.ok) throw new Error()
-      setSaveState('saved')
-      setTimeout(() => { setSaveState('idle'); setOpen(false) }, 1200)
-    } catch {
-      setSaveState('error')
-      setTimeout(() => setSaveState('idle'), 2000)
-    }
-  }
-
-  return (
-    <div className="export-dropdown" ref={ref}>
-      <button
-        className={`btn-export ${open ? 'open' : ''}`}
-        onClick={() => setOpen(o => !o)}
-      >
-        export <ChevronDown size={10} />
-      </button>
-
-      {open && (
-        <div className="export-menu">
-          <div className="export-rename">
-            <label className="export-rename-label">name</label>
-            <input
-              className="export-rename-input"
-              value={saveName}
-              onChange={e => setSaveName(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleSave()}
-              spellCheck={false}
-              autoFocus
-            />
-          </div>
-
-          <div className="export-divider" />
-
-          <button className="export-item" onClick={handleDownload}>
-            <Download size={12} />
-            download .pal
-          </button>
-
-          <button
-            className={`export-item export-item--save ${saveState}`}
-            onClick={handleSave}
-            disabled={saveState === 'saving'}
-          >
-            {saveState === 'saved'
-              ? <><Check size={12} /> saved to library</>
-              : saveState === 'error'
-              ? <><X size={12} /> failed</>
-              : <><Save size={12} /> save to library</>
-            }
-          </button>
-        </div>
-      )}
-    </div>
-  )
-}
 
 // ---------------------------------------------------------------------------
 // Help modal
@@ -281,7 +187,6 @@ export function ExtractTab() {
     })
   }
 
-  // Called by ZoomableImage when picking is active and user clicks a pixel
   const handlePick = (hex) => {
     setBgColor(hex); setBgMode('pick'); setPicking(false)
   }
@@ -373,7 +278,10 @@ export function ExtractTab() {
                 <div className="extract-preview-section">
                   <div className="extract-section-header">
                     <p className="section-label">oklab — recommended</p>
-                    <ExportDropdown result={resultOklab} />
+                    <ExportDropdown
+                      name={`${resultOklab.name}_oklab`}
+                      palContent={resultOklab.pal_content}
+                    />
                   </div>
                   <ZoomableImage src={previewOklab} alt="oklab preview" />
                   <div className="palette-strip-wrap">
@@ -386,7 +294,10 @@ export function ExtractTab() {
                 <div className="extract-preview-section">
                   <div className="extract-section-header">
                     <p className="section-label">rgb</p>
-                    <ExportDropdown result={resultRgb} />
+                    <ExportDropdown
+                      name={`${resultRgb.name}_rgb`}
+                      palContent={resultRgb.pal_content}
+                    />
                   </div>
                   <ZoomableImage src={previewRgb} alt="rgb preview" />
                   <div className="palette-strip-wrap">

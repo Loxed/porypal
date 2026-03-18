@@ -4,6 +4,7 @@ import { DropZone } from '../components/DropZone'
 import { ZoomableImage } from '../components/ZoomableImage'
 import { PaletteStrip } from '../components/PaletteStrip'
 import { Modal } from '../components/Modal'
+import { ExportDropdown } from '../components/ExportDropdown'
 import { remapToShinyPalette, detectBgColor, downloadBlob } from '../utils'
 import { Download, Upload } from 'lucide-react'
 
@@ -26,9 +27,8 @@ function parsePalFile(text) {
     const parts = line.split(/\s+/)
     if (parts.length >= 3) {
       const r = parseInt(parts[0]), g = parseInt(parts[1]), b = parseInt(parts[2])
-      if (!isNaN(r) && !isNaN(g) && !isNaN(b)) {
+      if (!isNaN(r) && !isNaN(g) && !isNaN(b))
         colors.push(`#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`)
-      }
     }
   }
   return colors
@@ -46,10 +46,7 @@ function PalettePickerModal({ palettes, current, onPick, onClose }) {
     const reader = new FileReader()
     reader.onload = ev => {
       const colors = parsePalFile(ev.target.result)
-      if (colors.length > 0) {
-        onPick({ name: f.name, colors })
-        onClose()
-      }
+      if (colors.length > 0) { onPick({ name: f.name, colors }); onClose() }
     }
     reader.readAsText(f)
     e.target.value = ''
@@ -58,11 +55,7 @@ function PalettePickerModal({ palettes, current, onPick, onClose }) {
   return (
     <Modal title="select palette" onClose={onClose} actions={
       <>
-        <button
-          className="btn-primary-sm"
-          onClick={() => fileRef.current?.click()}
-          title="import a .pal file directly"
-        >
+        <button className="btn-primary-sm" onClick={() => fileRef.current?.click()}>
           <Upload size={11} /> import .pal
         </button>
         <input ref={fileRef} type="file" accept=".pal" style={{ display: 'none' }} onChange={handleImportFile} />
@@ -91,9 +84,6 @@ function PalettePickerModal({ palettes, current, onPick, onClose }) {
   )
 }
 
-// ---------------------------------------------------------------------------
-// Shared palette pick row
-// ---------------------------------------------------------------------------
 function PalPickRow({ label, palette, onPick }) {
   return (
     <div className="field">
@@ -172,7 +162,6 @@ function ApplyShinyMode({ palettes }) {
       <div className="shiny-layout">
         <div className="shiny-left">
           <DropZone onFile={handleSprite} label="Drop sprite" />
-
           <PalPickRow label="normal palette" palette={normalPal} onPick={() => setPickingFor('normal')} />
           <PalPickRow label="shiny palette"  palette={shinyPal}  onPick={() => setPickingFor('shiny')} />
 
@@ -187,9 +176,7 @@ function ApplyShinyMode({ palettes }) {
         </div>
 
         <div className="shiny-right">
-          {!spriteB64 && (
-            <div className="empty-state">drop a sprite and select palettes to preview</div>
-          )}
+          {!spriteB64 && <div className="empty-state">drop a sprite and select palettes to preview</div>}
           {spriteB64 && (
             <div className="shiny-previews">
               <div className="shiny-preview-section">
@@ -197,18 +184,14 @@ function ApplyShinyMode({ palettes }) {
                 {normalPreview
                   ? <ZoomableImage src={normalPreview} alt="normal" />
                   : <div className="empty-state" style={{ minHeight: 120 }}>pick normal palette</div>}
-                {normalPal && (
-                  <PaletteStrip colors={normalPal.colors} usedIndices={normalPal.colors.map((_,i) => i)} checkSize="100%" />
-                )}
+                {normalPal && <PaletteStrip colors={normalPal.colors} usedIndices={normalPal.colors.map((_,i) => i)} checkSize="100%" />}
               </div>
               <div className="shiny-preview-section">
                 <p className="section-label">shiny</p>
                 {shinyPreview
                   ? <ZoomableImage src={shinyPreview} alt="shiny" />
                   : <div className="empty-state" style={{ minHeight: 120 }}>pick shiny palette</div>}
-                {shinyPal && (
-                  <PaletteStrip colors={shinyPal.colors} usedIndices={shinyPal.colors.map((_,i) => i)} checkSize="100%" />
-                )}
+                {shinyPal && <PaletteStrip colors={shinyPal.colors} usedIndices={shinyPal.colors.map((_,i) => i)} checkSize="100%" />}
               </div>
             </div>
           )}
@@ -342,12 +325,18 @@ function ExtractMatchedMode() {
         {result && (
           <div className="shiny-previews">
             <div className="shiny-preview-section">
-              <p className="section-label">normal — {result.normal.colors.length} colors</p>
+              <div className="shiny-preview-header">
+                <p className="section-label">normal — {result.normal.colors.length} colors</p>
+                <ExportDropdown name={result.normal.name} palContent={result.normal.pal_content} />
+              </div>
               {normalPreview && <ZoomableImage src={normalPreview} alt="normal preview" />}
               <PaletteStrip colors={result.normal.colors} usedIndices={result.normal.colors.map((_,i) => i)} checkSize="100%" />
             </div>
             <div className="shiny-preview-section">
-              <p className="section-label">shiny — {result.shiny.colors.length} colors</p>
+              <div className="shiny-preview-header">
+                <p className="section-label">shiny — {result.shiny.colors.length} colors</p>
+                <ExportDropdown name={result.shiny.name + '_shiny'} palContent={result.shiny.pal_content} />
+              </div>
               {shinyPreview && <ZoomableImage src={shinyPreview} alt="shiny preview" />}
               <PaletteStrip colors={result.shiny.colors} usedIndices={result.shiny.colors.map((_,i) => i)} checkSize="100%" />
             </div>

@@ -5,6 +5,7 @@ import { PaletteStrip } from './PaletteStrip'
 import { BgColorCell } from './BgColorCell'
 import { BgColorPicker } from './BgColorPicker'
 import { ViewToggle } from './ViewToggle'
+import { ExportDropdown } from './ExportDropdown'
 import { detectBgColor, downloadBlob, remapToShinyPalette } from '../utils'
 import './VariantsPanel.css'
 
@@ -44,14 +45,6 @@ function parsePalFile(text) {
     }
   }
   return colors
-}
-
-function downloadPal(palContent, filename) {
-  const blob = new Blob([palContent], { type: 'text/plain' })
-  const a = document.createElement('a')
-  a.href = URL.createObjectURL(blob)
-  a.download = filename.endsWith('.pal') ? filename : `${filename}.pal`
-  a.click()
 }
 
 // ---------------------------------------------------------------------------
@@ -378,9 +371,7 @@ function ExtractMode({ nColors, outputBg, outputBgMode, setOutputBg, setOutputBg
                           <span className="variant-card-name">{r.name}</span>
                           {isRef && <span className="item-card-ref-badge">ref</span>}
                           <SlotMatchBadge match={match} />
-                          <button className="sprite-queue-btn" onClick={() => downloadPal(r.pal_content, r.name)}>
-                            <Download size={11} />
-                          </button>
+                          <ExportDropdown name={r.name} palContent={r.pal_content} />
                         </div>
                         <PaletteStrip colors={r.colors} usedIndices={r.colors.map((_, i) => i)} checkSize="50%" />
                         <SlotMatchWarning match={match} />
@@ -396,9 +387,7 @@ function ExtractMode({ nColors, outputBg, outputBgMode, setOutputBg, setOutputBg
                       <PaletteStrip colors={r.colors} usedIndices={r.colors.map((_, i) => i)} checkSize="100%" />
                       <ZoomableImage src={r.preview} alt={r.name} />
                       <SlotMatchWarning match={match} />
-                      <button className="btn-secondary" onClick={() => downloadPal(r.pal_content, r.name)}>
-                        <Download size={11} /> download .pal
-                      </button>
+                      <ExportDropdown name={r.name} palContent={r.pal_content} />
                     </>
                   )}
                 </div>

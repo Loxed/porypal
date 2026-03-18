@@ -8,7 +8,9 @@
 - [x] Import a sprite, click extract -- gets a palette back
 - [x] Transparent color is auto-detected correctly
 - [x] Both Oklab and RGB previews render
-- [x] Download `.pal` works
+- [x] Export dropdown opens on both oklab and rgb results
+- [x] Download `.pal` works (from export dropdown)
+- [x] Rename input in dropdown changes the saved filename
 - [x] Save to library works (check `palettes/user/` on disk)
 
 **Apply Palette**
@@ -27,23 +29,28 @@
 - [x] Drop multiple sprites -- grouping by silhouette works
 - [x] Palette strip shows correct trimmed colors (no trailing bg dupes)
 - [x] Drag sprite between groups triggers re-extract
-> drag target is now the entire group section, not just the header
 - [x] Re-extract button preserves current group structure, only updates palettes
-> first extract still does fresh silhouette grouping; adding new files resets groups
 - [x] Threshold slider triggers re-extract after first extract
 - [x] Per-group download zip button
-> download icon in group header; zip contains `/palettes` + `/sprites` + manifest
+- [x] Search/filter bar with wildcard support
 
-**Groups → Variants**
+**Groups → Variants (extract mode)**
 - [x] Drop 3 recolored sprites, set reference -- produces 3 index-aligned palettes
 - [x] Palette strip shows correct trimmed colors
 - [x] Download zip works
 - [x] Zip organised into `/palettes` and `/sprites` with manifest
+- [x] Export dropdown on each result card (download .pal + save to library)
+
+**Groups → Variants (apply mode)**
+- [x] Drop a base sprite, pick N palettes, set ref -- renders N recolored sprites
+- [x] Download all as zip works
 
 **Shiny → Create Palette Pair (mode 2)**
 - [x] Drop normal + shiny sprite -- produces 2 palettes
 - [x] Palettes are index-aligned
 - [x] Download zip works -- includes `/palettes` and `/sprites` with manifest
+- [x] Export dropdown on normal palette result
+- [x] Export dropdown on shiny palette result (saved with `_shiny` suffix)
 
 **Shiny → Create Shiny Sprite (mode 1)**
 - [x] Drop sprite, pick normal + shiny palette from loaded palettes or import .pal directly
@@ -82,7 +89,6 @@
 - [x] Delete a user palette -- gone from list and disk
 - [ ] Browse library -- tree loads
 - [ ] Import from library -- appears in user palettes
-> full overhaul needed (see backlog)
 
 ---
 
@@ -90,11 +96,14 @@
 
 - [x] Extract tab: bg picker (auto/default/custom/pipette all work)
 - [x] Extract tab: help modal opens and closes (Escape key too)
+- [x] Extract tab: export dropdown (download + save to library)
 - [x] Apply palette tab: bg picker + pipette works, palette manager modal opens/closes
 - [x] Items tab: bg picker for output transparent works
 - [x] Items tab: grid/list toggle works
 - [x] Variants: bg picker works, grid/list toggle works
+- [x] Variants: export dropdown on result cards works
 - [x] Shiny: palette picker modal opens, selects, closes, import .pal works
+- [x] Shiny: export dropdown on extract matched results
 - [x] Tileset: help modal opens, save preset modal opens + saves
 - [x] Pipeline: batch step still works end to end
 
@@ -112,6 +121,7 @@
 - [x] `BgColorPicker` component
 - [x] `Modal` shell component
 - [x] `ViewToggle` component
+- [x] `ExportDropdown` component (extract + download .pal + save to library)
 - [x] Consolidate shared CSS into `App.css`
 
 ---
@@ -123,15 +133,17 @@
 - [x] Re-extract should preserve group structure, only update palettes
 - [x] Threshold slider triggers re-extract after first extract
 - [x] Per-group download zip button
-- [x] Added search/filter feature 
+- [x] Search/filter feature with wildcard support
 
 ### Variants
 - [x] Zip: organise into `/palettes` and `/sprites` with manifest
-- [ ] UI: replace star-as-reference with explicit "set as reference" button
+- [x] UI: set-ref button + ref badge replacing star
+- [x] Export dropdown on each result card
 
 ### Shiny
 - [x] Mode 1 (apply): pick from loaded palettes or import .pal directly; download zip with `/sprites` + `/palettes` + manifest
 - [x] Mode 2 (extract): download zip with `/sprites` + `/palettes` + manifest
+- [x] Mode 2: export dropdown on each extracted palette
 
 ### Tileset
 - [x] Grid lines: thicker, contrasting color, better hover state

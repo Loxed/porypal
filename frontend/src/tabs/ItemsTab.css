@@ -84,9 +84,6 @@
   border-radius: var(--radius); padding: 3px 8px;
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
-.spinning { animation: spin 0.7s linear infinite; }
-
 /* ── Mode switcher ── */
 .items-mode-switcher {
   display: flex; gap: 3px; margin-bottom: 20px;

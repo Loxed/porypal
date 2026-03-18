@@ -43,13 +43,34 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
 .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; gap: 12px; color: var(--muted); font-size: 13px; text-align: center; }
 .error-msg { font-family: var(--mono); font-size: 12px; color: var(--danger); }
 .spinner { width: 22px; height: 22px; border: 2px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+
+/* single shared keyframe — referenced by .spinner and .spinning */
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* shared buttons used in multiple tabs */
+/* .spinning is used on icon buttons (e.g. reload) that spin while loading */
+.spinning { animation: spin 0.7s linear infinite; }
+
+/* pipette pick hint — shown next to image label when picking is active */
+.pick-hint { color: #EF9F27; font-size: 10px; margin-left: 8px; }
+
+/* shared buttons */
 .btn-primary { padding: 10px 18px; background: var(--accent); color: var(--bg); border: none; border-radius: var(--radius); font-family: var(--mono); font-size: 13px; font-weight: 500; cursor: pointer; transition: opacity 0.15s, transform 0.1s; width: 100%; }
 .btn-primary:hover:not(:disabled) { opacity: 0.88; }
 .btn-primary:active:not(:disabled) { transform: scale(0.98); }
 .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* inline / compact primary — used in toolbars, step headers, etc. */
+.btn-primary-sm {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 12px;
+  background: var(--accent); color: var(--bg);
+  border: none; border-radius: var(--radius);
+  font-family: var(--mono); font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: opacity 0.15s; white-space: nowrap;
+}
+.btn-primary-sm:hover:not(:disabled) { opacity: 0.85; }
+.btn-primary-sm:disabled { opacity: 0.35; cursor: not-allowed; }
+
 .btn-secondary { padding: 8px 14px; background: transparent; color: var(--text); border: 1px solid var(--border2); border-radius: var(--radius); font-family: var(--mono); font-size: 12px; cursor: pointer; transition: border-color 0.15s; width: 100%; }
 .btn-secondary:hover { border-color: var(--accent); }
 .btn-ghost { padding: 4px 8px; background: transparent; border: none; color: var(--muted); font-family: var(--mono); font-size: 11px; cursor: pointer; }
@@ -63,7 +84,6 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); font
 .field-label { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
 .field-input { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: var(--mono); font-size: 13px; padding: 8px 10px; width: 100%; transition: border-color 0.15s; }
 .field-input:focus { outline: none; border-color: var(--accent); }
-
 
 .logo {
   display: flex;

@@ -307,17 +307,3 @@
 .pres-icon { flex-shrink: 0; display: flex; align-items: center; }
 .pres-file { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pres-notes { font-size: 10px; color: inherit; opacity: 0.8; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
-
-/* ── Shared ── */
-.btn-primary-sm {
-  display: flex; align-items: center; gap: 5px;
-  padding: 5px 12px;
-  background: var(--accent); color: var(--bg);
-  border: none; border-radius: var(--radius);
-  font-family: var(--mono); font-size: 12px; font-weight: 500;
-  cursor: pointer; transition: opacity 0.15s; white-space: nowrap;
-}
-.btn-primary-sm:hover { opacity: 0.88; }
-
-@keyframes spin { to { transform: rotate(360deg); } }
-.spinning { animation: spin 0.7s linear infinite; }

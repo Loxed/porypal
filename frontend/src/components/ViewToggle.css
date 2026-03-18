@@ -1,0 +1,14 @@
+.view-toggle { display: flex; gap: 2px; }
+
+.view-btn {
+  width: 28px; height: 28px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: color 0.1s, border-color 0.1s, background 0.1s;
+}
+.view-btn:hover  { color: var(--text); border-color: var(--border2); }
+.view-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(88,166,255,0.08); }

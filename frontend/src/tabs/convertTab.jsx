@@ -7,21 +7,14 @@ import { ResultCard } from '../components/ResultCard'
 import { PaletteStrip } from '../components/PaletteStrip'
 import { useFetch } from '../hooks/useFetch'
 import { downloadBlob, detectBgColor} from '../utils'
-import { X, Upload, Trash2, RefreshCw, Layers, Grid, List } from 'lucide-react'
+import { X, Upload, Trash2, RefreshCw, Layers } from 'lucide-react'
 import { BgColorPicker } from '../components/BgColorPicker'
 import { Modal } from '../components/Modal'
+import { ViewToggle } from '../components/ViewToggle'
 
 
 const API = '/api'
 const GBA_TRANSPARENT = '#73C5A4'
-
-function GridIcon() {
-  return <Grid size={12} fill="currentColor" />
-}
-
-function ListIcon() {
-  return <List size={12} fill="currentColor" />
-}
 
 // ---- Palette Management Modal ----
 function PaletteModal({ palettes, selected, onToggle, onSelectAll, onDeselectAll, onReload, onUpload, onDelete, onClose, reloading }) {
@@ -89,6 +82,7 @@ export function ConvertTab() {
 
   const [bgColor, setBgColor] = useState(GBA_TRANSPARENT)
   const [bgMode, setBgMode]   = useState('auto')
+  const [picking, setPicking] = useState(false)
 
   const [palettes, setPalettes] = useState([])
   const [selectedPalettes, setSelectedPalettes] = useState(new Set())
@@ -236,13 +230,27 @@ export function ConvertTab() {
                   onCommit={color => convert(file, color)}
                   showAuto={!!originalB64}
                   onAutoDetect={() => detectBgColor(originalB64)}
+                  showPipette={!!originalB64}
+                  picking={picking}
+                  onPipetteToggle={() => setPicking(p => !p)}
                 />
               </div>
 
               {/* ── Original preview ── */}
               <div className="original-preview">
-                <p className="section-label">original</p>
-                <ZoomableImage src={originalB64} alt="original" />
+                <p className="section-label">
+                  original
+                  {picking && <span className="pick-hint"> · click to pick bg color</span>}
+                </p>
+                <ZoomableImage
+                  src={originalB64}
+                  alt="original"
+                  picking={picking}
+                  onPick={hex => {
+                    setBgColor(hex); setBgMode('pick'); setPicking(false)
+                    convert(file, hex)
+                  }}
+                />
               </div>
             </>
           )}
@@ -277,20 +285,7 @@ export function ConvertTab() {
                 <span>palettes</span>
                 <span className="palette-mgr-badge">{selectedPalettes.size}/{palettes.length}</span>
               </button>
-              {results.length > 0 && (
-                <div className="view-toggle">
-                  <button
-                    className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
-                    onClick={() => setViewMode('grid')}
-                    title="grid view"
-                  ><GridIcon /></button>
-                  <button
-                    className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
-                    onClick={() => setViewMode('list')}
-                    title="list view"
-                  ><ListIcon /></button>
-                </div>
-              )}
+              {results.length > 0 && <ViewToggle value={viewMode} onChange={setViewMode} />}
             </div>
           </div>
 

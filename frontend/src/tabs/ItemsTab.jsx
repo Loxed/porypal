@@ -5,14 +5,12 @@ import { BgColorPicker } from '../components/BgColorPicker'
 import { GroupSection } from '../components/GroupSection'
 import { VariantsPanel } from '../components/VariantsPanel'
 import { downloadBlob, detectBgColor } from '../utils'
-import { X, Download, Grid, List } from 'lucide-react'
+import { X, Download } from 'lucide-react'
+import { ViewToggle } from '../components/ViewToggle'
 
 const API = '/api'
 const GBA_TRANSPARENT = '#73C5A4'
 const AUTO_EXTRACT_DELAY_MS = 900
-
-function GridIcon() { return <Grid size={12} fill="currentColor" /> }
-function ListIcon()  { return <List size={12} fill="currentColor" /> }
 
 function fileToB64(file) {
   return new Promise(resolve => {
@@ -357,10 +355,7 @@ export function ItemsTab() {
               {results && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   {loading && <span className="auto-extract-indicator">re-extracting…</span>}
-                  <div className="view-toggle">
-                    <button className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`} onClick={() => setViewMode('grid')}><GridIcon /></button>
-                    <button className={`view-btn ${viewMode === 'list' ? 'active' : ''}`} onClick={() => setViewMode('list')}><ListIcon /></button>
-                  </div>
+                  <ViewToggle value={viewMode} onChange={setViewMode} />
                 </div>
               )}
             </div>

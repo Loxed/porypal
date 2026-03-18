@@ -4,6 +4,7 @@ import { ZoomableImage } from './ZoomableImage'
 import { PaletteStrip } from './PaletteStrip'
 import { BgColorCell } from './BgColorCell'
 import { BgColorPicker } from './BgColorPicker'
+import { ViewToggle } from './ViewToggle'
 import { detectBgColor, downloadBlob } from '../utils'
 import './VariantsPanel.css'
 
@@ -176,16 +177,7 @@ export function VariantsPanel({ nColors, outputBg, outputBgMode, setOutputBg, se
           <span className="items-count">
             {results ? `${results.results.length} variant${results.results.length !== 1 ? 's' : ''} · ref: ${results.reference}` : ''}
           </span>
-          {results && (
-            <div className="view-toggle">
-              <button className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`} onClick={() => setViewMode('grid')}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-              </button>
-              <button className={`view-btn ${viewMode === 'list' ? 'active' : ''}`} onClick={() => setViewMode('list')}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="4" width="18" height="2"/><rect x="3" y="11" width="18" height="2"/><rect x="3" y="18" width="18" height="2"/></svg>
-              </button>
-            </div>
-          )}
+          {results && <ViewToggle value={viewMode} onChange={setViewMode} />}
         </div>
 
         {!results && !loading && (

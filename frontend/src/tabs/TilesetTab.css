@@ -32,7 +32,7 @@
 .source-tile.selected { background: rgba(74,141,252,0.4); outline: 2px solid #4A8DFC; outline-offset: -1px; }
 .selected-hint { color: var(--accent); font-size: 10px; margin-left: 6px; }
 
-/* output grid = preview */
+/* output grid */
 .output-grid {
   display: grid;
   grid-template-columns: repeat(var(--cols, 9), 1fr);
@@ -63,39 +63,9 @@
 
 /* presets */
 .preset-section { display: flex; flex-direction: column; gap: 8px; }
-.preset-list { display: flex; flex-direction: column; gap: 2px; }
-.preset-row {
-  display: flex; align-items: center; gap: 8px;
-  padding: 6px 8px; border-radius: 4px;
-  border: 1px solid var(--border);
-  cursor: pointer; background: var(--surface2);
-  transition: border-color 0.1s, background 0.1s;
-}
-.preset-row:hover { border-color: var(--border2); background: var(--surface); }
-.preset-row.active { border-color: var(--accent); background: rgba(88,166,255,0.08); }
-.preset-name { font-family: var(--mono); font-size: 12px; color: var(--text); flex: 1; }
-.preset-meta { font-family: var(--mono); font-size: 10px; color: var(--muted); flex-shrink: 0; }
-.preset-delete { background: transparent; border: none; color: var(--muted); cursor: pointer; padding: 2px; display: flex; align-items: center; flex-shrink: 0; opacity: 0; transition: opacity 0.1s, color 0.1s; }
-.preset-row:hover .preset-delete { opacity: 1; }
-.preset-delete:hover { color: var(--danger); }
 .preset-save-btn { display: flex; align-items: center; justify-content: center; gap: 6px; }
 
-/* small primary */
-.btn-primary-sm { padding: 5px 12px; background: var(--accent); color: var(--bg); border: none; border-radius: var(--radius); font-family: var(--mono); font-size: 12px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; white-space: nowrap; }
-.btn-primary-sm:hover:not(:disabled) { opacity: 0.85; }
-.btn-primary-sm:disabled { opacity: 0.35; cursor: not-allowed; }
-
-/* modal */
-.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; display: flex; align-items: center; justify-content: center; }
-.modal-box { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; width: 520px; max-width: 90vw; max-height: 80vh; display: flex; flex-direction: column; overflow: hidden; }
-.modal-sm { width: 360px; }
-.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border); }
-.modal-title { font-family: var(--mono); font-size: 13px; font-weight: 500; }
-.modal-close { background: transparent; border: none; color: var(--muted); cursor: pointer; padding: 2px; display: flex; align-items: center; }
-.modal-close:hover { color: var(--text); }
-.modal-body { padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
-.modal-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
-.modal-note { font-size: 12px; color: var(--muted); font-style: italic; border-left: 2px solid var(--border2); padding-left: 10px; }
+/* modal content — tileset-specific */
 .frame-reference { display: flex; flex-direction: column; gap: 2px; }
 .frame-ref-row { display: flex; align-items: center; gap: 12px; padding: 5px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface2); }
 .frame-ref-idx { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--accent); width: 20px; flex-shrink: 0; }

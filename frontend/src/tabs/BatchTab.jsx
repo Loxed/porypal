@@ -26,7 +26,7 @@ const STEP_DEFAULTS = {
   },
 }
 
-const STEP_LABELS = { extract: 'Extract Palette', tileset: 'Apply Preset', convert: 'Apply Palette' }
+const STEP_LABELS = { extract: 'Extract Palette', tileset: 'Change Tileset', convert: 'Apply Palette' }
 const STEP_COLORS = { extract: 'step--extract', tileset: 'step--tileset', convert: 'step--convert' }
 
 let _stepCounter = 0
@@ -196,7 +196,7 @@ function StepCard({ step, index, total, allSteps, onChange, onMove, onDelete, pa
         <span className="step-title">{STEP_LABELS[step.type]}</span>
         {error && <span className="step-error-hint"><AlertTriangle size={11}/> {error}</span>}
         <button className="step-expand-btn" onClick={() => setExpanded(e => !e)}>
-          {expanded ? 'hide' : 'config'}
+          {expanded ? 'hide' : 'show'}
         </button>
         <button className="step-delete-btn" onClick={() => onDelete(index)}>
           <X size={12}/>
@@ -472,8 +472,8 @@ export function BatchTab() {
           {!showProgress && (
             <div className="add-step-row">
               <span className="add-step-label">add step</span>
-              <button className="add-step-btn add-step-btn--extract" onClick={() => addStep('extract')}>+ extract palette</button>
-              <button className="add-step-btn add-step-btn--tileset" onClick={() => addStep('tileset')}>+ apply preset</button>
+              <button className="add-step-btn add-step-btn--extract" onClick={() => addStep('extract')}>+ extract palettes</button>
+              <button className="add-step-btn add-step-btn--tileset" onClick={() => addStep('tileset')}>+ change tileset</button>
               <button className="add-step-btn add-step-btn--convert" onClick={() => addStep('convert')}>+ apply palette</button>
             </div>
           )}

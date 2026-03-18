@@ -50,10 +50,9 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 
 **Shiny → Create Shiny Palette**
 > UI it terribly designed right now, not using space. make it make sense. we have 1. normal sprite + normal palette + shiny palette which should produce normal and shiny sprites side by side, with download buttons for each (and a zip with both sprites in /sprites and both palettes in /palettes). 2. a bit better, we have normal sprite + shiny sprite which should produce both normal and shiny palettes. same as previous option, allow for dloading sprites and palettes separately or together as a zip. right now its just a mess of buttons and inputs that dont make sense.
-> 
-- [] Drop normal + shiny sprite -- produces 2 palettes
-> Option 2 (Create palette pair) doesnt work, it errors: {"detail":"Method Not Allowed"}
-- [] Palettes are index-aligned (same structure)
+
+- [x] Drop normal + shiny sprite -- produces 2 palettes
+- [x] Palettes are index-aligned (same structure)
 
 **Shiny → Create Shiny Sprite**
 - [x] Drop sprite + normal.pal + shiny.pal -- renders shiny preview correctly
@@ -84,8 +83,7 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 - [x] Add Apply Palette step -- palette picker shows loaded palettes
 > same as above also rename the add step names to match the current thigns we have in the app.
 - [x] Run on a folder -- progress shows, zip downloads
-> currently errors to: ERROR:root:Pipeline [fe2684b9-e4a7-45b7-b00d-2644416623da] error on OW Sprites Gen4/trchar052.png: ImageManager.__init__() takes 1 positional argument but 2 were given probably due to refactoring stuff we did before. somethign to do with config.yaml being removed.
-> we
+
 **Palettes tab**
 - [x] Loaded palettes list shows up
 - [x] Upload a `.pal` file -- appears in list
@@ -126,7 +124,7 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 2 directories, 19 files
 (base) lox@lox-legion:~/projects/pokeemerald-expansion/graphics/pokemon/abomasnow$
 ```
->This is for pokeemerald-expansion. The base game (pokeemrald) doesn't have the exact same structure (no mega folder for example).
+> This is for pokeemerald-expansion. The base game (pokeemerald) doesn't have the exact same structure (no mega folder for example).
 
 > we'll see how we plan this refactor, its not gonna be just a palette library. the palette folder tho, needs it's previously mentioned CRUD features, and we need to make sure the palettes are being loaded and applied correctly in the different features across the app.
 
@@ -136,4 +134,33 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 
 - [x] All 7 tabs load without red errors in devtools
 - [x] Logo click returns to Extract Palette tab
-> We'll add a proper home/dashboard tab later, when everything i s done. this dashboard will have a few showcases of different features and a easy to navigate menu with more explanations of what each feature does and when to use it. for now, the logo just returns us to the extract palette tab, since thats the most basic feature and a good starting point for new users.
+> We'll add a proper home/dashboard tab later, when everything is done. this dashboard will have a few showcases of different features and a easy to navigate menu with more explanations of what each feature does and when to use it. for now, the logo just returns us to the extract palette tab, since thats the most basic feature and a good starting point for new users.
+
+---
+
+## Fixes applied
+
+| # | File | Change |
+|---|------|--------|
+| 1 | `server/api/pipeline.py` | `ImageManager({})` → `ImageManager()` in `_run_convert_step` |
+| 2 | `server/app.py` | Added `shiny` to imports + `app.include_router(shiny.router)` |
+
+## Backlog (not bugs, future work)
+
+- [ ] Download all as zip (Apply Palette) should respect selected/deselected palettes
+- [ ] Apply Palette should auto-reprocess when palettes are loaded/unloaded
+- [ ] Group drag-and-drop should accept drop anywhere on group section, not just header
+- [ ] Groups should persist across re-extracts (only update palettes, not reset structure)
+- [ ] Threshold slider should trigger re-extract after first extract
+- [ ] Per-group download zip button
+- [ ] Variants zip: organise into `/palettes` and `/sprites` with manifest
+- [ ] Variants UI: replace star-as-reference with an explicit "set as reference" button
+- [ ] Shiny UI overhaul (both modes underuse space, missing download options)
+- [ ] Shiny zip: `/sprites` and `/palettes` folders
+- [ ] Tileset: thicker grid lines with contrasting color, better hover state
+- [ ] Tileset download: detect + fill empty slots with bg color
+- [ ] Pipeline: show first-sprite preview per step
+- [ ] Pipeline: rename step labels to match app tab names
+- [ ] Palettes tab: full CRUD (folders, rename, reorder, edit colors)
+- [ ] Palettes tab: palette library overhaul → `porypal_library/`, pokeemerald structure
+- [ ] Dashboard/home tab

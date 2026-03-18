@@ -26,3 +26,9 @@ example/
 palette_library/*
 palettes/user/*
 porypal_dump.md
+CONTEXT_DUMP.md
+
+.venv_path
+porypal_dump.md
+
+porypal_dump.md

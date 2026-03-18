@@ -42,8 +42,7 @@ class ConversionResult:
 class ImageManager:
     """Handles image loading, conversion, and saving. No Qt dependency."""
 
-    def __init__(self, config: dict):
-        self.config = config
+    def __init__(self):
         self._current_image_path: Path | None = None
         self._original_rgba: Image.Image | None = None
         self._transparent_color: Color | None = None

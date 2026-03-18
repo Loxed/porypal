@@ -228,20 +228,20 @@ export function ItemsTab() {
   return (
     <div className="tab-content">
       {/* ── Mode switcher ── */}
-      <div className="items-mode-switcher">
-        <button
-          className={`items-mode-btn ${mode === 'group' ? 'active' : ''}`}
-          onClick={() => setMode('group')}
-        >
-          extract groups 
-        </button>
-        <button
-          className={`items-mode-btn ${mode === 'variants' ? 'active' : ''}`}
-          onClick={() => setMode('variants')}
-        >
-          item variants
-        </button>
-      </div>
+            <div className="items-mode-switcher">
+              <button
+                className={`items-mode-btn ${mode === 'group' ? 'active' : ''}`}
+                onClick={() => setMode('group')}
+              >
+                group extract
+              </button>
+              <button
+                className={`items-mode-btn ${mode === 'variants' ? 'active' : ''}`}
+                onClick={() => setMode('variants')}
+              >
+                variants
+              </button>
+            </div>
 
       {mode === 'variants' && (
         <VariantsPanel

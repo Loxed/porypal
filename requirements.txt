@@ -1,3 +1,7 @@
-PyQt5==5.15.11
-Pillow==11.1.0
-PyYAML==6.0.2
+fastapi
+uvicorn
+python-multipart
+Pillow
+numpy
+scikit-learn
+PyYAML

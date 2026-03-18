@@ -19,8 +19,7 @@ from model.palette import Palette
 class PaletteManager:
     """Loads and manages palettes from a directory of JASC-PAL files."""
 
-    def __init__(self, config: dict):
-        self.config = config
+    def __init__(self):
         self._palettes: list[Palette] = []
         self._meta: dict[str, dict] = {}  # name → {path, is_default, source}
         self._load_palettes()

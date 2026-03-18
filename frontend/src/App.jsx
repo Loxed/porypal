@@ -8,16 +8,16 @@ import { ItemsTab } from './tabs/ItemsTab'
 import { ShinyTab } from './tabs/ShinyTab'
 import './App.css'
 
-const TABS = ['convert', 'extract', 'batch', 'tileset', 'palettes', 'items', 'shiny']
+const TABS = ['extract palette', 'apply palette', 'groups', 'shiny', 'tileset', 'pipeline', 'palettes']
 
 export default function App() {
-  const [tab, setTab] = useState('convert')
+  const [tab, setTab] = useState('extract palette')
 
   return (
     <div className="app">
       <header className="header">
         <div className="header-inner">
-          <a className="logo" href='#' onClick={() => setTab('convert')}>
+          <a className="logo" href='#' onClick={() => setTab('extract palette')}>
             <img src="/porypal.ico" alt="Porypal" className="logo-icon" />
           </a>
           <nav className="nav">
@@ -41,19 +41,19 @@ export default function App() {
               <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/>
               </svg>
-              Support the project
+              Support the project :)
             </a>
           </div>
         </div>
       </header>
       <main className="main">
-        {tab === 'convert'  && <ConvertTab />}
-        {tab === 'extract'  && <ExtractTab />}
-        {tab === 'batch'    && <BatchTab />}
-        {tab === 'tileset'  && <TilesetTab />}
-        {tab === 'palettes' && <PalettesTab />}
-        {tab === 'items'    && <ItemsTab />}
-        {tab === 'shiny'    && <ShinyTab />}
+        {tab === 'extract palette' && <ExtractTab />}
+        {tab === 'apply palette'   && <ConvertTab />}
+        {tab === 'shiny'           && <ShinyTab />}
+        {tab === 'tileset'         && <TilesetTab />}
+        {tab === 'pipeline'        && <BatchTab />}
+        {tab === 'groups'          && <ItemsTab />}
+        {tab === 'palettes'        && <PalettesTab />}
       </main>
     </div>
   )

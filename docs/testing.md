@@ -21,40 +21,35 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 - [x] Download single result works
 - [x] Download all as zip works -- respects current palette selection
 - [x] Auto-reprocesses when palette selection changes
-> (not exactly but close to working, a ui overhaul will come from palette management later on so dont touch for now)
+- [x] Pipette works to pick bg color from original image
 
 ---
 
 ## Important (complex features)
 
 **Groups → Group Extract**
-> i have a hard time with this group extract feature. whats the point of it? we should maybe label it as a way to validate data (lets say we're making pokeball designs, and some element of a sprite is inconsistent accross different pokeballs, like the shadow or the highlight, we pintpoint the inconsistency?)
-
 - [x] Drop multiple sprites -- grouping by silhouette works
+- [x] Palette strip shows correct trimmed colors (no trailing bg dupes)
 - [ ] Drag sprite between groups triggers re-extract
-
-> not quite. it works, but only if you drag the sprite above what seems to be the group header (some drop area that's not the entire group section container, which it should be).
-> when grouping stuff, it needs to be persistent. redoing the extract sprites shouldnt reset the groups, it should just update the palettes within each group. currently it resets everything, which is really bad for workflow.
-
-- [ ] Download zip contains correct palettes + manifest
-> this works, but we should have a download group as zip button for each unique group if we want too. rather than every shape/group
-> changing threshold doesnt auto extract again, it should (after the first time)
+> only works when dragging over the group header, should be entire group section
+- [ ] Groups persist across re-extracts (should only update palettes, not reset structure)
+- [ ] Threshold slider triggers re-extract after first extract
+- [ ] Per-group download zip button
 
 **Groups → Variants**
 - [x] Drop 3 recolored sprites, set reference -- produces 3 index-aligned palettes
-> works, but we want to overhaul the current ui. right now we click on a star to set reference (which seems like a favourite feature), which is confusing. we should have a clear button for setting reference.
-- [x] Download zip works.
-> propose a /palettes and /sprites folder within the zip, so its more organised. currently its just a flat zip with all the palettes, no resampled sprites, and no manifest.
+- [x] Palette strip shows correct trimmed colors
+- [x] Download zip works
+> still flat zip -- needs `/palettes` and `/sprites` folders + manifest
 
-**Shiny → Create Shiny Palette**
-> UI is terribly designed right now, not using space. make it make sense. we have 1. normal sprite + normal palette + shiny palette which should produce normal and shiny sprites side by side, with download buttons for each (and a zip with both sprites in /sprites and both palettes in /palettes). 2. a bit better, we have normal sprite + shiny sprite which should produce both normal and shiny palettes. same as previous option, allow for dloading sprites and palettes separately or together as a zip. right now its just a mess of buttons and inputs that dont make sense.
-
+**Shiny → Create Shiny Palette (mode 2)**
 - [x] Drop normal + shiny sprite -- produces 2 palettes
-- [x] Palettes are index-aligned (same structure)
+- [x] Palettes are index-aligned
+> UI overhaul needed -- both modes underuse space, missing download options for sprites
 
-**Shiny → Create Shiny Sprite**
+**Shiny → Create Shiny Sprite (mode 1)**
 - [x] Drop sprite + normal.pal + shiny.pal -- renders shiny preview correctly
-> works but doesnt show download options for sprites or a zip with both.
+> missing download buttons for sprites and a zip with both
 
 ---
 
@@ -62,23 +57,18 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 
 **Tileset**
 - [x] Drop a spritesheet -- tiles appear
-> cant see tiles' grid easily. make it thicker and have a contrasting color to the sprite, maybe inverted from the sprite's palette or something. same for the hover state, make it more visible.
 - [x] Click tile, click slot -- tile placed correctly
 - [x] Save preset -- appears in preset list
 - [x] Load preset -- layout restored
 - [x] Download PNG -- correct arrangement
-> lets detect the bg color like we do everywhere else and apply it to empty slots in the downloaded png, so its ready for insertion right away. currently it just downloads the tiles with any spacing, but the empty slots are png transparent, whereas the bg around the tiles is another color which needs to be detected the same way we detect it in other features and applied to the empty slots in the downloaded png.
+> empty slots should be filled with detected bg color, not left transparent
 
 **Pipeline**
 - [x] Load folder
-> works on windows, gotta check on linux/mac
-> right now we dont see what's a folder and how many files we're loading. maybe add a preview that shows the first sprite in the folder, and a count of how many sprites are being loaded?
+- [x] Drop individual files or drag folder
 - [x] Add Extract step -- configurable
-> it works, but i'd love to see an example of it on the first sprite in the folder, so we can be sure the preset is being applied correctly before running the whole batch.
-- [x] Add Tileset step -- preset picker shows saved presets
-> same as above, preview!
-- [x] Add Apply Palette step -- palette picker shows loaded palettes
-> same as above. also rename the add step names to match the current things we have in the app.
+- [x] Add Tileset step (now labelled "apply preset") -- preset picker shows saved presets
+- [x] Add Apply Palette step (now labelled "apply palette") -- palette picker shows loaded palettes
 - [x] Run on a folder -- progress shows, zip downloads
 
 **Palettes tab**
@@ -87,50 +77,29 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 - [x] Delete a user palette -- gone from list and disk
 - [ ] Browse library -- tree loads
 - [ ] Import from library -- appears in user palettes
-> this needs an overhaul. we need to be able to have a file explorer essentially.
-> CRUD folder operations (Create, remove, rename, delete) in the user palettes.
-> CRUD Palette operations (Create, remove, rename, delete) in the user palettes, with a preview of the palette colors when hovering or clicking on a palette in the list. same for the library palettes, we should be able to preview them before importing.
-> as said before, we need to be able to edit and reorder palettes, rename, put them in folders n stuff.
-> browse library is empty rn and i dont really like the way it is. i think i'll keep the structure like emerald/ and firered/ but we'll rename the palette library to porypal_library. essentially, it should have folders like pokemon/ that contain abomasnow/ with the different sprites and palettes it has.
-
-> Heres what a pokemon file looks like:
-```
-(base) lox@lox-legion:~/projects/pokeemerald-expansion/graphics/pokemon/abomasnow$ tree
-.
-├── anim_front.png
-├── anim_frontf.png
-├── back.png
-├── footprint.png
-├── icon.png
-├── mega
-│   ├── back.png
-│   ├── front.png
-│   ├── icon.png
-│   ├── normal.pal
-│   ├── overworld.png
-│   ├── overworld_normal.pal
-│   ├── overworld_shiny.pal
-│   └── shiny.pal
-├── normal.pal
-├── overworld.png
-├── overworld_normal.pal
-├── overworld_shiny.pal
-├── overworldf.png
-└── shiny.pal
-
-2 directories, 19 files
-```
-> This is for pokeemerald-expansion. The base game (pokeemerald) doesn't have the exact same structure (no mega folder for example).
-
-> we'll see how we plan this refactor, its not gonna be just a palette library. the palette folder tho, needs its previously mentioned CRUD features, and we need to make sure the palettes are being loaded and applied correctly in the different features across the app.
+> full overhaul needed (see backlog)
 
 ---
 
-## Smoke test (just open and check no console errors)
+## Re-verify after refactor
+
+- [x] Extract tab: bg picker (auto/default/custom/pipette all work)
+- [x] Extract tab: help modal opens and closes (Escape key too)
+- [x] Apply palette tab: bg picker + pipette works, palette manager modal opens/closes
+- [x] Items tab: bg picker for output transparent works
+- [x] Items tab: grid/list toggle works
+- [x] Variants: bg picker works, grid/list toggle works
+- [x] Shiny: palette picker modal opens, selects, closes
+- [x] Tileset: help modal opens, save preset modal opens + saves
+- [*] Pipeline: batch step still works end to end
+> works but needs re-test after file selection refactor
+
+---
+
+## Smoke test
 
 - [x] All 7 tabs load without red errors in devtools
 - [x] Logo click returns to Extract Palette tab
-> We'll add a proper home/dashboard tab later, when everything is done. this dashboard will have a few showcases of different features and a easy to navigate menu with more explanations of what each feature does and when to use it. for now, the logo just returns us to the extract palette tab, since thats the most basic feature and a good starting point for new users.
 
 ---
 
@@ -140,45 +109,71 @@ Based on the codebase, here's what needs testing in order of "most likely to be 
 |---|------|--------|
 | 1 | `server/api/pipeline.py` | `ImageManager({})` → `ImageManager()` in `_run_convert_step` |
 | 2 | `server/app.py` | Added `shiny` to imports + `app.include_router(shiny.router)` |
-| 3 | `server/api/convert.py` | `download_all_converted` now accepts + filters by `palette_names` |
-| 4 | `frontend/src/tabs/ConvertTab.jsx` | `handleDownloadAll` sends `results.map(r => r.palette_name)` instead of `selectedPalettes` |
-| 5 | `frontend/src/tabs/ConvertTab.jsx` | `useEffect` on `selectedPalettes` auto-reprocesses when selection changes |
-| 6 | `frontend/src/components/BgColorPicker.jsx` + `.css` | New component — extracted bg picker from 4 tabs |
-| 7 | `frontend/src/tabs/ExtractTab.jsx` + `.css` | Use `BgColorPicker`, remove duplicate bg-* styles |
-| 8 | `frontend/src/tabs/ConvertTab.jsx` | Use `BgColorPicker` |
+| 3 | `server/api/convert.py` | `download_all_converted` filters by `palette_names` |
+| 4 | `frontend/src/tabs/ConvertTab.jsx` | `handleDownloadAll` sends `results.map(r => r.palette_name)` |
+| 5 | `frontend/src/tabs/ConvertTab.jsx` | `useEffect` on `selectedPalettes` auto-reprocesses |
+| 6 | `frontend/src/components/BgColorPicker.jsx` + `.css` | New component — extracted from 4 tabs |
+| 7 | `frontend/src/tabs/ExtractTab.jsx` + `.css` | Use `BgColorPicker` |
+| 8 | `frontend/src/tabs/ConvertTab.jsx` | Use `BgColorPicker` + pipette |
 | 9 | `frontend/src/tabs/ItemsTab.jsx` | Use `BgColorPicker` |
-| 10 | `frontend/src/components/VariantsPanel.jsx` | Use `BgColorPicker`, fix missing `Eclipse`/`PaintBucket` imports |
-| 11 | `frontend/src/components/Modal.jsx` + `.css` | New component — single modal shell with `title`, `size`, `actions`, `children` props + Escape key support |
-| 12 | `frontend/src/tabs/ExtractTab.jsx` + `.css` | Use `Modal`, remove duplicate modal CSS |
-| 13 | `frontend/src/tabs/TilesetTab.jsx` | Use `Modal` for both `HelpModal` and `SaveModal` |
+| 10 | `frontend/src/components/VariantsPanel.jsx` | Use `BgColorPicker`, fix missing icon imports |
+| 11 | `frontend/src/components/Modal.jsx` + `.css` | New component — single modal shell, Escape key |
+| 12 | `frontend/src/tabs/ExtractTab.jsx` + `.css` | Use `Modal` |
+| 13 | `frontend/src/tabs/TilesetTab.jsx` | Use `Modal` for `HelpModal` and `SaveModal` |
 | 14 | `frontend/src/tabs/ShinyTab.jsx` | Use `Modal` for `PalettePickerModal` |
-| 15 | `frontend/src/tabs/ConvertTab.jsx` | Use `Modal` for `PaletteModal`, header actions passed via `actions` prop |
-
----
-
-## Backlog (not bugs, future work)
-
-- [ ] Group drag-and-drop: accept drop on entire group section, not just header
-- [ ] Groups: persist across re-extracts (update palettes only, don't reset structure)
-- [ ] Groups: threshold slider triggers re-extract after first extract
-- [ ] Groups: per-group download zip button
-- [ ] Variants zip: organise into `/palettes` and `/sprites` with manifest
-- [ ] Variants UI: replace star-as-reference with explicit "set as reference" button
-- [ ] Shiny UI overhaul (both modes underuse space, missing download options)
-- [ ] Shiny zip: `/sprites` and `/palettes` folders
-- [ ] Tileset: thicker grid lines with contrasting color, better hover state
-- [ ] Tileset download: detect + fill empty slots with bg color
-- [ ] Pipeline: show first-sprite preview per step
-- [ ] Pipeline: rename step labels to match app tab names
-- [ ] Palettes tab: full CRUD (folders, rename, reorder, edit colors)
-- [ ] Palettes tab: palette library overhaul → `porypal_library/`, pokeemerald structure
-- [ ] Dashboard/home tab
+| 15 | `frontend/src/tabs/ConvertTab.jsx` | Use `Modal` for `PaletteModal` |
+| 16 | `frontend/src/components/ViewToggle.jsx` + `.css` | New component — extracted from 3 places |
+| 17 | `frontend/src/tabs/ConvertTab.jsx` + `.css` | Use `ViewToggle` |
+| 18 | `frontend/src/tabs/ItemsTab.jsx` + `.css` | Use `ViewToggle` |
+| 19 | `frontend/src/components/VariantsPanel.jsx` | Use `ViewToggle` |
+| 20 | `frontend/src/App.css` | `btn-primary-sm`, `.spinning`, `@keyframes spin`, `.pick-hint` as globals |
+| 21 | `frontend/src/tabs/BatchTab.css` | Remove `btn-primary-sm`, `spinning` |
+| 22 | `frontend/src/tabs/ConvertTab.css` | Remove `spinning`, `view-toggle`/`view-btn` |
+| 23 | `frontend/src/tabs/ItemsTab.css` | Remove `spinning`, `view-toggle`/`view-btn` |
+| 24 | `frontend/src/tabs/TilesetTab.css` | Remove `btn-primary-sm`, modal shell styles |
+| 25 | `frontend/src/tabs/ExtractTab.css` | Remove `pick-hint` (now global) |
+| 26 | `server/api/items.py` | `_trim_palette` helper — strips trailing bg dupes from `colors` array and `.pal` output |
+| 27 | `frontend/src/tabs/BatchTab.jsx` | Drag+drop + individual file pick + folder pick; step labels renamed |
 
 ---
 
 ## Refactor queue
 
-- [x] `BgColorPicker` component — extracted from 4 tabs
-- [x] `Modal` shell component — extracted from `ExtractTab`, `TilesetTab`, `ShinyTab`, `ConvertTab`
-- [ ] `ViewToggle` component — duplicated in `ConvertTab` and `ItemsTab`
-- [ ] Consolidate shared CSS (`btn-primary-sm`, `spinning`, modal shells) into `App.css`
+- [x] `BgColorPicker` component
+- [x] `Modal` shell component
+- [x] `ViewToggle` component
+- [x] Consolidate shared CSS into `App.css`
+
+---
+
+## Backlog (future work, roughly prioritised)
+
+### Groups
+- [ ] Drag target should be entire group section, not just header
+- [ ] Re-extract should preserve group structure, only update palettes
+- [ ] Threshold slider triggers re-extract after first extract
+- [ ] Per-group download zip button
+
+### Variants
+- [ ] Zip: organise into `/palettes` and `/sprites` with manifest
+- [ ] UI: replace star-as-reference with explicit "set as reference" button
+
+### Shiny
+- [ ] Full UI overhaul — both modes need better layout and space usage
+- [ ] Mode 1 (apply): download buttons for normal + shiny sprites, zip with `/sprites` + `/palettes`
+- [ ] Mode 2 (extract): same download options
+
+### Tileset
+- [ ] Grid lines: thicker, contrasting color, better hover state
+- [ ] Download: detect bg color + fill empty slots before export
+
+### Pipeline
+- [ ] Show first-sprite preview per step so you can verify config before running
+
+### Palettes tab
+- [ ] Full CRUD: create/rename/delete folders, rename/reorder/edit palette colors
+- [ ] Palette library overhaul → `porypal_library/` with pokeemerald folder structure
+- [ ] Preview palette colors on hover before importing from library
+
+### General
+- [ ] Dashboard/home tab with feature overview

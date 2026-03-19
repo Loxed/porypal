@@ -87,8 +87,8 @@
 - [x] Loaded palettes list shows up
 - [x] Upload a `.pal` file -- appears in list
 - [x] Delete a user palette -- gone from list and disk
-- [ ] Browse library -- tree loads
-- [ ] Import from library -- appears in user palettes
+- [x] Browse library -- tree loads
+- [x] Import from library -- appears in user palettes
 
 ---
 
@@ -155,8 +155,8 @@
 - [x] In zip, have a `/palettes` and `/sprites` folder instead of everything flat
 
 ### Palettes tab
-- [ ] Full CRUD: create/rename/delete folders, rename/reorder/edit palette colors
-- [ ] Palette library overhaul → `porypal_library/` with pokeemerald folder structure
+- [x] Full CRUD: create/rename/delete folders, rename/reorder/edit palette colors
+- [x] Palette library overhaul → `porypal_library/` with any folder structure
 - [ ] Preview palette colors on hover before importing from library
 
 ### General

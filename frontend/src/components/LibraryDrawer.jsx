@@ -1,19 +1,9 @@
 /**
  * frontend/src/components/LibraryDrawer.jsx
- *
- * Self-contained palette library drawer.
- * Imported by PalettesTab — nothing else needs to change there.
- *
- * Folder routing:
- *   pokemon_folder  → PokemonFolderSection  (paginated, infinite scroll)
- *   trainers_folder → PokemonFolderSection  (same structure as pokemon)
- *   items_folder    → ItemsFolderSection    (paginated, infinite scroll)
- *   folder          → LazyFolderNode        (lazy depth-1 expand)
- *   palette         → LibraryPaletteRow     (single palette row)
  */
 
 import { useState, useEffect, useRef } from 'react'
-import { X, ChevronDown, ChevronRight, Check, Loader, Download, FolderInput } from 'lucide-react'
+import { X, ChevronDown, ChevronRight, Check, Loader, Download, FolderInput, Maximize2, Minimize2 } from 'lucide-react'
 import { PaletteStrip } from './PaletteStrip'
 import { PokemonCard } from './PokemonCard.jsx'
 import './LibraryDrawer.css'
@@ -21,7 +11,7 @@ import './LibraryDrawer.css'
 const API = '/api'
 const PAGE_SIZE = 20
 
-// ── Standalone palette row (plain .pal in the tree) ───────────────────────────
+// ── Standalone palette row ─────────────────────────────────────────────────
 
 function LibraryPaletteRow({ palette, onImport }) {
   const [importState, setImportState] = useState('idle')
@@ -70,9 +60,9 @@ function LibraryPaletteRow({ palette, onImport }) {
   )
 }
 
-// ── Pokemon / Trainers folder — paginated + infinite scroll ───────────────────
+// ── Pokemon / Trainers folder ──────────────────────────────────────────────
 
-function PokemonFolderSection({ node, query, onImport }) {
+function PokemonFolderSection({ node, query, onImport, fullscreen }) {
   const [open, setOpen]       = useState(false)
   const [items, setItems]     = useState([])
   const [total, setTotal]     = useState(null)
@@ -81,7 +71,6 @@ function PokemonFolderSection({ node, query, onImport }) {
   const [offset, setOffset]   = useState(0)
   const sentinelRef           = useRef()
 
-  // Reset when folder path or query changes
   useEffect(() => {
     setItems([])
     setTotal(null)
@@ -89,7 +78,6 @@ function PokemonFolderSection({ node, query, onImport }) {
     setHasMore(false)
   }, [node.path, query])
 
-  // Fetch one page
   useEffect(() => {
     if (!open) return
     let cancelled = false
@@ -109,7 +97,6 @@ function PokemonFolderSection({ node, query, onImport }) {
     return () => { cancelled = true }
   }, [open, node.path, query, offset])
 
-  // Infinite scroll sentinel
   useEffect(() => {
     if (!sentinelRef.current || !hasMore || loading) return
     const obs = new IntersectionObserver(entries => {
@@ -134,7 +121,7 @@ function PokemonFolderSection({ node, query, onImport }) {
       {open && (
         <div className="lib-tree-folder-body lib-pokemon-grid">
           {items.map((pkm, i) => (
-            <PokemonCard key={pkm.path ?? i} node={pkm} onImport={onImport} />
+            <PokemonCard key={pkm.path ?? i} node={pkm} onImport={onImport} fullscreen={fullscreen} />
           ))}
           {loading && (
             <div className="lib-pokemon-loading">
@@ -151,7 +138,7 @@ function PokemonFolderSection({ node, query, onImport }) {
   )
 }
 
-// ── Items folder — paginated + infinite scroll ────────────────────────────────
+// ── Items folder ───────────────────────────────────────────────────────────
 
 function ItemRow({ item, onImport }) {
   const [importState, setImportState] = useState('idle')
@@ -243,7 +230,6 @@ function ItemsFolderSection({ node, query, onImport }) {
   const [offset, setOffset]   = useState(0)
   const sentinelRef           = useRef()
 
-  // Reset when folder path or query changes
   useEffect(() => {
     setItems([])
     setTotal(null)
@@ -251,7 +237,6 @@ function ItemsFolderSection({ node, query, onImport }) {
     setHasMore(false)
   }, [node.path, query])
 
-  // Fetch one page
   useEffect(() => {
     if (!open) return
     let cancelled = false
@@ -271,7 +256,6 @@ function ItemsFolderSection({ node, query, onImport }) {
     return () => { cancelled = true }
   }, [open, node.path, query, offset])
 
-  // Infinite scroll sentinel
   useEffect(() => {
     if (!sentinelRef.current || !hasMore || loading) return
     const obs = new IntersectionObserver(entries => {
@@ -313,9 +297,9 @@ function ItemsFolderSection({ node, query, onImport }) {
   )
 }
 
-// ── Generic lazy folder (loads children on first open) ────────────────────────
+// ── Generic lazy folder ────────────────────────────────────────────────────
 
-function LazyFolderNode({ node, query, onImport, depth }) {
+function LazyFolderNode({ node, query, onImport, depth, fullscreen }) {
   const [open, setOpen]         = useState(depth < 1)
   const [children, setChildren] = useState(node.children ?? null)
   const [loading, setLoading]   = useState(false)
@@ -334,7 +318,6 @@ function LazyFolderNode({ node, query, onImport, depth }) {
     }
   }
 
-  // Auto-fetch when starting open
   useEffect(() => {
     if (open && children === null) fetchChildren()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -344,7 +327,6 @@ function LazyFolderNode({ node, query, onImport, depth }) {
     setOpen(o => !o)
   }
 
-  // Prune branches that can't match the current query
   const hasMatch = query
     ? (() => {
         if (!children) return true
@@ -375,7 +357,7 @@ function LazyFolderNode({ node, query, onImport, depth }) {
             </div>
           )}
           {children?.map((child, i) => (
-            <LibraryNode key={i} node={child} query={query} onImport={onImport} depth={depth + 1} />
+            <LibraryNode key={i} node={child} query={query} onImport={onImport} depth={depth + 1} fullscreen={fullscreen} />
           ))}
           {children?.length === 0 && !loading && (
             <div className="lib-pokemon-empty">empty</div>
@@ -386,37 +368,31 @@ function LazyFolderNode({ node, query, onImport, depth }) {
   )
 }
 
-// ── Tree node router ──────────────────────────────────────────────────────────
+// ── Tree node router ───────────────────────────────────────────────────────
 
-function LibraryNode({ node, query, onImport, depth = 0 }) {
-  // Pokemon and trainers share the same sprite/palette structure
+function LibraryNode({ node, query, onImport, depth = 0, fullscreen }) {
   if (node.type === 'pokemon_folder' || node.type === 'trainers_folder') {
-    return <PokemonFolderSection node={node} query={query} onImport={onImport} />
+    return <PokemonFolderSection node={node} query={query} onImport={onImport} fullscreen={fullscreen} />
   }
-
-  // Items folders have a special paginated layout with thumbnails
   if (node.type === 'items_folder') {
     return <ItemsFolderSection node={node} query={query} onImport={onImport} />
   }
-
-  // Standalone .pal file
   if (node.type === 'palette') {
     const name = node.name.replace(/\.pal$/, '')
     if (query && !name.toLowerCase().includes(query.toLowerCase())) return null
     return <LibraryPaletteRow palette={node} onImport={onImport} />
   }
-
-  // Generic folder — lazy-load children on expand
-  return <LazyFolderNode node={node} query={query} onImport={onImport} depth={depth} />
+  return <LazyFolderNode node={node} query={query} onImport={onImport} depth={depth} fullscreen={fullscreen} />
 }
 
-// ── Drawer ────────────────────────────────────────────────────────────────────
+// ── Drawer ─────────────────────────────────────────────────────────────────
 
 export function LibraryDrawer({ onClose, onImport }) {
   const [tree, setTree]                = useState(null)
   const [query, setQuery]              = useState('')
   const [debouncedQuery, setDebounced] = useState('')
   const [loading, setLoading]          = useState(true)
+  const [fullscreen, setFullscreen]    = useState(false)
   const drawerRef   = useRef()
   const debounceRef = useRef()
 
@@ -427,14 +403,15 @@ export function LibraryDrawer({ onClose, onImport }) {
       .catch(() => setLoading(false))
   }, [])
 
-  // Close on outside click
+  // Close on outside click (only when not fullscreen)
   useEffect(() => {
+    if (fullscreen) return
     const handler = e => {
       if (drawerRef.current && !drawerRef.current.contains(e.target)) onClose()
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
-  }, [onClose])
+  }, [onClose, fullscreen])
 
   const handleSearch = e => {
     const val = e.target.value
@@ -444,10 +421,20 @@ export function LibraryDrawer({ onClose, onImport }) {
   }
 
   return (
-    <div className="drawer-overlay">
-      <div className="drawer" ref={drawerRef}>
+    <div className={`drawer-overlay ${fullscreen ? 'drawer-overlay--fullscreen' : ''}`}>
+      <div
+        className={`drawer ${fullscreen ? 'drawer--fullscreen' : ''}`}
+        ref={drawerRef}
+      >
         <div className="drawer-header">
           <div className="drawer-title-row">
+            <button
+              className="drawer-fullscreen-btn"
+              onClick={() => setFullscreen(f => !f)}
+              title={fullscreen ? 'Restore drawer' : 'Expand to full page'}
+            >
+              {fullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+            </button>
             <span className="drawer-title">palette library</span>
             <button className="drawer-close" onClick={onClose}><X size={15} /></button>
           </div>
@@ -459,7 +446,7 @@ export function LibraryDrawer({ onClose, onImport }) {
             autoFocus
           />
         </div>
-        <div className="drawer-body">
+        <div className={`drawer-body ${fullscreen ? 'drawer-body--fullscreen' : ''}`}>
           {loading && (
             <div className="empty-state"><div className="spinner" /></div>
           )}
@@ -470,7 +457,14 @@ export function LibraryDrawer({ onClose, onImport }) {
             </div>
           )}
           {!loading && tree?.map((node, i) => (
-            <LibraryNode key={i} node={node} query={debouncedQuery} onImport={onImport} depth={0} />
+            <LibraryNode
+              key={i}
+              node={node}
+              query={debouncedQuery}
+              onImport={onImport}
+              depth={0}
+              fullscreen={fullscreen}
+            />
           ))}
         </div>
       </div>

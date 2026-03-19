@@ -18,7 +18,7 @@
 }
 
 .drawer {
-  width: 50%;
+  width: 40%;
   max-width: 95vw;
   background: var(--surface);
   border-left: 1px solid var(--border2);
@@ -240,9 +240,7 @@
   text-align: center;
 }
 
-/* ── Item row (inside items_folder section) ──────────────────────────────────
-   Layout: [thumb 24px] [name 120px] [palette strip flex] [download btn] [import btn]
-   ─────────────────────────────────────────────────────────────────────────── */
+/* ── Item row ────────────────────────────────────────────────────────────── */
 
 .lib-item-row {
   display: flex;
@@ -258,7 +256,6 @@
   border-color: var(--border);
 }
 
-/* thumbnail */
 .lib-item-thumb {
   width: 24px;
   height: 24px;
@@ -286,7 +283,6 @@
   height: 100%;
 }
 
-/* name */
 .lib-item-name {
   font-family: var(--mono);
   font-size: 11px;
@@ -298,7 +294,6 @@
   flex-shrink: 0;
 }
 
-/* palette strip */
 .lib-item-strip {
   flex: 1;
   min-width: 0;
@@ -311,7 +306,6 @@
   opacity: 0.5;
 }
 
-/* action buttons (download + import) */
 .lib-item-btn {
   display: flex;
   align-items: center;
@@ -352,3 +346,72 @@
 
 @keyframes spin { to { transform: rotate(360deg); } }
 .spinning { animation: spin 0.7s linear infinite; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FULLSCREEN MODE
+   Expands drawer to 50% width, same right-side slide animation
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.drawer-fullscreen-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  border-radius: 3px;
+  transition: color 0.1s;
+  flex-shrink: 0;
+}
+.drawer-fullscreen-btn:hover { color: var(--accent); }
+
+.drawer-overlay--fullscreen {
+  justify-content: flex-end;
+  align-items: stretch;
+}
+
+.drawer--fullscreen {
+  width: 100%;
+  max-width: 100%;
+  animation: drawerSlideIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Slightly more padding in fullscreen */
+.drawer-body--fullscreen {
+  padding: 14px 24px;
+}
+
+/* Folder structure */
+.drawer-body--fullscreen .lib-tree-folder        { margin-bottom: 4px; }
+.drawer-body--fullscreen .lib-tree-folder-header { padding: 10px 14px; font-size: 13px; }
+.drawer-body--fullscreen .lib-tree-folder-body   { padding: 6px 12px; gap: 4px; }
+
+/* Palette rows */
+.drawer-body--fullscreen .lib-row      { padding: 8px 10px; gap: 12px; }
+.drawer-body--fullscreen .lib-row-name { width: 160px; font-size: 12px; }
+
+/* Pokemon card chrome */
+.drawer-body--fullscreen .lib-pokemon-grid { gap: 5px; }
+.drawer-body--fullscreen .pkm-card-header  { padding: 7px 12px; min-height: 42px; }
+.drawer-body--fullscreen .pkm-card-name    { font-size: 13px; }
+.drawer-body--fullscreen .pkm-form-header  { padding: 7px 14px; }
+.drawer-body--fullscreen .pkm-form-body    { padding: 12px 14px; gap: 12px; }
+
+/* Sprites: 48px → 96px */
+.drawer-body--fullscreen .pkm-spr             { width: 96px !important; height: 96px !important; }
+.drawer-body--fullscreen .pkm-spr-placeholder { width: 96px !important; height: 96px !important; }
+
+/* Header icon stays compact */
+.drawer-body--fullscreen .pkm-spr.small             { width: 32px !important; height: 32px !important; }
+.drawer-body--fullscreen .pkm-spr-placeholder.small { width: 32px !important; height: 32px !important; }
+
+/* Labels beside bigger sprites */
+.drawer-body--fullscreen .pkm-sprite-label { font-size: 10px; }
+.drawer-body--fullscreen .pkm-sprite-pal   { font-size: 10px; }
+.drawer-body--fullscreen .pkm-spr-sub      { font-size: 9px; }
+
+/* Palette strip: cap width so swatches stay readable */
+.drawer-body--fullscreen .pkm-pal-row   { gap: 10px; }
+.drawer-body--fullscreen .pkm-pal-label { width: 22%; font-size: 11px; }
+.drawer-body--fullscreen .palette-strip { max-width: 360px; }

@@ -466,17 +466,11 @@ function FormSection({ node, label, onImport, defaultOpen = false }) {
       {open && (
         <div className="pkm-form-body">
           {/* Main sprites: normal / shiny pairs */}
-          {mainSprites.length > 0 && palettes.length > 0 && (
+          {(mainSprites.length > 0 || iconSprites.length > 0) && (
             <div className="pkm-sprite-row">
-              {mainSprites.map(sprite => (
+              {mainSprites.length > 0 && palettes.length > 0 && mainSprites.map(sprite => (
                 <DynamicSpritePair key={sprite.path} sprite={sprite} palettes={palettes} />
               ))}
-            </div>
-          )}
-
-          {/* Icon sprites: single column, scored against icon_palettes */}
-          {iconSprites.length > 0 && (
-            <div className="pkm-sprite-row">
               {iconSprites.map(sprite => (
                 <IconSpriteDisplay
                   key={sprite.path}

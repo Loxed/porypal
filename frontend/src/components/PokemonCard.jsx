@@ -1,18 +1,19 @@
 /**
  * PokemonCard.jsx
  *
- * Displays a collapsed pokemon card. When opened, fetches full node data and shows:
- *  - Sprite pairs (normal + shiny) for: icon, front, back, overworld
- *  - Shiny sprites are generated client-side by remapping with shiny palette colors
- *  - Results are cached at module level so re-opening is instant
- *  - Palette rows with Download + Import buttons
+ * Fully dynamic — no hardcoded sprite/palette mappings.
  *
- * Palette mapping:
- *   icon, front, back  →  normal.pal / shiny.pal
- *   overworld          →  overworld_normal.pal / overworld_shiny.pal
+ * For each PNG found in the pokemon folder:
+ *   1. Load pixel data
+ *   2. Score every available .pal by counting exact pixel color matches
+ *   3. Best-scoring palette = sourcePal (the one the file is encoded with)
+ *   4. Find the normal/shiny partner by string substitution:
+ *        *normal* ↔ *shiny*  (handles normal.pal, normal_gba.pal, overworld_normal.pal, …)
+ *   5. Render  [sourcePal→normalPal | sourcePal→shinyPal]
+ *      When sourcePal === targetPal the remap is identity → raw appearance
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { ChevronDown, ChevronRight, Loader, Download, FolderInput, Check, X } from 'lucide-react'
 import { PaletteStrip } from './PaletteStrip'
 import { remapToShinyPalette } from '../utils'
@@ -20,54 +21,15 @@ import './PokemonCard.css'
 
 const API = '/api'
 
-// ── Sprite / palette config ───────────────────────────────────────────────────
-// Each entry defines: which sprite file to use, and which palette
-// names to use for normal / shiny remapping.
-const SPRITE_CONFIGS = [
-  {
-    key: 'icon',
-    label: 'Icon',
-    sprite: 'icon.png',
-    normalPal: 'normal.pal',
-    shinyPal: 'shiny.pal',
-  },
-  {
-    key: 'front',
-    label: 'Front',
-    sprite: 'anim_front.png',
-    normalPal: 'normal.pal',
-    shinyPal: 'shiny.pal',
-  },
-  {
-    key: 'back',
-    label: 'Back',
-    sprite: 'back.png',
-    normalPal: 'normal.pal',
-    shinyPal: 'shiny.pal',
-  },
-  {
-    key: 'ow',
-    label: 'OW',
-    sprite: 'overworld.png',
-    normalPal: 'overworld_normal.pal',
-    shinyPal: 'overworld_shiny.pal',
-  },
-]
+// Sprites to always skip
+const SKIP_SPRITES = new Set(['footprint.png'])
 
 // ── Module-level caches ───────────────────────────────────────────────────────
-// Persist across component mounts — avoids re-fetching / re-remapping on re-open.
-const _rawB64Cache = new Map()      // spritePath → raw base64 PNG
-const _remappedCache = new Map()    // `${spritePath}::${cacheKey}` → remapped base64
+const _rawB64Cache   = new Map()  // spritePath → raw base64
+const _remappedCache = new Map()  // `path::from::to` → remapped base64
+const _pixelCache    = new Map()  // spritePath → ImageData (for detection)
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-
-function findPalette(palettes, filename) {
-  return palettes?.find(p => p.name.toLowerCase() === filename.toLowerCase()) ?? null
-}
-
-function findSprite(sprites, filename) {
-  return sprites?.find(s => s.name.toLowerCase() === filename.toLowerCase()) ?? null
-}
 
 async function loadSpriteB64(spritePath) {
   if (_rawB64Cache.has(spritePath)) return _rawB64Cache.get(spritePath)
@@ -86,130 +48,246 @@ async function loadSpriteB64(spritePath) {
   })
 }
 
-// ── ShinySprite: loads + remaps a sprite with a given palette pair ───────────
-function ShinySprite({ spritePath, normalColors, shinyColors, label }) {
-  const [state, setState] = useState('idle') // idle | loading | done | error
-  const [src, setSrc] = useState(null)
+async function getPixels(spritePath) {
+  if (_pixelCache.has(spritePath)) return _pixelCache.get(spritePath)
+  const b64 = await loadSpriteB64(spritePath)
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = img.naturalWidth
+      canvas.height = img.naturalHeight
+      canvas.getContext('2d').drawImage(img, 0, 0)
+      const id = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height)
+      _pixelCache.set(spritePath, id)
+      resolve(id)
+    }
+    img.onerror = reject
+    img.src = `data:image/png;base64,${b64}`
+  })
+}
+
+/**
+ * Score a palette against image pixels.
+ * Returns fraction of opaque pixels whose color exactly matches a palette color.
+ */
+function scorePalette(imageData, paletteHexColors) {
+  const data = imageData.data
+  const colorSet = new Set()
+  for (const hex of paletteHexColors) {
+    colorSet.add(hex.toLowerCase())
+  }
+  let matches = 0
+  let total = 0
+  for (let i = 0; i < data.length; i += 4) {
+    if (data[i + 3] < 128) continue
+    total++
+    const hex = '#' +
+      data[i    ].toString(16).padStart(2, '0') +
+      data[i + 1].toString(16).padStart(2, '0') +
+      data[i + 2].toString(16).padStart(2, '0')
+    if (colorSet.has(hex)) matches++
+  }
+  return total === 0 ? 0 : matches / total
+}
+
+/**
+ * Detect which palette a sprite is encoded with by finding the best match score.
+ */
+async function detectSourcePalette(spritePath, palettes) {
+  if (!palettes.length) return null
+  const pixels = await getPixels(spritePath)
+  let bestPal   = null
+  let bestScore = -1
+  for (const pal of palettes) {
+    const score = scorePalette(pixels, pal.colors)
+    if (score > bestScore) {
+      bestScore = score
+      bestPal   = pal
+    }
+  }
+  return bestPal
+}
+
+/**
+ * Sort palettes so normal/shiny pairs are adjacent.
+ * Order: normal.pal, shiny.pal, normal_gba.pal, shiny_gba.pal, overworld_normal.pal, …
+ * General rule: group by prefix (everything except the normal/shiny word),
+ * within each group normal comes before shiny.
+ */
+function sortPalettePairs(palettes) {
+  const getGroupKey = (name) => {
+    const n = name.toLowerCase().replace(/\.pal$/, '')
+    // Replace the normal/shiny word (with optional surrounding _ or nothing) with a placeholder
+    return n.replace(/(?:^|_)(?:normal|shiny)(?:_|$)/, match => match.replace(/normal|shiny/, '\x00'))
+  }
+  const getOrder = (name) => {
+    const n = name.toLowerCase()
+    if (n.includes('normal')) return 0
+    if (n.includes('shiny'))  return 1
+    return 2
+  }
+  return [...palettes].sort((a, b) => {
+    const ga = getGroupKey(a.name)
+    const gb = getGroupKey(b.name)
+    if (ga !== gb) return ga.localeCompare(gb)
+    return getOrder(a.name) - getOrder(b.name)
+  })
+}
+
+/**
+ * Given a detected source palette, find its normal and shiny counterparts.
+ *
+ * Pairing rule: substitute 'normal' ↔ 'shiny' in the palette filename.
+ *   normal.pal           ↔  shiny.pal
+ *   normal_gba.pal       ↔  shiny_gba.pal
+ *   overworld_normal.pal ↔  overworld_shiny.pal
+ *
+ * If no pair exists, both columns show the same (identity remap).
+ */
+function findPalettePair(sourcePal, allPalettes) {
+  const srcName  = sourcePal.name.toLowerCase()
+  const isNormal = srcName.includes('normal')
+  const isShiny  = srcName.includes('shiny')
+
+  if (!isNormal && !isShiny) {
+    // No normal/shiny in name — identity on both sides
+    return { normalPal: sourcePal, shinyPal: sourcePal }
+  }
+
+  const partnerName = isNormal
+    ? srcName.replace('normal', 'shiny')
+    : srcName.replace('shiny', 'normal')
+
+  const partnerPal = allPalettes.find(p => p.name.toLowerCase() === partnerName) ?? sourcePal
+
+  return isNormal
+    ? { normalPal: sourcePal, shinyPal: partnerPal }
+    : { normalPal: partnerPal, shinyPal: sourcePal }
+}
+
+// ── RemappedSprite ────────────────────────────────────────────────────────────
+
+function RemappedSprite({ spritePath, fromColors, toColors, alt }) {
+  const [status, setStatus] = useState('idle')
+  const [src, setSrc]       = useState(null)
 
   useEffect(() => {
-    if (!spritePath || !normalColors?.length || !shinyColors?.length) return
-
-    const cacheKey = `${spritePath}::${shinyColors.join(',')}`
+    if (!spritePath || !fromColors?.length || !toColors?.length) return
+    const cacheKey = `${spritePath}::${fromColors.join(',')}::${toColors.join(',')}`
     if (_remappedCache.has(cacheKey)) {
       setSrc(_remappedCache.get(cacheKey))
-      setState('done')
+      setStatus('done')
       return
     }
-
     let cancelled = false
-    setState('loading')
-
+    setStatus('loading')
     loadSpriteB64(spritePath)
-      .then(b64 => remapToShinyPalette(b64, normalColors, shinyColors))
+      .then(b64 => remapToShinyPalette(b64, fromColors, toColors))
       .then(remapped => {
         if (cancelled) return
         _remappedCache.set(cacheKey, remapped)
         setSrc(remapped)
-        setState('done')
+        setStatus('done')
       })
-      .catch(() => {
-        if (!cancelled) setState('error')
-      })
+      .catch(() => { if (!cancelled) setStatus('error') })
+    return () => { cancelled = true }
+  }, [spritePath, fromColors, toColors])
 
-    return () => {
-      cancelled = true
-    }
-  }, [spritePath, normalColors, shinyColors])
-
-  if (state === 'error') return <div className="pkm-spr-placeholder" title="failed" />
-  if (state !== 'done' || !src) {
+  if (status === 'error') return <div className="pkm-spr-placeholder" title="remap failed" />
+  if (status !== 'done' || !src) {
     return (
       <div className="pkm-spr-placeholder loading">
-        {state === 'loading' && <Loader size={10} className="pkm-spin" />}
+        {status === 'loading' && <Loader size={10} className="pkm-spin" />}
       </div>
     )
   }
-
   return (
     <img
       className="pkm-spr"
       src={`data:image/png;base64,${src}`}
-      alt={`${label} shiny`}
+      alt={alt}
       draggable={false}
     />
   )
 }
 
-// ── NormalSprite: just shows the raw sprite from disk ────────────────────────
-function NormalSprite({ spritePath, label }) {
-  const [err, setErr] = useState(false)
-  if (!spritePath) return <div className="pkm-spr-placeholder" />
-  if (err) return <div className="pkm-spr-placeholder" title="not found" />
-  return (
-    <img
-      className="pkm-spr"
-      src={`${API}/palette-library/sprite?path=${encodeURIComponent(spritePath)}`}
-      alt={`${label} normal`}
-      onError={() => setErr(true)}
-      draggable={false}
-    />
-  )
-}
+// ── DynamicSpritePair ─────────────────────────────────────────────────────────
+// Detects source palette automatically, then renders [normal | shiny].
 
-// ── IconSprite: small version for the collapsed card header ──────────────────
-function IconSprite({ spritePath }) {
-  const [err, setErr] = useState(false)
-  if (!spritePath || err) return <div className="pkm-spr-placeholder small" />
-  return (
-    <img
-      className="pkm-spr small"
-      src={`${API}/palette-library/sprite?path=${encodeURIComponent(spritePath)}`}
-      onError={() => setErr(true)}
-      alt=""
-      draggable={false}
-    />
-  )
-}
+function DynamicSpritePair({ sprite, palettes }) {
+  const [detected, setDetected] = useState(null) // null=loading | 'error' | { sourcePal, normalPal, shinyPal }
+  const mountedRef = useRef(true)
 
-// ── SpritePairGroup: one column in the sprite row ────────────────────────────
-// Shows [normal | shiny] with a label underneath
-function SpritePairGroup({ config, sprites, palettes }) {
-  const spriteNode = findSprite(sprites, config.sprite)
-  const normalPalObj = findPalette(palettes, config.normalPal)
-  const shinyPalObj = findPalette(palettes, config.shinyPal)
+  useEffect(() => {
+    mountedRef.current = true
+    setDetected(null)
+    detectSourcePalette(sprite.path, palettes)
+      .then(sourcePal => {
+        if (!mountedRef.current) return
+        if (!sourcePal) { setDetected('error'); return }
+        const { normalPal, shinyPal } = findPalettePair(sourcePal, palettes)
+        setDetected({ sourcePal, normalPal, shinyPal })
+      })
+      .catch(() => { if (mountedRef.current) setDetected('error') })
+    return () => { mountedRef.current = false }
+  }, [sprite.path, palettes])
 
-  if (!spriteNode) return null
-
-  const normalColors = normalPalObj?.colors ?? null
-  const shinyColors = shinyPalObj?.colors ?? null
+  const label = sprite.name.replace(/\.png$/i, '')
 
   return (
     <div className="pkm-sprite-group">
       <div className="pkm-sprite-pair">
+
+        {/* Normal column */}
         <div className="pkm-spr-col">
-          <NormalSprite spritePath={spriteNode.path} label={config.label} />
+          {!detected ? (
+            <div className="pkm-spr-placeholder loading"><Loader size={10} className="pkm-spin" /></div>
+          ) : detected === 'error' ? (
+            <div className="pkm-spr-placeholder" title="detection failed" />
+          ) : (
+            <RemappedSprite
+              spritePath={sprite.path}
+              fromColors={detected.sourcePal.colors}
+              toColors={detected.normalPal.colors}
+              alt={`${label} normal`}
+            />
+          )}
           <span className="pkm-spr-sub">normal</span>
         </div>
+
+        {/* Shiny column */}
         <div className="pkm-spr-col">
-          {normalColors && shinyColors ? (
-            <ShinySprite
-              spritePath={spriteNode.path}
-              normalColors={normalColors}
-              shinyColors={shinyColors}
-              label={config.label}
-            />
+          {!detected ? (
+            <div className="pkm-spr-placeholder loading"><Loader size={10} className="pkm-spin" /></div>
+          ) : detected === 'error' ? (
+            <div className="pkm-spr-placeholder" title="detection failed" />
           ) : (
-            <div className="pkm-spr-placeholder" title="no shiny palette" />
+            <RemappedSprite
+              spritePath={sprite.path}
+              fromColors={detected.sourcePal.colors}
+              toColors={detected.shinyPal.colors}
+              alt={`${label} shiny`}
+            />
           )}
           <span className="pkm-spr-sub shiny">shiny</span>
         </div>
+
       </div>
-      <span className="pkm-sprite-label">{config.label}</span>
+
+      {/* Label shows sprite name + detected source palette as tooltip */}
+      <span
+        className="pkm-sprite-label"
+        title={detected && detected !== 'error' ? `source: ${detected.sourcePal.name}` : ''}
+      >
+        {label}
+      </span>
     </div>
   )
 }
 
 // ── Palette row ───────────────────────────────────────────────────────────────
+
 function PaletteRow({ palette, onImport }) {
   const [importState, setImportState] = useState('idle')
 
@@ -235,51 +313,47 @@ function PaletteRow({ palette, onImport }) {
   const displayName = palette.name.replace(/\.pal$/i, '')
 
   return (
-    <div className="pkm-palette-row">
-      <span className="pkm-palette-name">{displayName}</span>
-      <div className="pkm-palette-swatches">
+    <div className="pkm-pal-row">
+      <span className="pkm-pal-label" title={displayName}>{displayName}</span>
+      <div className="pkm-pal-strip">
         <PaletteStrip
           colors={palette.colors}
           usedIndices={palette.colors.map((_, i) => i)}
           checkSize="50%"
         />
       </div>
-      <div className="pkm-palette-actions">
-        <a
-          className="pkm-act-btn"
-          href={`${API}/palette-library/sprite?path=${encodeURIComponent(palette.path)}`}
-          download={palette.name}
-          title="Download .pal"
-        >
-          <Download size={11} />
-        </a>
-        <button
-          className={`pkm-act-btn ${importState === 'done' ? 'done' : importState === 'error' ? 'err' : ''}`}
-          onClick={handleImport}
-          disabled={importState === 'loading'}
-          title="Import to Porypal"
-        >
-          {importState === 'done' ? (
-            <Check size={11} />
-          ) : importState === 'error' ? (
-            <X size={11} />
-          ) : importState === 'loading' ? (
-            <Loader size={11} className="pkm-spin" />
-          ) : (
-            <FolderInput size={11} />
-          )}
-        </button>
-      </div>
+      <a
+        className="pkm-act-btn"
+        href={`${API}/palette-library/sprite?path=${encodeURIComponent(palette.path)}`}
+        download={palette.name}
+        title="Download .pal"
+      >
+        <Download size={11} />
+      </a>
+      <button
+        className={`pkm-act-btn ${importState === 'done' ? 'done' : importState === 'error' ? 'err' : ''}`}
+        onClick={handleImport}
+        disabled={importState === 'loading'}
+        title="Import to Porypal"
+      >
+        {importState === 'done'     ? <Check size={11} />
+        : importState === 'error'   ? <X size={11} />
+        : importState === 'loading' ? <Loader size={11} className="pkm-spin" />
+        : <FolderInput size={11} />}
+      </button>
     </div>
   )
 }
 
 // ── Form section (Base / mega / gmax / etc.) ─────────────────────────────────
+
 function FormSection({ node, label, onImport, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen)
 
-  const sprites = node.sprites ?? []
-  const palettes = node.palettes ?? []
+  const palettes = sortPalettePairs(node.palettes ?? [])
+  const sprites  = (node.sprites ?? []).filter(
+    s => !SKIP_SPRITES.has(s.name.toLowerCase())
+  )
 
   if (!sprites.length && !palettes.length) return null
 
@@ -295,17 +369,22 @@ function FormSection({ node, label, onImport, defaultOpen = false }) {
 
       {open && (
         <div className="pkm-form-body">
-          {sprites.length > 0 && (
+          {sprites.length > 0 && palettes.length > 0 && (
             <div className="pkm-sprite-row">
-              {SPRITE_CONFIGS.map(cfg => (
-                <SpritePairGroup
-                  key={cfg.key}
-                  config={cfg}
-                  sprites={sprites}
+              {sprites.map(sprite => (
+                <DynamicSpritePair
+                  key={sprite.path}
+                  sprite={sprite}
                   palettes={palettes}
                 />
               ))}
             </div>
+          )}
+
+          {sprites.length > 0 && palettes.length === 0 && (
+            <p style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--muted)', padding: '4px 0' }}>
+              no palettes found for this form
+            </p>
           )}
 
           {palettes.length > 0 && (
@@ -322,11 +401,12 @@ function FormSection({ node, label, onImport, defaultOpen = false }) {
 }
 
 // ── Main card ─────────────────────────────────────────────────────────────────
+
 export function PokemonCard({ node, onImport }) {
-  const [open, setOpen] = useState(false)
-  const [data, setData] = useState(null)
+  const [open, setOpen]       = useState(false)
+  const [data, setData]       = useState(null)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
+  const [error, setError]     = useState(false)
 
   const handleToggle = async () => {
     if (!open && !data && !loading) {
@@ -348,11 +428,9 @@ export function PokemonCard({ node, onImport }) {
     setOpen(o => !o)
   }
 
-  const iconSprite = data?.sprites
-    ? findSprite(data.sprites, 'icon.png') ||
-      findSprite(data.sprites, 'front.png') ||
-      findSprite(data.sprites, 'anim_front.png')
-    : null
+  const iconSprite = data?.sprites?.find(s =>
+    ['icon.png', 'icon_gba.png', 'front.png', 'anim_front.png'].includes(s.name.toLowerCase())
+  )
 
   const subformEntries = Object.entries(data?.subforms ?? {})
 
@@ -360,7 +438,13 @@ export function PokemonCard({ node, onImport }) {
     <div className={`pkm-card ${open ? 'is-open' : ''}`}>
       <button className="pkm-card-header" onClick={handleToggle}>
         {iconSprite ? (
-          <IconSprite spritePath={iconSprite.path} />
+          <img
+            className="pkm-spr small"
+            src={`${API}/palette-library/sprite?path=${encodeURIComponent(iconSprite.path)}`}
+            alt=""
+            draggable={false}
+            onError={e => { e.target.style.display = 'none' }}
+          />
         ) : (
           <div className="pkm-spr-placeholder small" />
         )}
@@ -383,12 +467,7 @@ export function PokemonCard({ node, onImport }) {
           )}
           {data && (
             <>
-              <FormSection
-                node={data}
-                label="Base"
-                onImport={onImport}
-                defaultOpen
-              />
+              <FormSection node={data} label="Base" onImport={onImport} defaultOpen />
               {subformEntries.map(([formName, formNode]) => (
                 <FormSection
                   key={formName}

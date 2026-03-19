@@ -4,7 +4,6 @@ import { PaletteStrip } from '../PaletteStrip'
 
 const API = '/api'
 
-// Well-known palette filename → display label
 export const PAL_LABELS = {
   'normal.pal':           'normal',
   'shiny.pal':            'shiny',
@@ -36,7 +35,7 @@ export function PokemonPaletteRow({ palette, label, onImport }) {
 
   return (
     <div className="pkm-pal-row">
-      <span className="pkm-pal-label">{label ?? palette.name.replace(/\.pal$/, '')}</span>
+      <span className="pkm-pal-label" title={label ?? palette.name.replace(/\.pal$/, '')}>{label ?? palette.name.replace(/\.pal$/, '')}</span>
       <div className="pkm-pal-strip">
         <PaletteStrip
           colors={palette.colors}

@@ -34,15 +34,12 @@ export function downloadBlob(blob, filename) {
   a.click()
 }
 
-// Add these to your existing utils.js
-
 export function hexToRgb(hex) {
   const h = hex.replace('#', '')
   return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)]
 }
 
 // Direct palette swap — no nearest neighbor, just replace palette colors
-// Used when palette indices are already correct (mode 1)
 export function applyPalette(imageB64, paletteHexColors) {
   return new Promise(resolve => {
     const img = new window.Image()
@@ -56,18 +53,12 @@ export function applyPalette(imageB64, paletteHexColors) {
       const data = imageData.data
       const palette = paletteHexColors.map(hexToRgb)
       const [tr, tg, tb] = palette[0]
-
-      // Build a lookup: original RGB → palette index (from normal palette)
-      // Then replace with shiny palette color at same index
-      // Since we don't have the index map here, we do nearest-match to normal pal
-      // to find the index, then apply shiny color at that index
       for (let i = 0; i < data.length; i += 4) {
         if (data[i+3] < 128) {
           data[i] = tr; data[i+1] = tg; data[i+2] = tb; data[i+3] = 255
           continue
         }
         const r = data[i], g = data[i+1], b = data[i+2]
-        // exact match to transparent → slot 0
         if (r === tr && g === tg && b === tb) continue
         let bestIdx = 1, bestDist = Infinity
         for (let j = 1; j < palette.length; j++) {
@@ -84,8 +75,36 @@ export function applyPalette(imageB64, paletteHexColors) {
   })
 }
 
-// Remap using normal palette to find indices, then render with shiny palette
-// normalPalette and shinyPalette are both hex color arrays, same length, same indices
+/**
+ * Sample the 4 corners of an ImageData pixel array and return the most common
+ * opaque color as [r, g, b]. Falls back to `fallback` if all corners are transparent.
+ */
+function _detectActualBg(data, w, h, fallback) {
+  const corners = [
+    [0, 0],
+    [w - 1, 0],
+    [0, h - 1],
+    [w - 1, h - 1],
+  ]
+  const counts = {}
+  for (const [cx, cy] of corners) {
+    const i = (cy * w + cx) * 4
+    if (data[i + 3] < 128) continue
+    const key = `${data[i]},${data[i+1]},${data[i+2]}`
+    counts[key] = (counts[key] || 0) + 1
+  }
+  const entries = Object.entries(counts).sort((a, b) => b[1] - a[1])
+  if (!entries.length) return fallback
+  return entries[0][0].split(',').map(Number)
+}
+
+/**
+ * Remap using normal palette to find slot indices, then render with shiny palette.
+ *
+ * Key fix vs old version: instead of assuming normalPal[0] is the bg color
+ * actually present in the image (which breaks for icon.png that uses magenta),
+ * we sample the image corners to detect the real bg, then treat that as slot 0.
+ */
 export function remapToShinyPalette(imageB64, normalPaletteHex, shinyPaletteHex) {
   return new Promise(resolve => {
     const img = new window.Image()
@@ -97,30 +116,41 @@ export function remapToShinyPalette(imageB64, normalPaletteHex, shinyPaletteHex)
       ctx.drawImage(img, 0, 0)
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
       const data = imageData.data
+      const w = canvas.width
+      const h = canvas.height
+
       const normalPal = normalPaletteHex.map(hexToRgb)
       const shinyPal  = shinyPaletteHex.map(hexToRgb)
-      const [tr, tg, tb] = normalPal[0]
       const [sr, sg, sb] = shinyPal[0]
 
+      // Detect the actual transparent/bg color from the image corners.
+      // This handles icons (magenta bg) and sprites that use #73C5A4 equally,
+      // without assuming normalPal[0] matches what's actually in the file.
+      const [tr, tg, tb] = _detectActualBg(data, w, h, normalPal[0])
+
       for (let i = 0; i < data.length; i += 4) {
-        if (data[i+3] < 128) {
+        // Alpha-transparent pixel → output shiny bg
+        if (data[i + 3] < 128) {
           data[i] = sr; data[i+1] = sg; data[i+2] = sb; data[i+3] = 255
           continue
         }
         const r = data[i], g = data[i+1], b = data[i+2]
-        // bg color → shiny transparent
+
+        // Actual bg color → output shiny bg
         if (r === tr && g === tg && b === tb) {
           data[i] = sr; data[i+1] = sg; data[i+2] = sb
           continue
         }
-        // find index in normal palette (skip slot 0)
+
+        // Find nearest slot in normal palette (skip slot 0 = bg)
         let bestIdx = 1, bestDist = Infinity
         for (let j = 1; j < normalPal.length; j++) {
-          const [pr,pg,pb] = normalPal[j]
+          const [pr, pg, pb] = normalPal[j]
           const dist = (r-pr)**2 + (g-pg)**2 + (b-pb)**2
           if (dist < bestDist) { bestDist = dist; bestIdx = j }
         }
-        // apply shiny color at same index
+
+        // Apply shiny color at same slot index
         if (bestIdx < shinyPal.length) {
           ;[data[i], data[i+1], data[i+2]] = shinyPal[bestIdx]
         }
@@ -164,27 +194,16 @@ export function detectBgColor(imageB64) {
 
 /**
  * Compare two base64 PNG images pixel by pixel in Oklab space.
- * Returns a score between 0 (identical) and 1 (completely different).
- * Only compares opaque pixels that aren't the bg color in the reference.
- *
- * @param {string} refB64      - reference image base64
- * @param {string} variantB64  - variant image base64
- * @param {string} bgHex       - transparent/bg color hex to skip
- * @returns {Promise<{score: number, mismatchedPixels: number, totalPixels: number}>}
  */
 export function compareVariantPixels(refB64, variantB64, bgHex = '#73c5a4') {
-  const hexToRgb = (hex) => {
+  const hexToRgbLocal = (hex) => {
     const h = hex.replace('#', '')
     return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)]
   }
-
-  // sRGB → linear
   const toLinear = (c) => {
     const v = c / 255
     return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
   }
-
-  // RGB (0-255) → Oklab
   const toOklab = (r, g, b) => {
     const lr = toLinear(r), lg = toLinear(g), lb = toLinear(b)
     const l = Math.cbrt(0.4122214708*lr + 0.5363325363*lg + 0.0514459929*lb)
@@ -196,14 +215,9 @@ export function compareVariantPixels(refB64, variantB64, bgHex = '#73c5a4') {
       0.0259040371*l + 0.7827717662*m - 0.8086757660*s,
     ]
   }
-
   const oklabDist = (a, b) =>
     Math.sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2 + (a[2]-b[2])**2)
-
-  // Threshold: Oklab distance above which we call pixels "mismatched"
-  // 0.05 ≈ a just-noticeable hue shift; 0.15 ≈ clearly different color
   const MISMATCH_THRESHOLD = 0.08
-
   const loadPixels = (b64) => new Promise((resolve) => {
     const img = new Image()
     img.onload = () => {
@@ -215,30 +229,21 @@ export function compareVariantPixels(refB64, variantB64, bgHex = '#73c5a4') {
     }
     img.src = `data:image/png;base64,${b64}`
   })
-
   return Promise.all([loadPixels(refB64), loadPixels(variantB64)]).then(([refData, varData]) => {
-    const [bgR, bgG, bgB] = hexToRgb(bgHex)
+    const [bgR, bgG, bgB] = hexToRgbLocal(bgHex)
     const rd = refData.data
     const vd = varData.data
     const len = Math.min(rd.length, vd.length)
-
-    let totalPixels    = 0
-    let mismatchedPixels = 0
-
+    let totalPixels = 0, mismatchedPixels = 0
     for (let i = 0; i < len; i += 4) {
-      const rA = rd[i+3]
-      // Skip transparent or bg-colored pixels in the reference
-      if (rA < 128) continue
+      if (rd[i+3] < 128) continue
       const rR = rd[i], rG = rd[i+1], rB = rd[i+2]
       if (rR === bgR && rG === bgG && rB === bgB) continue
-
       totalPixels++
-
       const vR = vd[i], vG = vd[i+1], vB = vd[i+2]
       const dist = oklabDist(toOklab(rR, rG, rB), toOklab(vR, vG, vB))
       if (dist > MISMATCH_THRESHOLD) mismatchedPixels++
     }
-
     const score = totalPixels === 0 ? 0 : mismatchedPixels / totalPixels
     return { score, mismatchedPixels, totalPixels }
   })

@@ -339,7 +339,7 @@
 }
 
 .drawer {
-  width: 520px;
+  width: 50%;
   max-width: 95vw;
   /* NO height:100% — align-items:stretch on parent handles it */
   background: var(--surface);

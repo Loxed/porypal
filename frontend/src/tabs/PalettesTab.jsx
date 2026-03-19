@@ -716,31 +716,40 @@ function LibraryNode({ node, query, onImport, depth = 0 }) {
 }
  
 // Lazy-loading folder: only fetches children when the user opens it
+// Fixed: also fetches on mount if the folder starts open (depth < 1)
 function LazyFolderNode({ node, query, onImport, depth }) {
-  const [open, setOpen]           = useState(depth < 1)
-  const [children, setChildren]   = useState(node.children ?? null) // pre-populated if top-level had them
-  const [loading, setLoading]     = useState(false)
- 
-  const handleToggle = async () => {
-    if (!open && children === null && !loading) {
-      setLoading(true)
-      try {
-        const res = await fetch(`/api/palette-library/folder?path=${encodeURIComponent(node.path)}`)
-        if (!res.ok) throw new Error()
-        setChildren(await res.json())
-      } catch {
-        setChildren([])
-      } finally {
-        setLoading(false)
-      }
+  const [open, setOpen]         = useState(depth < 1)
+  const [children, setChildren] = useState(node.children ?? null)
+  const [loading, setLoading]   = useState(false)
+
+  const fetchChildren = async () => {
+    if (children !== null || loading) return
+    setLoading(true)
+    try {
+      const res = await fetch(`/api/palette-library/folder?path=${encodeURIComponent(node.path)}`)
+      if (!res.ok) throw new Error()
+      setChildren(await res.json())
+    } catch {
+      setChildren([])
+    } finally {
+      setLoading(false)
     }
+  }
+
+  // Auto-load children when starting open (depth < 1)
+  useEffect(() => {
+    if (open && children === null) fetchChildren()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleToggle = async () => {
+    if (!open && children === null) fetchChildren()
     setOpen(o => !o)
   }
- 
+
   // If there's an active query, check if any child could match
   const hasMatch = query
     ? (() => {
-        if (!children) return true // unknown — show it
+        if (!children) return true
         const check = (n) => {
           if (n.type === 'palette') return n.name.replace(/\.pal$/, '').toLowerCase().includes(query.toLowerCase())
           if (n.type === 'pokemon_folder') return n.name.toLowerCase().includes(query.toLowerCase())
@@ -749,9 +758,9 @@ function LazyFolderNode({ node, query, onImport, depth }) {
         return children.some(check)
       })()
     : true
- 
+
   if (!hasMatch) return null
- 
+
   return (
     <div className="lib-tree-folder">
       <button className="lib-tree-folder-header" onClick={handleToggle}>
@@ -777,7 +786,6 @@ function LazyFolderNode({ node, query, onImport, depth }) {
     </div>
   )
 }
-
 // ─────────────────────────────────────────────────────────────────────────────
 // Library drawer
 // ─────────────────────────────────────────────────────────────────────────────
@@ -822,7 +830,7 @@ function LibraryDrawer({ onClose, onImport }) {
           </div>
           <input
             className="drawer-search"
-            placeholder="search pokémon…"
+            placeholder="search library..."
             value={query}
             onChange={handleSearch}
             autoFocus

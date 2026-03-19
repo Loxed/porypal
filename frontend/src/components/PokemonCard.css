@@ -115,7 +115,6 @@
 }
 
 /* ── Sprite row ─────────────────────────────────────────────────────────────── */
-/* Horizontal row of sprite groups: Icon | Front | Back | OW */
 .pkm-sprite-row {
   display: flex;
   align-items: flex-end;
@@ -124,7 +123,6 @@
   padding: 2px 0;
 }
 
-/* One group column: [normal | shiny] pair + label */
 .pkm-sprite-group {
   display: flex;
   flex-direction: column;
@@ -132,14 +130,12 @@
   gap: 3px;
 }
 
-/* The side-by-side normal + shiny pair */
 .pkm-sprite-pair {
   display: flex;
   gap: 4px;
   align-items: flex-end;
 }
 
-/* Each individual sprite column (image + "normal"/"shiny" sub-label) */
 .pkm-spr-col {
   display: flex;
   flex-direction: column;
@@ -159,7 +155,6 @@
   opacity: 0.9;
 }
 
-/* Sprite image — pixelated, fixed 48×48 display */
 .pkm-spr {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
@@ -174,7 +169,6 @@
   flex-shrink: 0;
 }
 
-/* Placeholder: same size as sprite, shown when missing or loading */
 .pkm-spr-placeholder {
   width: 48px;
   height: 48px;
@@ -195,7 +189,6 @@
   border-color: var(--border2);
 }
 
-/* Group label below the pair (e.g. "Front", "OW") */
 .pkm-sprite-label {
   font-family: var(--mono);
   font-size: 9px;
@@ -211,38 +204,38 @@
   gap: 3px;
 }
 
-.pkm-palette-row {
+.pkm-pal-row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   padding: 3px 6px;
   border-radius: 4px;
   border: 1px solid var(--border);
   background: var(--surface);
   transition: border-color 0.1s;
 }
-.pkm-palette-row:hover {
+.pkm-pal-row:hover {
   border-color: var(--border2);
 }
 
-.pkm-palette-name {
+.pkm-pal-label {
   font-family: var(--mono);
   font-size: 10px;
   color: var(--muted);
-  min-width: 90px;
-  flex-shrink: 0;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Fixed width so all labels align regardless of length */
+  width: 20%;
+  flex-shrink: 0;
 }
 
-.pkm-palette-swatches {
+.pkm-pal-strip {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
 }
 
-.pkm-palette-actions {
-  display: flex;
-  gap: 2px;
+.pkm-import-btn {
   flex-shrink: 0;
 }
 

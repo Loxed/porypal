@@ -2,11 +2,12 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import './PalettesTab.css'
 import { PaletteStrip } from '../components/PaletteStrip'
 import { Modal } from '../components/Modal'
+import { PokemonCard } from '../components/PokemonCard'
 import {
   RefreshCw, Upload, Trash2, Download, BookOpen,
   ChevronDown, ChevronRight, Check, X, FolderPlus,
-  Move, Pencil, Palette, GripVertical, Folder, FolderOpen, Plus, Minus,
-  FolderInput,
+  Move, Palette, GripVertical, Folder, FolderOpen, Plus, Minus,
+  FolderInput, Loader,
 } from 'lucide-react'
 
 const API = '/api'
@@ -284,7 +285,7 @@ function MoveDropdown({ folders, currentFolder, onMove }) {
         title="move to folder"
         onClick={handleOpen}
       >
-        <FolderInput size={11} />
+        <Move size={11} />
       </button>
       {open && (
         <div
@@ -383,7 +384,7 @@ function PaletteRow({ palette, folders, onDelete, onDownload, onRename, onMove, 
         <div className="pal-row-actions">
           {!palette.is_default && (
             <button className="pal-icon-btn" title="edit colors" onClick={() => setEditing(e => !e)}>
-              <Pencil size={12} />
+              <Palette size={12} />
             </button>
           )}
           {!palette.is_default && (
@@ -566,87 +567,15 @@ function NewFolderModal({ onClose, onCreate }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Library tree node (recursive)
+// Library — plain palette row
 // ─────────────────────────────────────────────────────────────────────────────
 
-function LibraryNode({ node, query, onImport, depth = 0 }) {
-  const [open, setOpen] = useState(depth < 2)
-  const [importAllState, setImportAllState] = useState('idle')
-
-  if (node.type === 'palette') {
-    const name = node.name.replace(/\.pal$/, '')
-    if (query && !name.toLowerCase().includes(query.toLowerCase())) return null
-    return (
-      <LibraryPaletteRow palette={node} onImport={onImport} />
-    )
-  }
-
-  // Folder node
-  // Filter children recursively when searching
-  const hasMatch = query
-    ? (function checkMatch(n) {
-        if (n.type === 'palette') return n.name.replace(/\.pal$/, '').toLowerCase().includes(query.toLowerCase())
-        return n.children?.some(checkMatch)
-      })(node)
-    : true
-
-  if (!hasMatch) return null
-
-  const handleImportAll = async () => {
-    setImportAllState('importing')
-    try {
-      const res = await fetch(`${API}/palette-library/import-folder`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ folder_path: node.path }),
-      })
-      if (!res.ok) throw new Error()
-      setImportAllState('done')
-      onImport()
-      setTimeout(() => setImportAllState('idle'), 2000)
-    } catch {
-      setImportAllState('error')
-      setTimeout(() => setImportAllState('idle'), 2000)
-    }
-  }
-
-  return (
-    <div className="lib-tree-folder">
-      <button className="lib-tree-folder-header" onClick={() => setOpen(o => !o)}>
-        {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
-        <span className="lib-tree-folder-name">{node.name}</span>
-        <span className="lib-tree-folder-count">{node.count}</span>
-        <button
-          className="lib-import-all-btn"
-          onClick={e => { e.stopPropagation(); handleImportAll() }}
-          disabled={importAllState === 'importing'}
-          title="import all in this folder"
-        >
-          {importAllState === 'done'
-            ? <><Check size={10} /> imported</>
-            : importAllState === 'error'
-            ? 'error'
-            : <><Download size={10} /> import all</>
-          }
-        </button>
-      </button>
-      {open && (
-        <div className="lib-tree-folder-body">
-          {node.children?.map((child, i) => (
-            <LibraryNode key={i} node={child} query={query} onImport={onImport} depth={depth + 1} />
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
 function LibraryPaletteRow({ palette, onImport }) {
-  const [state, setState] = useState('idle')
+  const [importState, setImportState] = useState('idle')
 
   const handleImport = async () => {
-    if (state !== 'idle') return
-    setState('importing')
+    if (importState !== 'idle') return
+    setImportState('importing')
     try {
       const res = await fetch(`${API}/palette-library/import`, {
         method: 'POST',
@@ -654,12 +583,12 @@ function LibraryPaletteRow({ palette, onImport }) {
         body: JSON.stringify({ path: palette.path }),
       })
       if (!res.ok) throw new Error()
-      setState('done')
+      setImportState('done')
       onImport()
-      setTimeout(() => setState('idle'), 2000)
+      setTimeout(() => setImportState('idle'), 2000)
     } catch {
-      setState('error')
-      setTimeout(() => setState('idle'), 2000)
+      setImportState('error')
+      setTimeout(() => setImportState('idle'), 2000)
     }
   }
 
@@ -670,12 +599,181 @@ function LibraryPaletteRow({ palette, onImport }) {
         <PaletteStrip colors={palette.colors} usedIndices={palette.colors.map((_, i) => i)} checkSize="50%" />
       </div>
       <button
-        className={`lib-import-btn ${state}`}
+        className={`lib-import-btn ${importState}`}
         onClick={handleImport}
-        disabled={state === 'importing'}
+        disabled={importState === 'importing'}
       >
-        {state === 'done' ? <><Check size={11} /> added</> : state === 'error' ? 'failed' : '+ add'}
+        {importState === 'done' ? <><Check size={11} /> added</> : importState === 'error' ? 'failed' : '+ add'}
       </button>
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Library — paginated pokemon folder section
+// ─────────────────────────────────────────────────────────────────────────────
+
+const PAGE_SIZE = 20
+
+function PokemonFolderSection({ node, query, onImport }) {
+  const [open, setOpen]       = useState(false)
+  const [items, setItems]     = useState([])
+  const [total, setTotal]     = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [hasMore, setHasMore] = useState(false)
+  const [offset, setOffset]   = useState(0)
+  const sentinelRef           = useRef()
+
+  // Reset when query or folder path changes
+  useEffect(() => {
+    setItems([])
+    setTotal(null)
+    setOffset(0)
+    setHasMore(false)
+  }, [node.path, query])
+
+  // Fetch page when open + offset changes
+  useEffect(() => {
+    if (!open) return
+    let cancelled = false
+    setLoading(true)
+    const params = new URLSearchParams({ folder: node.path, offset, limit: PAGE_SIZE })
+    if (query) params.set('q', query)
+    fetch(`${API}/palette-library/pokemon?${params}`)
+      .then(r => r.json())
+      .then(data => {
+        if (cancelled) return
+        setItems(prev => offset === 0 ? data.items : [...prev, ...data.items])
+        setTotal(data.total)
+        setHasMore(data.has_more)
+        setLoading(false)
+      })
+      .catch(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [open, node.path, query, offset])
+
+  // Intersection observer for infinite scroll
+  useEffect(() => {
+    if (!sentinelRef.current || !hasMore || loading) return
+    const obs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) setOffset(prev => prev + PAGE_SIZE)
+    }, { threshold: 0.1 })
+    obs.observe(sentinelRef.current)
+    return () => obs.disconnect()
+  }, [hasMore, loading])
+
+  const handleToggle = () => {
+    if (!open) { setItems([]); setTotal(null); setOffset(0); setHasMore(false) }
+    setOpen(o => !o)
+  }
+
+  return (
+    <div className="lib-tree-folder">
+      <button className="lib-tree-folder-header" onClick={handleToggle}>
+        {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+        <span className="lib-tree-folder-name">{node.name}</span>
+        {total !== null && <span className="lib-tree-folder-count">{total}</span>}
+      </button>
+      {open && (
+        <div className="lib-tree-folder-body lib-pokemon-grid">
+          {items.map((pkm, i) => (
+            <PokemonCard key={pkm.path ?? i} node={pkm} onImport={onImport} />
+          ))}
+          {loading && (
+            <div className="lib-pokemon-loading">
+              <Loader size={13} className="spinning" /> loading…
+            </div>
+          )}
+          {!loading && hasMore && <div ref={sentinelRef} className="lib-pokemon-sentinel" />}
+          {!loading && !hasMore && total !== null && items.length === 0 && (
+            <div className="lib-pokemon-empty">no pokémon found</div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Library — tree node (recursive)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function LibraryNode({ node, query, onImport, depth = 0 }) {
+  // ── pokemon_folder → paginated PokemonFolderSection ────────────────────────
+  if (node.type === 'pokemon_folder') {
+    return <PokemonFolderSection node={node} query={query} onImport={onImport} />
+  }
+ 
+  // ── standalone palette row ──────────────────────────────────────────────────
+  if (node.type === 'palette') {
+    const name = node.name.replace(/\.pal$/, '')
+    if (query && !name.toLowerCase().includes(query.toLowerCase())) return null
+    return <LibraryPaletteRow palette={node} onImport={onImport} />
+  }
+ 
+  // ── regular folder — lazy-load children when opened ─────────────────────────
+  return <LazyFolderNode node={node} query={query} onImport={onImport} depth={depth} />
+}
+ 
+// Lazy-loading folder: only fetches children when the user opens it
+function LazyFolderNode({ node, query, onImport, depth }) {
+  const [open, setOpen]           = useState(depth < 1)
+  const [children, setChildren]   = useState(node.children ?? null) // pre-populated if top-level had them
+  const [loading, setLoading]     = useState(false)
+ 
+  const handleToggle = async () => {
+    if (!open && children === null && !loading) {
+      setLoading(true)
+      try {
+        const res = await fetch(`/api/palette-library/folder?path=${encodeURIComponent(node.path)}`)
+        if (!res.ok) throw new Error()
+        setChildren(await res.json())
+      } catch {
+        setChildren([])
+      } finally {
+        setLoading(false)
+      }
+    }
+    setOpen(o => !o)
+  }
+ 
+  // If there's an active query, check if any child could match
+  const hasMatch = query
+    ? (() => {
+        if (!children) return true // unknown — show it
+        const check = (n) => {
+          if (n.type === 'palette') return n.name.replace(/\.pal$/, '').toLowerCase().includes(query.toLowerCase())
+          if (n.type === 'pokemon_folder') return n.name.toLowerCase().includes(query.toLowerCase())
+          return n.children?.some(check) ?? true
+        }
+        return children.some(check)
+      })()
+    : true
+ 
+  if (!hasMatch) return null
+ 
+  return (
+    <div className="lib-tree-folder">
+      <button className="lib-tree-folder-header" onClick={handleToggle}>
+        {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+        <span className="lib-tree-folder-name">{node.name}</span>
+        {loading && <Loader size={11} className="spinning" />}
+      </button>
+      {open && (
+        <div className="lib-tree-folder-body">
+          {loading && (
+            <div className="lib-pokemon-loading">
+              <Loader size={12} className="spinning" /> loading…
+            </div>
+          )}
+          {children?.map((child, i) => (
+            <LibraryNode key={i} node={child} query={query} onImport={onImport} depth={depth + 1} />
+          ))}
+          {children?.length === 0 && !loading && (
+            <div className="lib-pokemon-empty">empty</div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -685,10 +783,12 @@ function LibraryPaletteRow({ palette, onImport }) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function LibraryDrawer({ onClose, onImport }) {
-  const [tree, setTree]   = useState(null)
-  const [query, setQuery] = useState('')
-  const [loading, setLoading] = useState(true)
-  const drawerRef = useRef()
+  const [tree, setTree]               = useState(null)
+  const [query, setQuery]             = useState('')
+  const [debouncedQuery, setDebounced] = useState('')
+  const [loading, setLoading]         = useState(true)
+  const drawerRef  = useRef()
+  const debounceRef = useRef()
 
   useEffect(() => {
     fetch(`${API}/palette-library`)
@@ -698,15 +798,19 @@ function LibraryDrawer({ onClose, onImport }) {
   }, [])
 
   useEffect(() => {
-    const handler = e => { if (drawerRef.current && !drawerRef.current.contains(e.target)) onClose() }
+    const handler = e => {
+      if (drawerRef.current && !drawerRef.current.contains(e.target)) onClose()
+    }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
   }, [onClose])
 
-  const countPalettes = nodes =>
-    (nodes || []).reduce((n, node) => n + (node.type === 'palette' ? 1 : countPalettes(node.children)), 0)
-
-  const totalPalettes = tree ? countPalettes(tree) : 0
+  const handleSearch = e => {
+    const val = e.target.value
+    setQuery(val)
+    clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => setDebounced(val), 300)
+  }
 
   return (
     <div className="drawer-overlay">
@@ -714,14 +818,13 @@ function LibraryDrawer({ onClose, onImport }) {
         <div className="drawer-header">
           <div className="drawer-title-row">
             <span className="drawer-title">palette library</span>
-            {!loading && <span className="drawer-total">{totalPalettes} palettes</span>}
             <button className="drawer-close" onClick={onClose}><X size={15} /></button>
           </div>
           <input
             className="drawer-search"
-            placeholder="search…"
+            placeholder="search pokémon…"
             value={query}
-            onChange={e => setQuery(e.target.value)}
+            onChange={handleSearch}
             autoFocus
           />
         </div>
@@ -734,7 +837,7 @@ function LibraryDrawer({ onClose, onImport }) {
             </div>
           )}
           {!loading && tree?.map((node, i) => (
-            <LibraryNode key={i} node={node} query={query} onImport={onImport} depth={0} />
+            <LibraryNode key={i} node={node} query={debouncedQuery} onImport={onImport} depth={0} />
           ))}
         </div>
       </div>

@@ -1,6 +1,6 @@
 /* frontend/src/tabs/PalettesTab.css */
 
-/* ── Layout ── */
+/* ── Layout ─────────────────────────────────────────────────────────────────── */
 .palettes-layout {
   display: grid;
   grid-template-columns: 220px 1fr;
@@ -10,7 +10,7 @@
 .palettes-left  { display: flex; flex-direction: column; gap: 14px; }
 .palettes-right { display: flex; flex-direction: column; gap: 16px; min-height: 400px; }
 
-/* ── Left panel ── */
+/* ── Left panel ─────────────────────────────────────────────────────────────── */
 .palettes-stats { display: flex; flex-direction: column; gap: 2px; }
 .palettes-stat-row { display: flex; gap: 16px; }
 .palettes-stat-item { display: flex; flex-direction: column; gap: 2px; }
@@ -48,7 +48,7 @@
   padding: 1px 4px; border-radius: 3px; font-size: 10px; color: var(--text);
 }
 
-/* ── Toolbar ── */
+/* ── Toolbar ────────────────────────────────────────────────────────────────── */
 .palettes-toolbar {
   display: flex; align-items: center; justify-content: space-between;
   padding-bottom: 8px; border-bottom: 1px solid var(--border);
@@ -65,7 +65,7 @@
 }
 .palettes-new-folder-btn:hover { color: var(--accent); border-color: var(--accent); }
 
-/* ── Folder section ── */
+/* ── Folder section ─────────────────────────────────────────────────────────── */
 .pal-folder-section {
   display: flex; flex-direction: column; gap: 4px;
   border: 1px solid var(--border); border-radius: var(--radius);
@@ -97,11 +97,9 @@
   color: var(--muted);
   flex: 1;
   cursor: default;
-  /* render path separators in a dimmer color */
   letter-spacing: 0.01em;
 }
 
-/* Bold just the last path segment */
 .pal-folder-name .path-leaf {
   color: var(--text);
   font-weight: 600;
@@ -132,7 +130,7 @@
 
 .pal-folder-body { display: flex; flex-direction: column; gap: 1px; padding: 4px; }
 
-/* ── Palette row ── */
+/* ── Palette row ────────────────────────────────────────────────────────────── */
 .pal-row {
   display: flex; align-items: center; gap: 10px;
   padding: 7px 10px;
@@ -176,7 +174,7 @@
 .pal-row-strip { flex: 1; min-width: 0; }
 .pal-row-actions { display: flex; align-items: center; gap: 3px; flex-shrink: 0; }
 
-/* ── Icon buttons ── */
+/* ── Icon buttons ───────────────────────────────────────────────────────────── */
 .pal-icon-btn {
   width: 26px; height: 26px;
   background: transparent; border: 1px solid var(--border); border-radius: var(--radius);
@@ -188,7 +186,7 @@
 .pal-icon-btn--danger:hover,
 .pal-icon-btn--danger.confirming { color: var(--danger); border-color: var(--danger); }
 
-/* ── Color editor (expanded row) ── */
+/* ── Color editor ───────────────────────────────────────────────────────────── */
 .pal-color-editor {
   padding: 8px 10px 10px;
   background: var(--surface); border-top: 1px solid var(--border);
@@ -196,7 +194,6 @@
   animation: fadeIn 0.12s ease;
 }
 
-/* count row */
 .pal-editor-count-row {
   display: flex; align-items: center; justify-content: space-between;
 }
@@ -299,7 +296,7 @@
   display: flex; align-items: center; gap: 4px;
 }
 
-/* ── Move dropdown — fixed positioning, no wrapper div needed ── */
+/* ── Move dropdown ──────────────────────────────────────────────────────────── */
 .pal-move-menu {
   min-width: 200px; background: var(--surface); border: 1px solid var(--border2);
   border-radius: var(--radius); box-shadow: 0 8px 24px rgba(0,0,0,0.5);
@@ -320,34 +317,60 @@
 .pal-move-menu-item:last-child { border-bottom: none; }
 .pal-move-menu-item:hover { background: var(--surface2); color: var(--accent); }
 
-/* ── New folder modal inputs ── */
+/* ── New folder modal ───────────────────────────────────────────────────────── */
 .palettes-new-folder-form { display: flex; flex-direction: column; gap: 12px; }
 
-/* ── Library drawer ── */
+/* ─────────────────────────────────────────────────────────────────────────────
+   LIBRARY DRAWER
+   The scroll fix:
+   - .drawer-overlay: align-items: stretch (no height on children needed)
+   - .drawer: NO height:100% — stretch handles it; overflow:hidden to clip body
+   - .drawer-body: flex:1 + min-height:0 + overflow-y:auto
+     DO NOT use display:flex on drawer-body — block flow scrolls reliably
+   ───────────────────────────────────────────────────────────────────────────── */
 .drawer-overlay {
-  position: fixed; inset: 0;
+  position: fixed;
+  inset: 0;
   background: rgba(0,0,0,0.5);
   z-index: 400;
-  display: flex; justify-content: flex-end;
+  display: flex;
+  justify-content: flex-end;
+  align-items: stretch;      /* ← makes .drawer fill full viewport height */
 }
+
 .drawer {
-  width: 520px; max-width: 95vw; height: 100%;
-  background: var(--surface); border-left: 1px solid var(--border2);
-  display: flex; flex-direction: column;
+  width: 520px;
+  max-width: 95vw;
+  /* NO height:100% — align-items:stretch on parent handles it */
+  background: var(--surface);
+  border-left: 1px solid var(--border2);
+  display: flex;
+  flex-direction: column;
   box-shadow: -8px 0 32px rgba(0,0,0,0.4);
   animation: slideIn 0.18s ease;
+  overflow: hidden;          /* ← clips drawer-body so it can scroll internally */
 }
+
 @keyframes slideIn {
   from { transform: translateX(40px); opacity: 0; }
   to   { transform: none; opacity: 1; }
 }
 
 .drawer-header {
-  padding: 16px 16px 12px; border-bottom: 1px solid var(--border);
-  display: flex; flex-direction: column; gap: 10px; flex-shrink: 0;
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;            /* ← header never shrinks */
 }
-.drawer-title-row { display: flex; align-items: center; gap: 8px; }
-.drawer-title { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--text); }
+
+.drawer-title-row {
+  display: flex; align-items: center; gap: 8px;
+}
+.drawer-title {
+  font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--text);
+}
 .drawer-total {
   font-family: var(--mono); font-size: 11px; color: var(--muted);
   background: var(--surface2); border: 1px solid var(--border);
@@ -358,6 +381,7 @@
   cursor: pointer; padding: 2px; display: flex; align-items: center; border-radius: 3px;
 }
 .drawer-close:hover { color: var(--text); }
+
 .drawer-search {
   background: var(--surface2); border: 1px solid var(--border);
   border-radius: var(--radius); color: var(--text);
@@ -367,17 +391,37 @@
 .drawer-search:focus { outline: none; border-color: var(--accent); }
 .drawer-search::placeholder { color: var(--muted); }
 
-.drawer-body { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; }
+.drawer-body {
+  flex: 1;                   /* ← takes all remaining height */
+  min-height: 0;             /* ← CRITICAL: lets flex child shrink below content size */
+  overflow-y: auto;          /* ← enables scroll */
+  /* NO display:flex here — block flow scrolls correctly */
+  padding: 12px 16px;
+}
+
+/* ── Scrollbar styling ──────────────────────────────────────────────────────── */
+.drawer-body::-webkit-scrollbar { width: 5px; }
+.drawer-body::-webkit-scrollbar-track { background: var(--surface); }
+.drawer-body::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+.drawer-body::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* Children inside drawer-body need a little gap between them */
+.drawer-body > * + * {
+  margin-top: 6px;
+}
+
+/* ── Drawer empty state ─────────────────────────────────────────────────────── */
 .drawer-empty {
   display: flex; flex-direction: column; gap: 8px; padding: 24px 0;
-  align-items: center; font-family: var(--mono); font-size: 12px; color: var(--muted); text-align: center;
+  align-items: center; font-family: var(--mono); font-size: 12px; color: var(--muted);
+  text-align: center;
 }
 .drawer-empty code {
   background: var(--surface2); border: 1px solid var(--border2);
   padding: 1px 5px; border-radius: 3px; font-size: 11px;
 }
 
-/* ── Library tree nodes ── */
+/* ── Library tree nodes ─────────────────────────────────────────────────────── */
 .lib-tree-folder {
   display: flex; flex-direction: column; gap: 2px;
   border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
@@ -408,7 +452,7 @@
 
 .lib-tree-folder-body { padding: 4px 8px; display: flex; flex-direction: column; gap: 3px; }
 
-/* ── Library palette row ── */
+/* ── Library palette row ────────────────────────────────────────────────────── */
 .lib-row {
   display: flex; align-items: center; gap: 8px;
   padding: 6px 8px; border-radius: calc(var(--radius) - 1px);
@@ -433,6 +477,23 @@
 .lib-import-btn.error { border-color: var(--danger); color: var(--danger); pointer-events: none; }
 .lib-import-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* ── Spinner ── */
+/* ── Pokemon grid (inside lib-tree-folder-body) ─────────────────────────────── */
+.lib-pokemon-grid {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 4px 0;
+}
+.lib-pokemon-loading {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 8px;
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+}
+.lib-pokemon-sentinel { height: 1px; }
+.lib-pokemon-empty {
+  padding: 12px 8px;
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+  text-align: center;
+}
+
+/* ── Spinner ────────────────────────────────────────────────────────────────── */
 @keyframes spin { to { transform: rotate(360deg); } }
 .spinning { animation: spin 0.7s linear infinite; }

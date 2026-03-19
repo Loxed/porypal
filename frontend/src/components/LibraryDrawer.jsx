@@ -1,24 +1,42 @@
 /**
  * frontend/src/components/LibraryDrawer.jsx
+ *
+ * Node type routing:
+ *   pokemon_folder / trainers_folder  -> PokemonFolderSection  (paginated PokemonCards)
+ *   items_folder                      -> ItemsFolderSection    (paginated LibraryItemCards)
+ *   folder                            -> GenericFolderSection  (lazy, shows PNGs + PALs inline)
+ *   palette                           -> LibraryPaletteRow
  */
 
 import { useState, useEffect, useRef } from 'react'
 import { X, ChevronDown, ChevronRight, Check, Loader, Download, FolderInput, Maximize2, Minimize2 } from 'lucide-react'
 import { PaletteStrip } from './PaletteStrip'
 import { PokemonCard } from './PokemonCard.jsx'
+import { LibraryItemCard } from './LibraryItemCard.jsx'
 import './LibraryDrawer.css'
 
 const API = '/api'
 const PAGE_SIZE = 20
 
-// ── Standalone palette row ─────────────────────────────────────────────────
+function wildcardMatch(pattern, str) {
+  const p = pattern.toLowerCase()
+  const s = str.toLowerCase()
+  if (!p.includes('*') && !p.includes('?')) return s.includes(p)
+  const regex = p
+    .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+    .replace(/\*/g, '.*')
+    .replace(/\?/g, '.')
+  return new RegExp('^' + regex + '$').test(s)
+}
+
+// -- Standalone palette row -------------------------------------------------
 
 function LibraryPaletteRow({ palette, onImport }) {
-  const [importState, setImportState] = useState('idle')
+  const [state, setState] = useState('idle')
 
   const handleImport = async () => {
-    if (importState !== 'idle') return
-    setImportState('importing')
+    if (state !== 'idle') return
+    setState('loading')
     try {
       const res = await fetch(`${API}/palette-library/import`, {
         method: 'POST',
@@ -26,12 +44,12 @@ function LibraryPaletteRow({ palette, onImport }) {
         body: JSON.stringify({ path: palette.path }),
       })
       if (!res.ok) throw new Error()
-      setImportState('done')
+      setState('done')
       onImport()
-      setTimeout(() => setImportState('idle'), 2000)
+      setTimeout(() => setState('idle'), 2000)
     } catch {
-      setImportState('error')
-      setTimeout(() => setImportState('idle'), 2000)
+      setState('error')
+      setTimeout(() => setState('idle'), 2000)
     }
   }
 
@@ -39,30 +57,41 @@ function LibraryPaletteRow({ palette, onImport }) {
     <div className="lib-row">
       <span className="lib-row-name">{palette.name.replace(/\.pal$/, '')}</span>
       <div className="lib-row-strip">
-        <PaletteStrip
-          colors={palette.colors}
-          usedIndices={palette.colors.map((_, i) => i)}
-          checkSize="50%"
-        />
+        <PaletteStrip colors={palette.colors} usedIndices={palette.colors.map((_, i) => i)} checkSize="50%" />
       </div>
-      <button
-        className={`lib-import-btn ${importState}`}
-        onClick={handleImport}
-        disabled={importState === 'importing'}
-      >
-        {importState === 'done'
-          ? <><Check size={11} /> added</>
-          : importState === 'error'
-          ? 'failed'
-          : '+ add'}
+      <button className={`lib-import-btn ${state}`} onClick={handleImport} disabled={state === 'loading'}>
+        {state === 'done' ? <><Check size={11} /> added</> : state === 'error' ? 'failed' : '+ add'}
       </button>
     </div>
   )
 }
 
-// ── Pokemon / Trainers folder ──────────────────────────────────────────────
+// -- Generic sprite row (PNG inside a generic folder) -----------------------
 
-function PokemonFolderSection({ node, query, onImport, fullscreen }) {
+function LibrarySpriteRow({ sprite }) {
+  const [err, setErr] = useState(false)
+  return (
+    <div className="lib-row">
+      <div className="lib-sprite-thumb">
+        {!err
+          ? <img
+              className="lib-sprite-img"
+              src={`${API}/palette-library/sprite?path=${encodeURIComponent(sprite.path)}`}
+              alt={sprite.name}
+              draggable={false}
+              onError={() => setErr(true)}
+            />
+          : <div className="lib-sprite-img-missing" />
+        }
+      </div>
+      <span className="lib-row-name">{sprite.name.replace(/\.png$/i, '')}</span>
+    </div>
+  )
+}
+
+// -- Paginated section base (shared between Pokemon + Items) ----------------
+
+function usePaginatedSection(nodePath, query, fetchUrl) {
   const [open, setOpen]       = useState(false)
   const [items, setItems]     = useState([])
   const [total, setTotal]     = useState(null)
@@ -72,19 +101,16 @@ function PokemonFolderSection({ node, query, onImport, fullscreen }) {
   const sentinelRef           = useRef()
 
   useEffect(() => {
-    setItems([])
-    setTotal(null)
-    setOffset(0)
-    setHasMore(false)
-  }, [node.path, query])
+    setItems([]); setTotal(null); setOffset(0); setHasMore(false)
+  }, [nodePath, query])
 
   useEffect(() => {
     if (!open) return
     let cancelled = false
     setLoading(true)
-    const params = new URLSearchParams({ folder: node.path, offset, limit: PAGE_SIZE })
+    const params = new URLSearchParams({ folder: nodePath, offset, limit: PAGE_SIZE })
     if (query) params.set('q', query)
-    fetch(`${API}/palette-library/pokemon?${params}`)
+    fetch(`${fetchUrl}?${params}`)
       .then(r => r.json())
       .then(data => {
         if (cancelled) return
@@ -95,25 +121,35 @@ function PokemonFolderSection({ node, query, onImport, fullscreen }) {
       })
       .catch(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
-  }, [open, node.path, query, offset])
+  }, [open, nodePath, query, offset, fetchUrl])
 
   useEffect(() => {
     if (!sentinelRef.current || !hasMore || loading) return
-    const obs = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) setOffset(prev => prev + PAGE_SIZE)
-    }, { threshold: 0.1 })
+    const obs = new IntersectionObserver(
+      entries => { if (entries[0].isIntersecting) setOffset(p => p + PAGE_SIZE) },
+      { threshold: 0.1 }
+    )
     obs.observe(sentinelRef.current)
     return () => obs.disconnect()
   }, [hasMore, loading])
 
-  const handleToggle = () => {
+  const toggle = () => {
     if (!open) { setItems([]); setTotal(null); setOffset(0); setHasMore(false) }
     setOpen(o => !o)
   }
 
+  return { open, toggle, items, total, loading, hasMore, sentinelRef }
+}
+
+// -- Pokemon / Trainers folder ----------------------------------------------
+
+function PokemonFolderSection({ node, query, onImport, fullscreen }) {
+  const { open, toggle, items, total, loading, hasMore, sentinelRef } =
+    usePaginatedSection(node.path, query, `${API}/palette-library/pokemon`)
+
   return (
     <div className="lib-tree-folder">
-      <button className="lib-tree-folder-header" onClick={handleToggle}>
+      <button className="lib-tree-folder-header" onClick={toggle}>
         {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
         <span className="lib-tree-folder-name">{node.name}</span>
         {total !== null && <span className="lib-tree-folder-count">{total}</span>}
@@ -123,11 +159,7 @@ function PokemonFolderSection({ node, query, onImport, fullscreen }) {
           {items.map((pkm, i) => (
             <PokemonCard key={pkm.path ?? i} node={pkm} onImport={onImport} fullscreen={fullscreen} />
           ))}
-          {loading && (
-            <div className="lib-pokemon-loading">
-              <Loader size={13} className="spinning" /> loading…
-            </div>
-          )}
+          {loading && <div className="lib-pokemon-loading"><Loader size={13} className="spinning" /> loading...</div>}
           {!loading && hasMore && <div ref={sentinelRef} className="lib-pokemon-sentinel" />}
           {!loading && !hasMore && total !== null && items.length === 0 && (
             <div className="lib-pokemon-empty">no entries found</div>
@@ -138,155 +170,25 @@ function PokemonFolderSection({ node, query, onImport, fullscreen }) {
   )
 }
 
-// ── Items folder ───────────────────────────────────────────────────────────
-
-function ItemRow({ item, onImport }) {
-  const [importState, setImportState] = useState('idle')
-
-  const handleImport = async () => {
-    if (!item.palette_path || importState !== 'idle') return
-    setImportState('importing')
-    try {
-      const res = await fetch(`${API}/palette-library/import`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path: item.palette_path }),
-      })
-      if (!res.ok) throw new Error()
-      setImportState('done')
-      onImport()
-      setTimeout(() => setImportState('idle'), 2000)
-    } catch {
-      setImportState('error')
-      setTimeout(() => setImportState('idle'), 2000)
-    }
-  }
-
-  return (
-    <div className="lib-item-row">
-      <div className="lib-item-thumb">
-        {item.sprite_path ? (
-          <img
-            className="lib-item-img"
-            src={`${API}/palette-library/sprite?path=${encodeURIComponent(item.sprite_path)}`}
-            alt={item.name}
-            draggable={false}
-            onError={e => { e.target.style.display = 'none' }}
-          />
-        ) : (
-          <div className="lib-item-img-placeholder" />
-        )}
-      </div>
-
-      <span className="lib-item-name" title={item.name}>{item.name}</span>
-
-      <div className="lib-item-strip">
-        {item.colors ? (
-          <PaletteStrip
-            colors={item.colors}
-            usedIndices={item.colors.map((_, i) => i)}
-            checkSize="50%"
-          />
-        ) : (
-          <span className="lib-item-no-pal">no palette</span>
-        )}
-      </div>
-
-      {item.palette_path && (
-        <a
-          className="lib-item-btn"
-          href={`${API}/palette-library/sprite?path=${encodeURIComponent(item.palette_path)}`}
-          download={item.name + '.pal'}
-          title="Download .pal"
-        >
-          <Download size={11} />
-        </a>
-      )}
-
-      <button
-        className={`lib-item-btn ${!item.palette_path ? 'disabled' : ''} ${importState === 'done' ? 'done' : importState === 'error' ? 'err' : ''}`}
-        onClick={handleImport}
-        disabled={!item.palette_path || importState === 'importing'}
-        title={item.palette_path ? 'Import to Porypal' : 'No palette available'}
-      >
-        {importState === 'done'
-          ? <Check size={11} />
-          : importState === 'error'
-          ? <X size={11} />
-          : importState === 'importing'
-          ? <Loader size={11} className="spinning" />
-          : <FolderInput size={11} />}
-      </button>
-    </div>
-  )
-}
+// -- Items folder -----------------------------------------------------------
 
 function ItemsFolderSection({ node, query, onImport }) {
-  const [open, setOpen]       = useState(false)
-  const [items, setItems]     = useState([])
-  const [total, setTotal]     = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [hasMore, setHasMore] = useState(false)
-  const [offset, setOffset]   = useState(0)
-  const sentinelRef           = useRef()
-
-  useEffect(() => {
-    setItems([])
-    setTotal(null)
-    setOffset(0)
-    setHasMore(false)
-  }, [node.path, query])
-
-  useEffect(() => {
-    if (!open) return
-    let cancelled = false
-    setLoading(true)
-    const params = new URLSearchParams({ folder: node.path, offset, limit: PAGE_SIZE })
-    if (query) params.set('q', query)
-    fetch(`${API}/palette-library/items?${params}`)
-      .then(r => r.json())
-      .then(data => {
-        if (cancelled) return
-        setItems(prev => offset === 0 ? data.items : [...prev, ...data.items])
-        setTotal(data.total)
-        setHasMore(data.has_more)
-        setLoading(false)
-      })
-      .catch(() => { if (!cancelled) setLoading(false) })
-    return () => { cancelled = true }
-  }, [open, node.path, query, offset])
-
-  useEffect(() => {
-    if (!sentinelRef.current || !hasMore || loading) return
-    const obs = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) setOffset(prev => prev + PAGE_SIZE)
-    }, { threshold: 0.1 })
-    obs.observe(sentinelRef.current)
-    return () => obs.disconnect()
-  }, [hasMore, loading])
-
-  const handleToggle = () => {
-    if (!open) { setItems([]); setTotal(null); setOffset(0); setHasMore(false) }
-    setOpen(o => !o)
-  }
+  const { open, toggle, items, total, loading, hasMore, sentinelRef } =
+    usePaginatedSection(node.path, query, `${API}/palette-library/items`)
 
   return (
     <div className="lib-tree-folder">
-      <button className="lib-tree-folder-header" onClick={handleToggle}>
+      <button className="lib-tree-folder-header" onClick={toggle}>
         {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
         <span className="lib-tree-folder-name">{node.name}</span>
         {total !== null && <span className="lib-tree-folder-count">{total}</span>}
       </button>
       {open && (
-        <div className="lib-tree-folder-body">
+        <div className="lib-tree-folder-body lib-pokemon-grid">
           {items.map((item, i) => (
-            <ItemRow key={item.name ?? i} item={item} onImport={onImport} />
+            <LibraryItemCard key={item.name ?? i} item={item} onImport={onImport} />
           ))}
-          {loading && (
-            <div className="lib-pokemon-loading">
-              <Loader size={13} className="spinning" /> loading…
-            </div>
-          )}
+          {loading && <div className="lib-pokemon-loading"><Loader size={13} className="spinning" /> loading...</div>}
           {!loading && hasMore && <div ref={sentinelRef} className="lib-pokemon-sentinel" />}
           {!loading && !hasMore && total !== null && items.length === 0 && (
             <div className="lib-pokemon-empty">no items found</div>
@@ -297,9 +199,9 @@ function ItemsFolderSection({ node, query, onImport }) {
   )
 }
 
-// ── Generic lazy folder ────────────────────────────────────────────────────
+// -- Generic folder (lazy-load, shows PNGs + PALs inline) ------------------
 
-function LazyFolderNode({ node, query, onImport, depth, fullscreen }) {
+function GenericFolderSection({ node, query, onImport, depth }) {
   const [open, setOpen]         = useState(depth < 1)
   const [children, setChildren] = useState(node.children ?? null)
   const [loading, setLoading]   = useState(false)
@@ -322,18 +224,20 @@ function LazyFolderNode({ node, query, onImport, depth, fullscreen }) {
     if (open && children === null) fetchChildren()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleToggle = () => {
+  const toggle = () => {
     if (!open && children === null) fetchChildren()
     setOpen(o => !o)
   }
 
+  // Prune folders that can't match the query
   const hasMatch = query
     ? (() => {
         if (!children) return true
         const check = (n) => {
-          if (n.type === 'palette') return n.name.replace(/\.pal$/, '').toLowerCase().includes(query.toLowerCase())
+          if (n.type === 'palette') return wildcardMatch(query, n.name.replace(/\.pal$/, ''))
+          if (n.type === 'sprite')  return wildcardMatch(query, n.name.replace(/\.png$/i, ''))
           if (n.type === 'pokemon_folder' || n.type === 'trainers_folder' || n.type === 'items_folder')
-            return n.name.toLowerCase().includes(query.toLowerCase())
+            return wildcardMatch(query, n.name)
           return n.children?.some(check) ?? true
         }
         return children.some(check)
@@ -344,20 +248,16 @@ function LazyFolderNode({ node, query, onImport, depth, fullscreen }) {
 
   return (
     <div className="lib-tree-folder">
-      <button className="lib-tree-folder-header" onClick={handleToggle}>
+      <button className="lib-tree-folder-header" onClick={toggle}>
         {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
         <span className="lib-tree-folder-name">{node.name}</span>
         {loading && <Loader size={11} className="spinning" />}
       </button>
       {open && (
         <div className="lib-tree-folder-body">
-          {loading && (
-            <div className="lib-pokemon-loading">
-              <Loader size={12} className="spinning" /> loading…
-            </div>
-          )}
+          {loading && <div className="lib-pokemon-loading"><Loader size={12} className="spinning" /> loading...</div>}
           {children?.map((child, i) => (
-            <LibraryNode key={i} node={child} query={query} onImport={onImport} depth={depth + 1} fullscreen={fullscreen} />
+            <LibraryNode key={i} node={child} query={query} onImport={onImport} depth={depth + 1} />
           ))}
           {children?.length === 0 && !loading && (
             <div className="lib-pokemon-empty">empty</div>
@@ -368,7 +268,7 @@ function LazyFolderNode({ node, query, onImport, depth, fullscreen }) {
   )
 }
 
-// ── Tree node router ───────────────────────────────────────────────────────
+// -- Tree node router -------------------------------------------------------
 
 function LibraryNode({ node, query, onImport, depth = 0, fullscreen }) {
   if (node.type === 'pokemon_folder' || node.type === 'trainers_folder') {
@@ -378,14 +278,18 @@ function LibraryNode({ node, query, onImport, depth = 0, fullscreen }) {
     return <ItemsFolderSection node={node} query={query} onImport={onImport} />
   }
   if (node.type === 'palette') {
-    const name = node.name.replace(/\.pal$/, '')
-    if (query && !name.toLowerCase().includes(query.toLowerCase())) return null
+    if (query && !wildcardMatch(query, node.name.replace(/\.pal$/, ''))) return null
     return <LibraryPaletteRow palette={node} onImport={onImport} />
   }
-  return <LazyFolderNode node={node} query={query} onImport={onImport} depth={depth} fullscreen={fullscreen} />
+  if (node.type === 'sprite') {
+    if (query && !wildcardMatch(query, node.name.replace(/\.png$/i, ''))) return null
+    return <LibrarySpriteRow sprite={node} />
+  }
+  // Generic folder
+  return <GenericFolderSection node={node} query={query} onImport={onImport} depth={depth} fullscreen={fullscreen} />
 }
 
-// ── Drawer ─────────────────────────────────────────────────────────────────
+// -- Drawer -----------------------------------------------------------------
 
 export function LibraryDrawer({ onClose, onImport }) {
   const [tree, setTree]                = useState(null)
@@ -403,7 +307,6 @@ export function LibraryDrawer({ onClose, onImport }) {
       .catch(() => setLoading(false))
   }, [])
 
-  // Close on outside click (only when not fullscreen)
   useEffect(() => {
     if (fullscreen) return
     const handler = e => {
@@ -422,10 +325,7 @@ export function LibraryDrawer({ onClose, onImport }) {
 
   return (
     <div className={`drawer-overlay ${fullscreen ? 'drawer-overlay--fullscreen' : ''}`}>
-      <div
-        className={`drawer ${fullscreen ? 'drawer--fullscreen' : ''}`}
-        ref={drawerRef}
-      >
+      <div className={`drawer ${fullscreen ? 'drawer--fullscreen' : ''}`} ref={drawerRef}>
         <div className="drawer-header">
           <div className="drawer-title-row">
             <button
@@ -440,16 +340,14 @@ export function LibraryDrawer({ onClose, onImport }) {
           </div>
           <input
             className="drawer-search"
-            placeholder="search library…"
+            placeholder="search library..."
             value={query}
             onChange={handleSearch}
             autoFocus
           />
         </div>
         <div className={`drawer-body ${fullscreen ? 'drawer-body--fullscreen' : ''}`}>
-          {loading && (
-            <div className="empty-state"><div className="spinner" /></div>
-          )}
+          {loading && <div className="empty-state"><div className="spinner" /></div>}
           {!loading && (!tree || tree.length === 0) && (
             <div className="drawer-empty">
               <p>No palettes in library yet.</p>
@@ -457,14 +355,7 @@ export function LibraryDrawer({ onClose, onImport }) {
             </div>
           )}
           {!loading && tree?.map((node, i) => (
-            <LibraryNode
-              key={i}
-              node={node}
-              query={debouncedQuery}
-              onImport={onImport}
-              depth={0}
-              fullscreen={fullscreen}
-            />
+            <LibraryNode key={i} node={node} query={debouncedQuery} onImport={onImport} depth={0} fullscreen={fullscreen} />
           ))}
         </div>
       </div>

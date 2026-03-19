@@ -1,11 +1,11 @@
-/* ═══════════════════════════════════════════════════════════════════════════
+/* ---------------------------------------------------------------------------
    LIBRARY DRAWER
    The scroll fix:
    - .drawer-overlay: align-items: stretch (no height on children needed)
-   - .drawer: NO height:100% — stretch handles it; overflow:hidden to clip body
+   - .drawer: NO height:100% - stretch handles it; overflow:hidden to clip body
    - .drawer-body: flex:1 + min-height:0 + overflow-y:auto
-     DO NOT use display:flex on drawer-body — block flow scrolls reliably
-   ═══════════════════════════════════════════════════════════════════════════ */
+     DO NOT use display:flex on drawer-body - block flow scrolls reliably
+   --------------------------------------------------------------------------- */
 
 .drawer-overlay {
   position: fixed;
@@ -117,7 +117,7 @@
   font-size: 11px;
 }
 
-/* ── Library tree nodes ──────────────────────────────────────────────────── */
+/* -- Library tree nodes ---------------------------------------------------- */
 
 .lib-tree-folder {
   display: flex;
@@ -164,7 +164,7 @@
   gap: 3px;
 }
 
-/* ── Library palette row (standalone .pal) ───────────────────────────────── */
+/* -- Library palette row (standalone .pal) --------------------------------- */
 
 .lib-row {
   display: flex;
@@ -211,7 +211,7 @@
 .lib-import-btn.error { border-color: var(--danger); color: var(--danger); pointer-events: none; }
 .lib-import-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* ── Pokemon grid (inside lib-tree-folder-body) ──────────────────────────── */
+/* -- Pokemon grid (inside lib-tree-folder-body) ---------------------------- */
 
 .lib-pokemon-grid {
   display: flex;
@@ -240,7 +240,7 @@
   text-align: center;
 }
 
-/* ── Item row ────────────────────────────────────────────────────────────── */
+/* -- Item row -------------------------------------------------------------- */
 
 .lib-item-row {
   display: flex;
@@ -342,15 +342,15 @@
   cursor: not-allowed;
 }
 
-/* ── Spinner ─────────────────────────────────────────────────────────────── */
+/* -- Spinner --------------------------------------------------------------- */
 
 @keyframes spin { to { transform: rotate(360deg); } }
 .spinning { animation: spin 0.7s linear infinite; }
 
-/* ═══════════════════════════════════════════════════════════════════════════
+/* ---------------------------------------------------------------------------
    FULLSCREEN MODE
    Expands drawer to 50% width, same right-side slide animation
-   ═══════════════════════════════════════════════════════════════════════════ */
+   --------------------------------------------------------------------------- */
 
 .drawer-fullscreen-btn {
   background: none;
@@ -372,8 +372,8 @@
 }
 
 .drawer--fullscreen {
-  width: 100%;
-  max-width: 100%;
+  width: 50%;
+  max-width: 50%;
   animation: drawerSlideIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -398,7 +398,7 @@
 .drawer-body--fullscreen .pkm-form-header  { padding: 7px 14px; }
 .drawer-body--fullscreen .pkm-form-body    { padding: 12px 14px; gap: 12px; }
 
-/* Sprites: 48px → 96px */
+/* Sprites: 48px - 96px */
 .drawer-body--fullscreen .pkm-spr             { width: 96px !important; height: 96px !important; }
 .drawer-body--fullscreen .pkm-spr-placeholder { width: 96px !important; height: 96px !important; }
 
@@ -415,3 +415,32 @@
 .drawer-body--fullscreen .pkm-pal-row   { gap: 10px; }
 .drawer-body--fullscreen .pkm-pal-label { width: 22%; font-size: 11px; }
 .drawer-body--fullscreen .palette-strip { max-width: 360px; }
+
+/* -- Generic sprite row (PNG in a plain folder) -------------------------- */
+
+.lib-sprite-thumb {
+  width: 1.75rem;
+  height: 1.75rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-conic-gradient(#1c2330 0% 25%, #161b22 0% 50%) 0 0/6px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.lib-sprite-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  display: block;
+}
+
+.lib-sprite-img-missing {
+  width: 100%;
+  height: 100%;
+}

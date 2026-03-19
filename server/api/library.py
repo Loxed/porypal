@@ -1,14 +1,12 @@
 """
-server/api/library.py
+server/api/library.py  - full replacement
 
-Routes: /api/palette-library
-
-Performance design:
-  GET /api/palette-library          → depth-1 ONLY. Cached by mtime.
-  GET /api/palette-library/folder   → depth-1 children of any sub-folder (lazy expand).
-  GET /api/palette-library/pokemon  → paginated list of pokemon inside a pokemon_folder.
-  GET /api/palette-library/pokemon-node → full data for one pokemon (called on card open).
-  GET /api/palette-library/sprite   → serve a PNG or .pal file from the library.
+Folder routing:
+  pokemon_folder  - paginated pokemon list
+  trainers_folder - same as pokemon_folder
+  items_folder    - paginated items list (icons/ + icon_palettes/)
+  folder          - lazy depth-1 expand
+  palette         - single .pal row
 """
 
 from __future__ import annotations
@@ -24,28 +22,42 @@ from pydantic import BaseModel
 from model.palette import Palette
 from server.state import state
 
+
+def _wildcard_match(pattern: str, text: str) -> bool:
+    """
+    Case-insensitive wildcard match.
+    * matches any sequence of characters.
+    ? matches any single character.
+    Falls back to plain substring match when no wildcards are present.
+    """
+    p = pattern.lower()
+    t = text.lower()
+    if '*' not in p and '?' not in p:
+        return p in t
+    import re as _re
+    regex = _re.escape(p).replace(r'\*', '.*').replace(r'\?', '.')
+    return bool(_re.fullmatch(regex, t))
+
+
 router = APIRouter(prefix="/api/palette-library", tags=["library"])
 
 LIBRARY_DIR: Path = Path("palette_library").resolve()
 
-POKEMON_PAL_NAMES = {"normal.pal", "shiny.pal", "overworld_normal.pal", "overworld_shiny.pal"}
-
+POKEMON_PAL_NAMES   = {"normal.pal", "shiny.pal", "overworld_normal.pal", "overworld_shiny.pal"}
 POKEMON_SPRITE_PRIORITY = [
     "icon.png", "front.png", "anim_front.png",
     "back.png", "overworld.png", "overworldf.png",
 ]
-
-# Subdirectory names inside a pokemon_folder that are NOT individual pokemon —
-# they are shared resource folders and must be excluded from the paginated list.
 POKEMON_FOLDER_EXCLUDES = {"icon_palettes"}
 
 PAGE_SIZE = 20
 
-# Caches
-_pal_cache:        dict[str, tuple[float, list[str]]] = {}
-_candidates_cache: dict[str, tuple[float, list[Path]]] = {}
-_tree_cache:       dict = {"mtime": -1.0, "tree": []}
+_pal_cache:          dict[str, tuple[float, list[str]]] = {}
+_candidates_cache:   dict[str, tuple[float, list[Path]]] = {}
+_tree_cache:         dict = {"mtime": -1.0, "tree": []}
 
+
+# -- Helpers ------------------------------------------------------------------
 
 def _read_colors(path: Path) -> list[str] | None:
     key = str(path)
@@ -85,6 +97,11 @@ def _is_pokemon_dir(files: list[Path]) -> bool:
     return bool(names & POKEMON_PAL_NAMES)
 
 
+def _is_items_dir(directory: Path) -> bool:
+    """True if this folder contains an icons/ subdirectory."""
+    return (directory / "icons").is_dir()
+
+
 def _rel(path: Path) -> str:
     return str(path.relative_to(LIBRARY_DIR))
 
@@ -95,6 +112,10 @@ def _guard(target: Path) -> None:
 
 
 def _classify_subdir(sub: Path) -> str:
+    # Items folder: has an icons/ child
+    if _is_items_dir(sub):
+        return 'items'
+
     sub_files, sub_subdirs = _scan_dir(sub)
     if _is_pokemon_dir(sub_files):
         return 'pokemon'
@@ -109,13 +130,18 @@ def _walk_depth1(directory: Path) -> list[dict]:
     files, subdirs = _scan_dir(directory)
     nodes: list[dict] = []
     for f in files:
-        if f.suffix.lower() == ".pal":
+        ext = f.suffix.lower()
+        if ext == ".pal":
             colors = _read_colors(f)
             if colors is not None:
                 nodes.append({"type": "palette", "name": f.name, "path": _rel(f), "colors": colors})
+        elif ext == ".png":
+            nodes.append({"type": "sprite", "name": f.name, "path": _rel(f)})
     for sub in subdirs:
         kind = _classify_subdir(sub)
-        if kind in ('pokemon', 'pokemon_parent'):
+        if kind == 'items':
+            nodes.append({"type": "items_folder", "name": sub.name, "path": _rel(sub)})
+        elif kind in ('pokemon', 'pokemon_parent'):
             nodes.append({"type": "pokemon_folder", "name": sub.name, "path": _rel(sub)})
         else:
             nodes.append({"type": "folder", "name": sub.name, "path": _rel(sub)})
@@ -146,10 +172,6 @@ def _read_pokemon_node(directory: Path) -> dict:
 
 
 def _get_pokemon_candidates(parent: Path, q: str = "") -> list[Path]:
-    """
-    Return sorted subdirectories of `parent` that represent individual pokemon.
-    Directories listed in POKEMON_FOLDER_EXCLUDES (e.g. icon_palettes) are skipped.
-    """
     key = str(parent)
     try:
         mtime = os.path.getmtime(parent)
@@ -160,14 +182,25 @@ def _get_pokemon_candidates(parent: Path, q: str = "") -> list[Path]:
         candidates = cached[1]
     else:
         _, subdirs = _scan_dir(parent)
-        # Exclude shared resource folders that live alongside individual pokemon dirs
         candidates = [d for d in subdirs if d.name.lower() not in POKEMON_FOLDER_EXCLUDES]
         _candidates_cache[key] = (mtime, candidates)
     if q:
-        q_lower = q.lower()
-        return [d for d in candidates if q_lower in d.name.lower()]
+        return [d for d in candidates if _wildcard_match(q, d.name)]
     return candidates
 
+
+def _get_item_candidates(parent: Path, q: str = "") -> list[Path]:
+    """Sorted list of .png sprites from {parent}/icons/"""
+    icons_dir = parent / "icons"
+    if not icons_dir.exists():
+        return []
+    sprites = sorted(icons_dir.glob("*.png"), key=lambda p: p.name.lower())
+    if q:
+        sprites = [s for s in sprites if _wildcard_match(q, s.stem)]
+    return sprites
+
+
+# -- Routes --------------------------------------------------------------------
 
 @router.get("")
 def list_library():
@@ -187,7 +220,6 @@ def list_library():
 
 @router.get("/folder")
 def list_folder(path: str):
-    """Lazily expand any folder node. Returns its depth-1 children."""
     target = (LIBRARY_DIR / path).resolve()
     _guard(target)
     if not target.exists() or not target.is_dir():
@@ -213,7 +245,6 @@ def list_pokemon(folder: str, offset: int = 0, limit: int = PAGE_SIZE, q: str = 
 
 @router.get("/pokemon-node")
 def get_pokemon_node(path: str):
-    """Full data for a single pokemon (called when PokemonCard is opened)."""
     target = (LIBRARY_DIR / path).resolve()
     _guard(target)
     if not target.exists() or not target.is_dir():
@@ -221,9 +252,44 @@ def get_pokemon_node(path: str):
     return _read_pokemon_node(target)
 
 
+@router.get("/items")
+def list_items(folder: str, offset: int = 0, limit: int = PAGE_SIZE, q: str = ""):
+    """
+    Paginated list of items from {folder}/icons/ + {folder}/icon_palettes/.
+    Each item: { name, sprite_path, palette_path, colors }
+    """
+    parent = (LIBRARY_DIR / folder).resolve()
+    _guard(parent)
+    if not parent.exists() or not parent.is_dir():
+        raise HTTPException(404, f"Folder not found: {folder}")
+
+    palettes_dir = parent / "icon_palettes"
+    sprites      = _get_item_candidates(parent, q)
+    total        = len(sprites)
+    page         = sprites[offset: offset + limit]
+
+    items = []
+    for sprite_path in page:
+        pal_path = palettes_dir / (sprite_path.stem + ".pal")
+        colors   = _read_colors(pal_path) if pal_path.exists() else None
+        items.append({
+            "name":         sprite_path.stem,
+            "sprite_path":  _rel(sprite_path),
+            "palette_path": _rel(pal_path) if pal_path.exists() else None,
+            "colors":       colors,
+        })
+
+    return {
+        "items":    items,
+        "total":    total,
+        "offset":   offset,
+        "limit":    limit,
+        "has_more": offset + limit < total,
+    }
+
+
 @router.get("/sprite")
 def get_sprite(path: str):
-    """Serve PNG sprites or .pal palette files from the library."""
     target = (LIBRARY_DIR / path).resolve()
     _guard(target)
     if not target.exists():

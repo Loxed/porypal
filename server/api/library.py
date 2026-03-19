@@ -35,6 +35,10 @@ POKEMON_SPRITE_PRIORITY = [
     "back.png", "overworld.png", "overworldf.png",
 ]
 
+# Subdirectory names inside a pokemon_folder that are NOT individual pokemon —
+# they are shared resource folders and must be excluded from the paginated list.
+POKEMON_FOLDER_EXCLUDES = {"icon_palettes"}
+
 PAGE_SIZE = 20
 
 # Caches
@@ -142,6 +146,10 @@ def _read_pokemon_node(directory: Path) -> dict:
 
 
 def _get_pokemon_candidates(parent: Path, q: str = "") -> list[Path]:
+    """
+    Return sorted subdirectories of `parent` that represent individual pokemon.
+    Directories listed in POKEMON_FOLDER_EXCLUDES (e.g. icon_palettes) are skipped.
+    """
     key = str(parent)
     try:
         mtime = os.path.getmtime(parent)
@@ -152,7 +160,8 @@ def _get_pokemon_candidates(parent: Path, q: str = "") -> list[Path]:
         candidates = cached[1]
     else:
         _, subdirs = _scan_dir(parent)
-        candidates = subdirs
+        # Exclude shared resource folders that live alongside individual pokemon dirs
+        candidates = [d for d in subdirs if d.name.lower() not in POKEMON_FOLDER_EXCLUDES]
         _candidates_cache[key] = (mtime, candidates)
     if q:
         q_lower = q.lower()

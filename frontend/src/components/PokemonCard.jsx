@@ -1,19 +1,13 @@
 /**
  * PokemonCard.jsx
  *
- * Fully dynamic — no hardcoded sprite/palette mappings.
- *
- * For each PNG found in the pokemon folder:
- *   1. Load pixel data
- *   2. Score every available .pal by counting exact pixel color matches
- *   3. Best-scoring palette = sourcePal (the one the file is encoded with)
- *   4. Find the normal/shiny partner by string substitution:
- *        *normal* ↔ *shiny*  (handles normal.pal, normal_gba.pal, overworld_normal.pal, …)
- *   5. Render  [sourcePal→normalPal | sourcePal→shinyPal]
- *      When sourcePal === targetPal the remap is identity → raw appearance
+ * Sprite rendering rules:
+ *   icon.png / icon_gba.png  → scored against pokemon/icon_palettes/pal0-5.pal (no shiny)
+ *   front / anim_front / back / overworld → normal/shiny pair from the form's own palettes
+ *   footprint.png            → skipped entirely
  */
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { ChevronDown, ChevronRight, Loader, Download, FolderInput, Check, X } from 'lucide-react'
 import { PaletteStrip } from './PaletteStrip'
 import { remapToShinyPalette } from '../utils'
@@ -21,13 +15,16 @@ import './PokemonCard.css'
 
 const API = '/api'
 
-// Sprites to always skip
-const SKIP_SPRITES = new Set(['footprint.png'])
+const SKIP_SPRITES    = new Set(['footprint.png'])
+const ICON_SPRITE_NAMES = new Set(['icon.png', 'icon_gba.png'])
 
 // ── Module-level caches ───────────────────────────────────────────────────────
-const _rawB64Cache   = new Map()  // spritePath → raw base64
-const _remappedCache = new Map()  // `path::from::to` → remapped base64
-const _pixelCache    = new Map()  // spritePath → ImageData (for detection)
+const _rawB64Cache   = new Map()
+const _remappedCache = new Map()
+const _pixelCache    = new Map()
+
+const _iconPalettesCache   = new Map()  // iconPalettesPath → palette nodes
+const _iconPalettesPromises = new Map() // iconPalettesPath → in-flight promise
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -55,7 +52,7 @@ async function getPixels(spritePath) {
     const img = new Image()
     img.onload = () => {
       const canvas = document.createElement('canvas')
-      canvas.width = img.naturalWidth
+      canvas.width  = img.naturalWidth
       canvas.height = img.naturalHeight
       canvas.getContext('2d').drawImage(img, 0, 0)
       const id = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height)
@@ -67,18 +64,10 @@ async function getPixels(spritePath) {
   })
 }
 
-/**
- * Score a palette against image pixels.
- * Returns fraction of opaque pixels whose color exactly matches a palette color.
- */
 function scorePalette(imageData, paletteHexColors) {
-  const data = imageData.data
-  const colorSet = new Set()
-  for (const hex of paletteHexColors) {
-    colorSet.add(hex.toLowerCase())
-  }
-  let matches = 0
-  let total = 0
+  const data     = imageData.data
+  const colorSet = new Set(paletteHexColors.map(h => h.toLowerCase()))
+  let matches = 0, total = 0
   for (let i = 0; i < data.length; i += 4) {
     if (data[i + 3] < 128) continue
     total++
@@ -91,84 +80,84 @@ function scorePalette(imageData, paletteHexColors) {
   return total === 0 ? 0 : matches / total
 }
 
-/**
- * Detect which palette a sprite is encoded with by finding the best match score.
- */
+async function loadIconPalettes(iconPalettesPath) {
+  if (_iconPalettesCache.has(iconPalettesPath)) return _iconPalettesCache.get(iconPalettesPath)
+  if (_iconPalettesPromises.has(iconPalettesPath)) return _iconPalettesPromises.get(iconPalettesPath)
+
+  const promise = fetch(
+    `${API}/palette-library/folder?path=${encodeURIComponent(iconPalettesPath)}`
+  )
+    .then(r => {
+      if (!r.ok) { console.warn('[PokemonCard] icon_palettes fetch failed:', r.status, r.url); return [] }
+      return r.json()
+    })
+    .then(nodes => {
+      const pals = (nodes || []).filter(n => n.type === 'palette')
+      console.log('[PokemonCard] icon palettes loaded from', iconPalettesPath, ':', pals.length, pals.map(p => p.name))
+      _iconPalettesCache.set(iconPalettesPath, pals)
+      _iconPalettesPromises.delete(iconPalettesPath)
+      return pals
+    })
+    .catch(e => {
+      console.error('[PokemonCard] icon_palettes error:', e)
+      _iconPalettesPromises.delete(iconPalettesPath)
+      _iconPalettesCache.set(iconPalettesPath, [])
+      return []
+    })
+
+  _iconPalettesPromises.set(iconPalettesPath, promise)
+  return promise
+}
+
 async function detectSourcePalette(spritePath, palettes) {
   if (!palettes.length) return null
   const pixels = await getPixels(spritePath)
-  let bestPal   = null
-  let bestScore = -1
+  let bestPal = null, bestScore = -1
   for (const pal of palettes) {
     const score = scorePalette(pixels, pal.colors)
-    if (score > bestScore) {
-      bestScore = score
-      bestPal   = pal
-    }
+    if (score > bestScore) { bestScore = score; bestPal = pal }
   }
   return bestPal
 }
 
-/**
- * Sort palettes so normal/shiny pairs are adjacent.
- * Order: normal.pal, shiny.pal, normal_gba.pal, shiny_gba.pal, overworld_normal.pal, …
- * General rule: group by prefix (everything except the normal/shiny word),
- * within each group normal comes before shiny.
- */
 function sortPalettePairs(palettes) {
-  const getGroupKey = (name) => {
+  const getGroupKey = name => {
     const n = name.toLowerCase().replace(/\.pal$/, '')
-    // Replace the normal/shiny word (with optional surrounding _ or nothing) with a placeholder
-    return n.replace(/(?:^|_)(?:normal|shiny)(?:_|$)/, match => match.replace(/normal|shiny/, '\x00'))
+    return n.replace(/(?:^|_)(?:normal|shiny)(?:_|$)/, m => m.replace(/normal|shiny/, '\x00'))
   }
-  const getOrder = (name) => {
+  const getOrder = name => {
     const n = name.toLowerCase()
     if (n.includes('normal')) return 0
     if (n.includes('shiny'))  return 1
     return 2
   }
   return [...palettes].sort((a, b) => {
-    const ga = getGroupKey(a.name)
-    const gb = getGroupKey(b.name)
+    const ga = getGroupKey(a.name), gb = getGroupKey(b.name)
     if (ga !== gb) return ga.localeCompare(gb)
     return getOrder(a.name) - getOrder(b.name)
   })
 }
 
-/**
- * Given a detected source palette, find its normal and shiny counterparts.
- *
- * Pairing rule: substitute 'normal' ↔ 'shiny' in the palette filename.
- *   normal.pal           ↔  shiny.pal
- *   normal_gba.pal       ↔  shiny_gba.pal
- *   overworld_normal.pal ↔  overworld_shiny.pal
- *
- * If no pair exists, both columns show the same (identity remap).
- */
 function findPalettePair(sourcePal, allPalettes) {
   const srcName  = sourcePal.name.toLowerCase()
   const isNormal = srcName.includes('normal')
   const isShiny  = srcName.includes('shiny')
 
-  if (!isNormal && !isShiny) {
-    // No normal/shiny in name — identity on both sides
-    return { normalPal: sourcePal, shinyPal: sourcePal }
-  }
+  if (!isNormal && !isShiny) return { normalPal: sourcePal, shinyPal: sourcePal }
 
   const partnerName = isNormal
     ? srcName.replace('normal', 'shiny')
-    : srcName.replace('shiny', 'normal')
+    : srcName.replace('shiny',  'normal')
 
   const partnerPal = allPalettes.find(p => p.name.toLowerCase() === partnerName) ?? sourcePal
-
   return isNormal
     ? { normalPal: sourcePal, shinyPal: partnerPal }
     : { normalPal: partnerPal, shinyPal: sourcePal }
 }
 
-// ── RemappedSprite ────────────────────────────────────────────────────────────
+// ── RemappedSprite ─────────────────────────────────────────────────────────────
 
-function RemappedSprite({ spritePath, fromColors, toColors, alt }) {
+function RemappedSprite({ spritePath, fromColors, toColors, alt, small = false }) {
   const [status, setStatus] = useState('idle')
   const [src, setSrc]       = useState(null)
 
@@ -194,29 +183,24 @@ function RemappedSprite({ spritePath, fromColors, toColors, alt }) {
     return () => { cancelled = true }
   }, [spritePath, fromColors, toColors])
 
-  if (status === 'error') return <div className="pkm-spr-placeholder" title="remap failed" />
+  const cls = small ? 'pkm-spr small' : 'pkm-spr'
+
+  if (status === 'error')
+    return <div className={`pkm-spr-placeholder${small ? ' small' : ''}`} title="remap failed" />
   if (status !== 'done' || !src) {
     return (
-      <div className="pkm-spr-placeholder loading">
-        {status === 'loading' && <Loader size={10} className="pkm-spin" />}
+      <div className={`pkm-spr-placeholder${small ? ' small' : ''} loading`}>
+        {status === 'loading' && <Loader size={small ? 8 : 10} className="pkm-spin" />}
       </div>
     )
   }
-  return (
-    <img
-      className="pkm-spr"
-      src={`data:image/png;base64,${src}`}
-      alt={alt}
-      draggable={false}
-    />
-  )
+  return <img className={cls} src={`data:image/png;base64,${src}`} alt={alt} draggable={false} />
 }
 
-// ── DynamicSpritePair ─────────────────────────────────────────────────────────
-// Detects source palette automatically, then renders [normal | shiny].
+// ── DynamicSpritePair (normal / shiny) ────────────────────────────────────────
 
 function DynamicSpritePair({ sprite, palettes }) {
-  const [detected, setDetected] = useState(null) // null=loading | 'error' | { sourcePal, normalPal, shinyPal }
+  const [detected, setDetected] = useState(null)
   const mountedRef = useRef(true)
 
   useEffect(() => {
@@ -235,11 +219,15 @@ function DynamicSpritePair({ sprite, palettes }) {
 
   const label = sprite.name.replace(/\.png$/i, '')
 
+  const palLine = detected && detected !== 'error'
+    ? detected.normalPal.name === detected.shinyPal.name
+      ? detected.normalPal.name.replace(/\.pal$/i, '')
+      : `${detected.normalPal.name.replace(/\.pal$/i, '')} / ${detected.shinyPal.name.replace(/\.pal$/i, '')}`
+    : null
+
   return (
     <div className="pkm-sprite-group">
       <div className="pkm-sprite-pair">
-
-        {/* Normal column */}
         <div className="pkm-spr-col">
           {!detected ? (
             <div className="pkm-spr-placeholder loading"><Loader size={10} className="pkm-spin" /></div>
@@ -256,7 +244,6 @@ function DynamicSpritePair({ sprite, palettes }) {
           <span className="pkm-spr-sub">normal</span>
         </div>
 
-        {/* Shiny column */}
         <div className="pkm-spr-col">
           {!detected ? (
             <div className="pkm-spr-placeholder loading"><Loader size={10} className="pkm-spin" /></div>
@@ -272,23 +259,107 @@ function DynamicSpritePair({ sprite, palettes }) {
           )}
           <span className="pkm-spr-sub shiny">shiny</span>
         </div>
-
       </div>
 
-      {/* Label shows sprite name + detected source palette as tooltip */}
-      <span
-        className="pkm-sprite-label"
-        title={detected && detected !== 'error' ? `source: ${detected.sourcePal.name}` : ''}
-      >
-        {label}
-      </span>
+      <span className="pkm-sprite-label">{label}</span>
+      {palLine && <span className="pkm-sprite-pal">{palLine}</span>}
     </div>
   )
 }
 
-// ── Palette row ───────────────────────────────────────────────────────────────
+// ── IconSpriteDisplay ─────────────────────────────────────────────────────────
+// Uses a ref for onDetected to avoid stale closure — the effect dep array only
+// contains sprite.path, but we always call the latest onDetected via the ref.
 
-function PaletteRow({ palette, onImport }) {
+function IconSpriteDisplay({ sprite, onDetected, iconPalettesPath }) {
+  const [status, setStatus]   = useState('loading')
+  const [src, setSrc]         = useState(null)
+  const [palName, setPalName] = useState(null)
+
+  // Keep a ref to the latest onDetected so the async effect never goes stale
+  const onDetectedRef = useRef(onDetected)
+  useEffect(() => { onDetectedRef.current = onDetected })
+
+  useEffect(() => {
+    let cancelled = false
+    setStatus('loading')
+    setSrc(null)
+    setPalName(null)
+
+    Promise.all([loadIconPalettes(iconPalettesPath), loadSpriteB64(sprite.path)])
+      .then(async ([iconPalettes, b64]) => {
+        if (cancelled) return
+
+        if (!iconPalettes.length) {
+          console.warn('[PokemonCard] no icon palettes found for', sprite.name)
+          setSrc(b64)
+          setStatus('done')
+          return
+        }
+
+        const pixels = await getPixels(sprite.path)
+        let best = null, bestScore = -1
+        for (const pal of iconPalettes) {
+          const score = scorePalette(pixels, pal.colors)
+          if (score > bestScore) { bestScore = score; best = pal }
+        }
+
+        console.log('[PokemonCard]', sprite.name, '→ best icon pal:', best?.name, 'score:', bestScore)
+
+        if (!best || cancelled) return
+
+        const remapped = await remapToShinyPalette(b64, best.colors, best.colors)
+        if (cancelled) return
+
+        const name = best.name.replace(/\.pal$/i, '')
+        setSrc(remapped)
+        setPalName(name)
+        onDetectedRef.current?.(sprite.path, best)
+        setStatus('done')
+      })
+      .catch(e => {
+        console.error('[PokemonCard] icon detection error for', sprite.name, e)
+        if (!cancelled) setStatus('error')
+      })
+
+    return () => { cancelled = true }
+  }, [sprite.path, iconPalettesPath])
+
+  if (status === 'error') return null
+
+  const spriteName = sprite.name.replace(/\.png$/i, '')
+
+  return (
+    <div className="pkm-sprite-group">
+      <div className="pkm-spr-col">
+        {status !== 'done' || !src ? (
+          <div className="pkm-spr-placeholder loading">
+            {status === 'loading' && <Loader size={10} className="pkm-spin" />}
+          </div>
+        ) : (
+          <img
+            className="pkm-spr"
+            src={`data:image/png;base64,${src}`}
+            alt={spriteName}
+            draggable={false}
+          />
+        )}
+        <span className="pkm-spr-sub">icon</span>
+      </div>
+
+      <span className="pkm-sprite-label">{spriteName}</span>
+      {/* Show the matched icon palette name clearly below the sprite label */}
+      {palName
+        ? <span className="pkm-sprite-pal">{palName}</span>
+        : <span className="pkm-sprite-pal pkm-sprite-pal--loading">…</span>
+      }
+    </div>
+  )
+}
+
+// ── PaletteRow ────────────────────────────────────────────────────────────────
+
+function PaletteRow({ palette, onImport, badge }) {
   const [importState, setImportState] = useState('idle')
 
   const handleImport = async () => {
@@ -314,7 +385,9 @@ function PaletteRow({ palette, onImport }) {
 
   return (
     <div className="pkm-pal-row">
-      <span className="pkm-pal-label" title={displayName}>{displayName}</span>
+      <span className="pkm-pal-label" title={displayName}>
+        {displayName}
+      </span>
       <div className="pkm-pal-strip">
         <PaletteStrip
           colors={palette.colors}
@@ -345,17 +418,40 @@ function PaletteRow({ palette, onImport }) {
   )
 }
 
-// ── Form section (Base / mega / gmax / etc.) ─────────────────────────────────
+// ── FormSection ───────────────────────────────────────────────────────────────
 
 function FormSection({ node, label, onImport, defaultOpen = false }) {
-  const [open, setOpen] = useState(defaultOpen)
+  const [open, setOpen]           = useState(defaultOpen)
+  // spritePath → palette node, populated async by IconSpriteDisplay children
+  const [iconPalMap, setIconPalMap] = useState({})
 
-  const palettes = sortPalettePairs(node.palettes ?? [])
-  const sprites  = (node.sprites ?? []).filter(
-    s => !SKIP_SPRITES.has(s.name.toLowerCase())
+  // Derive icon_palettes path from the node's own path:
+  // e.g. "emerald/pokemon/abomasnow" → "emerald/pokemon/icon_palettes"
+  const iconPalettesPath = node.path.split('/').slice(0, -1).join('/') + '/icon_palettes'
+
+  const palettes    = sortPalettePairs(node.palettes ?? [])
+  const allSprites  = (node.sprites ?? []).filter(s => !SKIP_SPRITES.has(s.name.toLowerCase()))
+  const iconSprites = allSprites.filter(s =>  ICON_SPRITE_NAMES.has(s.name.toLowerCase()))
+  const mainSprites = allSprites.filter(s => !ICON_SPRITE_NAMES.has(s.name.toLowerCase()))
+
+  // Stable callback — useCallback so the ref inside IconSpriteDisplay always
+  // points to a function that has access to the latest setIconPalMap
+  const handleIconDetected = useCallback((spritePath, pal) => {
+    setIconPalMap(prev => ({ ...prev, [spritePath]: pal }))
+  }, [])
+
+  // Deduplicate: if icon.png and icon_gba.png both land on pal2, show one row
+  // badged "icon / icon_gba"; if they land on different pals, two separate rows
+  const iconPalEntries = Object.values(
+    Object.entries(iconPalMap).reduce((acc, [spritePath, pal]) => {
+      const spriteName = spritePath.split('/').pop().replace(/\.png$/i, '')
+      if (!acc[pal.path]) acc[pal.path] = { pal, sprites: [] }
+      acc[pal.path].sprites.push(spriteName)
+      return acc
+    }, {})
   )
 
-  if (!sprites.length && !palettes.length) return null
+  if (!allSprites.length && !palettes.length) return null
 
   return (
     <div className="pkm-form-section">
@@ -369,28 +465,45 @@ function FormSection({ node, label, onImport, defaultOpen = false }) {
 
       {open && (
         <div className="pkm-form-body">
-          {sprites.length > 0 && palettes.length > 0 && (
+          {/* Main sprites: normal / shiny pairs */}
+          {mainSprites.length > 0 && palettes.length > 0 && (
             <div className="pkm-sprite-row">
-              {sprites.map(sprite => (
-                <DynamicSpritePair
+              {mainSprites.map(sprite => (
+                <DynamicSpritePair key={sprite.path} sprite={sprite} palettes={palettes} />
+              ))}
+            </div>
+          )}
+
+          {/* Icon sprites: single column, scored against icon_palettes */}
+          {iconSprites.length > 0 && (
+            <div className="pkm-sprite-row">
+              {iconSprites.map(sprite => (
+                <IconSpriteDisplay
                   key={sprite.path}
                   sprite={sprite}
-                  palettes={palettes}
+                  onDetected={handleIconDetected}
+                  iconPalettesPath={iconPalettesPath}
                 />
               ))}
             </div>
           )}
 
-          {sprites.length > 0 && palettes.length === 0 && (
-            <p style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--muted)', padding: '4px 0' }}>
-              no palettes found for this form
-            </p>
-          )}
-
-          {palettes.length > 0 && (
+          {/* Palette list: regular pals first, then a divider, then icon pals */}
+          {(palettes.length > 0 || iconPalEntries.length > 0) && (
             <div className="pkm-palettes">
               {palettes.map(p => (
                 <PaletteRow key={p.path} palette={p} onImport={onImport} />
+              ))}
+              {iconPalEntries.length > 0 && palettes.length > 0 && (
+                <div className="pkm-pal-divider" />
+              )}
+              {iconPalEntries.map(({ pal, sprites }) => (
+                <PaletteRow
+                  key={pal.path}
+                  palette={pal}
+                  onImport={onImport}
+                  badge={sprites.join(' / ')}
+                />
               ))}
             </div>
           )}
@@ -428,9 +541,8 @@ export function PokemonCard({ node, onImport }) {
     setOpen(o => !o)
   }
 
-  const iconSprite = data?.sprites?.find(s =>
-    ['icon.png', 'icon_gba.png', 'front.png', 'anim_front.png'].includes(s.name.toLowerCase())
-  )
+  const iconSprite = data?.sprites?.find(s => ICON_SPRITE_NAMES.has(s.name.toLowerCase()))
+    ?? data?.sprites?.find(s => ['front.png', 'anim_front.png'].includes(s.name.toLowerCase()))
 
   const subformEntries = Object.entries(data?.subforms ?? {})
 
@@ -469,12 +581,7 @@ export function PokemonCard({ node, onImport }) {
             <>
               <FormSection node={data} label="Base" onImport={onImport} defaultOpen />
               {subformEntries.map(([formName, formNode]) => (
-                <FormSection
-                  key={formName}
-                  node={formNode}
-                  label={formName}
-                  onImport={onImport}
-                />
+                <FormSection key={formName} node={formNode} label={formName} onImport={onImport} />
               ))}
             </>
           )}

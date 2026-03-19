@@ -1,19 +1,15 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './PalettesTab.css'
 import { PaletteStrip } from '../components/PaletteStrip'
 import { Modal } from '../components/Modal'
-import { PokemonCard } from '../components/PokemonCard'
+import { LibraryDrawer } from '../components/LibraryDrawer'
 import {
   RefreshCw, Upload, Trash2, Download, BookOpen,
   ChevronDown, ChevronRight, Check, X, FolderPlus,
   Move, Palette, GripVertical, Folder, FolderOpen, Plus, Minus,
-  FolderInput, Loader,
 } from 'lucide-react'
 
 const API = '/api'
-
-const SOURCE_LABELS = { default: 'defaults', user: 'my palettes', legacy: 'other' }
-const SOURCE_ORDER  = ['default', 'user', 'legacy']
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Color editor (inline expand on a palette row)
@@ -26,8 +22,7 @@ function ColorEditor({ palette, onSave, onCancel }) {
   const [saveState, setSaveState]   = useState('idle') // idle | confirm | saving | saved | error
   const [dragSrc, setDragSrc]       = useState(null)
   const [dragOver, setDragOver]     = useState(null)
-  const [cacheCount, setCacheCount] = useState(0)  // mirrors removedStack.current.length for rendering
-  // Stack of removed colors — restored in LIFO order when slots are re-added
+  const [cacheCount, setCacheCount] = useState(0)
   const removedStack = useRef([])
   const HEX_RE = /^#[0-9a-fA-F]{6}$/
 
@@ -48,7 +43,6 @@ function ColorEditor({ palette, onSave, onCancel }) {
     }
   }
 
-  // ── Swap via drag ──
   const handleSlotDragStart = (e, i) => {
     e.dataTransfer.effectAllowed = 'move'
     e.dataTransfer.setData('text/plain', String(i))
@@ -72,8 +66,6 @@ function ColorEditor({ palette, onSave, onCancel }) {
   }
   const handleSlotDragEnd = () => { setDragSrc(null); setDragOver(null) }
 
-  // ── Add / remove with LIFO cache ──
-  // Stack rule: remove → push last color. Add → pop from stack (or black).
   const removeColor = () => {
     if (colors.length <= 1) return
     const popped = colors[colors.length - 1]
@@ -92,7 +84,6 @@ function ColorEditor({ palette, onSave, onCancel }) {
     setColors(prev => [...prev, restored])
   }
 
-  // ── Save with confirmation ──
   const handleSaveClick = () => {
     if (saveState === 'idle') { setSaveState('confirm'); return }
   }
@@ -118,7 +109,6 @@ function ColorEditor({ palette, onSave, onCancel }) {
 
   return (
     <div className="pal-color-editor">
-      {/* Slot count controls */}
       <div className="pal-editor-count-row">
         <span className="pal-editor-count-label">{colors.length} / 16 slots</span>
         <div className="pal-editor-count-btns">
@@ -131,7 +121,6 @@ function ColorEditor({ palette, onSave, onCancel }) {
             <Minus size={11} />
           </button>
 
-          {/* Show a mini preview of what + will restore, if anything is cached */}
           {cacheCount > 0 && (
             <div
               className="pal-editor-cache-swatch"
@@ -159,7 +148,6 @@ function ColorEditor({ palette, onSave, onCancel }) {
         </div>
       </div>
 
-      {/* Swatch grid — drag to swap */}
       <div className="pal-editor-strip">
         {colors.map((hex, i) => (
           <div
@@ -183,7 +171,6 @@ function ColorEditor({ palette, onSave, onCancel }) {
         ))}
       </div>
 
-      {/* Active slot hex editor */}
       {activeSlot !== null && activeSlot < colors.length && (
         <div className="pal-editor-hex-row">
           <div className="pal-editor-hex-swatch" style={{ background: colors[activeSlot] }} />
@@ -206,7 +193,6 @@ function ColorEditor({ palette, onSave, onCancel }) {
         </div>
       )}
 
-      {/* Actions */}
       <div className="pal-editor-actions">
         {saveState === 'saved' && (
           <span className="pal-editor-saved-msg"><Check size={12} /> saved</span>
@@ -247,7 +233,7 @@ function ColorEditor({ palette, onSave, onCancel }) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function MoveDropdown({ folders, currentFolder, onMove }) {
-  const [open, setOpen]     = useState(false)
+  const [open, setOpen]       = useState(false)
   const [menuPos, setMenuPos] = useState({ top: 0, right: 0 })
   const btnRef = useRef()
 
@@ -279,12 +265,7 @@ function MoveDropdown({ folders, currentFolder, onMove }) {
 
   return (
     <>
-      <button
-        ref={btnRef}
-        className="pal-icon-btn"
-        title="move to folder"
-        onClick={handleOpen}
-      >
+      <button ref={btnRef} className="pal-icon-btn" title="move to folder" onClick={handleOpen}>
         <Move size={11} />
       </button>
       {open && (
@@ -320,7 +301,6 @@ function PaletteRow({ palette, folders, onDelete, onDownload, onRename, onMove, 
   const [editing, setEditing]             = useState(false)
   const [dragging, setDragging]           = useState(false)
 
-  // path and name are the same value — guard against missing path field
   const palPath     = palette.path ?? palette.name
   const displayName = palPath.replace(/\.pal$/, '').split('/').pop()
 
@@ -422,7 +402,7 @@ function PaletteRow({ palette, folders, onDelete, onDownload, onRename, onMove, 
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Folder section (user palettes)
+// Folder section (user palettes, with drag-to-move support)
 // ─────────────────────────────────────────────────────────────────────────────
 
 function FolderSection({ folderName, label, palettes, folders, allFolders, onPaletteAction, onDeleteFolder, onDropPalette }) {
@@ -443,7 +423,7 @@ function FolderSection({ folderName, label, palettes, folders, allFolders, onPal
     setDragOver(false)
     try {
       const data = JSON.parse(e.dataTransfer.getData('text/plain'))
-      if (!data.palettePath) return   // not a palette drag (e.g. swatch index)
+      if (!data.palettePath) return
       if (data.folder !== (folderName ?? null)) {
         onDropPalette(data.palettePath, folderName ?? null)
       }
@@ -519,7 +499,7 @@ function FolderSection({ folderName, label, palettes, folders, allFolders, onPal
 // ─────────────────────────────────────────────────────────────────────────────
 
 function NewFolderModal({ onClose, onCreate }) {
-  const [name, setName] = useState('')
+  const [name, setName]   = useState('')
   const [error, setError] = useState(null)
   const [saving, setSaving] = useState(false)
 
@@ -567,304 +547,17 @@ function NewFolderModal({ onClose, onCreate }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Library — plain palette row
-// ─────────────────────────────────────────────────────────────────────────────
-
-function LibraryPaletteRow({ palette, onImport }) {
-  const [importState, setImportState] = useState('idle')
-
-  const handleImport = async () => {
-    if (importState !== 'idle') return
-    setImportState('importing')
-    try {
-      const res = await fetch(`${API}/palette-library/import`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ path: palette.path }),
-      })
-      if (!res.ok) throw new Error()
-      setImportState('done')
-      onImport()
-      setTimeout(() => setImportState('idle'), 2000)
-    } catch {
-      setImportState('error')
-      setTimeout(() => setImportState('idle'), 2000)
-    }
-  }
-
-  return (
-    <div className="lib-row">
-      <span className="lib-row-name">{palette.name.replace(/\.pal$/, '')}</span>
-      <div className="lib-row-strip">
-        <PaletteStrip colors={palette.colors} usedIndices={palette.colors.map((_, i) => i)} checkSize="50%" />
-      </div>
-      <button
-        className={`lib-import-btn ${importState}`}
-        onClick={handleImport}
-        disabled={importState === 'importing'}
-      >
-        {importState === 'done' ? <><Check size={11} /> added</> : importState === 'error' ? 'failed' : '+ add'}
-      </button>
-    </div>
-  )
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Library — paginated pokemon folder section
-// ─────────────────────────────────────────────────────────────────────────────
-
-const PAGE_SIZE = 20
-
-function PokemonFolderSection({ node, query, onImport }) {
-  const [open, setOpen]       = useState(false)
-  const [items, setItems]     = useState([])
-  const [total, setTotal]     = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [hasMore, setHasMore] = useState(false)
-  const [offset, setOffset]   = useState(0)
-  const sentinelRef           = useRef()
-
-  // Reset when query or folder path changes
-  useEffect(() => {
-    setItems([])
-    setTotal(null)
-    setOffset(0)
-    setHasMore(false)
-  }, [node.path, query])
-
-  // Fetch page when open + offset changes
-  useEffect(() => {
-    if (!open) return
-    let cancelled = false
-    setLoading(true)
-    const params = new URLSearchParams({ folder: node.path, offset, limit: PAGE_SIZE })
-    if (query) params.set('q', query)
-    fetch(`${API}/palette-library/pokemon?${params}`)
-      .then(r => r.json())
-      .then(data => {
-        if (cancelled) return
-        setItems(prev => offset === 0 ? data.items : [...prev, ...data.items])
-        setTotal(data.total)
-        setHasMore(data.has_more)
-        setLoading(false)
-      })
-      .catch(() => { if (!cancelled) setLoading(false) })
-    return () => { cancelled = true }
-  }, [open, node.path, query, offset])
-
-  // Intersection observer for infinite scroll
-  useEffect(() => {
-    if (!sentinelRef.current || !hasMore || loading) return
-    const obs = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) setOffset(prev => prev + PAGE_SIZE)
-    }, { threshold: 0.1 })
-    obs.observe(sentinelRef.current)
-    return () => obs.disconnect()
-  }, [hasMore, loading])
-
-  const handleToggle = () => {
-    if (!open) { setItems([]); setTotal(null); setOffset(0); setHasMore(false) }
-    setOpen(o => !o)
-  }
-
-  return (
-    <div className="lib-tree-folder">
-      <button className="lib-tree-folder-header" onClick={handleToggle}>
-        {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
-        <span className="lib-tree-folder-name">{node.name}</span>
-        {total !== null && <span className="lib-tree-folder-count">{total}</span>}
-      </button>
-      {open && (
-        <div className="lib-tree-folder-body lib-pokemon-grid">
-          {items.map((pkm, i) => (
-            <PokemonCard key={pkm.path ?? i} node={pkm} onImport={onImport} />
-          ))}
-          {loading && (
-            <div className="lib-pokemon-loading">
-              <Loader size={13} className="spinning" /> loading…
-            </div>
-          )}
-          {!loading && hasMore && <div ref={sentinelRef} className="lib-pokemon-sentinel" />}
-          {!loading && !hasMore && total !== null && items.length === 0 && (
-            <div className="lib-pokemon-empty">no pokémon found</div>
-          )}
-        </div>
-      )}
-    </div>
-  )
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Library — tree node (recursive)
-// ─────────────────────────────────────────────────────────────────────────────
-
-function LibraryNode({ node, query, onImport, depth = 0 }) {
-  // ── pokemon_folder → paginated PokemonFolderSection ────────────────────────
-  if (node.type === 'pokemon_folder') {
-    return <PokemonFolderSection node={node} query={query} onImport={onImport} />
-  }
- 
-  // ── standalone palette row ──────────────────────────────────────────────────
-  if (node.type === 'palette') {
-    const name = node.name.replace(/\.pal$/, '')
-    if (query && !name.toLowerCase().includes(query.toLowerCase())) return null
-    return <LibraryPaletteRow palette={node} onImport={onImport} />
-  }
- 
-  // ── regular folder — lazy-load children when opened ─────────────────────────
-  return <LazyFolderNode node={node} query={query} onImport={onImport} depth={depth} />
-}
- 
-// Lazy-loading folder: only fetches children when the user opens it
-// Fixed: also fetches on mount if the folder starts open (depth < 1)
-function LazyFolderNode({ node, query, onImport, depth }) {
-  const [open, setOpen]         = useState(depth < 1)
-  const [children, setChildren] = useState(node.children ?? null)
-  const [loading, setLoading]   = useState(false)
-
-  const fetchChildren = async () => {
-    if (children !== null || loading) return
-    setLoading(true)
-    try {
-      const res = await fetch(`/api/palette-library/folder?path=${encodeURIComponent(node.path)}`)
-      if (!res.ok) throw new Error()
-      setChildren(await res.json())
-    } catch {
-      setChildren([])
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  // Auto-load children when starting open (depth < 1)
-  useEffect(() => {
-    if (open && children === null) fetchChildren()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const handleToggle = async () => {
-    if (!open && children === null) fetchChildren()
-    setOpen(o => !o)
-  }
-
-  // If there's an active query, check if any child could match
-  const hasMatch = query
-    ? (() => {
-        if (!children) return true
-        const check = (n) => {
-          if (n.type === 'palette') return n.name.replace(/\.pal$/, '').toLowerCase().includes(query.toLowerCase())
-          if (n.type === 'pokemon_folder') return n.name.toLowerCase().includes(query.toLowerCase())
-          return n.children?.some(check) ?? true
-        }
-        return children.some(check)
-      })()
-    : true
-
-  if (!hasMatch) return null
-
-  return (
-    <div className="lib-tree-folder">
-      <button className="lib-tree-folder-header" onClick={handleToggle}>
-        {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
-        <span className="lib-tree-folder-name">{node.name}</span>
-        {loading && <Loader size={11} className="spinning" />}
-      </button>
-      {open && (
-        <div className="lib-tree-folder-body">
-          {loading && (
-            <div className="lib-pokemon-loading">
-              <Loader size={12} className="spinning" /> loading…
-            </div>
-          )}
-          {children?.map((child, i) => (
-            <LibraryNode key={i} node={child} query={query} onImport={onImport} depth={depth + 1} />
-          ))}
-          {children?.length === 0 && !loading && (
-            <div className="lib-pokemon-empty">empty</div>
-          )}
-        </div>
-      )}
-    </div>
-  )
-}
-// ─────────────────────────────────────────────────────────────────────────────
-// Library drawer
-// ─────────────────────────────────────────────────────────────────────────────
-
-function LibraryDrawer({ onClose, onImport }) {
-  const [tree, setTree]               = useState(null)
-  const [query, setQuery]             = useState('')
-  const [debouncedQuery, setDebounced] = useState('')
-  const [loading, setLoading]         = useState(true)
-  const drawerRef  = useRef()
-  const debounceRef = useRef()
-
-  useEffect(() => {
-    fetch(`${API}/palette-library`)
-      .then(r => r.json())
-      .then(data => { setTree(data); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [])
-
-  useEffect(() => {
-    const handler = e => {
-      if (drawerRef.current && !drawerRef.current.contains(e.target)) onClose()
-    }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [onClose])
-
-  const handleSearch = e => {
-    const val = e.target.value
-    setQuery(val)
-    clearTimeout(debounceRef.current)
-    debounceRef.current = setTimeout(() => setDebounced(val), 300)
-  }
-
-  return (
-    <div className="drawer-overlay">
-      <div className="drawer" ref={drawerRef}>
-        <div className="drawer-header">
-          <div className="drawer-title-row">
-            <span className="drawer-title">palette library</span>
-            <button className="drawer-close" onClick={onClose}><X size={15} /></button>
-          </div>
-          <input
-            className="drawer-search"
-            placeholder="search library..."
-            value={query}
-            onChange={handleSearch}
-            autoFocus
-          />
-        </div>
-        <div className="drawer-body">
-          {loading && <div className="empty-state"><div className="spinner" /></div>}
-          {!loading && (!tree || tree.length === 0) && (
-            <div className="drawer-empty">
-              <p>No palettes in library yet.</p>
-              <p>Add <code>.pal</code> files to <code>palette_library/</code></p>
-            </div>
-          )}
-          {!loading && tree?.map((node, i) => (
-            <LibraryNode key={i} node={node} query={debouncedQuery} onImport={onImport} depth={0} />
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
 // Main tab
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function PalettesTab() {
-  const [palettes, setPalettes]       = useState([])
-  const [knownFolders, setKnownFolders] = useState([])   // all user subfolders, including empty ones
-  const [loading, setLoading]         = useState(false)
-  const [reloading, setReloading]     = useState(false)
-  const [error, setError]             = useState(null)
-  const [showLibrary, setShowLibrary] = useState(false)
-  const [showNewFolder, setShowNewFolder] = useState(false)
+  const [palettes, setPalettes]             = useState([])
+  const [knownFolders, setKnownFolders]     = useState([])
+  const [loading, setLoading]               = useState(false)
+  const [reloading, setReloading]           = useState(false)
+  const [error, setError]                   = useState(null)
+  const [showLibrary, setShowLibrary]       = useState(false)
+  const [showNewFolder, setShowNewFolder]   = useState(false)
   const fileRef = useRef()
 
   const fetchPalettes = async () => {
@@ -912,8 +605,7 @@ export function PalettesTab() {
   const handleDownload = (path) => {
     const a = document.createElement('a')
     a.href = `${API}/palettes/${encodeURIComponent(path)}/download`
-    const filename = path.includes('/') ? path.split('/').pop() : path
-    a.download = filename
+    a.download = path.includes('/') ? path.split('/').pop() : path
     a.click()
   }
 
@@ -955,31 +647,26 @@ export function PalettesTab() {
     colorsUpdated: handleColorsUpdated,
   }
 
-  // Group palettes
+  // Group palettes by source → folder
   const grouped = {}
   for (const p of palettes) {
     const src = p.source
     if (!grouped[src]) grouped[src] = {}
-    const folder = p.folder ?? null
-    const folderKey = folder ?? '__root__'
+    const folderKey = p.folder ?? '__root__'
     if (!grouped[src][folderKey]) grouped[src][folderKey] = []
     grouped[src][folderKey].push(p)
   }
 
   const userFolders = [...new Set([
-    // folders that have palettes
     ...palettes.filter(p => p.source === 'user' && p.folder).map(p => p.folder),
-    // folders that exist on disk but may be empty
     ...knownFolders,
   ])].sort()
 
-  const defaultPalettes = (grouped['default']?.['__root__'] ?? [])
-  const legacyPalettes  = (grouped['legacy']?.['__root__'] ?? [])
-
-  const userRoot    = grouped['user']?.['__root__'] ?? []
-  // Build folder groups from ALL known folders, including empty ones
+  const defaultPalettes  = grouped['default']?.['__root__'] ?? []
+  const legacyPalettes   = grouped['legacy']?.['__root__']  ?? []
+  const userRoot         = grouped['user']?.['__root__']    ?? []
   const userFolderGroups = userFolders.map(f => ({
-    name: f,
+    name:     f,
     palettes: grouped['user']?.[f] ?? [],
   }))
 
@@ -1075,7 +762,7 @@ export function PalettesTab() {
             />
           )}
 
-          {/* User palettes — root + folders, with drag-to-move */}
+          {/* User palettes — root + subfolders, with drag-to-move */}
           {!loading && (
             <>
               <FolderSection

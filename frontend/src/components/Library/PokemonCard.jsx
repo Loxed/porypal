@@ -12,6 +12,7 @@ import { ChevronDown, ChevronRight, Loader, Download, FolderInput, Check, X } fr
 import { PaletteStrip } from '../PaletteStrip'
 import { remapToShinyPalette } from '../../utils'
 import './PokemonCard.css'
+import { AnimFrontThumb } from './AnimFrontThumb.jsx'
 
 const API = '/api'
 
@@ -536,51 +537,44 @@ export function PokemonCard({ node, onImport }) {
   }
 
   const iconSprite = data?.sprites?.find(s => ICON_SPRITE_NAMES.has(s.name.toLowerCase()))
-    ?? data?.sprites?.find(s => ['front.png', 'anim_front.png'].includes(s.name.toLowerCase()))
+      ?? data?.sprites?.find(s => ['front.png', 'anim_front.png'].includes(s.name.toLowerCase()))
+    const subformEntries = Object.entries(data?.subforms ?? {})
 
-  const subformEntries = Object.entries(data?.subforms ?? {})
-
-  return (
-    <div className={`pkm-card ${open ? 'is-open' : ''}`}>
-      <button className="pkm-card-header" onClick={handleToggle}>
-        {iconSprite ? (
-          <img
+    return (
+      <div className={`pkm-card ${open ? 'is-open' : ''}`}>
+        <button className="pkm-card-header" onClick={handleToggle}>
+          <AnimFrontThumb
+            path={`${node.path}/anim_front.png`}
+            size={24}
             className="pkm-spr small"
-            src={`${API}/palette-library/sprite?path=${encodeURIComponent(iconSprite.path)}`}
-            alt=""
-            draggable={false}
-            onError={e => { e.target.style.display = 'none' }}
           />
-        ) : (
-          <div className="pkm-spr-placeholder small" />
-        )}
-        <span className="pkm-card-name">{node.name}</span>
-        {loading && <Loader size={11} className="pkm-spin pkm-card-loader" />}
-        {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
-      </button>
+          <span className="pkm-card-name">{node.name}</span>
+          {loading && <Loader size={11} className="pkm-spin pkm-card-loader" />}
+          {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+        </button>
 
-      {open && (
-        <div className="pkm-card-body">
-          {loading && (
-            <div className="pkm-card-status">
-              <Loader size={12} className="pkm-spin" /> loading…
-            </div>
-          )}
-          {error && (
-            <div className="pkm-card-status error">
-              failed to load — {node.path}
-            </div>
-          )}
-          {data && (
-            <>
-              <FormSection node={data} label="Base" onImport={onImport} defaultOpen />
-              {subformEntries.map(([formName, formNode]) => (
-                <FormSection key={formName} node={formNode} label={formName} onImport={onImport} />
-              ))}
-            </>
-          )}
-        </div>
-      )}
-    </div>
-  )
-}
+        {open && (
+          <div className="pkm-card-body">
+            {loading && (
+              <div className="pkm-card-status">
+                <Loader size={12} className="pkm-spin" /> loading…
+              </div>
+            )}
+            {error && (
+              <div className="pkm-card-status error">
+                failed to load — {node.path}
+              </div>
+            )}
+            {data && (
+              <>
+                <FormSection node={data} label="Base" onImport={onImport} defaultOpen />
+                {subformEntries.map(([formName, formNode]) => (
+                  <FormSection key={formName} node={formNode} label={formName} onImport={onImport} />
+                ))}
+              </>
+            )}
+          </div>
+        )}
+      </div>
+    )
+  }

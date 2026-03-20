@@ -8,7 +8,7 @@
 
 import { useState } from 'react'
 import { Check, Download, FolderInput, Loader, X, Wand2 } from 'lucide-react'
-import { PaletteStrip } from './PaletteStrip'
+import { PaletteStrip } from '../PaletteStrip'
 import './LibraryItemCard.css'
 
 const API = '/api'

@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { X, ChevronDown, ChevronRight, Check, Loader, Download, FolderInput, Maximize2, Minimize2, FolderOpen, Trash2 } from 'lucide-react'
-import { PaletteStrip } from './PaletteStrip'
+import { PaletteStrip } from '../PaletteStrip'
 import { PokemonCard } from './PokemonCard.jsx'
 import { LibraryItemCard } from './LibraryItemCard.jsx'
 import { ProjectLoader } from './ProjectLoader.jsx'

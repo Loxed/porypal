@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { Loader, Check, Sparkles, Folder, Clock, X } from 'lucide-react'
-import { Modal } from './Modal'
+import { Modal } from '../Modal'
 import './ProjectLoader.css'
 
 const API = '/api'

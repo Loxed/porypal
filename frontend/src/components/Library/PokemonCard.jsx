@@ -9,8 +9,8 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { ChevronDown, ChevronRight, Loader, Download, FolderInput, Check, X } from 'lucide-react'
-import { PaletteStrip } from './PaletteStrip'
-import { remapToShinyPalette } from '../utils'
+import { PaletteStrip } from '../PaletteStrip'
+import { remapToShinyPalette } from '../../utils'
 import './PokemonCard.css'
 
 const API = '/api'

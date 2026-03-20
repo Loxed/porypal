@@ -12,7 +12,7 @@
 
 import { useState } from 'react'
 import { Check, Download, FolderInput, Loader, Wand2, X } from 'lucide-react'
-import { PaletteStrip } from './PaletteStrip'
+import { PaletteStrip } from '../PaletteStrip'
 import './TrainerCard.css'
 
 const API = '/api'

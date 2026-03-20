@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import './PalettesTab.css'
 import { PaletteStrip } from '../components/PaletteStrip'
 import { Modal } from '../components/Modal'
-import { LibraryDrawer } from '../components/LibraryDrawer'
+import { LibraryDrawer } from '../components/Library'
 import {
   RefreshCw, Upload, Trash2, Download, BookOpen,
   ChevronDown, ChevronRight, Check, X, FolderPlus,

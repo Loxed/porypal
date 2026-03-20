@@ -9,6 +9,7 @@ import { ItemsTab }    from './tabs/ItemsTab'
 import { ShinyTab }    from './tabs/ShinyTab'
 import { HomeTab }     from './tabs/HomeTab'
 import './App.css'
+import { Star } from 'lucide-react'
 
 // Map between URL hash slugs and internal tab keys
 const SLUG_TO_TAB = {
@@ -63,21 +64,25 @@ function setHashForTab(tab) {
 
 function SupportModal({ onClose }) {
   return (
-    <Modal title="support the project" onClose={onClose}>
+    <Modal title="support the project" onClose={onClose} size="xxl">
       <p className="modal-desc">
-        The best way to support porypal is to star the repo on GitHub. It takes two seconds and helps the project get visibility.
+        The best way to support Porypal is to star the repo on GitHub. It takes seconds and helps the project get visibility :)
       </p>
 
       <div style={{ display: 'flex', gap: 12 }}>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <div style={{ height: 120, background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--border2)' }}>screenshot: repo without star</span>
-          </div>
+        <div style={{ flex: 1 }}>
+          <img
+            src={"img/support_unstar.png"}
+            alt="repo without star"
+            style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }}
+          />
         </div>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <div style={{ height: 120, background: 'var(--surface2)', border: '1px solid #e3b34144', borderRadius: 'var(--radius)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: '#e3b34188' }}>screenshot: repo with star</span>
-          </div>
+        <div style={{ flex: 1 }}>
+          <img
+            src={"img/support_star.png"}
+            alt="repo with star"
+            style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 'var(--radius)', border: '1px solid #e3b34144' }}
+          />
         </div>
       </div>
 
@@ -86,12 +91,12 @@ function SupportModal({ onClose }) {
         target="_blank"
         rel="noopener noreferrer"
         className="btn-primary"
-        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, textDecoration: 'none' }}
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, textDecoration: 'none', color: 'white' }}
         onClick={onClose}
+        onMouseEnter={e => e.currentTarget.style.color = '#ffd573'}
+        onMouseLeave={e => e.currentTarget.style.color = 'white'}
       >
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-          <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/>
-        </svg>
+        <Star size={16}/>
         star on github
       </a>
     </Modal>
@@ -140,10 +145,8 @@ export default function App() {
               className="star-btn"
               onClick={() => setShowSupport(true)}
             >
-              <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/>
-              </svg>
-              Support the project :)
+              <Star size={16} />
+              support the project
             </button>
           </div>
         </div>

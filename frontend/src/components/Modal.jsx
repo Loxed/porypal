@@ -8,7 +8,7 @@ import './Modal.css'
  * Props:
  *   title       {string}     shown in the header
  *   onClose     {fn}         called when backdrop or X button is clicked
- *   size        {string?}    'sm' | 'lg' | 'xl' | undefined (default ~480px)
+ *   size        {string?}    'sm' | 'lg' | 'xl' | 'xxl' undefined (default ~480px)
  *   actions     {ReactNode?} extra buttons in the header, right of the title
  *   children    {ReactNode}  modal body content
  */

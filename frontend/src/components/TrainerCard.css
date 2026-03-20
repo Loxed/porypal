@@ -1,0 +1,131 @@
+.tc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tc-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: calc(var(--radius) - 1px);
+  border: 1px solid transparent;
+  transition: background 0.1s, border-color 0.1s;
+  min-width: 0;
+}
+.tc-row:hover { background: var(--surface2); border-color: var(--border); }
+
+/* Loose palette rows (no sprite) slightly muted */
+.tc-row--loose { opacity: 0.75; }
+.tc-row--loose:hover { opacity: 1; }
+
+/* Front sprite thumb */
+.tc-thumb {
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  background: repeating-conic-gradient(#1c2330 0% 25%, #161b22 0% 50%) 0 0/6px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tc-thumb--small {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.tc-thumb--empty {
+  background: var(--surface2);
+  border-style: dashed;
+  opacity: 0.3;
+}
+
+.tc-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  display: block;
+}
+.tc-img-missing { width: 100%; height: 100%; }
+
+/* Back pic slot — fixed width so rows align even when no back pic */
+.tc-back-slot {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tc-back-empty {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 3px;
+  border: 1px dashed var(--border);
+  opacity: 0.2;
+}
+
+/* Name */
+.tc-name {
+  font-family: var(--mono);
+  font-size: 0.688rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+  width: 9rem;
+}
+.tc-name--muted { color: var(--muted); }
+
+/* Palette strip */
+.tc-strip { flex: 1; min-width: 0; }
+
+/* No palette hint */
+.tc-no-pal {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  color: var(--muted);
+  opacity: 0.5;
+  flex: 1;
+}
+
+/* Divider between trainers and loose palettes */
+.tc-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+/* Action buttons */
+.tc-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.375rem;
+  height: 1.375rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--muted);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.1s, border-color 0.1s, background 0.1s;
+  flex-shrink: 0;
+}
+.tc-btn:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--accent);
+  background: rgba(88,166,255,0.08);
+}
+.tc-btn--done  { color: var(--best);   border-color: var(--best);   pointer-events: none; }
+.tc-btn--error { color: var(--danger); border-color: var(--danger); pointer-events: none; }
+.tc-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+@keyframes tc-spin { to { transform: rotate(360deg); } }
+.tc-spin { animation: tc-spin 0.7s linear infinite; }

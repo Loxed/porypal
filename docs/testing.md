@@ -109,6 +109,63 @@
 
 ---
 
+## Library drawer (new in v3.1)
+
+**Project loading**
+- [ ] Paste a path (Linux, Windows `C:\`, WSL `/mnt/c/`) -- scan works
+- [ ] Auto-descends into `/graphics` if project root is given
+- [ ] Recent paths saved in localStorage -- clicking one auto-scans
+- [ ] Remove a recent path -- disappears from list
+- [ ] Folder search bar filters the folder list in the scan step
+- [ ] Smart folders (`pokemon/`, `items/`, `trainers/`) pre-selected
+- [ ] Other folders shown separately, none pre-selected
+- [ ] Load project -- persists after closing and reopening the drawer
+- [ ] Remove a loaded project -- disappears from drawer
+
+**Drawer: palette_library/ section**
+- [ ] Shows `porypal/palette_library/` label and path
+- [ ] Sub-folders expand on click, start closed
+- [ ] Sprites and palettes matched by stem name shown as pairs
+- [ ] Unmatched sprites shown separately (dimmed)
+- [ ] Unmatched palettes shown separately
+- [ ] Search filters open folders, does not hide closed folders
+
+**Drawer: loaded project sections**
+- [ ] Each project shown as its own labelled section with root path
+- [ ] Trash icon removes the project
+- [ ] `pokemon/` folder opens as paginated PokemonCards
+- [ ] `items/` folder opens as paginated LibraryItemCards
+- [ ] `trainers/` folder opens as TrainerCard view
+- [ ] Other folders open as GenericFolderCard (sprite+palette pairs)
+- [ ] Search filters within open folders
+
+**PokemonCard**
+- [ ] Card expands on click -- loads front/back/icon sprites
+- [ ] Normal and shiny previews rendered correctly
+- [ ] Download .pal works for each palette row
+- [ ] Import to Porypal works -- palette appears in palettes/user/
+
+**ItemsCard (library)**
+- [ ] Item sprite shown next to palette strip
+- [ ] Generate palette button (wand) appears when no palette exists
+- [ ] Generate creates a .pal on disk and updates the row in place
+- [ ] Download .pal works
+- [ ] Import to Porypal works
+
+**TrainerCard**
+- [ ] Front pic shown for each trainer
+- [ ] Back pic shown in reserved slot (dashed placeholder if missing)
+- [ ] Palette strip shown when palette exists
+- [ ] "no palette" label shown when palette missing
+- [ ] Generate palette button (wand) appears when no palette exists
+- [ ] Generate creates palette and updates row in place
+- [ ] Download .pal works
+- [ ] Import to Porypal works
+- [ ] Unmatched palettes shown below divider
+- [ ] Search filters trainer rows
+
+---
+
 ## Smoke test
 
 - [x] All 7 tabs load without red errors in devtools
@@ -156,8 +213,10 @@
 
 ### Palettes tab
 - [x] Full CRUD: create/rename/delete folders, rename/reorder/edit palette colors
-- [x] Palette library overhaul → `porypal_library/` with any folder structure
-- [ ] Preview palette colors on hover before importing from library
+- [x] Palette library overhaul → `palette_library/` with any folder structure
+- [x] Smart views for `pokemon/`, `items/`, `trainers/` in library drawer
+- [x] Load decomp project by path -- browse graphics folder directly
+- [x] Generate missing palettes from sprites in-place (items + trainers)
 
 ### General
 - [ ] Dashboard/home tab with feature overview

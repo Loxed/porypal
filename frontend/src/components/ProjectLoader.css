@@ -1,0 +1,213 @@
+.proj-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.proj-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.proj-path-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.proj-path-row .field-input { flex: 1; }
+
+/* Recent history */
+.proj-history {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.proj-history-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  cursor: pointer;
+  transition: border-color 0.1s, background 0.1s;
+}
+.proj-history-row:hover {
+  border-color: var(--accent);
+  background: rgba(88,166,255,0.05);
+}
+
+.proj-history-icon { color: var(--muted); flex-shrink: 0; }
+
+.proj-history-path {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.proj-history-remove {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  border-radius: 3px;
+  flex-shrink: 0;
+  transition: color 0.1s;
+}
+.proj-history-remove:hover { color: var(--danger); }
+
+/* Folder list */
+.proj-folders {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 340px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.proj-folder-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.proj-group-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 2px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+.proj-group-hint {
+  font-size: 9px;
+  opacity: 0.6;
+  margin-left: 4px;
+}
+
+.proj-folder-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  cursor: pointer;
+  transition: border-color 0.1s, background 0.1s;
+  user-select: none;
+}
+.proj-folder-row:hover   { border-color: var(--border2); }
+.proj-folder-row.checked {
+  border-color: var(--accent);
+  background: rgba(88,166,255,0.06);
+}
+
+.proj-checkbox {
+  accent-color: var(--accent);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.proj-folder-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.proj-folder-icon.smart {
+  background: rgba(227,179,65,0.15);
+  color: #e3b341;
+  border: 1px solid rgba(227,179,65,0.3);
+}
+.proj-folder-icon.raw {
+  background: var(--surface);
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+.proj-folder-name {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.proj-folder-type {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  flex-shrink: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1px 7px;
+}
+.proj-folder-row.checked .proj-folder-type {
+  color: var(--accent);
+  border-color: rgba(88,166,255,0.4);
+  background: rgba(88,166,255,0.08);
+}
+
+.proj-empty {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  padding: 16px 0;
+}
+
+/* Actions */
+.proj-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+.proj-actions .btn-primary { width: auto; padding: 8px 20px; }
+
+.proj-selected-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Spinner */
+@keyframes proj-spin { to { transform: rotate(360deg); } }
+.proj-spin { animation: proj-spin 0.7s linear infinite; }
+
+/* Search bar above folder list */
+.proj-search-row {
+  display: flex;
+}
+.proj-search-row .field-input {
+  width: 100%;
+}

@@ -9,6 +9,6 @@ python main.py
 # Frontend
 
 ```sh
-cd /frontend
+cd frontend
 npm run dev
 ```

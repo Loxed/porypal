@@ -1,0 +1,576 @@
+/* HomeTab.css */
+
+.home-layout {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+  padding-bottom: 80px;
+}
+
+/* ── Hero ───────────────────────────────────────────────────────────────── */
+
+.home-hero { display: flex; flex-direction: column; gap: 14px; padding-top: 8px; }
+
+.home-hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0;
+}
+
+.home-hero-title-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: clamp(36px, 5vw, 52px);
+}
+
+.home-hero-icon { width: 1em; height: 1em; image-rendering: pixelated; flex-shrink: 0; }
+
+.home-hero-title {
+  font-family: var(--mono);
+  font-size: 1em;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0;
+}
+
+.home-hero-sub {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Sections ───────────────────────────────────────────────────────────── */
+
+.home-section { display: flex; flex-direction: column; gap: 20px; }
+
+.home-section-heading {
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text);
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Card grid ──────────────────────────────────────────────────────────── */
+
+/*
+ *  --card-height : uniform row height across all cards.
+ *                  Bump this if content clips on common screen sizes.
+ */
+.home-grid {
+  --card-height: 480px;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: var(--card-height);
+  gap: 12px;
+}
+
+@media (max-width: 720px) {
+  .home-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 420px) {
+  .home-grid { grid-template-columns: 1fr; --card-height: auto; }
+}
+
+/* ── Card ───────────────────────────────────────────────────────────────── */
+
+.home-card {
+  height: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  --card-accent: #888;
+}
+
+/* Flat accent tint across the whole card */
+.home-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--card-accent) 6%, transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.home-card:hover {
+  border-color: color-mix(in srgb, var(--card-accent) 55%, var(--border));
+  transform: translateY(-3px) rotate(0.35deg);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.home-card:hover .home-card-arrow { color: var(--card-accent); transform: translateX(2px); }
+
+.home-card--empty {
+  background: transparent;
+  border: 1px dashed var(--border);
+  cursor: default;
+  pointer-events: none;
+}
+.home-card--empty::after { display: none; }
+
+/* ── Band ───────────────────────────────────────────────────────────────── */
+/*
+ * Mirrors the Pokémon card top strip:
+ *   [STAGE/TYPE tag]  [Name — grows to fill]  [type energy icon]
+ */
+
+.home-card-band {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px 8px 12px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 2;
+  background: color-mix(in srgb, var(--card-accent) 18%, var(--surface));
+}
+
+.home-card-tag {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  line-height: 1.4;
+  background: color-mix(in srgb, var(--card-accent) 20%, transparent);
+  color: var(--card-accent);
+}
+
+.home-card-name {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+/*
+ * Type energy icon — the small circle in the top-right of the band.
+ * Matches the energy cost circles on real TCG cards.
+ */
+.home-card-type-icon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--card-accent) 25%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--card-accent) 40%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--card-accent);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.home-card-type-icon svg {
+  fill: transparent;
+  transition: fill 0.2s, stroke 0.2s;
+}
+
+.home-card:hover .home-card-type-icon {
+  background: color-mix(in srgb, var(--card-accent) 90%, #000);
+  border-color: var(--card-accent);
+}
+
+.home-card:hover .home-card-type-icon svg {
+  stroke: #fff;
+}
+
+/* ── Art zone ───────────────────────────────────────────────────────────── */
+
+.home-card-art {
+  flex: 0 0 34%;
+  position: relative;
+  background: color-mix(in srgb, var(--card-accent) 5%, var(--surface2));
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 2;
+}
+
+/* inset illustration frame — matches the TCG art border */
+.home-card-art::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px solid color-mix(in srgb, var(--card-accent) 22%, var(--border));
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.home-card-art-icon {
+  color: color-mix(in srgb, var(--card-accent) 40%, var(--border2));
+  position: relative;
+  z-index: 1;
+}
+
+.home-card-art-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Dex strip ──────────────────────────────────────────────────────────── */
+/*
+ * The thin flavour line below the art on real cards:
+ *   "NO. 127  Stag Beetle Pokémon  HT: 4'11"  WT: 121.3 lbs."
+ * Here: a one-line description of what the tool does.
+ */
+
+.home-card-dex {
+  flex-shrink: 0;
+  padding: 5px 13px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.02em;
+  position: relative;
+  z-index: 2;
+  background: color-mix(in srgb, var(--card-accent) 3%, var(--surface));
+}
+
+/* ── Body wrapper + scroll fade ─────────────────────────────────────────── */
+
+.home-card-body-wrap {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-card-body {
+  flex: 1;
+  min-height: 0;
+  padding: 10px 13px 8px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border2) transparent;
+  position: relative;
+  z-index: 2;
+}
+
+.home-card-body::-webkit-scrollbar       { width: 3px; }
+.home-card-body::-webkit-scrollbar-track { background: transparent; }
+.home-card-body::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+.home-card-scroll-fade {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 44px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--surface) 90%, transparent));
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 3;
+}
+
+.home-card-scroll-fade.is-visible { opacity: 1; }
+
+/* ── Attacks ────────────────────────────────────────────────────────────── */
+/*
+ * Each attack row matches the Pinsir layout:
+ *   [energy dot]  [Name bold]
+ *                 [description in small type below]
+ * Rows are separated by hairline rules.
+ */
+
+.home-card-attacks {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.home-card-attack {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.home-card-attack:last-child { border-bottom: none; }
+
+.home-card-attack-energy {
+  flex-shrink: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-top: 3px;
+  background: radial-gradient(
+    circle at 35% 35%,
+    color-mix(in srgb, var(--card-accent) 90%, white),
+    color-mix(in srgb, var(--card-accent) 55%, transparent)
+  );
+  box-shadow: 0 0 5px color-mix(in srgb, var(--card-accent) 45%, transparent);
+}
+
+.home-card-attack-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+/* Attack name — bold, matches "Overhead Throw" weight on Pinsir */
+.home-card-attack-name {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+/* Attack description — smaller, muted, like the rules text below the name */
+.home-card-attack-desc {
+  font-family: var(--sans);
+  font-size: 10.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ── Ability blocks ─────────────────────────────────────────────────────── */
+
+.home-card-modes {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.home-card-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.home-card-mode:last-child { border-bottom: none; }
+
+.home-card-mode-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.home-card-mode-badge {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  line-height: 1.4;
+  background: color-mix(in srgb, var(--card-accent) 80%, #000);
+  color: #fff;
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.home-card-mode-name {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.home-card-mode-desc {
+  font-family: var(--sans);
+  font-size: 10.5px;
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ── IO pills ───────────────────────────────────────────────────────────── */
+
+.home-io {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+/* small variant inside ability blocks */
+.home-io--small {
+  gap: 3px;
+  margin-top: 2px;
+}
+
+.home-io--small .home-io-item {
+  font-size: 8px;
+  padding: 1px 5px;
+}
+
+.home-io--small .home-io-arrow { color: var(--border2); }
+
+.home-io-item {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 2px 7px;
+  color: var(--muted);
+}
+
+.home-io-item--out {
+  color: var(--card-accent);
+  border-color: color-mix(in srgb, var(--card-accent) 38%, transparent);
+  background: color-mix(in srgb, var(--card-accent) 8%, transparent);
+}
+
+.home-io-arrow {
+  color: var(--border2);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Card footer (weakness/retreat style) ───────────────────────────────── */
+/*
+ * Pinned to the bottom of the card — mirrors the weaknesses/retreat strip
+ * on real TCG cards. Shows the tool's input → output summary + nav arrow.
+ */
+
+.home-card-footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 12px;
+  border-top: 1px solid var(--border);
+  background: color-mix(in srgb, var(--card-accent) 5%, var(--surface));
+  position: relative;
+  z-index: 2;
+}
+
+.home-card-footer-io {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.home-card-arrow {
+  color: var(--muted);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s, transform 0.15s;
+}
+
+/* ── Getting Started ────────────────────────────────────────────────────── */
+
+.home-quickstart { display: flex; flex-direction: column; gap: 4px; }
+
+.home-qs-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 0.1s, background 0.1s;
+  text-align: left;
+  width: 100%;
+}
+
+.home-qs-item:hover { border-color: var(--border2); background: var(--surface2); }
+
+.home-qs-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 600;
+  flex-shrink: 0;
+  min-width: 22px;
+  padding-top: 1px;
+}
+
+.home-qs-body { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+
+.home-qs-title { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--text); }
+
+.home-qs-desc { font-family: var(--sans); font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+.home-qs-arrow {
+  color: var(--border2);
+  flex-shrink: 0;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  transition: color 0.1s, transform 0.1s;
+}
+
+.home-qs-item:hover .home-qs-arrow { color: var(--accent); transform: translateX(2px); }
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+
+.home-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.home-footer-left { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+.home-footer-links { display: flex; gap: 16px; }
+
+.home-footer-link {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.1s;
+}
+
+.home-footer-link:hover { color: var(--accent); }

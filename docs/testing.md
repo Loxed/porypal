@@ -109,7 +109,7 @@
 
 ---
 
-## Library drawer (new in v3.1)
+## Library drawer (new in v3.0)
 
 **Project loading**
 - [ ] Paste a path (Linux, Windows `C:\`, WSL `/mnt/c/`) -- scan works

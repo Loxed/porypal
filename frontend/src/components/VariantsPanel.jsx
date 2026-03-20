@@ -6,6 +6,7 @@ import { BgColorCell } from './BgColorCell'
 import { BgColorPicker } from './BgColorPicker'
 import { ViewToggle } from './ViewToggle'
 import { ExportDropdown } from './ExportDropdown'
+import { PalettePicker } from './PalettePicker'
 import { detectBgColor, downloadBlob, remapToShinyPalette } from '../utils'
 import './VariantsPanel.css'
 

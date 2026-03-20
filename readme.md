@@ -4,12 +4,12 @@ Porypal is a sprite tool for Pokémon Gen 3 ROM hacking (pokeemerald, pokefirere
 
 #### Why do I need it?
 
-The GBA can only display 16 colors per sprite. This is a hardware limitation -- not 16 colors total, but 16 per palette, and every sprite has to use exactly one.
+The GBA can only display 16 colors per sprite. This is a hardware limitation, not 16 colors total, but 16 per palette, and every sprite has to use exactly one.
 
 This means you can't just export a PNG from your art program and drop it into the game. Your sprite needs two things first:
 
-1. A palette -- a `.pal` file listing the 16 colors your sprite is allowed to use
-2. A converted sprite -- every pixel remapped to the nearest color in that palette
+1. A palette: a `.pal` file listing the 16 colors your sprite is allowed to use
+2. A converted sprite: every pixel remapped to the nearest color in that palette
 
 Porypal handles both.
 

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import './BatchTab.css'
 import { useFetch } from '../hooks/useFetch'
 import { Trash2, ChevronUp, ChevronDown, Play, Download, X, AlertTriangle, Check, Loader } from 'lucide-react'
+import { PalettePicker } from '../components/PalettePicker'
 
 const API = '/api'
 const PREVIEW_DEBOUNCE_MS = 1200

@@ -39,7 +39,7 @@ if getattr(sys, "frozen", False):
 import uvicorn
 
 DEFAULT_HOST  = "127.0.0.1"
-DEFAULT_START_PORT = 8080
+DEFAULT_START_PORT = 7860
 
 
 def find_free_port(start: int = DEFAULT_START_PORT, attempts: int = 10) -> int:

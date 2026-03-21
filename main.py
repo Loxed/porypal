@@ -31,11 +31,19 @@ import webbrowser
 if getattr(sys, "frozen", False):
     _exe_dir = os.path.dirname(sys.executable)
     os.chdir(_exe_dir)
-    os.environ["PORYPAL_BUNDLE_DIR"] = sys._MEIPASS  # type: ignore[attr-defined]
+    os.environ["PORYPAL_BUNDLE_DIR"] = sys._MEIPASS
 
-    # Create user-writable dirs next to the exe if they don't exist yet.
-    for _d in ("palettes/user", "palette_library"):
+    # Create user-writable dirs next to the exe
+    for _d in ("palettes/user", "palette_library", "presets"):
         os.makedirs(os.path.join(_exe_dir, _d), exist_ok=True)
+
+    # Copy bundled read-only defaults next to the exe if not already there
+    import shutil
+    for _folder in ("palettes/defaults",):
+        _src = os.path.join(sys._MEIPASS, _folder)
+        _dst = os.path.join(_exe_dir, _folder)
+        if os.path.isdir(_src) and not os.path.isdir(_dst):
+            shutil.copytree(_src, _dst)
 
 import uvicorn
 

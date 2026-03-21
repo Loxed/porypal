@@ -47,6 +47,12 @@ jobs:
       - name: Build with PyInstaller
         run: pyinstaller porypal.spec
 
+      - name: Remove quarantine attributes (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          find dist/porypal -type f | xargs xattr -c 2>/dev/null || true
+          chmod +x dist/porypal/porypal
+
       - name: Zip artifact (Linux/macOS)
         if: matrix.os != 'windows-latest'
         run: |
@@ -107,3 +113,9 @@ jobs:
             3. Run `porypal` (Linux/macOS) or `porypal.exe` (Windows)
 
             No Python installation required.
+
+            ### macOS note
+            If you see security warnings, run this once in Terminal after extracting:
+            ```
+            xattr -cr porypal/
+            ```

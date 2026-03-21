@@ -3,5 +3,4 @@ uvicorn
 python-multipart
 Pillow
 numpy
-scikit-learn
 PyYAML

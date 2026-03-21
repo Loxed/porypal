@@ -2,6 +2,7 @@
 model/palette_extractor.py
 
 Extract a GBA-compatible palette from any sprite using k-means clustering.
+Pure numpy implementation — no sklearn/scipy dependency.
 Supports two color spaces for clustering:
   - 'oklab'  (default) — perceptually uniform, groups colors as humans see them
   - 'rgb'              — raw euclidean distance in sRGB space
@@ -18,7 +19,6 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image
-from sklearn.cluster import KMeans
 
 from model.palette import Color, Palette
 
@@ -46,12 +46,10 @@ def rgb_to_oklab(pixels: np.ndarray) -> np.ndarray:
     rgb = pixels.astype(np.float32) / 255.0
     lin = _srgb_to_linear(rgb)
 
-    # Linear RGB → LMS cone responses
     l = 0.4122214708 * lin[:, 0] + 0.5363325363 * lin[:, 1] + 0.0514459929 * lin[:, 2]
     m = 0.2119034982 * lin[:, 0] + 0.6806995451 * lin[:, 1] + 0.1073969566 * lin[:, 2]
     s = 0.0883024619 * lin[:, 0] + 0.2817188376 * lin[:, 1] + 0.6299787005 * lin[:, 2]
 
-    # Cube root (avoid NaN on negatives, though values should be ≥ 0)
     l_ = np.cbrt(np.maximum(l, 0))
     m_ = np.cbrt(np.maximum(m, 0))
     s_ = np.cbrt(np.maximum(s, 0))
@@ -78,13 +76,76 @@ def oklab_to_rgb(lab: np.ndarray) -> np.ndarray:
     m = m_ ** 3
     s = s_ ** 3
 
-    r =  4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s
-    g = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s
+    r  =  4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s
+    g  = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s
     b_ = -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
 
     rgb = np.stack([r, g, b_], axis=1)
     rgb = _linear_to_srgb(np.clip(rgb, 0, 1))
     return (np.clip(rgb, 0, 1) * 255 + 0.5).astype(np.uint8)
+
+
+# ---------------------------------------------------------------------------
+# Pure numpy k-means (drop-in for sklearn.cluster.KMeans)
+# ---------------------------------------------------------------------------
+
+def _kmeans(
+    data: np.ndarray,
+    k: int,
+    random_state: int = 42,
+    max_iter: int = 100,
+    tol: float = 1e-4,
+) -> tuple[np.ndarray, np.ndarray]:
+    """
+    k-means++ initialisation followed by Lloyd's algorithm.
+
+    Returns
+    -------
+    centers : (k, D) float32
+    labels  : (N,)   int32
+    """
+    rng = np.random.default_rng(random_state)
+    n   = len(data)
+
+    # k-means++ init
+    idx = [int(rng.integers(n))]
+    for _ in range(1, k):
+        diffs = data - data[idx[-1]]
+        dists = (diffs * diffs).sum(axis=1)
+        for i in idx:
+            dists[i] = 0.0
+        total = dists.sum()
+        if total == 0.0:
+            remaining = [i for i in range(n) if i not in idx]
+            idx.append(int(rng.choice(remaining)))
+        else:
+            idx.append(int(rng.choice(n, p=dists / total)))
+
+    centers = data[idx].copy().astype(np.float32)
+    labels  = np.zeros(n, dtype=np.int32)
+
+    for _ in range(max_iter):
+        # Assignment — chunked to avoid huge (N, k, D) intermediates
+        chunk      = 4096
+        new_labels = np.empty(n, dtype=np.int32)
+        for start in range(0, n, chunk):
+            end = min(start + chunk, n)
+            diff = data[start:end, np.newaxis, :] - centers[np.newaxis, :, :]
+            new_labels[start:end] = (diff * diff).sum(axis=2).argmin(axis=1)
+
+        # Update
+        new_centers = np.zeros_like(centers)
+        for j in range(k):
+            mask = new_labels == j
+            new_centers[j] = data[mask].mean(axis=0) if mask.any() else centers[j]
+
+        shift   = np.sqrt(((new_centers - centers) ** 2).sum(axis=1)).max()
+        centers = new_centers
+        labels  = new_labels
+        if shift < tol:
+            break
+
+    return centers, labels
 
 
 # ---------------------------------------------------------------------------
@@ -148,18 +209,18 @@ class PaletteExtractor:
             dtype=np.float32,
         )
 
-        img = Image.open(path).convert("RGBA")
+        img    = Image.open(path).convert("RGBA")
         pixels = np.array(img)          # (H, W, 4)
-        alpha = pixels[:, :, 3]
-        rgb   = pixels[:, :, :3]
+        alpha  = pixels[:, :, 3]
+        rgb    = pixels[:, :, :3]
 
         # Collect fully opaque pixels, excluding the transparent color
-        opaque_mask = alpha.flatten() >= 255
-        flat_rgb = rgb.reshape(-1, 3)
+        opaque_mask   = alpha.flatten() >= 255
+        flat_rgb      = rgb.reshape(-1, 3)
         opaque_pixels = flat_rgb[opaque_mask].astype(np.float32)
 
         non_transparent_mask = ~np.all(opaque_pixels == transparent_rgb, axis=1)
-        sprite_pixels_rgb = opaque_pixels[non_transparent_mask].astype(np.uint8)
+        sprite_pixels_rgb    = opaque_pixels[non_transparent_mask].astype(np.uint8)
 
         if len(sprite_pixels_rgb) == 0:
             logging.warning("Image has no sprite pixels — returning palette with transparent only")
@@ -171,16 +232,10 @@ class PaletteExtractor:
         else:
             cluster_pixels = sprite_pixels_rgb.astype(np.float32)
 
-        unique_colors = len(np.unique(sprite_pixels_rgb, axis=0))
+        unique_colors   = len(np.unique(sprite_pixels_rgb, axis=0))
         actual_clusters = min(n_colors, unique_colors)
 
-        kmeans = KMeans(
-            n_clusters=actual_clusters,
-            random_state=self.random_state,
-            n_init="auto",
-        )
-        kmeans.fit(cluster_pixels)
-        centers = kmeans.cluster_centers_   # float, in cluster space
+        centers, labels = _kmeans(cluster_pixels, actual_clusters, random_state=self.random_state)
 
         # Convert centroids back to uint8 RGB
         if color_space == "oklab":
@@ -189,9 +244,8 @@ class PaletteExtractor:
             centers_rgb = np.clip(centers, 0, 255).astype(np.uint8)
 
         # Sort by cluster size (most-used color first)
-        labels = kmeans.labels_
-        cluster_sizes = np.bincount(labels, minlength=actual_clusters)
-        order = np.argsort(-cluster_sizes)
+        cluster_sizes  = np.bincount(labels, minlength=actual_clusters)
+        order          = np.argsort(-cluster_sizes)
         sorted_centers = centers_rgb[order]
 
         colors = [transparent_color] + [

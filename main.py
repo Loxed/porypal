@@ -51,31 +51,25 @@ def open_browser(host: str, port: int, delay: float = 1.5) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Porypal – palette toolchain for Gen 3 ROM hacking"
+        description="Porypal ΓÇô palette toolchain for Gen 3 ROM hacking"
     )
-    parser.add_argument(
-        "--host", default=DEFAULT_HOST,
-        help=f"Host to bind (default: {DEFAULT_HOST})",
-    )
-    parser.add_argument(
-        "--port", type=int, default=DEFAULT_PORT,
-        help=f"Port to listen on (default: {DEFAULT_PORT})",
-    )
-    parser.add_argument(
-        "--no-browser", action="store_true",
-        help="Don't open browser automatically",
-    )
-    parser.add_argument(
-        "--reload", action="store_true",
-        help="Enable auto-reload (dev mode, not available when frozen)",
-    )
+    parser.add_argument("--host", default=DEFAULT_HOST)
+    parser.add_argument("--port", type=int, default=DEFAULT_PORT)
+    parser.add_argument("--no-browser", action="store_true")
+    parser.add_argument("--reload", action="store_true")
     args = parser.parse_args()
 
-    # Auto-reload is meaningless (and crashes) in a frozen bundle.
     reload = args.reload and not getattr(sys, "frozen", False)
 
     url = f"http://{args.host}:{args.port}"
-    print(f"\n  Porypal running at {url}\n")
+
+    print("=" * 40)
+    print("  Porypal v3.0")
+    print("=" * 40)
+    print(f"\n  Open your browser and go to:\n")
+    print(f"      {url}\n")
+    print("  Press Ctrl+C to stop the app.")
+    print("=" * 40 + "\n")
 
     if not args.no_browser:
         t = threading.Thread(
@@ -83,13 +77,20 @@ def main() -> None:
         )
         t.start()
 
-    uvicorn.run(
-        "server.app:app",
-        host=args.host,
-        port=args.port,
-        reload=reload,
-        log_level="warning",
-    )
+    try:
+        uvicorn.run(
+            "server.app:app",
+            host=args.host,
+            port=args.port,
+            reload=reload,
+            log_level="warning",
+        )
+    except Exception as e:
+        print(f"\n  ERROR: {e}")
+    finally:
+        # Keep console open so user can read any messages
+        if getattr(sys, "frozen", False):
+            input("\n  Press Enter to close...")
 
 
 if __name__ == "__main__":

@@ -9,7 +9,8 @@
 #   ./dump_to_md.sh --since                      # only files changed since last commit
 #   ./dump_to_md.sh --ext ts tsx rs              # override extensions
 #   ./dump_to_md.sh --copy                       # copy result to clipboard
-#   ./dump_to_md.sh src --since --copy           # combine freely
+#   ./dump_to_md.sh --build                      # include build/deploy files (.spec, workflows, Dockerfile, etc.)
+#   ./dump_to_md.sh src --since --copy --build   # combine freely
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -20,6 +21,12 @@ DEFAULT_EXTENSIONS=("py" "js" "jsx" "ts" "tsx" "css" "scss"
                     "html" "yaml" "yml" "toml" "json" "sh" "bash"
                     "rs" "go" "java" "cpp" "c" "h" "cs" "rb" "php"
                     "swift" "kt" "vue" "svelte" "mdx")
+
+BUILD_EXTENSIONS=("spec" "cfg" "ini" "env")
+
+BUILD_FILENAMES=("Dockerfile" "Makefile" "docker-compose.yml" "docker-compose.yaml"
+                 ".dockerignore" ".gitignore" "Procfile" "fly.toml" "railway.toml"
+                 "render.yaml" "netlify.toml" "vercel.json" ".env.example")
 
 DEFAULT_EXCLUDE_DIRS=(".venv" "venv" "env" "__pycache__" ".git"
                       "build" "dist" "out" "target" "node_modules"
@@ -32,12 +39,14 @@ FOLDERS=()
 EXTENSIONS=()
 SINCE=false
 COPY=false
+BUILD=false
 
 # -- Parse args ----------------------------------------------------------------
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --since) SINCE=true; shift ;;
-        --copy)  COPY=true;  shift ;;
+        --since)  SINCE=true;  shift ;;
+        --copy)   COPY=true;   shift ;;
+        --build)  BUILD=true;  shift ;;
         --ext)
             shift
             while [[ $# -gt 0 && "$1" != --* ]]; do
@@ -51,6 +60,10 @@ done
 
 if [ ${#EXTENSIONS[@]} -eq 0 ]; then
     EXTENSIONS=("${DEFAULT_EXTENSIONS[@]}")
+fi
+
+if $BUILD; then
+    EXTENSIONS+=("${BUILD_EXTENSIONS[@]}")
 fi
 
 # -- Check clipboard availability ----------------------------------------------
@@ -104,11 +117,19 @@ fi
 find "$ROOT" -type f | sort | while read -r file; do
     rel="${file#$ROOT/}"
 
-    # Skip excluded dirs
+    # Skip excluded dirs.
+    # --build: allow .github/ through (catches CI workflows), but still block .git/
     skip=false
     for dir in "${DEFAULT_EXCLUDE_DIRS[@]}"; do
-        if [[ "$rel" == *"$dir"* ]]; then
-            skip=true; break
+        if $BUILD && [[ "$dir" == ".git" ]]; then
+            # Block .git/ exactly but allow .github/
+            if [[ "$rel" == ".git/"* || "$rel" == ".git" ]]; then
+                skip=true; break
+            fi
+        else
+            if [[ "$rel" == *"$dir"* ]]; then
+                skip=true; break
+            fi
         fi
     done
     $skip && continue
@@ -142,12 +163,22 @@ find "$ROOT" -type f | sort | while read -r file; do
         $match_folder || continue
     fi
 
-    # Check extension
+    # Check extension match
     ext="${file##*.}"
     match_ext=false
     for e in "${EXTENSIONS[@]}"; do
         [[ "$ext" == "$e" ]] && match_ext=true && break
     done
+
+    # --build: also match exact filenames (Dockerfile, Makefile, etc.)
+    if ! $match_ext && $BUILD; then
+        for name in "${BUILD_FILENAMES[@]}"; do
+            if [[ "$filename" == "$name" ]]; then
+                match_ext=true; break
+            fi
+        done
+    fi
+
     $match_ext || continue
 
     # Language hint for syntax highlighting
@@ -169,6 +200,8 @@ find "$ROOT" -type f | sort | while read -r file; do
         yaml|yml)    lang="yaml" ;;
         toml)        lang="toml" ;;
         json)        lang="json" ;;
+        spec|cfg)    lang="python" ;;
+        ini)         lang="ini" ;;
         *)           lang="$ext" ;;
     esac
 
@@ -188,6 +221,7 @@ TOKENS=$(( CHARS / 4 ))
 
 echo "Written to ${OUTPUT_FILENAME}"
 echo "~${TOKENS} tokens"
+$BUILD && echo "  (--build: included .spec, .github/workflows, Dockerfile, Makefile, etc.)"
 
 # -- Copy to clipboard ---------------------------------------------------------
 if $COPY; then

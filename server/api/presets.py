@@ -109,3 +109,5 @@ def delete_preset(preset_id: str) -> bool:
         f.unlink()
         return True
     return False
+
+from server.preset_store import router

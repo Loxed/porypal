@@ -40,7 +40,7 @@ from model.image_manager import ImageManager
 from model.palette_extractor import PaletteExtractor
 from model.tileset_manager import TilesetManager
 from server.helpers import pil_to_b64
-from server.presets import load_preset
+from server.preset_store import load_preset
 from server.state import state
 
 router = APIRouter(prefix="/api/pipeline", tags=["pipeline"])

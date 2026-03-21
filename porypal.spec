@@ -98,6 +98,34 @@ hiddenimports += pil_hiddenimports
 hiddenimports += collect_submodules("anyio")
 hiddenimports += collect_submodules("starlette")
 
+# Local packages – not installed so collect_submodules won't find them.
+hiddenimports += [
+    "server",
+    "server.app",
+    "server.state",
+    "server.helpers",
+    "server.presets",
+    "server.api",
+    "server.api.palettes",
+    "server.api.convert",
+    "server.api.extract",
+    "server.api.batch",
+    "server.api.tileset",
+    "server.api.presets",
+    "server.api.health",
+    "server.api.library",
+    "server.api.pipeline",
+    "server.api.items",
+    "server.api.shiny",
+    "server.preset_store",
+    "model",
+    "model.palette",
+    "model.palette_manager",
+    "model.palette_extractor",
+    "model.image_manager",
+    "model.tileset_manager",
+]
+
 # ── Analysis ──────────────────────────────────────────────────────────────────
 a = Analysis(
     ["main.py"],

@@ -1,6 +1,7 @@
 # <img src="frontend/public/porypal.ico" width="28" height="28" style="vertical-align:middle; margin-right:8px"> Porypal
 
 Porypal is a sprite tool for Pokémon Gen 3 ROM hacking (pokeemerald, pokefirered, pokeemerald-expansion).
+![Porypal Home Page](docs/img/home.png)
 
 #### Why do I need it?
 
@@ -13,39 +14,45 @@ This means you can't just export a PNG from your art program and drop it into th
 
 Porypal handles both.
 
-![Porypal UI](docs/img/main_ui.png)
-
 ## What can Porypal do for me?
 
 **Extract Palette**
+![Preview Extract](frontend/public/img/preview_extract.png)
 - Import a sprite to extract a palette (`sprite.pal`) from it.
 - Automatically detects the sprite's transparent/background color.
 - Reduces the sprite's colors down to 16, so it's ready for insertion.
 
 **Apply Palette**
+![Preview Apply](frontend/public/img/preview_apply.gif)
 - Import a sprite to see it converted against every palette in your library at once.
 - The best-matching palettes are automatically highlighted and applied.
 - Download the converted `sprite.png`, ready for use with the selected palette.
 
 **Shiny**
+![Preview Shiny](frontend/public/img/preview_shiny.png)
 1. *Create a Shiny Palette*
    - Import `sprite.png` + `shiny_sprite.png` to get two index-aligned palettes (`normal.pal` and `shiny.pal`).
 2. *Create a Shiny Sprite*
    - Import `sprite.png` + `normal.pal` + `shiny.pal` to get a `shiny_sprite.png`.
 
 **Tileset**
+![Preview Tileset](frontend/public/img/preview_tileset.png)
 - Slice a spritesheet into tiles and rearrange them into any layout you want.
 - Save layouts as presets and reuse them across spritesheets of the same dimensions.
 
 **Pipeline**
+![Preview Pipeline](frontend/public/img/preview_pipeline.png)
 - Build a multi-step pipeline (Extract Palette, Apply Tileset, Apply Palette) and run it across an entire folder.
 - Results download as a zip with a per-file summary.
 
 **Palettes**
+![Preview Palettes](frontend/public/img/preview_palettes.png)
 - Manage the palettes available across the app in one place.
 - Upload your own `.pal` files or import palettes from the built-in library, organised by game and category.
 
 **Group Operations**
+
+![Preview Group](frontend/public/img/preview_groups.png)
 1. *Group Extract*
    - Import multiple sprites (Pokeballs, Z-Crystals, Mega Stones) and automatically group them by silhouette (same shape = same group).
    - Within each group, colors that appear across most sprites are locked to the same palette slot index, so swapping palettes in-game works more smoothly.

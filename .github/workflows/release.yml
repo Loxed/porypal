@@ -1,0 +1,109 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            name: linux
+            artifact: porypal-linux.zip
+          - os: windows-latest
+            name: windows
+            artifact: porypal-windows.zip
+          - os: macos-latest
+            name: macos
+            artifact: porypal-macos.zip
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt pyinstaller
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build
+
+      - name: Build with PyInstaller
+        run: pyinstaller porypal.spec
+
+      - name: Zip artifact (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        run: |
+          cd dist
+          zip -r ../${{ matrix.artifact }} porypal/
+
+      - name: Zip artifact (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd dist
+          Compress-Archive -Path porypal/ -DestinationPath ../${{ matrix.artifact }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}
+          path: ${{ matrix.artifact }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Porypal ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          files: |
+            artifacts/linux/porypal-linux.zip
+            artifacts/windows/porypal-windows.zip
+            artifacts/macos/porypal-macos.zip
+          body: |
+            ## Porypal ${{ github.ref_name }}
+
+            ### Download
+            | Platform | File |
+            |----------|------|
+            | Linux    | `porypal-linux.zip` |
+            | Windows  | `porypal-windows.zip` |
+            | macOS    | `porypal-macos.zip` |
+
+            ### Install
+            1. Download the zip for your platform
+            2. Extract it
+            3. Run `porypal` (Linux/macOS) or `porypal.exe` (Windows)
+
+            No Python installation required.

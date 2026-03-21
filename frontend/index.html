@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Porypal (v3.0)</title>
   </head>
+  <script>
+    if (window.location.pathname === '/' && !window.location.hash) {
+      window.location.replace('/#/home');
+    }
+  </script>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>

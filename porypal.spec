@@ -141,7 +141,6 @@ a = Analysis(
         "matplotlib", "jupyter", "notebook",
         "IPython", "tornado", "zmq",
         "wx", "gi",
-        "scipy",  # pulled in by sklearn but unused
     ],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,

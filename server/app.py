@@ -57,7 +57,7 @@ app.include_router(shiny.router)
 
 @app.get("/")
 def root():
-    return RedirectResponse(url="/#/home")
+    return RedirectResponse(url="/#/home", status_code=301))
 
 
 # --- Static files ---

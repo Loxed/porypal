@@ -1,6 +1,7 @@
 # <img src="frontend/public/porypal.ico" width="28" height="28" style="vertical-align:middle; margin-right:8px"> Porypal
 
 Porypal is a sprite tool for Pokémon Gen 3 ROM hacking (pokeemerald, pokefirered, pokeemerald-expansion).
+
 ![Porypal Home Page](docs/img/home.png)
 
 #### Why do I need it?

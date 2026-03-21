@@ -17,9 +17,10 @@ from fastapi.staticfiles import StaticFiles
 
 from server.api import (
     palettes, convert, extract, batch,
-    tileset, presets, health, library,
+    tileset, health, library,
     pipeline, items, shiny,
 )
+from server import preset_store as presets
 
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 

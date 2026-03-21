@@ -1,19 +1,24 @@
 """
 server/app.py
 
-FastAPI entrypoint — mounts routers and middleware only.
+FastAPI entrypoint – mounts routers and middleware only.
 All route logic lives in server/api/*.py.
 """
 
 from __future__ import annotations
 import logging
+import os
 from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from server.api import palettes, convert, extract, batch, tileset, presets, health, library, pipeline, items, shiny
+from server.api import (
+    palettes, convert, extract, batch,
+    tileset, presets, health, library,
+    pipeline, items, shiny,
+)
 
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
@@ -21,13 +26,16 @@ app = FastAPI(title="Porypal API", version="3.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:5173",
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ---------- routers ----------
-
+# ── Routers ────────────────────────────────────────────────────────────────────
 app.include_router(palettes.router)
 app.include_router(convert.router)
 app.include_router(extract.router)
@@ -38,15 +46,29 @@ app.include_router(health.router)
 app.include_router(library.router)
 app.include_router(pipeline.router)
 app.include_router(items.router)
-app.include_router(shiny.router)  # fixed: was missing, caused 405 on shiny endpoints
+app.include_router(shiny.router)
 
-# ---------- static files ----------
+# ── Static files ───────────────────────────────────────────────────────────────
+# When running as a PyInstaller bundle, bundled read-only assets live in
+# PORYPAL_BUNDLE_DIR (sys._MEIPASS).  In development they're relative to the
+# repo root.
 
-example_dir = Path(__file__).parent.parent / "example"
-frontend_dist = Path(__file__).parent.parent / "frontend" / "dist"
+_bundle = os.environ.get("PORYPAL_BUNDLE_DIR")
+_base   = Path(_bundle) if _bundle else Path(__file__).parent.parent
+
+example_dir    = _base / "example"
+frontend_dist  = _base / "frontend" / "dist"
 
 if example_dir.exists():
-    app.mount("/example", StaticFiles(directory=str(example_dir)), name="example")
+    app.mount(
+        "/example",
+        StaticFiles(directory=str(example_dir)),
+        name="example",
+    )
 
 if frontend_dist.exists():
-    app.mount("/", StaticFiles(directory=str(frontend_dist), html=True), name="frontend")
+    app.mount(
+        "/",
+        StaticFiles(directory=str(frontend_dist), html=True),
+        name="frontend",
+    )

@@ -1,82 +1,111 @@
 """
-server/api/presets.py
+server/presets.py
 
-Routes: /api/presets
+Preset management – load/save JSON presets from the presets/ folder.
+
+When running as a PyInstaller bundle:
+  • Bundled (read-only) defaults live in  PORYPAL_BUNDLE_DIR/presets/
+  • User-saved presets live in            CWD/presets/   (next to the exe)
+
+list_presets() merges both sources; bundled ones are always marked
+is_default=True and cannot be deleted.
 """
 
 from __future__ import annotations
-from typing import Optional
+import json
+import logging
+import os
+from pathlib import Path
 
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+# User-writable presets directory (relative to CWD, i.e. next to the exe).
+PRESETS_DIR = Path("presets")
 
-from server.presets import list_presets, load_preset, save_preset, delete_preset
-
-router = APIRouter(prefix="/api/presets", tags=["presets"])
-
-
-class PresetBody(BaseModel):
-    name: str
-    tile_w: int = 32
-    tile_h: int = 32
-    out_tile_w: Optional[int] = None   # output tile width  (None = same as tile_w)
-    out_tile_h: Optional[int] = None   # output tile height (None = same as tile_h)
-    cols: int = 9
-    rows: int = 1
-    slots: list
-    slot_labels: Optional[list] = None
-    src_cols: Optional[int] = None
-    src_rows: Optional[int] = None
-    # Legacy resize fields — accepted so old presets can be re-saved cleanly
-    resize_tile_w: Optional[int] = None
-    resize_tile_h: Optional[int] = None
-    resize_interpolation: Optional[str] = None
+# Bundled read-only presets (sys._MEIPASS/presets/ when frozen, else None).
+_bundle = os.environ.get("PORYPAL_BUNDLE_DIR")
+BUNDLED_PRESETS_DIR: Path | None = Path(_bundle) / "presets" if _bundle else None
 
 
-@router.get("")
-def get_presets():
-    return list_presets()
+def _ensure_dir() -> None:
+    PRESETS_DIR.mkdir(exist_ok=True)
 
 
-@router.get("/{preset_id}")
-def get_preset(preset_id: str):
-    p = load_preset(preset_id)
-    if not p:
-        raise HTTPException(404, f"Preset '{preset_id}' not found")
-    return p
+def _read_preset(f: Path, is_default: bool = False) -> dict | None:
+    try:
+        data = json.loads(f.read_text())
+        return {
+            "id":         f.stem,
+            "name":       data.get("name", f.stem),
+            "tile_w":     data.get("tile_w", 32),
+            "tile_h":     data.get("tile_h", 32),
+            "out_tile_w": data.get("out_tile_w"),
+            "out_tile_h": data.get("out_tile_h"),
+            "cols":       data.get("cols", 9),
+            "rows":       data.get("rows", 1),
+            "slots":      data.get("slots", []),
+            "src_cols":   data.get("src_cols"),
+            "src_rows":   data.get("src_rows"),
+            "is_default": data.get("is_default", is_default),
+        }
+    except Exception as e:
+        logging.warning(f"Could not read preset {f.name}: {e}")
+        return None
 
 
-@router.post("/{preset_id}")
-def upsert_preset(preset_id: str, body: PresetBody):
-    data = body.model_dump(exclude_none=False)
+def list_presets() -> list[dict]:
+    _ensure_dir()
+    seen:   set[str]  = set()
+    result: list[dict] = []
 
-    # Normalise: if out_tile_w/h not set but legacy resize fields are, migrate them
-    if data.get("out_tile_w") is None and data.get("resize_tile_w"):
-        data["out_tile_w"] = data["resize_tile_w"]
-    if data.get("out_tile_h") is None and data.get("resize_tile_h"):
-        data["out_tile_h"] = data["resize_tile_h"]
+    # 1. Bundled defaults (from sys._MEIPASS when frozen, or the repo's
+    #    presets/ dir in development when PORYPAL_BUNDLE_DIR is not set).
+    _default_src = BUNDLED_PRESETS_DIR or PRESETS_DIR
+    if _default_src.exists():
+        for f in sorted(_default_src.glob("*.json")):
+            p = _read_preset(f, is_default=True)
+            if p and p["id"] not in seen:
+                seen.add(p["id"])
+                result.append(p)
 
-    # Drop legacy keys so the stored JSON stays clean
-    data.pop("resize_tile_w", None)
-    data.pop("resize_tile_h", None)
-    data.pop("resize_interpolation", None)
+    # 2. User presets (only when frozen; in dev the dirs are the same).
+    if BUNDLED_PRESETS_DIR is not None and PRESETS_DIR.exists():
+        for f in sorted(PRESETS_DIR.glob("*.json")):
+            if f.stem in seen:
+                continue
+            p = _read_preset(f, is_default=False)
+            if p:
+                seen.add(p["id"])
+                result.append(p)
 
-    # Drop None out_tile_w/h if they match tile_w/h (no-op resize)
-    if data.get("out_tile_w") == data["tile_w"]:
-        data["out_tile_w"] = None
-    if data.get("out_tile_h") == data["tile_h"]:
-        data["out_tile_h"] = None
-
-    return save_preset(preset_id, data)
+    return result
 
 
-@router.delete("/{preset_id}")
-def remove_preset(preset_id: str):
-    p = load_preset(preset_id)
-    if not p:
-        raise HTTPException(404, f"Preset '{preset_id}' not found")
-    if p.get("is_default", False):
-        raise HTTPException(403, f"Preset '{preset_id}' is a default preset and cannot be deleted")
-    if not delete_preset(preset_id):
-        raise HTTPException(500, "Failed to delete preset")
-    return {"deleted": preset_id}
+def load_preset(preset_id: str) -> dict | None:
+    # Check user dir first (allows overriding a default by same name).
+    _ensure_dir()
+    f = PRESETS_DIR / f"{preset_id}.json"
+    if f.exists():
+        return json.loads(f.read_text())
+
+    # Fall back to bundled defaults.
+    if BUNDLED_PRESETS_DIR:
+        fb = BUNDLED_PRESETS_DIR / f"{preset_id}.json"
+        if fb.exists():
+            return json.loads(fb.read_text())
+
+    return None
+
+
+def save_preset(preset_id: str, data: dict) -> dict:
+    _ensure_dir()
+    f = PRESETS_DIR / f"{preset_id}.json"
+    f.write_text(json.dumps(data, indent=2))
+    return data
+
+
+def delete_preset(preset_id: str) -> bool:
+    _ensure_dir()
+    f = PRESETS_DIR / f"{preset_id}.json"
+    if f.exists():
+        f.unlink()
+        return True
+    return False

@@ -1,0 +1,184 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version label (e.g. v3.0.0)"
+        required: false
+        default: "dev"
+
+permissions:
+  contents: write
+
+jobs:
+  # ──────────────────────────────────────────────────────────────────────────
+  # Build the Vite frontend once and share it across all platform jobs.
+  # ──────────────────────────────────────────────────────────────────────────
+  build-frontend:
+    name: Build frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install & build
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Upload dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist
+          retention-days: 1
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Native binary build for each platform.
+  # ──────────────────────────────────────────────────────────────────────────
+  build-native:
+    name: Build – ${{ matrix.label }}
+    needs: build-frontend
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            label: Windows
+            artifact: porypal-windows.zip
+            archive_cmd: |
+              Compress-Archive -Path dist/porypal -DestinationPath porypal-windows.zip
+
+          - os: ubuntu-latest
+            label: Linux
+            artifact: porypal-linux.tar.gz
+            archive_cmd: |
+              tar -czf porypal-linux.tar.gz -C dist porypal
+
+          - os: macos-latest
+            label: macOS
+            artifact: porypal-macos.zip
+            archive_cmd: |
+              zip -r porypal-macos.zip dist/porypal
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # ── Python ──────────────────────────────────────────────────────────
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt pyinstaller
+
+      # ── Frontend dist (from build-frontend job) ──────────────────────────
+      - uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist
+
+      # ── PyInstaller ──────────────────────────────────────────────────────
+      - name: Build with PyInstaller
+        run: pyinstaller porypal.spec
+
+      # ── Smoke test ───────────────────────────────────────────────────────
+      # Start the server, wait 5 s, hit the health endpoint, then kill it.
+      - name: Smoke test (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $proc = Start-Process -FilePath "dist/porypal/porypal.exe" `
+                    -ArgumentList "--no-browser" -PassThru -WindowStyle Hidden
+          Start-Sleep 8
+          try {
+            $r = Invoke-RestMethod -Uri "http://127.0.0.1:7860/api/health" -TimeoutSec 5
+            Write-Host "Health: $($r | ConvertTo-Json)"
+          } finally {
+            Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+          }
+
+      - name: Smoke test (Linux / macOS)
+        if: runner.os != 'Windows'
+        run: |
+          ./dist/porypal/porypal --no-browser &
+          PID=$!
+          sleep 8
+          curl -sf http://127.0.0.1:7860/api/health || (kill $PID; exit 1)
+          kill $PID
+
+      # ── Archive ──────────────────────────────────────────────────────────
+      - name: Create archive (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ${{ matrix.archive_cmd }}
+
+      - name: Create archive (Linux / macOS)
+        if: runner.os != 'Windows'
+        run: ${{ matrix.archive_cmd }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.artifact }}
+          retention-days: 7
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Create a GitHub Release and attach all three archives.
+  # Only runs on version tags (v*).
+  # ──────────────────────────────────────────────────────────────────────────
+  release:
+    name: GitHub Release
+    needs: build-native
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          pattern: "porypal-*"
+          merge-multiple: true
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Porypal ${{ github.ref_name }}"
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          generate_release_notes: true
+          files: |
+            release-assets/porypal-windows.zip
+            release-assets/porypal-linux.tar.gz
+            release-assets/porypal-macos.zip
+          body: |
+            ## Installation
+
+            Download the archive for your platform, extract it, and run the `porypal` executable inside.
+
+            | Platform | File | Notes |
+            |---|---|---|
+            | Windows | `porypal-windows.zip` | Extract, double-click `porypal.exe` |
+            | Linux | `porypal-linux.tar.gz` | Extract, run `./porypal` |
+            | macOS | `porypal-macos.zip` | Extract, run `./porypal` (see note below) |
+
+            > **macOS:** On first launch, right-click → Open to bypass Gatekeeper (the app is unsigned).
+            >
+            > **Linux:** You may need `chmod +x porypal` after extracting.
+
+            The app opens your browser automatically at `http://localhost:7860`.

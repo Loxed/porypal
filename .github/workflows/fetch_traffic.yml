@@ -1,10 +1,8 @@
 name: Fetch GitHub Traffic
-
 on:
   schedule:
     - cron: "0 9 * * 1"  # every Monday 9am UTC
   workflow_dispatch:       # manual trigger button in Actions tab
-
 jobs:
   fetch:
     runs-on: ubuntu-latest
@@ -12,22 +10,19 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT_TOKEN }}
-
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
       - run: pip install requests
-
       - run: python scripts/fetch_github_traffic.py
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-
       - name: Commit updated stats
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
           git add scripts/stats.json
           git diff --staged --quiet || git commit -m "chore: update traffic stats"
-          git pull --rebase
           git push

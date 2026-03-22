@@ -2,7 +2,7 @@ name: Fetch GitHub Traffic
 on:
   schedule:
     - cron: "0 9 * * 1"  # every Monday 9am UTC
-  workflow_dispatch:       # manual trigger button in Actions tab
+  workflow_dispatch:
 jobs:
   fetch:
     runs-on: ubuntu-latest
@@ -22,7 +22,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin main
           git add scripts/stats.json
           git diff --staged --quiet || git commit -m "chore: update traffic stats"
+          git pull --rebase origin main
           git push

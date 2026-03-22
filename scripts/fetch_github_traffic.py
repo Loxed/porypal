@@ -15,7 +15,7 @@ import requests
 
 REPO       = "loxed/porypal"
 TOKEN      = os.environ["GITHUB_TOKEN"]
-STATS_FILE = Path("stats.json")
+STATS_FILE = Path("scripts/stats.json")
 
 HEADERS = {
     "Authorization": f"token {TOKEN}",

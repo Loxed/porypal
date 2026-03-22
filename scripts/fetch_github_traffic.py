@@ -74,7 +74,8 @@ def run() -> None:
     releases = fetch("releases")
     for release in releases:
         for asset in release.get("assets", []):
-            stats["releases"][asset["name"]] = asset["download_count"]
+            existing = stats["releases"].get(asset["name"], 0)
+            stats["releases"][asset["name"]] = max(existing, asset["download_count"])
 
     stats["last_updated"] = datetime.utcnow().isoformat()
     save_stats(stats)

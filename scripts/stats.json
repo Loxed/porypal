@@ -118,9 +118,9 @@
   "releases": {
     "porypal-linux.zip": 0,
     "porypal-macos.zip": 0,
-    "porypal-windows.zip": 0,
+    "porypal-windows.zip": 1,
     "porypal_1.zip": 7,
     "Porypal.2.0-Windows.zip": 291
   },
-  "last_updated": "2026-03-22T17:52:08.533583"
+  "last_updated": "2026-03-22T18:15:44.607190"
 }

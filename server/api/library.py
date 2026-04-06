@@ -480,7 +480,7 @@ def generate_item_palette(body: GeneratePaletteBody):
         tmp_path = tmp.name
 
     try:
-        palette = state.extractor.extract(
+        palette, _method = state.extractor.extract(
             tmp_path,
             n_colors=body.n_colors,
             bg_color=body.bg_color,

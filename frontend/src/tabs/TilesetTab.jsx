@@ -4,7 +4,7 @@ import { DropZone } from '../components/DropZone'
 import { Modal } from '../components/Modal'
 import { useFetch } from '../hooks/useFetch'
 import { downloadBlob } from '../utils'
-import { Info, X, Save } from 'lucide-react'
+import { Info, X, Save, Download } from 'lucide-react'
 import { PresetList } from '../components/PresetList'
 
 const API = '/api'
@@ -186,6 +186,7 @@ async function buildAndDownload(sourceFile, slots, cols, rows, inputTileW, input
 export function TilesetTab() {
   const [file, setFile]         = useState(null)
   const [arrangeFile, setArrangeFile] = useState(null)
+  const [outputName, setOutputName] = useState('')
   // Source tile size (how big tiles are in the uploaded image)
   const [inTileW, setInTileW]   = useState(32)
   const [inTileH, setInTileH]   = useState(32)
@@ -204,6 +205,8 @@ export function TilesetTab() {
   const [presets, setPresets]             = useState([])
   const [activePresetId, setActivePresetId] = useState(null)
   const [defaultIds, setDefaultIds]       = useState(new Set())
+  const [downloadError, setDownloadError] = useState(null)
+  const [downloading, setDownloading]     = useState(false)
   const { loading, error, run }           = useFetch()
 
   // Debounce everything that triggers a re-slice
@@ -248,7 +251,8 @@ export function TilesetTab() {
   }
 
   const handleFile = (f) => {
-    setFile(f); setArrangeFile(f); setResult(null); resetSlots(cols, rows)
+    setFile(f); setArrangeFile(f); setResult(null); resetSlots(cols, rows); setDownloadError(null)
+    setOutputName(`${f.name.replace(/\.[^.]+$/, '')}_arranged`)
     doSlice(f, inTileW, inTileH, outTileW, outTileH)
   }
 
@@ -314,6 +318,24 @@ export function TilesetTab() {
     ? `${inTileW}×${inTileH} → ${outTileW}×${outTileH}`
     : `${outTileW}×${outTileH}px`
 
+  const handleDownload = async () => {
+    if (!result || !arrangeFile || slots.every(s => s == null) || !outputName.trim()) return
+    setDownloadError(null)
+    setDownloading(true)
+    try {
+      await buildAndDownload(
+        arrangeFile, slots, cols, rows,
+        result.input_tile_width, result.input_tile_height,
+        result.tile_width, result.tile_height,
+        `${outputName.trim()}.png`,
+      )
+    } catch (e) {
+      setDownloadError(e.message || 'Failed to download arranged tileset')
+    } finally {
+      setDownloading(false)
+    }
+  }
+
   return (
     <div className="tab-content">
       {showHelp && <HelpModal onClose={() => setShowHelp(false)}/>}
@@ -324,6 +346,20 @@ export function TilesetTab() {
         {/* ── Left panel ── */}
         <div className="tileset-left">
           <DropZone onFile={handleFile} label="Drop tileset image"/>
+
+          {file && (
+            <div className="field">
+              <label className="field-label">output name</label>
+              <input
+                className="field-input"
+                value={outputName}
+                onChange={e => setOutputName(e.target.value)}
+                spellCheck={false}
+                placeholder="sprite_arranged"
+              />
+              <span className="tileset-field-hint">used for the downloaded PNG filename</span>
+            </div>
+          )}
 
           {/* Tile dimensions */}
           <div className="tile-dim-grid">
@@ -391,7 +427,7 @@ export function TilesetTab() {
             </button>
           </div>
 
-          {error && <p className="error-msg">{error}</p>}
+          {(error || downloadError) && <p className="error-msg">{downloadError || error}</p>}
 
           {/* Source preview */}
           {result && (
@@ -425,16 +461,6 @@ export function TilesetTab() {
             <div style={{ display: 'flex', gap: 6 }}>
               {result && <>
                 <button className="btn-ghost" onClick={() => resetSlots(cols, rows)}>clear</button>
-                <button className="btn-primary-sm"
-                  disabled={slots.every(s => s == null)}
-                  onClick={() => run(() => buildAndDownload(
-                    arrangeFile, slots, cols, rows,
-                    result.input_tile_width, result.input_tile_height,
-                    result.tile_width, result.tile_height,
-                    `${file.name.replace(/\.[^.]+$/,'')}_arranged.png`,
-                  ))}>
-                  download
-                </button>
               </>}
               <button className="help-btn" onClick={() => setShowHelp(true)}><Info size={15}/></button>
             </div>
@@ -451,13 +477,23 @@ export function TilesetTab() {
                   <button className="btn-ghost" onClick={() => setSelectedTile(null)}>cancel</button>
                 </div>
               )}
-              <OutputGrid
-                slots={slots} setSlots={setSlots}
-                cols={cols} rows={rows}
-                tiles={result.tiles}
-                selectedTile={selectedTile} setSelectedTile={setSelectedTile}
-                slotLabels={slotLabels}
-              />
+              <div className="tileset-output-stack">
+                <OutputGrid
+                  slots={slots} setSlots={setSlots}
+                  cols={cols} rows={rows}
+                  tiles={result.tiles}
+                  selectedTile={selectedTile} setSelectedTile={setSelectedTile}
+                  slotLabels={slotLabels}
+                />
+                <button
+                  className="btn-primary tileset-download-btn"
+                  disabled={slots.every(s => s == null) || !outputName.trim() || downloading}
+                  onClick={handleDownload}
+                >
+                  <Download size={13} />
+                  {downloading ? 'downloading…' : `Download '${outputName.trim()}.png'`}
+                </button>
+              </div>
             </>
           )}
         </div>

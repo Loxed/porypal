@@ -51,13 +51,14 @@ def _extract_palette_for_sprite(image_data: bytes, filename: str, n_colors: int,
         tmp.write(image_data)
         tmp_path = tmp.name
     try:
-        return state.extractor.extract(
+        palette, _method = state.extractor.extract(
             tmp_path,
             n_colors=n_colors,
             bg_color=bg_color,
             color_space="oklab",
             name=Path(filename).stem,
         )
+        return palette
     finally:
         os.unlink(tmp_path)
 

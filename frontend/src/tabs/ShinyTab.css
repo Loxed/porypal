@@ -7,6 +7,20 @@
 }
 .shiny-left  { display: flex; flex-direction: column; gap: 14px; }
 .shiny-right { display: flex; flex-direction: column; gap: 20px; min-height: 400px; }
+.shiny-field-hint {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.shiny-download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 13px !important;
+  padding: 11px 18px !important;
+}
 
 /* ── Mode toggle ── */
 .mode-toggle {
@@ -72,6 +86,11 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+}
+.shiny-preview-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 .shiny-preview-section {
   display: flex;

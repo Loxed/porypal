@@ -90,6 +90,7 @@ function PalPickRow({ label, palette, onPick }) {
 function ApplyShinyMode({ palettes }) {
   const [spriteFile, setSpriteFile]       = useState(null)
   const [spriteB64, setSpriteB64]         = useState(null)
+  const [outputName, setOutputName]       = useState('')
   const [normalPal, setNormalPal]         = useState(null)
   const [shinyPal, setShinyPal]           = useState(null)
   const [normalPreview, setNormalPreview] = useState(null)
@@ -107,10 +108,14 @@ function ApplyShinyMode({ palettes }) {
     remapToShinyPalette(spriteB64, normalPal.colors, shinyPal.colors).then(setShinyPreview)
   }, [spriteB64, normalPal, shinyPal])
 
-  const handleSprite = async (f) => { setSpriteFile(f); setSpriteB64(await fileToB64(f)) }
+  const handleSprite = async (f) => {
+    setSpriteFile(f)
+    setSpriteB64(await fileToB64(f))
+    setOutputName(f.name.replace(/\.[^.]+$/, ''))
+  }
 
   const handleDownloadZip = async () => {
-    if (!spriteFile || !normalPal || !shinyPal) return
+    if (!spriteFile || !normalPal || !shinyPal || !outputName.trim()) return
     setDownloading(true)
     try {
       const fd = new FormData()
@@ -119,10 +124,10 @@ function ApplyShinyMode({ palettes }) {
       fd.append('shiny_pal', JSON.stringify(shinyPal.colors))
       fd.append('normal_pal_name', normalPal.name.replace('.pal', ''))
       fd.append('shiny_pal_name', shinyPal.name.replace('.pal', ''))
-      fd.append('sprite_name', spriteFile.name.replace(/\.[^.]+$/, ''))
+      fd.append('sprite_name', outputName.trim())
       const res = await fetch(`${API}/shiny/apply/download`, { method: 'POST', body: fd })
       if (!res.ok) return
-      downloadBlob(await res.blob(), `${spriteFile.name.replace(/\.[^.]+$/, '')}_shiny.zip`)
+      downloadBlob(await res.blob(), `${outputName.trim()}.zip`)
     } finally { setDownloading(false) }
   }
 
@@ -139,35 +144,49 @@ function ApplyShinyMode({ palettes }) {
       <div className="shiny-layout">
         <div className="shiny-left">
           <DropZone onFile={handleSprite} label="Drop sprite" />
+          {spriteFile && (
+            <div className="field">
+              <label className="field-label">output name</label>
+              <input
+                className="field-input"
+                value={outputName}
+                onChange={e => setOutputName(e.target.value)}
+                spellCheck={false}
+                placeholder="shiny_sprite"
+              />
+              <span className="shiny-field-hint">used for the downloaded zip and embedded sprite filenames</span>
+            </div>
+          )}
           <PalPickRow label="normal palette" palette={normalPal} onPick={() => setPickingFor('normal')} />
           <PalPickRow label="shiny palette"  palette={shinyPal}  onPick={() => setPickingFor('shiny')} />
-          <button
-            className="btn-secondary"
-            disabled={!spriteFile || !normalPal || !shinyPal || !shinyPreview || downloading}
-            onClick={handleDownloadZip}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
-          >
-            <Download size={11} /> {downloading ? 'downloading…' : 'download zip'}
-          </button>
         </div>
         <div className="shiny-right">
           {!spriteB64 && <div className="empty-state">drop a sprite and select palettes to preview</div>}
           {spriteB64 && (
-            <div className="shiny-previews">
-              <div className="shiny-preview-section">
-                <p className="section-label">normal</p>
-                {normalPreview
-                  ? <ZoomableImage src={normalPreview} alt="normal" />
-                  : <div className="empty-state" style={{ minHeight: 120 }}>pick normal palette</div>}
-                {normalPal && <PaletteStrip colors={normalPal.colors} usedIndices={normalPal.colors.map((_,i) => i)} checkSize="100%" />}
+            <div className="shiny-preview-stack">
+              <div className="shiny-previews">
+                <div className="shiny-preview-section">
+                  <p className="section-label">normal</p>
+                  {normalPreview
+                    ? <ZoomableImage src={normalPreview} alt="normal" />
+                    : <div className="empty-state" style={{ minHeight: 120 }}>pick normal palette</div>}
+                  {normalPal && <PaletteStrip colors={normalPal.colors} usedIndices={normalPal.colors.map((_,i) => i)} checkSize="100%" />}
+                </div>
+                <div className="shiny-preview-section">
+                  <p className="section-label">shiny</p>
+                  {shinyPreview
+                    ? <ZoomableImage src={shinyPreview} alt="shiny" />
+                    : <div className="empty-state" style={{ minHeight: 120 }}>pick shiny palette</div>}
+                  {shinyPal && <PaletteStrip colors={shinyPal.colors} usedIndices={shinyPal.colors.map((_,i) => i)} checkSize="100%" />}
+                </div>
               </div>
-              <div className="shiny-preview-section">
-                <p className="section-label">shiny</p>
-                {shinyPreview
-                  ? <ZoomableImage src={shinyPreview} alt="shiny" />
-                  : <div className="empty-state" style={{ minHeight: 120 }}>pick shiny palette</div>}
-                {shinyPal && <PaletteStrip colors={shinyPal.colors} usedIndices={shinyPal.colors.map((_,i) => i)} checkSize="100%" />}
-              </div>
+              <button
+                className="btn-primary shiny-download-btn"
+                disabled={!spriteFile || !normalPal || !shinyPal || !shinyPreview || downloading || !outputName.trim()}
+                onClick={handleDownloadZip}
+              >
+                <Download size={13} /> {downloading ? 'downloading…' : `Download '${outputName.trim()}.zip'`}
+              </button>
             </div>
           )}
         </div>
@@ -183,6 +202,7 @@ function ExtractMatchedMode() {
   const [shinyFile, setShinyFile]         = useState(null)
   const [normalB64, setNormalB64]         = useState(null)
   const [shinyB64, setShinyB64]           = useState(null)
+  const [outputName, setOutputName]       = useState('')
   const [nColors, setNColors]             = useState(15)
   const [bgColor, setBgColor]             = useState(GBA_TRANSPARENT)
   const [result, setResult]               = useState(null)
@@ -203,6 +223,7 @@ function ExtractMatchedMode() {
     const b64 = await fileToB64(f)
     setNormalB64(b64)
     setBgColor(await detectBgColor(b64))
+    setOutputName(`${f.name.replace(/\.[^.]+$/, '')}_shiny_pair`)
   }
 
   const handleShinyFile = async (f) => {
@@ -225,6 +246,7 @@ function ExtractMatchedMode() {
   }
 
   const handleDownloadZip = async () => {
+    if (!normalFile || !shinyFile || !outputName.trim()) return
     setDownloading(true)
     try {
       const fd = new FormData()
@@ -232,7 +254,7 @@ function ExtractMatchedMode() {
       fd.append('n_colors', nColors); fd.append('bg_color', bgColor)
       const res = await fetch(`${API}/shiny/extract-matched/download`, { method: 'POST', body: fd })
       if (!res.ok) return
-      downloadBlob(await res.blob(), `${normalFile.name.replace(/\.[^.]+$/, '')}_shiny_pair.zip`)
+      downloadBlob(await res.blob(), `${outputName.trim()}.zip`)
     } finally { setDownloading(false) }
   }
 
@@ -249,6 +271,19 @@ function ExtractMatchedMode() {
           <DropZone onFile={handleShinyFile} label="drop shiny sprite" />
           {shinyB64 && <div className="sprite-thumb"><img src={`data:image/png;base64,${shinyB64}`} alt="shiny" /></div>}
         </div>
+        {(normalFile || shinyFile) && (
+          <div className="field">
+            <label className="field-label">output name</label>
+            <input
+              className="field-input"
+              value={outputName}
+              onChange={e => setOutputName(e.target.value)}
+              spellCheck={false}
+              placeholder="sprite_shiny_pair"
+            />
+            <span className="shiny-field-hint">used for the downloaded zip filename</span>
+          </div>
+        )}
         <div className="field">
           <label className="field-label">colors (max 15)</label>
           <input type="number" className="field-input" min={1} max={15} value={nColors}
@@ -265,36 +300,39 @@ function ExtractMatchedMode() {
         <button className="btn-primary" disabled={!normalFile || !shinyFile || loading} onClick={handleExtract}>
           {loading ? 'extracting…' : 'extract matched palettes'}
         </button>
-        {result && (
-          <button className="btn-secondary" disabled={downloading} onClick={handleDownloadZip}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-            <Download size={11} /> {downloading ? 'downloading…' : 'download zip'}
-          </button>
-        )}
         {error && <p className="error-msg">{error}</p>}
       </div>
 
       <div className="shiny-right">
         {!result && <div className="empty-state">drop both sprites and extract to see matched palettes</div>}
         {result && (
-          <div className="shiny-previews">
-            <div className="shiny-preview-section">
-              <div className="shiny-preview-header">
-                <p className="section-label">normal — {result.normal.colors.length} colors</p>
-                <ExportDropdown name={result.normal.name} palContent={result.normal.pal_content} />
+          <div className="shiny-preview-stack">
+            <div className="shiny-previews">
+              <div className="shiny-preview-section">
+                <div className="shiny-preview-header">
+                  <p className="section-label">normal — {result.normal.colors.length} colors</p>
+                  <ExportDropdown name={result.normal.name} palContent={result.normal.pal_content} />
+                </div>
+                {normalPreview && <ZoomableImage src={normalPreview} alt="normal preview" />}
+                <PaletteStrip colors={result.normal.colors} usedIndices={result.normal.colors.map((_,i)=>i)} checkSize="100%" />
               </div>
-              {normalPreview && <ZoomableImage src={normalPreview} alt="normal preview" />}
-              <PaletteStrip colors={result.normal.colors} usedIndices={result.normal.colors.map((_,i)=>i)} checkSize="100%" />
-            </div>
-            <div className="shiny-preview-section">
-              <div className="shiny-preview-header">
-                <p className="section-label">shiny — {result.shiny.colors.length} colors</p>
-                <ExportDropdown name={result.shiny.name + '_shiny'} palContent={result.shiny.pal_content} />
+              <div className="shiny-preview-section">
+                <div className="shiny-preview-header">
+                  <p className="section-label">shiny — {result.shiny.colors.length} colors</p>
+                  <ExportDropdown name={result.shiny.name + '_shiny'} palContent={result.shiny.pal_content} />
+                </div>
+                {shinyPreview && <ZoomableImage src={shinyPreview} alt="shiny preview" />}
+                <PaletteStrip colors={result.shiny.colors} usedIndices={result.shiny.colors.map((_,i)=>i)} checkSize="100%" />
               </div>
-              {shinyPreview && <ZoomableImage src={shinyPreview} alt="shiny preview" />}
-              <PaletteStrip colors={result.shiny.colors} usedIndices={result.shiny.colors.map((_,i)=>i)} checkSize="100%" />
             </div>
-          </div>
+            <button
+              className="btn-primary shiny-download-btn"
+              disabled={downloading || !outputName.trim()}
+              onClick={handleDownloadZip}
+            >
+              <Download size={13} /> {downloading ? 'downloading…' : `Download '${outputName.trim()}.zip'`}
+            </button>
+            </div>
         )}
       </div>
     </div>

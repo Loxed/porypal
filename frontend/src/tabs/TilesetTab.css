@@ -2,6 +2,20 @@
 .tileset-left  { display: flex; flex-direction: column; gap: 14px; }
 .tileset-right { display: flex; flex-direction: column; gap: 16px; min-height: 400px; }
 .field-mono { font-family: var(--mono) !important; }
+.tileset-field-hint { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 2px; }
+.tileset-download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 13px !important;
+  padding: 11px 18px !important;
+}
+.tileset-output-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
 /* toolbar */
 .tileset-toolbar { display: flex; align-items: center; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--border); }

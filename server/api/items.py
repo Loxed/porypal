@@ -118,6 +118,18 @@ def _render_sprite(
     return out
 
 
+def _public_result(result: dict) -> dict:
+    """Return a JSON-safe copy of an item extraction result."""
+    return {k: v for k, v in result.items() if k != "png_bytes"}
+
+
+def _public_group(group: dict) -> dict:
+    """Return a JSON-safe copy of a grouped extraction response."""
+    public = dict(group)
+    public["results"] = [_public_result(r) for r in group.get("results", [])]
+    return public
+
+
 # ---------------------------------------------------------------------------
 # Group extraction
 # ---------------------------------------------------------------------------
@@ -453,7 +465,7 @@ async def extract_item_palettes(
     except ValueError as e:
         raise HTTPException(400, str(e))
 
-    return {"groups": groups}
+    return {"groups": [_public_group(group) for group in groups]}
 
 
 @router.post("/download-all")
@@ -619,7 +631,7 @@ async def extract_variants(
     except Exception as e:
         raise HTTPException(400, str(e))
 
-    return {"reference": sprites[0]["name"], "results": results}
+    return {"reference": sprites[0]["name"], "results": [_public_result(r) for r in results]}
 
 
 @router.post("/extract-variants/download")

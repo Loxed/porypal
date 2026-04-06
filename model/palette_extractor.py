@@ -2,10 +2,11 @@
 model/palette_extractor.py
 
 Extract a GBA-compatible palette from any sprite using k-means clustering.
-Pure numpy implementation — no sklearn/scipy dependency.
 Supports two color spaces for clustering:
   - 'oklab'  (default) — perceptually uniform, groups colors as humans see them
   - 'rgb'              — raw euclidean distance in sRGB space
+
+Oklab matrix coefficients are loaded from oklab_weights.json (same directory).
 
 Usage:
     extractor = PaletteExtractor()
@@ -14,6 +15,7 @@ Usage:
 """
 
 from __future__ import annotations
+import json
 import logging
 from pathlib import Path
 
@@ -24,12 +26,30 @@ from model.palette import Color, Palette
 
 
 # ---------------------------------------------------------------------------
-# Oklab conversion (vectorized numpy)
-# Reference: https://bottosson.github.io/posts/oklab/
+# Oklab weights (loaded once at import time)
+# ---------------------------------------------------------------------------
+
+# path = model/data/oklab_weights.json
+_WEIGHTS_PATH = Path(__file__).parent / "data" / "oklab_weights.json"
+
+def _load_weights() -> dict[str, np.ndarray]:
+    with open(_WEIGHTS_PATH, "r") as f:
+        raw = json.load(f)
+    return {
+        k: np.array(v, dtype=np.float32)
+        for k, v in raw.items()
+        if not k.startswith("_")
+    }
+
+_W = _load_weights()
+
+
+# ---------------------------------------------------------------------------
+# sRGB gamma helpers
 # ---------------------------------------------------------------------------
 
 def _srgb_to_linear(c: np.ndarray) -> np.ndarray:
-    """sRGB gamma → linear (in-place safe, float32 input expected, 0–1 range)."""
+    """sRGB gamma → linear (float32, 0–1 range)."""
     return np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
 
 
@@ -38,27 +58,20 @@ def _linear_to_srgb(c: np.ndarray) -> np.ndarray:
     return np.where(c <= 0.0031308, 12.92 * c, 1.055 * c ** (1.0 / 2.4) - 0.055)
 
 
+# ---------------------------------------------------------------------------
+# Oklab conversion (vectorized numpy, weights from JSON)
+# ---------------------------------------------------------------------------
+
 def rgb_to_oklab(pixels: np.ndarray) -> np.ndarray:
     """
     Convert (N, 3) uint8 RGB → (N, 3) float32 Oklab.
     L in ~[0, 1], a/b in ~[-0.5, 0.5].
     """
-    rgb = pixels.astype(np.float32) / 255.0
-    lin = _srgb_to_linear(rgb)
+    lin = _srgb_to_linear(pixels.astype(np.float32) / 255.0)
 
-    l = 0.4122214708 * lin[:, 0] + 0.5363325363 * lin[:, 1] + 0.0514459929 * lin[:, 2]
-    m = 0.2119034982 * lin[:, 0] + 0.6806995451 * lin[:, 1] + 0.1073969566 * lin[:, 2]
-    s = 0.0883024619 * lin[:, 0] + 0.2817188376 * lin[:, 1] + 0.6299787005 * lin[:, 2]
+    lms = np.cbrt(np.maximum(lin @ _W["rgb_to_lms"].T, 0))
 
-    l_ = np.cbrt(np.maximum(l, 0))
-    m_ = np.cbrt(np.maximum(m, 0))
-    s_ = np.cbrt(np.maximum(s, 0))
-
-    L =  0.2104542553 * l_ + 0.7936177850 * m_ - 0.0040720468 * s_
-    a =  1.9779984951 * l_ - 2.4285922050 * m_ + 0.4505937099 * s_
-    b =  0.0259040371 * l_ + 0.7827717662 * m_ - 0.8086757660 * s_
-
-    return np.stack([L, a, b], axis=1).astype(np.float32)
+    return (lms @ _W["lms_to_oklab"].T).astype(np.float32)
 
 
 def oklab_to_rgb(lab: np.ndarray) -> np.ndarray:
@@ -66,86 +79,88 @@ def oklab_to_rgb(lab: np.ndarray) -> np.ndarray:
     Convert (N, 3) float32 Oklab → (N, 3) uint8 RGB.
     Values are clamped to valid range.
     """
-    L, a, b = lab[:, 0], lab[:, 1], lab[:, 2]
+    lms_ = lab @ _W["oklab_to_lms"].T
+    lms  = lms_ ** 3
 
-    l_ = L + 0.3963377774 * a + 0.2158037573 * b
-    m_ = L - 0.1055613458 * a - 0.0638541728 * b
-    s_ = L - 0.0894841775 * a - 1.2914855480 * b
-
-    l = l_ ** 3
-    m = m_ ** 3
-    s = s_ ** 3
-
-    r  =  4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s
-    g  = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s
-    b_ = -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
-
-    rgb = np.stack([r, g, b_], axis=1)
-    rgb = _linear_to_srgb(np.clip(rgb, 0, 1))
-    return (np.clip(rgb, 0, 1) * 255 + 0.5).astype(np.uint8)
+    rgb = _linear_to_srgb(np.clip(lms @ _W["lms_to_rgb"].T, 0.0, 1.0))
+    return (rgb * 255.0 + 0.5).astype(np.uint8)
 
 
 # ---------------------------------------------------------------------------
-# Pure numpy k-means (drop-in for sklearn.cluster.KMeans)
+# K-means (pure numpy, no sklearn)
 # ---------------------------------------------------------------------------
 
 def _kmeans(
-    data: np.ndarray,
-    k: int,
-    random_state: int = 42,
+    pixels: np.ndarray,
+    n_clusters: int,
+    n_init: int = 3,
     max_iter: int = 100,
-    tol: float = 1e-4,
+    random_state: int = 42,
 ) -> tuple[np.ndarray, np.ndarray]:
     """
-    k-means++ initialisation followed by Lloyd's algorithm.
+    K-means clustering with k-means++ initialisation.
 
-    Returns
-    -------
-    centers : (k, D) float32
-    labels  : (N,)   int32
+    Args:
+        pixels:      (N, D) float32 array of data points.
+        n_clusters:  Number of clusters k.
+        n_init:      Number of independent restarts; best inertia wins.
+        max_iter:    Maximum iterations per run.
+        random_state: Seed for reproducibility.
+
+    Returns:
+        centers: (k, D) float32 cluster centroids.
+        labels:  (N,)  int32  cluster index per point.
     """
     rng = np.random.default_rng(random_state)
-    n   = len(data)
+    N = len(pixels)
 
-    # k-means++ init
-    idx = [int(rng.integers(n))]
-    for _ in range(1, k):
-        diffs = data - data[idx[-1]]
-        dists = (diffs * diffs).sum(axis=1)
-        for i in idx:
-            dists[i] = 0.0
-        total = dists.sum()
-        if total == 0.0:
-            remaining = [i for i in range(n) if i not in idx]
-            idx.append(int(rng.choice(remaining)))
-        else:
-            idx.append(int(rng.choice(n, p=dists / total)))
+    best_inertia = np.inf
+    best_centers: np.ndarray | None = None
+    best_labels:  np.ndarray | None = None
 
-    centers = data[idx].copy().astype(np.float32)
-    labels  = np.zeros(n, dtype=np.int32)
+    for _ in range(n_init):
+        # --- k-means++ init ---
+        first = int(rng.integers(N))
+        chosen = [first]
 
-    for _ in range(max_iter):
-        # Assignment — chunked to avoid huge (N, k, D) intermediates
-        chunk      = 4096
-        new_labels = np.empty(n, dtype=np.int32)
-        for start in range(0, n, chunk):
-            end = min(start + chunk, n)
-            diff = data[start:end, np.newaxis, :] - centers[np.newaxis, :, :]
-            new_labels[start:end] = (diff * diff).sum(axis=2).argmin(axis=1)
+        for _ in range(1, n_clusters):
+            # Distance from each point to its nearest chosen center
+            dists = np.min(
+                np.sum((pixels[:, None, :] - pixels[chosen][None, :, :]) ** 2, axis=2),
+                axis=1,
+            )
+            probs = dists / dists.sum()
+            chosen.append(int(rng.choice(N, p=probs)))
 
-        # Update
-        new_centers = np.zeros_like(centers)
-        for j in range(k):
-            mask = new_labels == j
-            new_centers[j] = data[mask].mean(axis=0) if mask.any() else centers[j]
+        centers = pixels[chosen].copy()
 
-        shift   = np.sqrt(((new_centers - centers) ** 2).sum(axis=1)).max()
-        centers = new_centers
-        labels  = new_labels
-        if shift < tol:
-            break
+        # --- Lloyd iterations ---
+        labels = np.empty(N, dtype=np.int32)
+        for _ in range(max_iter):
+            # Assignment step: (N, k) squared distances
+            dists_sq = np.sum(
+                (pixels[:, None, :] - centers[None, :, :]) ** 2, axis=2
+            )
+            new_labels = np.argmin(dists_sq, axis=1).astype(np.int32)
 
-    return centers, labels
+            if np.array_equal(new_labels, labels):
+                break
+            labels = new_labels
+
+            # Update step
+            for k in range(n_clusters):
+                members = pixels[labels == k]
+                if len(members):
+                    centers[k] = members.mean(axis=0)
+                # Empty cluster: leave centroid unchanged (rare with k-means++)
+
+        inertia = float(np.sum((pixels - centers[labels]) ** 2))
+        if inertia < best_inertia:
+            best_inertia = inertia
+            best_centers = centers.copy()
+            best_labels  = labels.copy()
+
+    return best_centers, best_labels  # type: ignore[return-value]
 
 
 # ---------------------------------------------------------------------------
@@ -197,27 +212,29 @@ class PaletteExtractor:
             raise FileNotFoundError(f"Image not found: {path}")
 
         if color_space not in self.VALID_COLOR_SPACES:
-            raise ValueError(f"color_space must be one of {self.VALID_COLOR_SPACES}, got {color_space!r}")
+            raise ValueError(
+                f"color_space must be one of {self.VALID_COLOR_SPACES}, got {color_space!r}"
+            )
 
         max_sprite_colors = Palette.MAX_COLORS - 1  # 15
         if n_colors < 1 or n_colors > max_sprite_colors:
             raise ValueError(f"n_colors must be 1–{max_sprite_colors}, got {n_colors}")
 
         transparent_color = self._parse_hex(bg_color)
-        transparent_rgb = np.array(
+        transparent_rgb   = np.array(
             [transparent_color.r, transparent_color.g, transparent_color.b],
             dtype=np.float32,
         )
 
         img    = Image.open(path).convert("RGBA")
-        pixels = np.array(img)          # (H, W, 4)
+        pixels = np.array(img)       # (H, W, 4)
         alpha  = pixels[:, :, 3]
         rgb    = pixels[:, :, :3]
 
         # Collect fully opaque pixels, excluding the transparent color
-        opaque_mask   = alpha.flatten() >= 255
-        flat_rgb      = rgb.reshape(-1, 3)
-        opaque_pixels = flat_rgb[opaque_mask].astype(np.float32)
+        opaque_mask    = alpha.flatten() >= 255
+        flat_rgb       = rgb.reshape(-1, 3)
+        opaque_pixels  = flat_rgb[opaque_mask].astype(np.float32)
 
         non_transparent_mask = ~np.all(opaque_pixels == transparent_rgb, axis=1)
         sprite_pixels_rgb    = opaque_pixels[non_transparent_mask].astype(np.uint8)
@@ -235,7 +252,11 @@ class PaletteExtractor:
         unique_colors   = len(np.unique(sprite_pixels_rgb, axis=0))
         actual_clusters = min(n_colors, unique_colors)
 
-        centers, labels = _kmeans(cluster_pixels, actual_clusters, random_state=self.random_state)
+        centers, labels = _kmeans(
+            cluster_pixels,
+            n_clusters=actual_clusters,
+            random_state=self.random_state,
+        )
 
         # Convert centroids back to uint8 RGB
         if color_space == "oklab":
@@ -244,8 +265,8 @@ class PaletteExtractor:
             centers_rgb = np.clip(centers, 0, 255).astype(np.uint8)
 
         # Sort by cluster size (most-used color first)
-        cluster_sizes  = np.bincount(labels, minlength=actual_clusters)
-        order          = np.argsort(-cluster_sizes)
+        cluster_sizes = np.bincount(labels, minlength=actual_clusters)
+        order         = np.argsort(-cluster_sizes)
         sorted_centers = centers_rgb[order]
 
         colors = [transparent_color] + [
@@ -271,7 +292,9 @@ class PaletteExtractor:
         results = []
         for path in image_paths:
             try:
-                results.append(self.extract(path, n_colors=n_colors, bg_color=bg_color, color_space=color_space))
+                results.append(
+                    self.extract(path, n_colors=n_colors, bg_color=bg_color, color_space=color_space)
+                )
             except Exception as e:
                 logging.error(f"Failed to extract palette from {path}: {e}")
         return results

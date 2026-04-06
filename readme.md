@@ -120,6 +120,19 @@ git pull
 ./scripts/setup.sh
 ```
 
+### Versioning
+
+To bump the project version, sync all `vX.Y` / `X.Y` / `X.Y.Z` strings, and optionally create/push a release tag, use:
+
+```bash
+python scripts/bump_version.py --show
+python scripts/bump_version.py --patch --commit --tag --push
+python scripts/bump_version.py 3.2.0
+python scripts/bump_version.py 3.2.0 --commit --tag --push
+```
+
+Full release notes: [docs/versioning.md](docs/versioning.md)
+
 ## Directory Structure
 
 ```

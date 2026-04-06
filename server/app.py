@@ -14,7 +14,7 @@ from server import preset_store as presets
 
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
-app = FastAPI(title="Porypal API", version="3.1.0")
+app = FastAPI(title="Porypal API", version="3.1.2")
 
 app.add_middleware(
     CORSMiddleware,

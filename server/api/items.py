@@ -5,7 +5,6 @@ Routes: /api/items
 """
 
 from __future__ import annotations
-import base64
 import io
 import json
 import os
@@ -19,7 +18,7 @@ from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
 
 from model.palette import Color, Palette
-from server.helpers import pil_to_b64, make_pal_content
+from server.helpers import pil_to_b64, make_pal_content, save_png
 from server.state import state
 
 router = APIRouter(prefix="/api/items", tags=["items"])
@@ -39,12 +38,6 @@ def _parse_hex(hex_color: str) -> Color:
 
 def _load_rgba(data: bytes) -> np.ndarray:
     return np.array(Image.open(io.BytesIO(data)).convert("RGBA"))
-
-
-def _png_bytes(img: Image.Image) -> bytes:
-    buf = io.BytesIO()
-    img.save(buf, format="PNG")
-    return buf.getvalue()
 
 
 def _extract_palette_for_sprite(image_data: bytes, filename: str, n_colors: int, bg_color: str) -> Palette:
@@ -120,6 +113,7 @@ def _render_sprite(
     pal_data += [0] * (768 - len(pal_data))
     out.putpalette(pal_data)
     out.putdata(index_map.flatten().tolist())
+    out.info["transparency"] = 0
     return out
 
 
@@ -239,6 +233,7 @@ def _extract_group(
             "colors":      [c.to_hex() for c in sprite_palette],
             "pal_content": make_pal_content(pal_object),
             "preview":     pil_to_b64(out_img.convert("RGBA")),
+            "png_bytes":   save_png(out_img),
             "exact":       len(pal.opaque_colors) <= n_colors,
         })
 
@@ -394,6 +389,7 @@ def _extract_variants(
         pal_data += [0] * (768 - len(pal_data))
         out_img.putpalette(pal_data)
         out_img.putdata(ref_slot_image.flatten().tolist())
+        out_img.info["transparency"] = 0
 
         pal_object = Palette(name=sprite["name"], colors=variant_colors)
 
@@ -402,6 +398,7 @@ def _extract_variants(
             "colors":      [c.to_hex() for c in variant_colors],
             "pal_content": make_pal_content(pal_object),
             "preview":     pil_to_b64(out_img.convert("RGBA")),
+            "png_bytes":   save_png(out_img),
         })
 
     results.sort(key=lambda r: r["name"].lower())
@@ -559,7 +556,7 @@ async def download_group_palettes(
     with zipfile.ZipFile(zip_buf, "w", zipfile.ZIP_DEFLATED) as zf:
         for r in group_data["results"]:
             zf.writestr(f"palettes/{r['name']}.pal", r["pal_content"])
-            zf.writestr(f"sprites/{r['name']}.png",  base64.b64decode(r["preview"]))
+            zf.writestr(f"sprites/{r['name']}.png",  r["png_bytes"])
         manifest = {
             "group":     label,
             "reference": group_data["reference"],
@@ -661,7 +658,7 @@ async def download_variants(
     with zipfile.ZipFile(zip_buf, "w", zipfile.ZIP_DEFLATED) as zf:
         for r in results:
             zf.writestr(f"palettes/{r['name']}.pal", r["pal_content"])
-            zf.writestr(f"sprites/{r['name']}.png",  base64.b64decode(r["preview"]))
+            zf.writestr(f"sprites/{r['name']}.png",  r["png_bytes"])
         manifest = {
             "reference": reference_name,
             "files": [
@@ -735,7 +732,7 @@ async def download_apply_variants(
             safe_name = pal_name.replace('.pal', '')
             pal_obj   = Palette(name=safe_name, colors=variant_palette)
 
-            zf.writestr(f"sprites/{safe_name}.png",  _png_bytes(out_img.convert("RGBA")))
+            zf.writestr(f"sprites/{safe_name}.png",  save_png(out_img))
             zf.writestr(f"palettes/{safe_name}.pal", make_pal_content(pal_obj))
             manifest_files.append({
                 "name":    safe_name,

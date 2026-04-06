@@ -26,59 +26,6 @@ function useDebounce(value, delay) {
 }
 
 // ---------------------------------------------------------------------------
-// Nearest-neighbor scale — pixel-exact, never calls drawImage for the resize
-// ---------------------------------------------------------------------------
-function nearestNeighborScale(srcCanvas, dstW, dstH) {
-  const srcW = srcCanvas.width
-  const srcH = srcCanvas.height
-  const src  = srcCanvas.getContext('2d').getImageData(0, 0, srcW, srcH).data
-
-  const out  = document.createElement('canvas')
-  out.width  = dstW
-  out.height = dstH
-  const octx = out.getContext('2d')
-  const id   = octx.createImageData(dstW, dstH)
-  const d    = id.data
-  const xR   = srcW / dstW
-  const yR   = srcH / dstH
-
-  for (let y = 0; y < dstH; y++) {
-    const sy = Math.floor(y * yR)
-    for (let x = 0; x < dstW; x++) {
-      const sx  = Math.floor(x * xR)
-      const si  = (sy * srcW + sx) * 4
-      const di  = (y  * dstW + x)  * 4
-      d[di]     = src[si]
-      d[di + 1] = src[si + 1]
-      d[di + 2] = src[si + 2]
-      d[di + 3] = src[si + 3]
-    }
-  }
-  octx.putImageData(id, 0, 0)
-  return out
-}
-
-function scaleFileBlob(file, scaleX, scaleY) {
-  return new Promise(resolve => {
-    const img = new window.Image()
-    const url = URL.createObjectURL(file)
-    img.onload = () => {
-      const srcW = img.naturalWidth
-      const srcH = img.naturalHeight
-      const dstW = Math.max(1, Math.round(srcW * scaleX))
-      const dstH = Math.max(1, Math.round(srcH * scaleY))
-      const tmp  = document.createElement('canvas')
-      tmp.width  = srcW
-      tmp.height = srcH
-      tmp.getContext('2d').drawImage(img, 0, 0)
-      URL.revokeObjectURL(url)
-      nearestNeighborScale(tmp, dstW, dstH).toBlob(b => resolve(b), 'image/png')
-    }
-    img.src = url
-  })
-}
-
-// ---------------------------------------------------------------------------
 // Help modal
 // ---------------------------------------------------------------------------
 function HelpModal({ onClose }) {
@@ -98,12 +45,12 @@ function HelpModal({ onClose }) {
         <p className="section-label" style={{ marginBottom: 8 }}>examples</p>
         <div className="example-imgs">
           <div className="example-img-wrap">
-            <img src="/example/e4.png" alt="e4" className="example-img" draggable={false}/>
-            <span className="example-caption">NDS styled sprite</span>
+            <img src="/img/help/tileset/cynthia.png" alt="NDS styled sprite" className="example-img" draggable={false}/>
+            <span className="example-caption">cynthia.png</span>
           </div>
           <div className="example-img-wrap">
-            <img src="/example/waiter_f.png" alt="waiter" className="example-img" draggable={false}/>
-            <span className="example-caption">waiter_f.png</span>
+            <img src="/img/help/tileset/may.png" alt="GBA styled sprite" className="example-img" draggable={false}/>
+            <span className="example-caption">may.png</span>
           </div>
         </div>
       </div>
@@ -211,31 +158,26 @@ function OutputGrid({ slots, setSlots, cols, rows, tiles, selectedTile, setSelec
 }
 
 // ---------------------------------------------------------------------------
-// Download — pixel-exact, transparency preserved
+// Download via backend so indexed PNG metadata can be preserved
 // ---------------------------------------------------------------------------
-async function buildAndDownload(tiles, slots, cols, rows, tileW, tileH, filename) {
-  const canvas = document.createElement('canvas')
-  canvas.width  = cols * tileW
-  canvas.height = rows * tileH
-  const ctx = canvas.getContext('2d')
-  ctx.imageSmoothingEnabled = false
-  // Transparent by default — bg colour is not this tool's responsibility
+async function buildAndDownload(sourceFile, slots, cols, rows, inputTileW, inputTileH, outputTileW, outputTileH, filename) {
+  if (!sourceFile) throw new Error('No tileset source available')
 
-  await Promise.all(slots.map((tileIdx, pos) => {
-    if (tileIdx == null || !tiles[tileIdx]) return Promise.resolve()
-    const x = (pos % cols) * tileW
-    const y = Math.floor(pos / cols) * tileH
-    return new Promise(res => {
-      const img = new Image()
-      img.onload = () => {
-        ctx.drawImage(img, 0, 0, tileW, tileH, x, y, tileW, tileH)
-        res()
-      }
-      img.src = `data:image/png;base64,${tiles[tileIdx]}`
-    })
-  }))
+  const fd = new FormData()
+  fd.append('file', sourceFile)
+  fd.append('input_tile_width', String(inputTileW))
+  fd.append('input_tile_height', String(inputTileH))
+  fd.append('output_tile_width', String(outputTileW))
+  fd.append('output_tile_height', String(outputTileH))
+  fd.append('cols', String(cols))
+  fd.append('rows', String(rows))
+  fd.append('sprite_order', slots.map(tileIdx => (tileIdx == null ? '' : String(tileIdx))).join(','))
 
-  canvas.toBlob(blob => downloadBlob(blob, filename), 'image/png')
+  const res = await fetch(`${API}/tileset/arrange`, { method: 'POST', body: fd })
+  if (!res.ok) throw new Error(await res.text())
+
+  const blob = await res.blob()
+  downloadBlob(blob, filename)
 }
 
 // ---------------------------------------------------------------------------
@@ -243,6 +185,7 @@ async function buildAndDownload(tiles, slots, cols, rows, tileW, tileH, filename
 // ---------------------------------------------------------------------------
 export function TilesetTab() {
   const [file, setFile]         = useState(null)
+  const [arrangeFile, setArrangeFile] = useState(null)
   // Source tile size (how big tiles are in the uploaded image)
   const [inTileW, setInTileW]   = useState(32)
   const [inTileH, setInTileH]   = useState(32)
@@ -284,23 +227,17 @@ export function TilesetTab() {
   const resetSlots = (c, r) => setSlots(Array(c * r).fill(null))
 
   // ---------------------------------------------------------------------------
-  // Slice — scale client-side if in≠out, then POST to backend
+  // Slice on the backend so paletted PNG metadata can be preserved
   // ---------------------------------------------------------------------------
   const doSlice = async (f, iw, ih, ow, oh) => {
-    const needsScale = iw !== ow || ih !== oh
-    const scaleX     = ow / iw
-    const scaleY     = oh / ih
-
-    let fileToSend = f
-    if (needsScale) {
-      const blob = await scaleFileBlob(f, scaleX, scaleY)
-      fileToSend = new File([blob], f.name, { type: 'image/png' })
-    }
+    setArrangeFile(f)
 
     const fd = new FormData()
-    fd.append('file', fileToSend)
-    fd.append('tile_width',  needsScale ? ow : iw)
-    fd.append('tile_height', needsScale ? oh : ih)
+    fd.append('file', f)
+    fd.append('input_tile_width', String(iw))
+    fd.append('input_tile_height', String(ih))
+    fd.append('output_tile_width', String(ow))
+    fd.append('output_tile_height', String(oh))
 
     const data = await run(async () => {
       const res = await fetch(`${API}/tileset/slice`, { method: 'POST', body: fd })
@@ -311,7 +248,7 @@ export function TilesetTab() {
   }
 
   const handleFile = (f) => {
-    setFile(f); setResult(null); resetSlots(cols, rows)
+    setFile(f); setArrangeFile(f); setResult(null); resetSlots(cols, rows)
     doSlice(f, inTileW, inTileH, outTileW, outTileH)
   }
 
@@ -344,8 +281,8 @@ export function TilesetTab() {
   }
 
   const handleSavePreset = async (id, name) => {
-    const srcCols = result ? Math.floor(result.source_w / result.tile_width)  : undefined
-    const srcRows = result ? Math.floor(result.source_h / result.tile_height) : undefined
+    const srcCols = result ? Math.floor(result.source_w / result.input_tile_width)  : undefined
+    const srcRows = result ? Math.floor(result.source_h / result.input_tile_height) : undefined
     const body = {
       name,
       tile_w:     inTileW,
@@ -470,8 +407,8 @@ export function TilesetTab() {
                 b64={result.source}
                 sourceW={result.source_w}
                 sourceH={result.source_h}
-                tileW={result.tile_width}
-                tileH={result.tile_height}
+                tileW={result.input_tile_width}
+                tileH={result.input_tile_height}
                 selectedTile={selectedTile}
                 onTileClick={i => setSelectedTile(prev => prev === i ? null : i)}
               />
@@ -490,11 +427,12 @@ export function TilesetTab() {
                 <button className="btn-ghost" onClick={() => resetSlots(cols, rows)}>clear</button>
                 <button className="btn-primary-sm"
                   disabled={slots.every(s => s == null)}
-                  onClick={() => buildAndDownload(
-                    result.tiles, slots, cols, rows,
+                  onClick={() => run(() => buildAndDownload(
+                    arrangeFile, slots, cols, rows,
+                    result.input_tile_width, result.input_tile_height,
                     result.tile_width, result.tile_height,
                     `${file.name.replace(/\.[^.]+$/,'')}_arranged.png`,
-                  )}>
+                  ))}>
                   download
                 </button>
               </>}

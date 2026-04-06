@@ -16,7 +16,7 @@ from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
 from PIL import Image
 
-from server.helpers import pil_to_b64
+from server.helpers import pil_to_b64, is_4bpp_bytes, save_png
 from server.state import state
 
 router = APIRouter(prefix="/api/convert", tags=["convert"])
@@ -80,6 +80,7 @@ async def download_converted(
 ):
     """Convert and return a single GBA-compatible indexed PNG for download."""
     data = await file.read()
+    was_4bpp = is_4bpp_bytes(data)
     with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
         tmp.write(data)
         tmp_path = tmp.name
@@ -93,9 +94,7 @@ async def download_converted(
         results = state.image_manager.process_all_palettes([palette])
         result = results[0]
 
-        out_buf = io.BytesIO()
-        result.image.save(out_buf, format="PNG", bits=4, optimize=True)
-        out_buf.seek(0)
+        out_buf = io.BytesIO(save_png(result.image, preserve_4bpp=was_4bpp))
 
         stem = Path(file.filename).stem
         pal_stem = Path(palette_name).stem
@@ -121,6 +120,7 @@ async def download_all_converted(
     palette_names: JSON-encoded list of palette name strings. If empty, uses all loaded palettes.
     """
     data = await file.read()
+    was_4bpp = is_4bpp_bytes(data)
 
     try:
         selected = json.loads(palette_names)
@@ -151,9 +151,7 @@ async def download_all_converted(
         with zipfile.ZipFile(zip_buf, "w", zipfile.ZIP_DEFLATED) as zf:
             for r in results:
                 pal_stem = Path(r.palette.name).stem
-                img_buf = io.BytesIO()
-                r.image.save(img_buf, format="PNG", bits=4, optimize=True)
-                zf.writestr(f"{stem}_{pal_stem}.png", img_buf.getvalue())
+                zf.writestr(f"{stem}_{pal_stem}.png", save_png(r.image, preserve_4bpp=was_4bpp))
         zip_buf.seek(0)
 
         return StreamingResponse(

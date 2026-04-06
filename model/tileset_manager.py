@@ -13,45 +13,61 @@ from PIL import Image
 
 
 class TilesetManager:
-    """
-    Loads a spritesheet, slices it into tiles, reorders them
-    according to config, and produces a processed output image.
-    """
-
     def __init__(self, config: dict):
         self.config = config
         self._source: Optional[Image.Image] = None
+        self._source_palette: Optional[list[int]] = None  # raw palette from original "P" image
+        self._source_transparency: int | bytes | None = None
+        self._was_4bpp: bool = False
         self._tiles: list[Image.Image] = []
         self._processed: Optional[Image.Image] = None
 
-    # ---------- public ----------
-
     def load(self, file_path: str | Path) -> bool:
-        """Load, resize, slice and arrange. Returns True on success."""
         try:
-            img = Image.open(file_path).convert("RGBA")
+            # Open once to capture palette metadata before any conversion
+            original = Image.open(file_path)
+            self._was_4bpp = False
+            self._source_palette = None
+            self._source_transparency = None
+            if original.mode == "P":
+                import numpy as np
+                arr = np.array(original)
+                n_used = int(arr.max()) + 1 if arr.size > 0 else 0
+                if n_used <= 16:
+                    self._was_4bpp = True
+                    self._source_palette = original.getpalette()  # flat [R,G,B, ...] × 256
+                    self._source_transparency = original.info.get("transparency")
+
+            if self._was_4bpp:
+                img = original.copy()
+            else:
+                img = original.convert("RGBA")
             self._source = self._resize(img)
             self._tiles = self._extract_tiles(self._source)
             self._processed = self._arrange(self._tiles)
-            logging.debug(f"Tileset loaded: {file_path} → {len(self._tiles)} tiles")
+            logging.debug(f"Tileset loaded: {file_path} → {len(self._tiles)} tiles (4bpp={self._was_4bpp})")
             return True
         except Exception as e:
             logging.error(f"Failed to load tileset: {e}")
             return False
 
     def get_tiles(self) -> list[Image.Image]:
-        """Return individual tile images."""
         return self._tiles
 
     def get_processed(self) -> Optional[Image.Image]:
-        """Return the arranged output image."""
         return self._processed
 
     def get_source(self) -> Optional[Image.Image]:
-        """Return the (possibly resized) source image."""
         return self._source
 
-    # ---------- pipeline steps ----------
+    def was_4bpp(self) -> bool:
+        return self._was_4bpp
+
+    def get_source_palette(self) -> Optional[list[int]]:
+        return self._source_palette
+
+    def get_source_transparency(self) -> int | bytes | None:
+        return self._source_transparency
 
     def _resize(self, img: Image.Image) -> Image.Image:
         cfg = self.config.get("tileset", {})
@@ -72,14 +88,21 @@ class TilesetManager:
 
     def _extract_tiles(self, img: Image.Image) -> list[Image.Image]:
         cfg = self.config.get("tileset", {})
-        sprite_size = cfg.get("output_sprite_size", {"width": 32, "height": 32})
-        tw = sprite_size["width"]
-        th = sprite_size["height"]
+        input_size = cfg.get("input_sprite_size") or cfg.get(
+            "output_sprite_size", {"width": 32, "height": 32}
+        )
+        output_size = cfg.get("output_sprite_size", input_size)
+        in_tw = input_size["width"]
+        in_th = input_size["height"]
+        out_tw = output_size["width"]
+        out_th = output_size["height"]
 
         tiles = []
-        for y in range(0, img.height, th):
-            for x in range(0, img.width, tw):
-                tile = img.crop((x, y, x + tw, y + th))
+        for y in range(0, img.height, in_th):
+            for x in range(0, img.width, in_tw):
+                tile = img.crop((x, y, x + in_tw, y + in_th))
+                if tile.size != (out_tw, out_th):
+                    tile = tile.resize((out_tw, out_th), Image.NEAREST)
                 tiles.append(tile)
         return tiles
 
@@ -92,9 +115,19 @@ class TilesetManager:
         out_w = out_cfg.get("output_width", sprite_size["width"] * len(order))
         out_h = out_cfg.get("output_height", sprite_size["height"])
 
-        output = Image.new("RGBA", (out_w, out_h), (0, 0, 0, 0))
+        if self._was_4bpp and self._source_palette:
+            output = Image.new("P", (out_w, out_h), 0)
+            output.putpalette(self._source_palette)
+            if self._source_transparency is not None:
+                output.info["transparency"] = self._source_transparency
+        else:
+            output = Image.new("RGBA", (out_w, out_h), (0, 0, 0, 0))
+
+        cols = max(1, out_w // sprite_size["width"])
         for i, idx in enumerate(order):
-            if idx < len(tiles):
-                x_pos = i * sprite_size["width"]
-                output.paste(tiles[idx], (x_pos, 0))
+            if idx is None or idx < 0 or idx >= len(tiles):
+                continue
+            x_pos = (i % cols) * sprite_size["width"]
+            y_pos = (i // cols) * sprite_size["height"]
+            output.paste(tiles[idx], (x_pos, y_pos))
         return output

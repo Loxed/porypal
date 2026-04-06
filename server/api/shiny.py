@@ -17,7 +17,7 @@ from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
 
 from model.palette import Color, Palette
-from server.helpers import pil_to_b64, make_pal_content
+from server.helpers import pil_to_b64, make_pal_content, save_png
 from server.state import state
 
 router = APIRouter(prefix="/api/shiny", tags=["shiny"])
@@ -32,16 +32,10 @@ def _load_rgba(data: bytes) -> np.ndarray:
     return np.array(Image.open(io.BytesIO(data)).convert("RGBA"))
 
 
-def _png_bytes(img: Image.Image) -> bytes:
-    buf = io.BytesIO()
-    img.save(buf, format="PNG")
-    return buf.getvalue()
-
-
 def _remap_sprite(sprite_px: np.ndarray, normal_colors: list[Color], shiny_colors: list[Color]) -> Image.Image:
     """
     Remap sprite pixels: find the nearest color in normal_colors for each pixel,
-    then output the corresponding color from shiny_colors at the same index.
+    then output a paletted image using shiny_colors at the same indices.
     """
     h, w = sprite_px.shape[:2]
     rgb   = sprite_px[:, :, :3]
@@ -52,24 +46,30 @@ def _remap_sprite(sprite_px: np.ndarray, normal_colors: list[Color], shiny_color
 
     flat_rgb   = rgb.reshape(-1, 3).astype(np.uint8)
     flat_alpha = alpha.flatten()
-    out_flat   = np.zeros((h * w, 4), dtype=np.uint8)
+    index_flat = np.zeros(h * w, dtype=np.uint8)
     bg_rgb     = normal_rgb[0]
-    bg_shiny   = shiny_rgb[0]
 
     for i in range(h * w):
         if flat_alpha[i] < 128:
-            out_flat[i] = [*bg_shiny, 255]
+            index_flat[i] = 0
             continue
         px = flat_rgb[i]
         if np.all(px == bg_rgb):
-            out_flat[i] = [*bg_shiny, 255]
+            index_flat[i] = 0
             continue
         dists  = ((normal_rgb[1:].astype(np.int32) - px.astype(np.int32)) ** 2).sum(axis=1)
         idx    = int(dists.argmin()) + 1
-        mapped = shiny_rgb[idx] if idx < len(shiny_rgb) else bg_shiny
-        out_flat[i] = [*mapped, 255]
+        index_flat[i] = idx if idx < len(shiny_rgb) else 0
 
-    return Image.fromarray(out_flat.reshape(h, w, 4), "RGBA")
+    out = Image.new("P", (w, h))
+    pal_data: list[int] = []
+    for c in shiny_colors:
+        pal_data += list(c.to_tuple())
+    pal_data += [0] * (768 - len(pal_data))
+    out.putpalette(pal_data)
+    out.putdata(index_flat.tolist())
+    out.info["transparency"] = 0
+    return out
 
 
 def _extract_normal_palette(image_data: bytes, filename: str, n_colors: int, bg_color: str) -> Palette:
@@ -214,8 +214,8 @@ async def download_matched_palettes(
     with zipfile.ZipFile(zip_buf, "w", zipfile.ZIP_DEFLATED) as zf:
         zf.writestr(f"palettes/{stem_n}.pal",       make_pal_content(normal_pal))
         zf.writestr(f"palettes/{stem_s}_shiny.pal", make_pal_content(shiny_pal))
-        zf.writestr(f"sprites/{stem_n}.png",        _png_bytes(normal_img))
-        zf.writestr(f"sprites/{stem_s}_shiny.png",  _png_bytes(shiny_img))
+        zf.writestr(f"sprites/{stem_n}.png",        save_png(normal_img))
+        zf.writestr(f"sprites/{stem_s}_shiny.png",  save_png(shiny_img))
         manifest = {
             "files": [
                 {"name": stem_n, "palette": f"palettes/{stem_n}.pal",           "sprite": f"sprites/{stem_n}.png"},
@@ -262,8 +262,8 @@ async def download_apply_shiny(
 
     zip_buf = io.BytesIO()
     with zipfile.ZipFile(zip_buf, "w", zipfile.ZIP_DEFLATED) as zf:
-        zf.writestr(f"sprites/{stem}.png",             _png_bytes(normal_img))
-        zf.writestr(f"sprites/{stem}_shiny.png",       _png_bytes(shiny_img))
+        zf.writestr(f"sprites/{stem}.png",             save_png(normal_img))
+        zf.writestr(f"sprites/{stem}_shiny.png",       save_png(shiny_img))
         zf.writestr(f"palettes/{normal_name}.pal",     make_pal_content(normal_palette_obj))
         zf.writestr(f"palettes/{shiny_name}.pal",      make_pal_content(shiny_palette_obj))
         manifest = {

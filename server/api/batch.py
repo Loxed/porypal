@@ -14,6 +14,7 @@ from pathlib import Path
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
 
+from server.helpers import save_png
 from server.state import state
 
 router = APIRouter(prefix="/api/batch", tags=["batch"])
@@ -45,9 +46,7 @@ async def batch_convert(
                 stem = Path(upload.filename).stem
                 pal_stem = Path(palette_name).stem
                 out_name = f"{stem}_{pal_stem}.png"
-                img_buf = io.BytesIO()
-                r.image.save(img_buf, format="PNG", bits=4, optimize=True)
-                zf.writestr(out_name, img_buf.getvalue())
+                zf.writestr(out_name, save_png(r.image))
                 results_meta.append({"file": upload.filename, "colors_used": r.colors_used, "output": out_name})
             except Exception as e:
                 results_meta.append({"file": upload.filename, "error": str(e)})

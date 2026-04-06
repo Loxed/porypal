@@ -14,7 +14,7 @@ from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
 
 from model.image_manager import ImageManager
-from server.helpers import make_pal_content
+from server.helpers import make_pal_content, save_png
 from server.state import state
 
 router = APIRouter(prefix="/api/extract", tags=["extract"])
@@ -117,20 +117,17 @@ async def download_extract_zip(
             name=stem,
         )
 
-        # 2. Render 4bpp indexed PNG via ImageManager
+        # 2. Render indexed PNG via ImageManager
         #    (nearest-neighbour pixel→slot mapping, same pipeline as Convert tab)
         img_mgr = ImageManager()
         img_mgr.load_image(tmp_path, bg_color=bg)
         results = img_mgr.process_all_palettes([palette])
-        indexed_img = results[0].image   # mode "P"
 
         # 3. Build zip
         zip_buf = io.BytesIO()
         with zipfile.ZipFile(zip_buf, "w", zipfile.ZIP_DEFLATED) as zf:
-            # Indexed 4bpp PNG
-            png_buf = io.BytesIO()
-            indexed_img.save(png_buf, format="PNG", bits=4, optimize=True)
-            zf.writestr(f"{stem}.png", png_buf.getvalue())
+            # save_png sees mode "P" with <=16 colors -> writes 4bpp automatically
+            zf.writestr(f"{stem}.png", save_png(results[0].image))
 
             # JASC-PAL
             zf.writestr(f"{stem}.pal", make_pal_content(palette))

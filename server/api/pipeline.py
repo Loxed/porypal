@@ -52,7 +52,7 @@ from PIL import Image
 from model.image_manager import ImageManager
 from model.palette_extractor import PaletteExtractor
 from model.tileset_manager import TilesetManager
-from server.helpers import pil_to_b64
+from server.helpers import pil_to_b64, save_png
 from server.preset_store import load_preset
 from server.state import state
 
@@ -130,7 +130,7 @@ def _run_extract_step(
     color_space = step.get("color_space", "oklab")
 
     with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-        img.save(tmp.name, format="PNG")
+        tmp.write(save_png(img))
         tmp_path = tmp.name
 
     try:
@@ -178,41 +178,38 @@ def _run_tileset_step(img: Image.Image, step: dict) -> Image.Image:
     rows   = preset["rows"]
     slots  = preset.get("slots", [])
 
-    out_tile_w = preset.get("out_tile_w") or preset.get("resize_tile_w")
-    out_tile_h = preset.get("out_tile_h") or preset.get("resize_tile_h")
+    out_tile_w = preset.get("out_tile_w") or preset.get("resize_tile_w") or tile_w
+    out_tile_h = preset.get("out_tile_h") or preset.get("resize_tile_h") or tile_h
 
-    src = img.convert("RGBA")
+    config = {
+        "tileset": {
+            "input_sprite_size": {"width": tile_w, "height": tile_h},
+            "output_sprite_size": {"width": out_tile_w, "height": out_tile_h},
+            "sprite_order": slots,
+            "resize_tileset": False,
+            "resize_to": 128,
+            "supported_sizes": [],
+        },
+        "output": {
+            "output_width": cols * out_tile_w,
+            "output_height": rows * out_tile_h,
+        },
+    }
 
-    if out_tile_w and out_tile_h and (out_tile_w != tile_w or out_tile_h != tile_h):
-        scale_x  = out_tile_w / tile_w
-        scale_y  = out_tile_h / tile_h
-        new_w    = max(1, round(src.width  * scale_x))
-        new_h    = max(1, round(src.height * scale_y))
-        src      = src.resize((new_w, new_h), Image.NEAREST)
-        slice_tile_w = out_tile_w
-        slice_tile_h = out_tile_h
-    else:
-        slice_tile_w = tile_w
-        slice_tile_h = tile_h
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+        tmp.write(save_png(img))
+        tmp_path = tmp.name
 
-    src_cols = max(1, src.width  // slice_tile_w)
-    src_rows = max(1, src.height // slice_tile_h)
-    tiles: list[Image.Image] = []
-    for r in range(src_rows):
-        for c in range(src_cols):
-            tile = src.crop((c * slice_tile_w, r * slice_tile_h,
-                             (c+1) * slice_tile_w, (r+1) * slice_tile_h))
-            tiles.append(tile)
-
-    out = Image.new("RGBA", (cols * slice_tile_w, rows * slice_tile_h), (0, 0, 0, 0))
-    for slot_pos, tile_idx in enumerate(slots):
-        if tile_idx is None or tile_idx >= len(tiles):
-            continue
-        out_col = slot_pos % cols
-        out_row = slot_pos // cols
-        out.paste(tiles[tile_idx], (out_col * slice_tile_w, out_row * slice_tile_h))
-
-    return out
+    try:
+        mgr = TilesetManager(config)
+        if not mgr.load(tmp_path):
+            raise ValueError("Failed to process tileset")
+        processed = mgr.get_processed()
+        if processed is None:
+            raise ValueError("Tileset step produced no image")
+        return processed
+    finally:
+        os.unlink(tmp_path)
 
 
 def _run_convert_step(
@@ -236,7 +233,7 @@ def _run_convert_step(
 
     img_mgr = ImageManager()
     with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-        img.save(tmp.name, format="PNG")
+        tmp.write(save_png(img))
         tmp_path = tmp.name
     try:
         img_mgr.load_image(tmp_path)
@@ -258,7 +255,7 @@ def _run_convert_step(
             notes = f"conflict: {len(best)} palettes tied ({', '.join(tied)})"
         best.sort(key=lambda r: r.palette.name)
 
-    return best[0].image.convert("RGBA"), notes
+    return best[0].image, notes
 
 
 # ---------------------------------------------------------------------------
@@ -278,7 +275,7 @@ async def preview_pipeline(
 
     data = await file.read()
     try:
-        img = Image.open(io.BytesIO(data)).convert("RGBA")
+        img = Image.open(io.BytesIO(data)).copy()
     except Exception as e:
         raise HTTPException(400, f"Cannot open image: {e}")
 
@@ -393,7 +390,7 @@ def _execute_job(
         result: dict[str, str] = {"file": filename, "status": "ok", "notes": ""}
 
         try:
-            img   = Image.open(io.BytesIO(raw_bytes)).convert("RGBA")
+            img   = Image.open(io.BytesIO(raw_bytes)).copy()
             stem  = Path(filename).stem
             ext   = Path(filename).suffix or ".png"
             extracted_palette = None
@@ -419,7 +416,8 @@ def _execute_job(
             while out_path.exists():
                 out_path = sprites_dir / f"{out_stem}_{counter}{ext}"
                 counter += 1
-            img.save(str(out_path), format="PNG")
+            out_bytes = save_png(img)
+            out_path.write_bytes(out_bytes)
 
         except Exception as e:
             result["status"] = "error"

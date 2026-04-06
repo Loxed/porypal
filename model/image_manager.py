@@ -170,6 +170,7 @@ class ImageManager:
         pal_data += [0] * (768 - len(pal_data))
         out.putpalette(pal_data)
         out.putdata(index_map.flatten().tolist())
+        out.info["transparency"] = 0
 
         return ConversionResult(image=out, palette=palette, colors_used=len(used), used_indices=used)
 
@@ -179,7 +180,9 @@ class ImageManager:
         """Save a ConversionResult as a 4-bit indexed PNG."""
         try:
             out_path = Path(output_path)
-            result.image.save(out_path, format="PNG", bits=4, optimize=True)
+            from server.helpers import save_png
+
+            out_path.write_bytes(save_png(result.image))
             logging.debug(f"Saved: {out_path}")
             return True
         except Exception as e:

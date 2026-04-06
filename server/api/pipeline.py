@@ -13,9 +13,21 @@ Job lifecycle
 -------------
 POST   /api/pipeline/run               → { job_id }
 GET    /api/pipeline/status/{job_id}   → { status, done, total, current_file, results }
-POST   /api/pipeline/preview           → { previews }  ← NEW: dry-run on first file
+POST   /api/pipeline/preview           → { previews }
 GET    /api/pipeline/download/{job_id} → zip stream
 DELETE /api/pipeline/{job_id}          → cleanup
+
+Filename templating
+-------------------
+Pass `filename_template` and `palette_template` form fields to /run.
+Supported tokens:
+  <name>    — original file stem (e.g. "bulbasaur")
+  <palette> — palette name stem (convert steps, not used by default)
+  <cs>      — color space ("oklab" or "rgb", extract steps only)
+
+Defaults:
+  filename_template = "<name>"       → bulbasaur.png   (no suffix)
+  palette_template  = "<name>_<cs>" → bulbasaur_oklab.pal
 """
 
 from __future__ import annotations
@@ -24,6 +36,7 @@ import io
 import json
 import logging
 import os
+import re
 import shutil
 import tempfile
 import threading
@@ -45,15 +58,34 @@ from server.state import state
 
 router = APIRouter(prefix="/api/pipeline", tags=["pipeline"])
 
-# In-memory job store (single-user local tool)
 _jobs: dict[str, dict] = {}
 _jobs_lock = threading.Lock()
 
 PORYPAL_VERSION = "3.0.0"
 
+DEFAULT_FILENAME_TEMPLATE = "<name>"
+DEFAULT_PALETTE_TEMPLATE  = "<name>_<cs>"
+
 
 # ---------------------------------------------------------------------------
-# Helpers
+# Template helpers
+# ---------------------------------------------------------------------------
+
+def _sanitise(s: str) -> str:
+    """Strip characters that are unsafe in filenames."""
+    return re.sub(r'[<>:"/\\|?*]', "_", s).strip(" .")
+
+
+def _apply_template(template: str, name: str = "", palette: str = "", cs: str = "") -> str:
+    result = template
+    result = result.replace("<name>",    _sanitise(name))
+    result = result.replace("<palette>", _sanitise(palette))
+    result = result.replace("<cs>",      _sanitise(cs))
+    return result or name   # never return empty string
+
+
+# ---------------------------------------------------------------------------
+# Step helpers
 # ---------------------------------------------------------------------------
 
 def _auto_detect_bg(img: Image.Image) -> str:
@@ -81,15 +113,15 @@ def _run_extract_step(
     stem: str,
     step: dict,
     pal_dir: Path,
+    palette_template: str = DEFAULT_PALETTE_TEMPLATE,
 ) -> tuple[Image.Image, Any]:
-    """Extract palette. Returns (unchanged image, Palette | None)."""
+    """Extract palette. Returns (unchanged image, Palette)."""
     bg_mode  = step.get("bg_mode", "auto")
     bg_color = step.get("bg_color", "#73C5A4")
     if bg_mode == "auto":
         bg_color = _auto_detect_bg(img)
     elif bg_mode == "default":
         bg_color = "#73C5A4"
-    # else: use provided bg_color
 
     n_colors    = int(step.get("n_colors", 15))
     color_space = step.get("color_space", "oklab")
@@ -100,7 +132,6 @@ def _run_extract_step(
 
     try:
         extractor = PaletteExtractor()
-        # extract() returns (palette, method) — unpack the tuple
         palette, _method = extractor.extract(
             tmp_path,
             n_colors=n_colors,
@@ -113,28 +144,23 @@ def _run_extract_step(
 
     if step.get("save_palette", True):
         pal_dir.mkdir(parents=True, exist_ok=True)
-        filename = f"{stem}_{color_space}.pal"
-        dest = pal_dir / filename
-        counter = 1
+        base_name = _apply_template(palette_template, name=stem, cs=color_space)
+        filename  = f"{base_name}.pal"
+        dest      = pal_dir / filename
+        counter   = 1
         while dest.exists():
-            dest = pal_dir / f"{stem}_{color_space}_{counter}.pal"
+            dest = pal_dir / f"{base_name}_{counter}.pal"
             counter += 1
         lines = ["JASC-PAL", "0100", str(len(palette.colors))]
         lines += [f"{c.r} {c.g} {c.b}" for c in palette.colors]
         dest.write_text("\n".join(lines) + "\n", encoding="utf-8")
-        # Reload manager so the palette is immediately available
         state.palette_manager.reload()
 
     return img, palette
 
 
 def _run_tileset_step(img: Image.Image, step: dict) -> Image.Image:
-    """Rearrange tiles according to a preset. Returns new image.
-
-    Respects resize_tile_w / resize_tile_h / resize_interpolation preset fields:
-    the source image is scaled (nearest-neighbour by default) before slicing so
-    that the output tiles match the target tile dimensions.
-    """
+    """Rearrange tiles according to a preset. Returns new image."""
     preset_id = step.get("preset_id")
     if not preset_id:
         raise ValueError("Tileset step has no preset_id")
@@ -149,10 +175,6 @@ def _run_tileset_step(img: Image.Image, step: dict) -> Image.Image:
     rows   = preset["rows"]
     slots  = preset.get("slots", [])
 
-    # ── Resize support ──────────────────────────────────────────────────────
-    # Presets saved with the new UI use out_tile_w/out_tile_h.
-    # Presets saved with the old UI used resize_tile_w/resize_tile_h — keep
-    # both names so existing presets continue to work.
     out_tile_w = preset.get("out_tile_w") or preset.get("resize_tile_w")
     out_tile_h = preset.get("out_tile_h") or preset.get("resize_tile_h")
 
@@ -237,7 +259,7 @@ def _run_convert_step(
 
 
 # ---------------------------------------------------------------------------
-# Preview endpoint — dry-run on a single file, returns per-step images
+# Preview endpoint
 # ---------------------------------------------------------------------------
 
 @router.post("/preview")
@@ -245,13 +267,7 @@ async def preview_pipeline(
     file: UploadFile = File(...),
     steps: str = Form(...),
 ):
-    """
-    Dry-run the pipeline on a single file (no palette saving, no disk writes).
-    Returns an ordered list of preview frames: original + result after each step.
-
-    Each frame:
-      { type, label, image (base64 PNG | null), palette (hex[] | null), error (str | null) }
-    """
+    """Dry-run on a single file. Returns per-step preview images."""
     try:
         parsed_steps = json.loads(steps)
     except Exception:
@@ -281,7 +297,6 @@ async def preview_pipeline(
             stype = step.get("type", "unknown")
             try:
                 if stype == "extract":
-                    # Never save during preview
                     dry_step = {**step, "save_palette": False}
                     img, extracted_palette = _run_extract_step(img, stem, dry_step, tmp_pal_dir)
                     space = step.get("color_space", "oklab")
@@ -294,8 +309,8 @@ async def preview_pipeline(
                     })
 
                 elif stype == "tileset":
-                    preset_id = step.get("preset_id", "")
-                    preset    = load_preset(preset_id) if preset_id else None
+                    preset_id   = step.get("preset_id", "")
+                    preset      = load_preset(preset_id) if preset_id else None
                     preset_name = preset["name"] if preset else preset_id
                     img = _run_tileset_step(img, step)
                     previews.append({
@@ -341,7 +356,6 @@ async def preview_pipeline(
                     "palette": None,
                     "error":   str(e),
                 })
-                # Continue — don't abort remaining steps, show all errors
 
     finally:
         shutil.rmtree(tmp_pal_dir, ignore_errors=True)
@@ -353,10 +367,16 @@ async def preview_pipeline(
 # Background job executor
 # ---------------------------------------------------------------------------
 
-def _execute_job(job_id: str, file_data: list[tuple[str, bytes]], steps: list[dict]) -> None:
+def _execute_job(
+    job_id: str,
+    file_data: list[tuple[str, bytes]],
+    steps: list[dict],
+    filename_template: str = DEFAULT_FILENAME_TEMPLATE,
+    palette_template:  str = DEFAULT_PALETTE_TEMPLATE,
+) -> None:
     work_dir    = Path(tempfile.mkdtemp(prefix=f"porypal_{job_id}_"))
-    sprites_dir = work_dir / "sprites"    # processed images go here
-    pal_dir     = work_dir / "palettes"   # extracted .pal files go here
+    sprites_dir = work_dir / "sprites"
+    pal_dir     = work_dir / "palettes"
     sprites_dir.mkdir()
     pal_dir.mkdir()
 
@@ -378,7 +398,9 @@ def _execute_job(job_id: str, file_data: list[tuple[str, bytes]], steps: list[di
             for step in steps:
                 stype = step.get("type")
                 if stype == "extract":
-                    img, extracted_palette = _run_extract_step(img, stem, step, pal_dir)
+                    img, extracted_palette = _run_extract_step(
+                        img, stem, step, pal_dir, palette_template
+                    )
                 elif stype == "tileset":
                     img = _run_tileset_step(img, step)
                 elif stype == "convert":
@@ -387,7 +409,13 @@ def _execute_job(job_id: str, file_data: list[tuple[str, bytes]], steps: list[di
                         result["notes"] = notes
                         result["status"] = "conflict" if "conflict" in notes else "ok"
 
-            out_path = sprites_dir / f"{stem}_processed{ext}"
+            # Apply filename template for the output sprite
+            out_stem = _apply_template(filename_template, name=stem)
+            out_path = sprites_dir / f"{out_stem}{ext}"
+            counter  = 1
+            while out_path.exists():
+                out_path = sprites_dir / f"{out_stem}_{counter}{ext}"
+                counter += 1
             img.save(str(out_path), format="PNG")
 
         except Exception as e:
@@ -399,7 +427,7 @@ def _execute_job(job_id: str, file_data: list[tuple[str, bytes]], steps: list[di
             _jobs[job_id]["results"].append(result)
             _jobs[job_id]["done"] = i + 1
 
-    # ── Copy loaded palettes used by convert steps into pal_dir ─────────────
+    # Copy loaded palettes used by convert steps into pal_dir
     already_in_pal_dir = {f.name for f in pal_dir.glob("*.pal")}
     for step in steps:
         if step.get("type") == "convert" and step.get("palette_source") == "loaded":
@@ -412,20 +440,18 @@ def _execute_job(job_id: str, file_data: list[tuple[str, bytes]], steps: list[di
                     dest.write_bytes(src_path.read_bytes())
                     already_in_pal_dir.add(pal_name)
 
-    # ── Build zip with organised structure ───────────────────────────────────
     results_snapshot = _jobs[job_id]["results"]
 
     zip_path = work_dir / "results.zip"
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
-        # sprites/
         for f in sorted(sprites_dir.glob("*")):
             zf.write(f, f"sprites/{f.name}")
-        # palettes/
         for f in sorted(pal_dir.glob("*.pal")):
             zf.write(f, f"palettes/{f.name}")
-        # manifest.json
         manifest = {
-            "porypal_version": PORYPAL_VERSION,
+            "porypal_version":   PORYPAL_VERSION,
+            "filename_template": filename_template,
+            "palette_template":  palette_template,
             "steps": steps,
             "summary": {
                 "total":    len(results_snapshot),
@@ -451,6 +477,8 @@ async def run_pipeline(
     background_tasks: BackgroundTasks,
     files: list[UploadFile] = File(...),
     steps: str = Form(...),
+    filename_template: str = Form(default=DEFAULT_FILENAME_TEMPLATE),
+    palette_template:  str = Form(default=DEFAULT_PALETTE_TEMPLATE),
 ):
     """Start a pipeline job. Returns job_id immediately."""
     try:
@@ -481,7 +509,10 @@ async def run_pipeline(
             "work_dir":     None,
         }
 
-    background_tasks.add_task(_execute_job, job_id, file_data, parsed_steps)
+    background_tasks.add_task(
+        _execute_job, job_id, file_data, parsed_steps,
+        filename_template, palette_template,
+    )
     return {"job_id": job_id}
 
 

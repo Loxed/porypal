@@ -146,7 +146,6 @@ function ConvertConfig({ config, onChange, palettes, hasExtractBefore }) {
           {palettes.length === 0
             ? <span className="step-config-hint">No palettes loaded</span>
             : (
-              // Import PalettePicker at top of BatchTab.jsx
               <PalettePicker
                 palettes={palettes}
                 mode="multi"
@@ -221,7 +220,6 @@ function StepCard({ step, index, total, allSteps, onChange, onMove, onDelete, pa
 // Preview strip
 // ---------------------------------------------------------------------------
 
-/** Single preview card — original, extract, tileset, or convert */
 function PreviewCard({ frame }) {
   const typeColors = {
     original: 'var(--muted)',
@@ -255,9 +253,6 @@ function PreviewCard({ frame }) {
         <span className="preview-card-error" title={frame.error}>
           {frame.error.length > 40 ? frame.error.slice(0, 40) + '…' : frame.error}
         </span>
-      )}
-      {frame.error && frame.type !== 'original' && frame.error.startsWith('conflict') && (
-        <span className="preview-card-warn">{frame.error}</span>
       )}
     </div>
   )
@@ -359,6 +354,96 @@ function ProgressPanel({ status, jobId, onReset }) {
 }
 
 // ---------------------------------------------------------------------------
+// Filename template editor
+// ---------------------------------------------------------------------------
+
+const TOKEN_HINT = {
+  '<name>':    'input file name',
+  '<cs>':      'color space (oklab / rgb) (extract step)',
+  '<palette>': 'palette (apply step)',
+}
+
+function TemplateField({ label, value, onChange, placeholder, hint }) {
+  return (
+    <div className="field" style={{ flex: 1, minWidth: 0 }}>
+      <label className="field-label">{label}</label>
+      <input
+        className="field-input"
+        style={{ fontFamily: 'var(--mono)', fontSize: 12 }}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        spellCheck={false}
+      />
+      {hint && <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>{hint}</span>}
+    </div>
+  )
+}
+
+function TemplateEditor({ filenameTemplate, paletteTemplate, onChangeFilename, onChangePalette }) {
+  const [open, setOpen] = useState(false)
+
+  const filenamePreview = filenameTemplate.replace('<name>', 'porygon').replace('<cs>', 'oklab').replace('<palette>', 'normal') || 'porygon'
+  const palettePreview  = paletteTemplate.replace('<name>', 'porygon').replace('<cs>', 'oklab').replace('<palette>', 'normal') || 'porygon_oklab'
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <button
+        className="step-toggle"
+        style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: 5 }}
+        onClick={() => setOpen(o => !o)}
+      >
+        {open ? <ChevronUp size={10}/> : <ChevronDown size={10}/>}
+        naming
+        {!open && (
+          <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--muted)', marginLeft: 4 }}>
+            {filenamePreview}.png · {palettePreview}.pal
+          </span>
+        )}
+      </button>
+
+      {open && (
+        <div style={{
+          display: 'flex', flexDirection: 'column', gap: 10,
+          padding: '10px 12px',
+          background: 'var(--surface2)', border: '1px solid var(--border)',
+          borderRadius: 'var(--radius)',
+        }}>
+          <div style={{ display: 'flex', gap: 12 }}>
+            <TemplateField
+              label="output sprite filename"
+              value={filenameTemplate}
+              onChange={onChangeFilename}
+              placeholder="<name>"
+              hint={`output sprite name: '${filenamePreview}.png'`}
+            />
+            <TemplateField
+              label="output palette filename"
+              value={paletteTemplate}
+              onChange={onChangePalette}
+              placeholder="<name>_<palette>"
+              hint={`output palette name: '${palettePreview}.pal'`}
+            />
+          </div>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            {Object.entries(TOKEN_HINT).map(([token, desc]) => (
+              <span key={token} style={{
+                fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--muted)',
+                background: 'var(--surface)', border: '1px solid var(--border)',
+                borderRadius: 3, padding: '1px 6px',
+              }}>
+                <span style={{ color: 'var(--accent)' }}>{token}</span>
+                {': '}{desc}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Main tab
 // ---------------------------------------------------------------------------
 export function BatchTab() {
@@ -368,12 +453,14 @@ export function BatchTab() {
   const [palettes, setPalettes] = useState([])
   const [presets, setPresets]   = useState([])
 
+  const [filenameTemplate, setFilenameTemplate] = useState('<name>')
+  const [paletteTemplate,  setPaletteTemplate]  = useState('<name>_<palette>')
+
   const [jobId, setJobId]         = useState(null)
   const [jobStatus, setJobStatus] = useState(null)
   const [running, setRunning]     = useState(false)
   const [runError, setRunError]   = useState(null)
 
-  // Preview state
   const [previewData, setPreviewData]       = useState(null)
   const [previewLoading, setPreviewLoading] = useState(false)
 
@@ -402,8 +489,7 @@ export function BatchTab() {
     return () => clearInterval(pollRef.current)
   }, [jobId, running])
 
-  // ── Debounced preview ──────────────────────────────────────────────────────
-  // Stable key from step configs so we don't depend on the steps array reference
+  // Debounced preview
   const pipelineKey = useMemo(
     () => JSON.stringify(steps.map(s => ({ type: s.type, ...s.config }))),
     [steps]
@@ -442,7 +528,6 @@ export function BatchTab() {
 
     return () => clearTimeout(previewTimer.current)
   }, [pipelineKey, firstFileName])
-  // ──────────────────────────────────────────────────────────────────────────
 
   const handleFiles = (fileList) => {
     const picked = Array.from(fileList).filter(f =>
@@ -484,6 +569,8 @@ export function BatchTab() {
       const fd = new FormData()
       files.forEach(f => fd.append('files', f))
       fd.append('steps', JSON.stringify(steps.map(s => ({ type: s.type, ...s.config }))))
+      fd.append('filename_template', filenameTemplate || '<name>')
+      fd.append('palette_template',  paletteTemplate  || '<name>_<cs>')
       const res = await fetch(`${API}/pipeline/run`, { method: 'POST', body: fd })
       if (!res.ok) throw new Error(await res.text())
       const { job_id } = await res.json()
@@ -581,6 +668,14 @@ export function BatchTab() {
           </div>
 
           {runError && <p className="error-msg">{runError}</p>}
+
+          {/* ── Filename templates ── */}
+          <TemplateEditor
+            filenameTemplate={filenameTemplate}
+            paletteTemplate={paletteTemplate}
+            onChangeFilename={setFilenameTemplate}
+            onChangePalette={setPaletteTemplate}
+          />
 
           {/* ── Preview strip ── */}
           <PreviewStrip

@@ -98,7 +98,7 @@ def main() -> None:
     url = f"http://{args.host}:{port}"
 
     print("=" * 40)
-    print("  Porypal v3.0")
+    print("  Porypal v3.1")
     print("=" * 40)
     print(f"\n  Open your browser and go to:\n")
     print(f"      {url}\n")

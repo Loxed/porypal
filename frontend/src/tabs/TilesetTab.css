@@ -156,8 +156,3 @@
 .frame-ref-row { display: flex; align-items: center; gap: 12px; padding: 5px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface2); }
 .frame-ref-idx { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--accent); width: 20px; flex-shrink: 0; }
 .frame-ref-label { font-family: var(--mono); font-size: 12px; }
-.modal-examples { display: flex; flex-direction: column; gap: 10px; }
-.example-imgs { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-.example-img-wrap { display: flex; flex-direction: column; gap: 4px; width: 100%; }
-.example-img { image-rendering: pixelated; image-rendering: crisp-edges; background: repeating-conic-gradient(#1c2330 0% 25%, #161b22 0% 50%) 0 0/8px 8px; border: 1px solid var(--border); border-radius: 4px; width: 100%; height: auto; display: block; }
-.example-caption { font-family: var(--mono); font-size: 10px; color: var(--muted); }

@@ -8,7 +8,7 @@ import { PaletteStrip } from '../components/PaletteStrip'
 import { PalettePicker } from '../components/PalettePicker'
 import { useFetch } from '../hooks/useFetch'
 import { downloadBlob, detectBgColor } from '../utils'
-import { X, RefreshCw, Layers } from 'lucide-react'
+import { X, RefreshCw, Layers, Info } from 'lucide-react'
 import { BgColorPicker } from '../components/BgColorPicker'
 import { Modal } from '../components/Modal'
 import { ViewToggle } from '../components/ViewToggle'
@@ -55,6 +55,42 @@ function PaletteModal({ palettes, selected, onChange, onReload, onUpload, onClos
   )
 }
 
+function HelpModal({ onClose }) {
+  return (
+    <Modal title="apply palette" onClose={onClose}>
+      <p className="modal-desc">
+        Preview one sprite against every loaded palette, compare the results, and export a PNG with the selected palette embedded.
+      </p>
+      <div className="help-steps">
+        <div className="help-step">
+          <span className="help-step-num">1</span>
+          <div>
+            <strong>Drop a sprite</strong>
+            <p>The app auto-detects the transparent color, then remaps the sprite against every enabled palette in your library.</p>
+          </div>
+        </div>
+        <div className="help-step">
+          <span className="help-step-num">2</span>
+          <div>
+            <strong>Filter and compare</strong>
+            <p>Use the palette manager to limit which palettes are tested. Best matches are highlighted, and you can switch between grid and list view.</p>
+          </div>
+        </div>
+        <div className="help-step">
+          <span className="help-step-num">3</span>
+          <div>
+            <strong>Download the result you want</strong>
+            <p>Download one remap as <code>sprite_palette.png</code>, or export every visible result in one ZIP.</p>
+          </div>
+        </div>
+      </div>
+      <div className="help-note">
+        <strong>Palette embedding:</strong> converted PNGs keep the output palette embedded so they stay reusable in the rest of the app.
+      </div>
+    </Modal>
+  )
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 export function ConvertTab() {
@@ -72,6 +108,7 @@ export function ConvertTab() {
   const [selectedPalettes, setSelectedPalettes] = useState(new Set())
   const [reloading, setReloading]         = useState(false)
   const [showPaletteModal, setShowPaletteModal] = useState(false)
+  const [showHelp, setShowHelp] = useState(false)
 
   const { loading, error, run } = useFetch()
   const isMounted = useRef(false)
@@ -154,6 +191,7 @@ export function ConvertTab() {
 
   return (
     <div className="tab-content">
+      {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
       {showPaletteModal && (
         <PaletteModal
           palettes={palettes}
@@ -226,6 +264,9 @@ export function ConvertTab() {
                 <span className="palette-mgr-badge">{selectedPalettes.size}/{palettes.length}</span>
               </button>
               {results.length > 0 && <ViewToggle value={viewMode} onChange={setViewMode} />}
+              <button className="tab-help-btn" onClick={() => setShowHelp(true)} title="Help">
+                <Info size={15} />
+              </button>
             </div>
           </div>
 

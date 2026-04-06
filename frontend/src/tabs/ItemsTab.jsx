@@ -5,8 +5,9 @@ import { BgColorPicker } from '../components/BgColorPicker'
 import { GroupSection } from '../components/GroupSection'
 import { VariantsPanel } from '../components/VariantsPanel'
 import { downloadBlob, detectBgColor } from '../utils'
-import { X, Download } from 'lucide-react'
+import { X, Download, Info } from 'lucide-react'
 import { ViewToggle } from '../components/ViewToggle'
+import { Modal } from '../components/Modal'
 
 const API = '/api'
 const GBA_TRANSPARENT = '#73C5A4'
@@ -56,6 +57,54 @@ function wildcardMatch(pattern, str) {
   return new RegExp(`^${escaped}$`, 'i').test(str)
 }
 
+function HelpModal({ onClose }) {
+  return (
+    <Modal title="group operations" onClose={onClose}>
+      <p className="modal-desc">
+        Work with multiple item sprites at once, either by extracting aligned palettes from variants or by grouping related sprites that share colors.
+      </p>
+      <div className="help-steps">
+        <div className="help-step">
+          <span className="help-step-num">1</span>
+          <div>
+            <strong>Item variants</strong>
+            <p>Use one reference sprite to define slot order, then extract or apply index-compatible palettes across recolors of the same pixel art.</p>
+
+              <div className="example-imgs">
+                <div className="example-img-wrap">
+                  <img
+                    src="/img/help/groups/potions.png"
+                    alt="Potion item variants example"
+                    className="example-img"
+                    draggable={false}
+                  />
+                  <span className="example-caption">potions.png</span>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div className="help-step">
+          <span className="help-step-num">2</span>
+          <div>
+            <strong>Group extract</strong>
+            <p>Drop many sprites, group them by silhouette, and keep frequently shared colors locked to the same palette slots across the whole group.</p>
+          </div>
+        </div>
+        <div className="help-step">
+          <span className="help-step-num">3</span>
+          <div>
+            <strong>Refine and export</strong>
+            <p>Drag sprites between groups, rename groups, tune the shared-color threshold, then download one group or the whole set as ZIPs.</p>
+          </div>
+        </div>
+      </div>
+      <div className="help-note">
+        <strong>Variant mode rule:</strong> all variant sprites should have the same dimensions and silhouette. If they do not, empty-slot warnings will appear.
+      </div>
+    </Modal>
+  )
+}
+
 // ---------------------------------------------------------------------------
 // ItemsTab
 // ---------------------------------------------------------------------------
@@ -75,6 +124,7 @@ export function ItemsTab() {
   const [viewMode, setViewMode]                 = useState('grid')
   const [downloadingGroup, setDownloadingGroup] = useState(null)
   const [search, setSearch]                     = useState('')
+  const [showHelp, setShowHelp]                 = useState(false)
 
   const inputRef         = useRef()
   const autoExtractTimer = useRef(null)
@@ -289,18 +339,24 @@ export function ItemsTab() {
   // ---------------------------------------------------------------------------
   return (
     <div className="tab-content">
-      <div className="items-mode-switcher">
-        <button
-          className={`items-mode-btn ${mode === 'variants' ? 'active' : ''}`}
-          onClick={() => setMode('variants')}
-        >
-          item variants
-        </button>
-        <button
-          className={`items-mode-btn ${mode === 'group' ? 'active' : ''}`}
-          onClick={() => setMode('group')}
-        >
-          group extract
+      {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
+      <div className="tab-mode-header">
+        <div className="items-mode-switcher">
+          <button
+            className={`items-mode-btn ${mode === 'variants' ? 'active' : ''}`}
+            onClick={() => setMode('variants')}
+          >
+            item variants
+          </button>
+          <button
+            className={`items-mode-btn ${mode === 'group' ? 'active' : ''}`}
+            onClick={() => setMode('group')}
+          >
+            group extract
+          </button>
+        </div>
+        <button className="tab-help-btn" onClick={() => setShowHelp(true)} title="Help">
+          <Info size={15} />
         </button>
       </div>
 

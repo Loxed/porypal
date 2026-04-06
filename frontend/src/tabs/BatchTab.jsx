@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import './BatchTab.css'
 import { useFetch } from '../hooks/useFetch'
-import { Trash2, ChevronUp, ChevronDown, Play, Download, X, AlertTriangle, Check, Loader } from 'lucide-react'
+import { Trash2, ChevronUp, ChevronDown, Play, Download, X, AlertTriangle, Check, Loader, Info } from 'lucide-react'
 import { PalettePicker } from '../components/PalettePicker'
+import { Modal } from '../components/Modal'
 
 const API = '/api'
 const PREVIEW_DEBOUNCE_MS = 1200
@@ -33,6 +34,42 @@ const STEP_COLORS = { extract: 'step--extract', tileset: 'step--tileset', conver
 
 let _stepCounter = 0
 const makeStep = (type) => ({ id: `step_${++_stepCounter}`, type, config: { ...STEP_DEFAULTS[type] } })
+
+function HelpModal({ onClose }) {
+  return (
+    <Modal title="pipeline" onClose={onClose}>
+      <p className="modal-desc">
+        Build a repeatable image pipeline, preview it on one sample sprite, then run it across a whole folder in one batch.
+      </p>
+      <div className="help-steps">
+        <div className="help-step">
+          <span className="help-step-num">1</span>
+          <div>
+            <strong>Load files or a folder</strong>
+            <p>Drop multiple sprites at once or pick a whole directory. The first file is used for the live preview strip.</p>
+          </div>
+        </div>
+        <div className="help-step">
+          <span className="help-step-num">2</span>
+          <div>
+            <strong>Assemble steps in order</strong>
+            <p>Combine Extract, Change Tileset, and Apply Palette steps. Reorder them until the preview matches your intended output.</p>
+          </div>
+        </div>
+        <div className="help-step">
+          <span className="help-step-num">3</span>
+          <div>
+            <strong>Run and download</strong>
+            <p>The finished ZIP contains processed sprites, any generated palettes, and a <code>manifest.json</code> summary with conflicts or errors.</p>
+          </div>
+        </div>
+      </div>
+      <div className="help-note">
+        <strong>Rule of thumb:</strong> if a Convert step should use an extracted palette, place an Extract step before it in the pipeline.
+      </div>
+    </Modal>
+  )
+}
 
 // ---------------------------------------------------------------------------
 // Validation
@@ -463,6 +500,7 @@ export function BatchTab() {
 
   const [previewData, setPreviewData]       = useState(null)
   const [previewLoading, setPreviewLoading] = useState(false)
+  const [showHelp, setShowHelp]             = useState(false)
 
   const fileInputRef   = useRef()
   const folderInputRef = useRef()
@@ -590,6 +628,7 @@ export function BatchTab() {
 
   return (
     <div className="tab-content">
+      {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
       <div className="batch-layout">
 
         {/* ── Left: files ── */}
@@ -659,12 +698,17 @@ export function BatchTab() {
               pipeline
               {steps.length > 0 && <span className="batch-step-count">{steps.length} steps</span>}
             </span>
-            <button className="btn-run" disabled={!canRun} onClick={handleRun}>
-              {running
-                ? <><Loader size={12} className="spinning"/> running…</>
-                : <><Play size={12}/> run {files.length > 0 ? `(${files.length})` : ''}</>
-              }
-            </button>
+            <div className="tab-toolbar-actions">
+              <button className="btn-run" disabled={!canRun} onClick={handleRun}>
+                {running
+                  ? <><Loader size={12} className="spinning"/> running…</>
+                  : <><Play size={12}/> run {files.length > 0 ? `(${files.length})` : ''}</>
+                }
+              </button>
+              <button className="tab-help-btn" onClick={() => setShowHelp(true)} title="Help">
+                <Info size={15} />
+              </button>
+            </div>
           </div>
 
           {runError && <p className="error-msg">{runError}</p>}

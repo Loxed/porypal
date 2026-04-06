@@ -378,7 +378,7 @@ export function ExtractTab() {
                 : 'preview'
               }
             </span>
-            <button className="help-btn" onClick={() => setShowHelp(true)} title="Help">
+            <button className="tab-help-btn" onClick={() => setShowHelp(true)} title="Help">
               <Info size={15}/>
             </button>
           </div>

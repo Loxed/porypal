@@ -86,7 +86,7 @@
 
 /* ── Mode switcher ── */
 .items-mode-switcher {
-  display: flex; gap: 3px; margin-bottom: 20px;
+  display: flex; gap: 3px;
   background: var(--surface2); border: 1px solid var(--border);
   border-radius: var(--radius); padding: 3px; width: fit-content;
 }

@@ -11,6 +11,7 @@
  *                     multi: receives new Set<string>
  *                     single: receives name string or null
  *   onImportFile    optional: (File) => void  — called when user imports a .pal file
+ *   allowMultiImport bool — allow selecting/importing multiple .pal files at once
  *   compact         bool — smaller max-height, tighter layout
  *   showSelectAll   bool — show select/deselect all button (multi only, default true)
  *   placeholder     string — search placeholder
@@ -104,6 +105,7 @@ export function PalettePicker({
   selected,
   onChange,
   onImportFile,
+  allowMultiImport = false,
   compact = false,
   showSelectAll = true,
   placeholder = 'search palettes…',
@@ -112,9 +114,10 @@ export function PalettePicker({
   const fileRef = useRef()
 
   const handleImport = (e) => {
-    const f = e.target.files[0]
-    if (!f || !onImportFile) return
-    onImportFile(f)
+    const files = Array.from(e.target.files ?? [])
+    if (files.length === 0 || !onImportFile) return
+    const picked = allowMultiImport ? files : files.slice(0, 1)
+    picked.forEach(onImportFile)
     e.target.value = ''
   }
 
@@ -184,9 +187,16 @@ export function PalettePicker({
         {onImportFile && (
           <>
             <button className="pal-picker-import-btn" onClick={() => fileRef.current?.click()}>
-              <Upload size={10} /> import .pal
+              <Upload size={10} /> {allowMultiImport ? 'import .pal files' : 'import .pal'}
             </button>
-            <input ref={fileRef} type="file" accept=".pal" style={{ display: 'none' }} onChange={handleImport} />
+            <input
+              ref={fileRef}
+              type="file"
+              accept=".pal"
+              multiple={allowMultiImport}
+              style={{ display: 'none' }}
+              onChange={handleImport}
+            />
           </>
         )}
         {mode === 'multi' && showSelectAll && palettes.length > 0 && (

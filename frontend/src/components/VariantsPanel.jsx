@@ -581,6 +581,7 @@ function ApplyMode({ nColors, outputBg, outputBgMode, setOutputBg, setOutputBgMo
             selected={selectedSet}
             onChange={handlePickerChange}
             onImportFile={handleImportPalFile}
+            allowMultiImport={true}
             compact={true}
             showSelectAll={false}
           />

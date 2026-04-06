@@ -462,7 +462,7 @@ export function TilesetTab() {
               {result && <>
                 <button className="btn-ghost" onClick={() => resetSlots(cols, rows)}>clear</button>
               </>}
-              <button className="help-btn" onClick={() => setShowHelp(true)}><Info size={15}/></button>
+              <button className="tab-help-btn" onClick={() => setShowHelp(true)} title="Help"><Info size={15}/></button>
             </div>
           </div>
 

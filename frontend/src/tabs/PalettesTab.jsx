@@ -6,7 +6,7 @@ import { LibraryDrawer } from '../components/Library'
 import {
   RefreshCw, Upload, Trash2, Download, BookOpen,
   ChevronDown, ChevronRight, Check, X, FolderPlus,
-  Move, Palette, GripVertical, Folder, FolderOpen, Plus, Minus,
+  Move, Palette, GripVertical, Folder, FolderOpen, Plus, Minus, Info,
 } from 'lucide-react'
 
 const API = '/api'
@@ -546,6 +546,42 @@ function NewFolderModal({ onClose, onCreate }) {
   )
 }
 
+function HelpModal({ onClose }) {
+  return (
+    <Modal title="palette manager" onClose={onClose}>
+      <p className="modal-desc">
+        Keep all loaded palettes in one place, import new ones, organise user folders, and edit color slots directly from the app.
+      </p>
+      <div className="help-steps">
+        <div className="help-step">
+          <span className="help-step-num">1</span>
+          <div>
+            <strong>Load palettes</strong>
+            <p>Browse the library, upload <code>.pal</code> files, or reload everything from disk to refresh the list.</p>
+          </div>
+        </div>
+        <div className="help-step">
+          <span className="help-step-num">2</span>
+          <div>
+            <strong>Organise user palettes</strong>
+            <p>Rename palettes, create folders, and drag palettes between folders. Default palettes stay read-only.</p>
+          </div>
+        </div>
+        <div className="help-step">
+          <span className="help-step-num">3</span>
+          <div>
+            <strong>Edit slot colors</strong>
+            <p>Open the color editor to reorder slots, add or remove colors, and save the palette back to disk.</p>
+          </div>
+        </div>
+      </div>
+      <div className="help-note">
+        <strong>Note:</strong> files in <code>palettes/defaults/</code> are reference palettes. Editable work should live in <code>palettes/user/</code>.
+      </div>
+    </Modal>
+  )
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Main tab
 // ─────────────────────────────────────────────────────────────────────────────
@@ -558,6 +594,7 @@ export function PalettesTab() {
   const [error, setError]                   = useState(null)
   const [showLibrary, setShowLibrary]       = useState(false)
   const [showNewFolder, setShowNewFolder]   = useState(false)
+  const [showHelp, setShowHelp]             = useState(false)
   const fileRef = useRef()
 
   const fetchPalettes = async () => {
@@ -672,6 +709,7 @@ export function PalettesTab() {
 
   return (
     <div className="tab-content">
+      {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
       {showLibrary && (
         <LibraryDrawer onClose={() => setShowLibrary(false)} onImport={fetchPalettes} />
       )}
@@ -736,6 +774,9 @@ export function PalettesTab() {
             <div className="palettes-toolbar-right">
               <button className="palettes-new-folder-btn" onClick={() => setShowNewFolder(true)}>
                 <FolderPlus size={12} /> new folder
+              </button>
+              <button className="tab-help-btn" onClick={() => setShowHelp(true)} title="Help">
+                <Info size={15} />
               </button>
             </div>
           </div>

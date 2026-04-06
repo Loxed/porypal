@@ -13,6 +13,13 @@
 
 .home-hero { display: flex; flex-direction: column; gap: 14px; padding-top: 8px; }
 
+.home-hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
 .home-hero-eyebrow {
   font-family: var(--mono);
   font-size: 11px;

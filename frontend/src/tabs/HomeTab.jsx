@@ -1,6 +1,6 @@
 // frontend/src/tabs/HomeTab.jsx
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Palette, Paintbrush, Star, Grid2x2, Factory, Layers, BookOpen, ArrowRight } from 'lucide-react'
+import { Palette, Paintbrush, Star, Grid2x2, Factory, Layers, BookOpen, ArrowRight, Info } from 'lucide-react'
 import './HomeTab.css'
 
 // ── Accent colours per tag ────────────────────────────────────────────────────
@@ -292,7 +292,10 @@ export function HomeTab({ onNavigate }) {
       <div className="home-layout">
 
         <div className="home-hero">
-          <p className="home-hero-eyebrow">v3.1 · Gen 3 ROM hacking</p>
+          <div className="home-hero-top">
+            <p className="home-hero-eyebrow">v3.1 · Gen 3 ROM hacking</p>
+            
+          </div>
           <div className="home-hero-title-row">
             <img src="/porypal.ico" alt="" className="home-hero-icon" />
             <h1 className="home-hero-title">Porypal</h1>

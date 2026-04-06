@@ -7,7 +7,7 @@ import { PalettePicker } from '../components/PalettePicker'
 import { Modal } from '../components/Modal'
 import { ExportDropdown } from '../components/ExportDropdown'
 import { remapToShinyPalette, detectBgColor, downloadBlob } from '../utils'
-import { Download } from 'lucide-react'
+import { Download, Info } from 'lucide-react'
 
 const API = '/api'
 const GBA_TRANSPARENT = '#73C5A4'
@@ -66,6 +66,42 @@ function PalettePickerModal({ palettes, currentName, onPick, onClose }) {
         onImportFile={handleImportFile}
         showSelectAll={false}
       />
+    </Modal>
+  )
+}
+
+function HelpModal({ onClose }) {
+  return (
+    <Modal title="shiny tools" onClose={onClose}>
+      <p className="modal-desc">
+        Build shiny-ready palette pairs or apply an existing pair to a sprite while keeping the slot order aligned.
+      </p>
+      <div className="help-steps">
+        <div className="help-step">
+          <span className="help-step-num">1</span>
+          <div>
+            <strong>Create shiny sprite</strong>
+            <p>Drop one sprite, pick a normal palette and a shiny palette, then export a ZIP with both indexed sprites using the same slot layout.</p>
+          </div>
+        </div>
+        <div className="help-step">
+          <span className="help-step-num">2</span>
+          <div>
+            <strong>Create palette pair</strong>
+            <p>Drop matching normal and shiny sprites to extract two palettes that stay index-compatible with each other.</p>
+          </div>
+        </div>
+        <div className="help-step">
+          <span className="help-step-num">3</span>
+          <div>
+            <strong>Export what you need</strong>
+            <p>Palette-pair mode includes both <code>.pal</code> files and preview sprites. Apply mode exports the normal and shiny sprites directly.</p>
+          </div>
+        </div>
+      </div>
+      <div className="help-note">
+        <strong>Best results:</strong> use sprites with the same silhouette and transparent color so the shiny mapping stays stable across slots.
+      </div>
     </Modal>
   )
 }
@@ -344,6 +380,7 @@ function ExtractMatchedMode() {
 export function ShinyTab() {
   const [mode, setMode]         = useState('apply')
   const [palettes, setPalettes] = useState([])
+  const [showHelp, setShowHelp] = useState(false)
 
   useEffect(() => {
     fetch(`${API}/palettes`).then(r => r.json()).then(setPalettes).catch(() => {})
@@ -351,7 +388,8 @@ export function ShinyTab() {
 
   return (
     <div className="tab-content">
-      <div style={{ marginBottom: 20 }}>
+      {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
+      <div className="tab-mode-header">
         <div className="mode-toggle">
           <button className={`mode-btn ${mode === 'apply' ? 'active' : ''}`} onClick={() => setMode('apply')}>
             Create shiny sprite
@@ -362,6 +400,9 @@ export function ShinyTab() {
             <div style={{ fontSize: 9, opacity: 0.8, marginTop: 2 }}>normal.png + shiny.png = normal.pal + shiny.pal</div>
           </button>
         </div>
+        <button className="tab-help-btn" onClick={() => setShowHelp(true)} title="Help">
+          <Info size={15} />
+        </button>
       </div>
       {mode === 'apply'   && <ApplyShinyMode palettes={palettes} />}
       {mode === 'extract' && <ExtractMatchedMode />}

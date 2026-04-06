@@ -1,0 +1,213 @@
+/* frontend/src/tabs/EightBppTab.css */
+
+.eightbpp-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+.eightbpp-left  { display: flex; flex-direction: column; gap: 14px; }
+.eightbpp-right { display: flex; flex-direction: column; gap: 16px; min-height: 400px; }
+
+/* ── Dual drop zone ── */
+.dual-dropzone {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.dual-dropzone-slot { display: flex; flex-direction: column; }
+/* Make the drop zones shorter since they're side by side */
+.dual-dropzone-slot .dropzone {
+  padding: 16px 8px;
+  min-height: 80px;
+}
+.dual-dropzone-slot .dropzone-label { font-size: 11px; }
+.dual-dropzone-slot .dropzone-hint  { display: none; }
+
+/* ── Toolbar ── */
+.eightbpp-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.eightbpp-meta { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.eightbpp-meta-badge { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 1px 8px; }
+
+/* ── Bank filter row ── */
+.bank-filter-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.bank-filter-btn {
+  width: 28px; height: 28px;
+  background: transparent; border: 1px solid var(--border2);
+  border-radius: var(--radius); font-family: var(--mono); font-size: 10px;
+  color: var(--muted); cursor: pointer;
+  transition: color 0.1s, border-color 0.1s, background 0.1s;
+  display: flex; align-items: center; justify-content: center;
+}
+.bank-filter-btn:hover { color: var(--text); border-color: var(--border2); }
+.bank-filter-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(88,166,255,0.1); }
+.bank-filter-btn.empty  { opacity: 0.3; }
+.bank-filter-all { padding: 4px 10px; width: auto; font-size: 10px; white-space: nowrap; }
+
+/* ── 16×16 palette grid ── */
+.palette-256-grid { display: flex; flex-direction: column; gap: 2px; }
+
+.palette-bank-row {
+  display: flex; align-items: stretch; gap: 2px;
+  transition: opacity 0.15s;
+}
+.palette-bank-row.dimmed { opacity: 0.15; }
+
+.bank-label {
+  width: 28px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 9px; color: var(--muted);
+  background: var(--surface2); border-radius: calc(var(--radius) - 1px);
+  cursor: pointer; user-select: none; transition: color 0.1s, background 0.1s;
+}
+.bank-label:hover   { color: var(--accent); background: rgba(88,166,255,0.08); }
+.bank-label.selected { color: var(--accent); background: rgba(88,166,255,0.12); }
+
+.bank-swatches { display: grid; grid-template-columns: repeat(16, 1fr); flex: 1; gap: 0; }
+
+.color-swatch-256 {
+  aspect-ratio: 1; cursor: pointer; position: relative; border-radius: 0;
+  transition: transform 0.08s, outline 0.08s;
+  overflow: hidden;
+}
+.color-swatch-256:hover { transform: scale(1.25); z-index: 10; }
+
+/* Pipette match — white ring, no size change */
+.color-swatch-256.pipette-match {
+  outline: 3px solid;
+  outline-offset: -2px;
+  z-index: 5;
+}
+
+/* Pixel count label inside swatch */
+.swatch-count {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 14px;
+  color: #fff;
+  background: rgba(0,0,0,0.55);
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  letter-spacing: -0.3px;
+}
+
+/* ── Bank detail ── */
+.bank-detail {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden; animation: fadeIn 0.15s ease;
+}
+.bank-detail-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; background: var(--surface); border-bottom: 1px solid var(--border);
+}
+.bank-detail-title { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--text); }
+.bank-detail-meta  { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+.bank-detail-body  { padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+
+.bank-detail-strip { display: grid; grid-template-columns: repeat(16, 1fr); gap: 3px; }
+.bank-detail-swatch {
+  aspect-ratio: 1; border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.08); cursor: pointer; position: relative;
+  transition: transform 0.08s, border-color 0.1s;
+}
+.bank-detail-swatch:hover { transform: scale(1.12); z-index: 5; border-color: var(--accent); }
+.bank-detail-swatch .slot-num {
+  position: absolute; bottom: 2px; right: 3px;
+  font-family: var(--mono); font-size: 7px; color: rgba(255,255,255,0.4); pointer-events: none;
+}
+
+.bank-detail-actions { display: flex; align-items: center; gap: 8px; }
+
+.bank-export-btn {
+  display: flex; align-items: center; gap: 5px; padding: 6px 12px;
+  background: transparent; border: 1px solid var(--border2); border-radius: var(--radius);
+  color: var(--muted); font-family: var(--mono); font-size: 11px; cursor: pointer;
+  transition: color 0.1s, border-color 0.1s, background 0.1s; white-space: nowrap;
+}
+.bank-export-btn:hover { color: var(--accent); border-color: var(--accent); background: rgba(88,166,255,0.06); }
+
+.bank-save-btn {
+  display: flex; align-items: center; gap: 5px; padding: 6px 12px;
+  background: transparent; border: 1px solid var(--border2); border-radius: var(--radius);
+  color: var(--muted); font-family: var(--mono); font-size: 11px; cursor: pointer;
+  transition: color 0.1s, border-color 0.1s; white-space: nowrap;
+}
+.bank-save-btn:hover { color: var(--best); border-color: var(--best); }
+.bank-save-btn.saved { color: var(--best); border-color: var(--best); pointer-events: none; }
+.bank-save-btn.error { color: var(--danger); border-color: var(--danger); pointer-events: none; }
+
+/* ── Hover tooltip ── */
+.swatch-hex-tip {
+  position: fixed; pointer-events: none; z-index: 200;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--radius); padding: 4px 8px;
+  font-family: var(--mono); font-size: 11px; color: var(--text);
+  display: flex; align-items: center; gap: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4); white-space: nowrap;
+}
+.swatch-hex-tip-dot {
+  width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+/* ── Info panel ── */
+.eightbpp-info {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 10px 12px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: var(--radius);
+}
+.eightbpp-info p { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.5; }
+.eightbpp-info code {
+  background: var(--surface); border: 1px solid var(--border2);
+  padding: 1px 4px; border-radius: 3px; font-size: 10px; color: var(--text);
+}
+
+/* ── Mode switcher ── */
+.mode-switcher {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+}
+.mode-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 8px 0; border-radius: var(--radius);
+  background: var(--surface2); border: 1px solid var(--border);
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+  cursor: pointer; transition: all 0.1s;
+}
+.mode-btn:hover { color: var(--text); border-color: var(--border2); }
+.mode-btn.active { color: var(--accent); border-color: var(--accent); background: rgba(88,166,255,0.08); }
+
+/* ── Shrink panel ── */
+.shrink-panel {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+}
+.shrink-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; cursor: pointer;
+}
+.shrink-header:hover { background: rgba(255,255,255,0.03); }
+.shrink-body {
+  padding: 10px 12px; display: flex; flex-direction: column; gap: 10px;
+  border-top: 1px solid var(--border);
+}
+.shrink-metrics {
+  font-family: var(--mono); font-size: 11px; color: var(--accent);
+}
+.shrink-threshold-val {
+  font-family: var(--mono); font-size: 11px; color: var(--text);
+  min-width: 30px; text-align: right;
+}
+
+/* ── Label accent ── */
+.label-accent {
+  color: var(--accent); margin-left: 8px;
+  font-size: 10px; text-transform: none; letter-spacing: 0;
+}

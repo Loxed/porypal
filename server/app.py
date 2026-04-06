@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from server.api import (
     palettes, convert, extract, batch,
     tileset, health, library,
-    pipeline, items, shiny,
+    pipeline, items, shiny, eightbpp,
 )
 from server import preset_store as presets
 
@@ -34,6 +34,7 @@ app.include_router(library.router)
 app.include_router(pipeline.router)
 app.include_router(items.router)
 app.include_router(shiny.router)
+app.include_router(eightbpp.router)
 
 _bundle = os.environ.get("PORYPAL_BUNDLE_DIR")
 _base   = Path(_bundle) if _bundle else Path(__file__).parent.parent

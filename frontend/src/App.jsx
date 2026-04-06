@@ -8,6 +8,7 @@ import { PalettesTab } from './tabs/PalettesTab'
 import { ItemsTab }    from './tabs/ItemsTab'
 import { ShinyTab }    from './tabs/ShinyTab'
 import { HomeTab }     from './tabs/HomeTab'
+import { EightBppTab } from './tabs/EightBppTab'
 import './App.css'
 import { Star } from 'lucide-react'
 
@@ -21,6 +22,7 @@ const SLUG_TO_TAB = {
   pipeline:        'pipeline',
   groups:          'groups',
   palettes:        'palettes',
+  '8bpp':          '8bpp',
 }
 
 const TAB_TO_SLUG = Object.fromEntries(
@@ -36,6 +38,7 @@ const TABS = [
   'pipeline',
   'groups',
   'palettes',
+  '8bpp',
 ]
 
 const TAB_LABELS = {
@@ -47,6 +50,7 @@ const TAB_LABELS = {
   'pipeline':        'pipeline',
   'groups':          'groups',
   'palettes':        'palettes',
+  '8bpp':            '8bpp',
 }
 
 function getTabFromHash() {
@@ -160,6 +164,7 @@ export default function App() {
         {tab === 'pipeline'        && <BatchTab    />}
         {tab === 'groups'          && <ItemsTab    />}
         {tab === 'palettes'        && <PalettesTab />}
+        {tab === '8bpp'            && <EightBppTab />}
       </main>
     </div>
   )

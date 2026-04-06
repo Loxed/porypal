@@ -1,0 +1,29 @@
+/* frontend/src/components/HighlightableImage.css
+   Reuses .zoom-controls, .zoom-btn, .zoom-label, .zoomable-scroll
+   from ZoomableImage.css — only the wrapper differs. */
+
+.highlightable-wrap {
+  background: #000;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  width: 100%;
+}
+
+.highlightable-wrap .zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  background: rgba(14, 17, 23, 0.85);
+  border-bottom: 1px solid var(--border);
+}
+
+.highlightable-wrap .zoomable-scroll {
+  overflow: auto;
+  max-height: 320px;
+}
+
+.highlightable-wrap.is-pipette .zoomable-scroll {
+  cursor: crosshair;
+}

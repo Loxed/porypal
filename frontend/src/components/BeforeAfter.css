@@ -1,0 +1,98 @@
+/* frontend/src/components/BeforeAfter.css */
+
+.ba-wrap {
+  background: #000;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  width: 100%;
+  user-select: none;
+}
+
+.ba-wrap .zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  background: rgba(14, 17, 23, 0.85);
+  border-bottom: 1px solid var(--border);
+}
+
+.ba-labels {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10px;
+}
+.ba-label-before {
+  color: var(--muted);
+  padding: 1px 6px;
+  border: 1px solid var(--border2);
+  border-radius: 3px 0 0 3px;
+}
+.ba-label-after {
+  color: var(--accent);
+  padding: 1px 6px;
+  border: 1px solid var(--accent);
+  border-left: none;
+  border-radius: 0 3px 3px 0;
+}
+
+.ba-scroll {
+  overflow: auto;
+  max-height: 320px;
+}
+
+.ba-canvas-wrap {
+  position: relative;
+  cursor: col-resize;
+}
+
+.ba-canvas {
+  display: block;
+}
+
+/* The draggable handle */
+.ba-handle {
+  position: absolute;
+  top: 0; bottom: 0;
+  transform: translateX(-50%);
+  width: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: col-resize;
+  pointer-events: none;   /* canvas gets the events; handle is visual only */
+}
+
+.ba-handle-line {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateX(-50%);
+  box-shadow: 0 0 4px rgba(0,0,0,0.6);
+}
+
+.ba-handle-grip {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px; height: 28px;
+  background: var(--surface);
+  border: 1.5px solid rgba(255,255,255,0.7);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.ba-handle.dragging .ba-handle-grip {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+}

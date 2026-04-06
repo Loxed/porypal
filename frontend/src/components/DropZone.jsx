@@ -1,17 +1,14 @@
 import { useState, useRef } from 'react'
 import './DropZone.css'
-
-export function DropZone({ onFile, label = 'Drop sprite here' }) {
+export function DropZone({ onFile, label = 'Drop sprite here', accept = 'image/*' }) {
   const [dragging, setDragging] = useState(false)
   const inputRef = useRef()
-
   const handleDrop = (e) => {
     e.preventDefault()
     setDragging(false)
     const f = e.dataTransfer.files[0]
     if (f) onFile(f)
   }
-
   return (
     <div
       className={`dropzone ${dragging ? 'dragging' : ''}`}
@@ -23,7 +20,7 @@ export function DropZone({ onFile, label = 'Drop sprite here' }) {
       <input
         ref={inputRef}
         type="file"
-        accept="image/*"
+        accept={accept}
         style={{ display: 'none' }}
         onChange={e => e.target.files[0] && onFile(e.target.files[0])}
       />

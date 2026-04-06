@@ -73,6 +73,19 @@ function HelpModal({ onClose }) {
 }
 
 // ---------------------------------------------------------------------------
+// Method badge
+// ---------------------------------------------------------------------------
+function MethodBadge({ method }) {
+  if (!method) return null
+  const embedded = method === 'embedded'
+  return (
+    <span className={`method-badge ${embedded ? 'method-badge--embedded' : 'method-badge--kmeans'}`}>
+      {embedded ? '4bpp detected' : 'k-means'}
+    </span>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Remap preview
 // ---------------------------------------------------------------------------
 function hexToRgb(hex) {
@@ -181,6 +194,8 @@ export function ExtractTab() {
   const handleExtract = () => {
     if (!file) return
     run(async () => {
+      // If one result comes back as 'embedded', both will be identical —
+      // we still fire both requests for simplicity but only show one preview.
       const [oklab, rgb] = await Promise.all([runExtract('oklab'), runExtract('rgb')])
       setResultOklab(oklab)
       setResultRgb(rgb)
@@ -192,6 +207,7 @@ export function ExtractTab() {
   }
 
   const tooMany = nColors > MAX_EXTRA_COLORS
+  const isEmbedded = resultOklab?.method === 'embedded'
 
   return (
     <div className="tab-content">
@@ -274,10 +290,34 @@ export function ExtractTab() {
                 <ZoomableImage src={originalB64} alt="source sprite" picking={picking} onPick={handlePick} />
               </div>
 
-              {previewOklab && resultOklab && (
+              {/* Embedded: single result, no oklab/rgb split */}
+              {isEmbedded && previewOklab && resultOklab && (
                 <div className="extract-preview-section">
                   <div className="extract-section-header">
-                    <p className="section-label">oklab — recommended</p>
+                    <p className="section-label">
+                      result
+                      <MethodBadge method="embedded" />
+                    </p>
+                    <ExportDropdown
+                      name={resultOklab.name}
+                      palContent={resultOklab.pal_content}
+                    />
+                  </div>
+                  <ZoomableImage src={previewOklab} alt="palette preview" />
+                  <div className="palette-strip-wrap">
+                    <PaletteStrip colors={resultOklab.colors} usedIndices={resultOklab.colors.map((_, i) => i)} />
+                  </div>
+                </div>
+              )}
+
+              {/* K-means: show both oklab and rgb */}
+              {!isEmbedded && previewOklab && resultOklab && (
+                <div className="extract-preview-section">
+                  <div className="extract-section-header">
+                    <p className="section-label">
+                      oklab — recommended
+                      <MethodBadge method="kmeans" />
+                    </p>
                     <ExportDropdown
                       name={`${resultOklab.name}_oklab`}
                       palContent={resultOklab.pal_content}
@@ -290,10 +330,13 @@ export function ExtractTab() {
                 </div>
               )}
 
-              {previewRgb && resultRgb && (
+              {!isEmbedded && previewRgb && resultRgb && (
                 <div className="extract-preview-section">
                   <div className="extract-section-header">
-                    <p className="section-label">rgb</p>
+                    <p className="section-label">
+                      rgb
+                      <MethodBadge method="kmeans" />
+                    </p>
                     <ExportDropdown
                       name={`${resultRgb.name}_rgb`}
                       palContent={resultRgb.pal_content}

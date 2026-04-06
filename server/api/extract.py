@@ -1,11 +1,8 @@
 """
 server/api/extract.py
-
 Routes: /api/extract
 """
-
 from __future__ import annotations
-import io
 import os
 import tempfile
 from pathlib import Path
@@ -18,6 +15,16 @@ from server.state import state
 router = APIRouter(prefix="/api/extract", tags=["extract"])
 
 
+def _palette_response(palette, method: str, color_space: str) -> dict:
+    return {
+        "name":        palette.name,
+        "colors":      [c.to_hex() for c in palette.colors],
+        "pal_content": make_pal_content(palette),
+        "color_space": color_space,
+        "method":      method,          # "embedded" | "kmeans"
+    }
+
+
 @router.post("")
 async def extract_palette(
     file: UploadFile = File(...),
@@ -26,36 +33,42 @@ async def extract_palette(
     color_space: str = Form(default="oklab"),
 ):
     """
-    Extract a GBA palette from the uploaded sprite using k-means.
-    color_space: 'oklab' (default, perceptually uniform) or 'rgb'.
-    Returns the palette as hex colors + JASC .pal content.
+    Extract a GBA palette from the uploaded sprite.
+
+    For paletted PNGs with ≤16 colors (4bpp), the embedded palette is used
+    directly and both oklab/rgb responses are identical.
+    For all other images, k-means clustering is applied in the requested color space.
+
+    Returns palette hex colors, JASC .pal content, and method ('embedded'|'kmeans').
     """
     if color_space not in ("oklab", "rgb"):
         raise HTTPException(400, f"color_space must be 'oklab' or 'rgb', got {color_space!r}")
 
     data = await file.read()
-    with tempfile.NamedTemporaryFile(suffix=Path(file.filename).suffix, delete=False) as tmp:
+    suffix = Path(file.filename).suffix
+    name   = Path(file.filename).stem
+
+    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
         tmp.write(data)
         tmp_path = tmp.name
 
     try:
-        palette = state.extractor.extract(
+        palette, method = state.extractor.extract(
             tmp_path,
             n_colors=n_colors,
             bg_color=bg_color,
             color_space=color_space,
-            name=Path(file.filename).stem,
+            name=name,
         )
 
         if len(palette.colors) > 16:
-            raise HTTPException(400, f"Image has too many colors ({len(palette.colors)}); max 16 for GBA")
+            raise HTTPException(
+                400,
+                f"Image has too many colors ({len(palette.colors)}); max 16 for GBA",
+            )
 
-        return {
-            "name":        palette.name,
-            "colors":      [c.to_hex() for c in palette.colors],
-            "pal_content": make_pal_content(palette),
-            "color_space": color_space,
-        }
+        return _palette_response(palette, method, color_space)
+
     finally:
         os.unlink(tmp_path)
 

@@ -29,7 +29,6 @@ from model.palette import Color, Palette
 # Oklab weights (loaded once at import time)
 # ---------------------------------------------------------------------------
 
-# path = model/data/oklab_weights.json
 _WEIGHTS_PATH = Path(__file__).parent / "data" / "oklab_weights.json"
 
 def _load_weights() -> dict[str, np.ndarray]:
@@ -192,7 +191,7 @@ class PaletteExtractor:
         bg_color: str = "#73C5A4",
         color_space: str = "oklab",
         name: str | None = None,
-    ) -> Palette:
+    ) -> tuple[Palette, str]:
         """
         Extract a palette from image_path.
 
@@ -205,7 +204,8 @@ class PaletteExtractor:
             name:         Palette name. Defaults to the image filename stem.
 
         Returns:
-            A Palette with (n_colors + 1) entries, index 0 = bg_color.
+            A tuple of (Palette, method) where method is 'embedded' or 'kmeans'.
+            Palette has (n_colors + 1) entries, index 0 = bg_color.
         """
         path = Path(image_path)
         if not path.exists():
@@ -226,7 +226,15 @@ class PaletteExtractor:
             dtype=np.float32,
         )
 
-        img    = Image.open(path).convert("RGBA")
+        img = Image.open(path)
+
+        # --- Fast path: embedded 4bpp palette (≤16 colors) ---
+        embedded = self._extract_embedded_palette(img, transparent_color, name or path.stem)
+        if embedded is not None:
+            return embedded, "embedded"
+
+        # --- Slow path: k-means clustering ---
+        img    = img.convert("RGBA")
         pixels = np.array(img)       # (H, W, 4)
         alpha  = pixels[:, :, 3]
         rgb    = pixels[:, :, :3]
@@ -241,7 +249,7 @@ class PaletteExtractor:
 
         if len(sprite_pixels_rgb) == 0:
             logging.warning("Image has no sprite pixels — returning palette with transparent only")
-            return Palette(name=name or path.stem, colors=[transparent_color])
+            return Palette(name=name or path.stem, colors=[transparent_color]), "kmeans"
 
         # Convert to clustering space
         if color_space == "oklab":
@@ -275,11 +283,60 @@ class PaletteExtractor:
 
         palette = Palette(name=name or path.stem, colors=colors)
         logging.info(
-            f"Extracted {len(colors)} colors from '{path.name}' "
+            f"Extracted {len(colors)} colors from '{path.name}' via k-means "
             f"(space={color_space}, transparent={bg_color}, "
             f"{len(sprite_pixels_rgb)} sprite pixels, {actual_clusters} clusters)"
         )
-        return palette
+        return palette, "kmeans"
+
+    def _extract_embedded_palette(
+        self,
+        img: Image.Image,
+        transparent_color: Color,
+        name: str,
+    ) -> Palette | None:
+        """
+        Extract the embedded palette from a paletted PNG (mode 'P') if it has
+        ≤16 colors (4bpp). Returns None if the image is not 4bpp-paletted,
+        falling through to k-means.
+
+        The transparent index (from img.info['transparency']) is always placed
+        in slot 0, replaced by bg_color. All other entries preserve their
+        original palette order.
+        """
+        if img.mode != "P":
+            return None
+
+        indices = np.array(img)                  # (H, W) uint8 palette indices
+        used_indices = np.unique(indices)
+
+        if used_indices.max() > 15:
+            logging.info(
+                f"'{name}': paletted PNG has {used_indices.max() + 1} colors — "
+                "falling back to k-means"
+            )
+            return None
+
+        raw = img.getpalette()                   # flat [R,G,B, ...] × up to 256
+        pal = np.array(raw, dtype=np.uint8).reshape(-1, 3)
+
+        transparent_index = img.info.get("transparency")
+
+        # Build colors in index order; slot 0 = transparent_color
+        colors: list[Color] = [transparent_color]
+        for idx in used_indices:
+            if isinstance(transparent_index, int) and idx == transparent_index:
+                continue                         # skip — already in slot 0
+            r, g, b = int(pal[idx][0]), int(pal[idx][1]), int(pal[idx][2])
+            if r == transparent_color.r and g == transparent_color.g and b == transparent_color.b:
+                continue                         # same color as bg, skip duplicate
+            colors.append(Color(r, g, b))
+
+        logging.info(
+            f"Extracted {len(colors)} colors from '{name}' via embedded palette "
+            f"(transparent index={transparent_index})"
+        )
+        return Palette(name=name, colors=colors)
 
     def extract_batch(
         self,
@@ -287,8 +344,8 @@ class PaletteExtractor:
         n_colors: int = 15,
         bg_color: str = "#73C5A4",
         color_space: str = "oklab",
-    ) -> list[Palette]:
-        """Extract palettes from a list of images. Returns one Palette per image."""
+    ) -> list[tuple[Palette, str]]:
+        """Extract palettes from a list of images. Returns one (Palette, method) per image."""
         results = []
         for path in image_paths:
             try:

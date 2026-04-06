@@ -100,7 +100,8 @@ def _run_extract_step(
 
     try:
         extractor = PaletteExtractor()
-        palette   = extractor.extract(
+        # extract() returns (palette, method) — unpack the tuple
+        palette, _method = extractor.extract(
             tmp_path,
             n_colors=n_colors,
             bg_color=bg_color,
@@ -148,7 +149,7 @@ def _run_tileset_step(img: Image.Image, step: dict) -> Image.Image:
     rows   = preset["rows"]
     slots  = preset.get("slots", [])
 
-    # ── Resize support ────────────────────────────────────────────────────────
+    # ── Resize support ──────────────────────────────────────────────────────
     # Presets saved with the new UI use out_tile_w/out_tile_h.
     # Presets saved with the old UI used resize_tile_w/resize_tile_h — keep
     # both names so existing presets continue to work.
@@ -168,7 +169,6 @@ def _run_tileset_step(img: Image.Image, step: dict) -> Image.Image:
     else:
         slice_tile_w = tile_w
         slice_tile_h = tile_h
-    # ──────────────────────────────────────────────────────────────────────────
 
     src_cols = max(1, src.width  // slice_tile_w)
     src_rows = max(1, src.height // slice_tile_h)
@@ -400,8 +400,6 @@ def _execute_job(job_id: str, file_data: list[tuple[str, bytes]], steps: list[di
             _jobs[job_id]["done"] = i + 1
 
     # ── Copy loaded palettes used by convert steps into pal_dir ─────────────
-    # Extract steps already write to pal_dir directly. Convert steps that use
-    # loaded palettes don't — collect those names and copy the source files in.
     already_in_pal_dir = {f.name for f in pal_dir.glob("*.pal")}
     for step in steps:
         if step.get("type") == "convert" and step.get("palette_source") == "loaded":
@@ -414,7 +412,7 @@ def _execute_job(job_id: str, file_data: list[tuple[str, bytes]], steps: list[di
                     dest.write_bytes(src_path.read_bytes())
                     already_in_pal_dir.add(pal_name)
 
-    # ── Build zip with organised structure ──────────────────────────────────
+    # ── Build zip with organised structure ───────────────────────────────────
     results_snapshot = _jobs[job_id]["results"]
 
     zip_path = work_dir / "results.zip"

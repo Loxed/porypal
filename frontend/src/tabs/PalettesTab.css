@@ -128,9 +128,22 @@
 .pal-folder-action-btn:hover { color: var(--accent); border-color: var(--accent); }
 .pal-folder-action-btn.danger:hover { color: var(--danger); border-color: var(--danger); }
 
-.pal-folder-body { display: flex; flex-direction: column; gap: 1px; padding: 4px; }
+.pal-folder-body--list { display: flex; flex-direction: column; gap: 6px; padding: 6px; }
+.pal-folder-body--grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding: 12px;
+}
+.pal-folder-empty {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  padding: 8px 4px;
+}
 
 /* ── Palette row ────────────────────────────────────────────────────────────── */
+.pal-item-shell { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .pal-row {
   display: flex; align-items: center; gap: 10px;
   padding: 7px 10px;
@@ -143,20 +156,34 @@
 .pal-row:active { cursor: grabbing; }
 .pal-row.dragging { opacity: 0.4; }
 .pal-row--confirm { border-color: var(--danger) !important; }
+.pal-row--grid {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  padding: 12px;
+  height: 100%;
+}
 
 .pal-drag-handle {
   color: var(--border2); flex-shrink: 0; opacity: 0;
   transition: opacity 0.1s; pointer-events: none;
 }
 .pal-row:hover .pal-drag-handle { opacity: 1; }
+.pal-row--grid .pal-drag-handle { opacity: 1; }
 
 .pal-row-info {
   display: flex; flex-direction: column; gap: 1px; flex-shrink: 0; width: 120px; min-width: 0;
+}
+.pal-row--grid .pal-row-info {
+  width: auto;
+  flex: 1;
+  gap: 3px;
 }
 .pal-row-name {
   font-family: var(--mono); font-size: 12px; color: var(--text);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.pal-row--grid .pal-row-name { font-size: 13px; }
 .pal-row-name.editable {
   cursor: pointer;
   border-bottom: 1px dashed transparent; transition: border-color 0.1s;
@@ -172,7 +199,21 @@
 
 .pal-row-count { font-family: var(--mono); font-size: 10px; color: var(--muted); }
 .pal-row-strip { flex: 1; min-width: 0; }
+.pal-row-strip--grid { width: 100%; }
 .pal-row-actions { display: flex; align-items: center; gap: 3px; flex-shrink: 0; }
+.pal-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.pal-card-title-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
 
 /* ── Icon buttons ───────────────────────────────────────────────────────────── */
 .pal-icon-btn {
@@ -186,12 +227,64 @@
 .pal-icon-btn--danger:hover,
 .pal-icon-btn--danger.confirming { color: var(--danger); border-color: var(--danger); }
 
+.pal-delete-confirm {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  background: rgba(248,81,73,0.08);
+  border: 1px solid rgba(248,81,73,0.35);
+  border-radius: var(--radius);
+}
+.pal-delete-confirm-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--danger);
+}
+.pal-delete-confirm-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.pal-delete-confirm-btn {
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  transition: color 0.1s, border-color 0.1s, background 0.1s;
+}
+.pal-delete-confirm-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.pal-delete-confirm-btn.danger {
+  border-color: rgba(248,81,73,0.45);
+  color: var(--danger);
+}
+.pal-delete-confirm-btn.danger:hover {
+  border-color: var(--danger);
+  background: rgba(248,81,73,0.08);
+}
+
 /* ── Color editor ───────────────────────────────────────────────────────────── */
 .pal-color-editor {
   padding: 8px 10px 10px;
   background: var(--surface); border-top: 1px solid var(--border);
   display: flex; flex-direction: column; gap: 8px;
   animation: fadeIn 0.12s ease;
+}
+.pal-folder-body--grid .pal-color-editor {
+  padding: 10px;
 }
 
 .pal-editor-count-row {
@@ -319,6 +412,24 @@
 
 /* ── New folder modal ───────────────────────────────────────────────────────── */
 .palettes-new-folder-form { display: flex; flex-direction: column; gap: 12px; }
+
+@media (max-width: 1200px) {
+  .pal-folder-body--grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 900px) {
+  .pal-folder-body--grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .pal-folder-body--grid { grid-template-columns: 1fr; }
+  .pal-delete-confirm {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .pal-delete-confirm-actions { justify-content: stretch; }
+  .pal-delete-confirm-btn { width: 100%; }
+}
 
 /* ─────────────────────────────────────────────────────────────────────────────
    LIBRARY DRAWER

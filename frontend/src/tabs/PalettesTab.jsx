@@ -3,6 +3,7 @@ import './PalettesTab.css'
 import { PaletteStrip } from '../components/PaletteStrip'
 import { Modal } from '../components/Modal'
 import { LibraryDrawer } from '../components/Library'
+import { ViewToggle } from '../components/ViewToggle'
 import {
   RefreshCw, Upload, Trash2, Download, BookOpen,
   ChevronDown, ChevronRight, Check, X, FolderPlus,
@@ -290,11 +291,30 @@ function MoveDropdown({ folders, currentFolder, onMove }) {
   )
 }
 
+function DeleteConfirm({ name, onConfirm, onCancel }) {
+  return (
+    <div className="pal-delete-confirm">
+      <span className="pal-delete-confirm-label">
+        <Trash2 size={11} />
+        {`delete '${name}'?`}
+      </span>
+      <div className="pal-delete-confirm-actions">
+        <button className="pal-delete-confirm-btn danger" onClick={onConfirm}>
+          delete
+        </button>
+        <button className="pal-delete-confirm-btn" onClick={onCancel}>
+          cancel
+        </button>
+      </div>
+    </div>
+  )
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Palette row
 // ─────────────────────────────────────────────────────────────────────────────
 
-function PaletteRow({ palette, folders, onDelete, onDownload, onRename, onMove, onColorsUpdated }) {
+function PaletteRow({ palette, folders, onDelete, onDownload, onRename, onMove, onColorsUpdated, viewMode = 'list' }) {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [renaming, setRenaming]           = useState(false)
   const [renameVal, setRenameVal]         = useState(palette.name.replace(/\.pal$/, '').split('/').pop())
@@ -311,9 +331,9 @@ function PaletteRow({ palette, folders, onDelete, onDownload, onRename, onMove, 
     setRenaming(false)
   }
 
-  const handleDelete = () => {
-    if (!confirmDelete) { setConfirmDelete(true); return }
-    onDelete(palPath)
+  const handleDeleteConfirm = async () => {
+    const ok = await onDelete(palPath)
+    if (ok !== false) setConfirmDelete(false)
   }
 
   const handleDragStart = e => {
@@ -322,73 +342,127 @@ function PaletteRow({ palette, folders, onDelete, onDownload, onRename, onMove, 
     setDragging(true)
   }
 
+  const actions = (
+    <div className="pal-row-actions">
+      {!palette.is_default && (
+        <button className="pal-icon-btn" title="edit colors" onClick={() => setEditing(e => !e)}>
+          <Palette size={12} />
+        </button>
+      )}
+      {!palette.is_default && (
+        <MoveDropdown
+          folders={folders}
+          currentFolder={palette.folder ?? null}
+          onMove={targetFolder => onMove(palPath, targetFolder)}
+        />
+      )}
+      <button className="pal-icon-btn" title="download .pal" onClick={() => onDownload(palPath)}>
+        <Download size={12} />
+      </button>
+      {!palette.is_default && (
+        <button
+          className={`pal-icon-btn pal-icon-btn--danger ${confirmDelete ? 'confirming' : ''}`}
+          title="delete palette"
+          onClick={() => setConfirmDelete(true)}
+        >
+          <Trash2 size={12} />
+        </button>
+      )}
+    </div>
+  )
+
   return (
-    <>
+    <div className={`pal-item-shell pal-item-shell--${viewMode}`}>
       <div
-        className={`pal-row ${confirmDelete ? 'pal-row--confirm' : ''} ${dragging ? 'dragging' : ''}`}
+        className={`pal-row pal-row--${viewMode} ${confirmDelete ? 'pal-row--confirm' : ''} ${dragging ? 'dragging' : ''}`}
         draggable={!palette.is_default}
         onDragStart={handleDragStart}
         onDragEnd={() => setDragging(false)}
       >
-        {!palette.is_default && (
-          <div className="pal-drag-handle"><GripVertical size={12} /></div>
+        {viewMode === 'grid' ? (
+          <>
+            <div className="pal-card-header">
+              <div className="pal-card-title-wrap">
+                {!palette.is_default && (
+                  <div className="pal-drag-handle"><GripVertical size={12} /></div>
+                )}
+                <div className="pal-row-info">
+                  {renaming ? (
+                    <input
+                      className="pal-row-name-input"
+                      value={renameVal}
+                      onChange={e => setRenameVal(e.target.value)}
+                      onBlur={commitRename}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') commitRename()
+                        if (e.key === 'Escape') { setRenameVal(displayName); setRenaming(false) }
+                      }}
+                      onClick={e => e.stopPropagation()}
+                      autoFocus
+                    />
+                  ) : (
+                    <span
+                      className={`pal-row-name ${!palette.is_default ? 'editable' : ''}`}
+                      title={palette.is_default ? palette.name : 'click to rename'}
+                      onClick={() => !palette.is_default && setRenaming(true)}
+                    >
+                      {displayName}
+                    </span>
+                  )}
+                  <span className="pal-row-count">{palette.count} colors</span>
+                </div>
+              </div>
+              {actions}
+            </div>
+            <div className="pal-row-strip pal-row-strip--grid">
+              <PaletteStrip colors={palette.colors} usedIndices={palette.colors.map((_, i) => i)} checkSize="100%" />
+            </div>
+          </>
+        ) : (
+          <>
+            {!palette.is_default && (
+              <div className="pal-drag-handle"><GripVertical size={12} /></div>
+            )}
+            <div className="pal-row-info">
+              {renaming ? (
+                <input
+                  className="pal-row-name-input"
+                  value={renameVal}
+                  onChange={e => setRenameVal(e.target.value)}
+                  onBlur={commitRename}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') commitRename()
+                    if (e.key === 'Escape') { setRenameVal(displayName); setRenaming(false) }
+                  }}
+                  onClick={e => e.stopPropagation()}
+                  autoFocus
+                />
+              ) : (
+                <span
+                  className={`pal-row-name ${!palette.is_default ? 'editable' : ''}`}
+                  title={palette.is_default ? palette.name : 'click to rename'}
+                  onClick={() => !palette.is_default && setRenaming(true)}
+                >
+                  {displayName}
+                </span>
+              )}
+              <span className="pal-row-count">{palette.count} colors</span>
+            </div>
+            <div className="pal-row-strip">
+              <PaletteStrip colors={palette.colors} usedIndices={palette.colors.map((_, i) => i)} checkSize="50%" />
+            </div>
+            {actions}
+          </>
         )}
-        <div className="pal-row-info">
-          {renaming ? (
-            <input
-              className="pal-row-name-input"
-              value={renameVal}
-              onChange={e => setRenameVal(e.target.value)}
-              onBlur={commitRename}
-              onKeyDown={e => {
-                if (e.key === 'Enter') commitRename()
-                if (e.key === 'Escape') { setRenameVal(displayName); setRenaming(false) }
-              }}
-              onClick={e => e.stopPropagation()}
-              autoFocus
-            />
-          ) : (
-            <span
-              className={`pal-row-name ${!palette.is_default ? 'editable' : ''}`}
-              title={palette.is_default ? palette.name : 'click to rename'}
-              onClick={() => !palette.is_default && setRenaming(true)}
-            >
-              {displayName}
-            </span>
-          )}
-          <span className="pal-row-count">{palette.count} colors</span>
-        </div>
-        <div className="pal-row-strip">
-          <PaletteStrip colors={palette.colors} usedIndices={palette.colors.map((_, i) => i)} checkSize="50%" />
-        </div>
-        <div className="pal-row-actions">
-          {!palette.is_default && (
-            <button className="pal-icon-btn" title="edit colors" onClick={() => setEditing(e => !e)}>
-              <Palette size={12} />
-            </button>
-          )}
-          {!palette.is_default && (
-            <MoveDropdown
-              folders={folders}
-              currentFolder={palette.folder ?? null}
-              onMove={targetFolder => onMove(palPath, targetFolder)}
-            />
-          )}
-          <button className="pal-icon-btn" title="download .pal" onClick={() => onDownload(palPath)}>
-            <Download size={12} />
-          </button>
-          {!palette.is_default && (
-            <button
-              className={`pal-icon-btn pal-icon-btn--danger ${confirmDelete ? 'confirming' : ''}`}
-              title={confirmDelete ? 'click again to confirm' : 'delete palette'}
-              onClick={handleDelete}
-              onBlur={() => setConfirmDelete(false)}
-            >
-              <Trash2 size={12} />
-            </button>
-          )}
-        </div>
       </div>
+
+      {confirmDelete && !palette.is_default && (
+        <DeleteConfirm
+          name={displayName}
+          onConfirm={handleDeleteConfirm}
+          onCancel={() => setConfirmDelete(false)}
+        />
+      )}
 
       {editing && !palette.is_default && (
         <ColorEditor
@@ -397,7 +471,7 @@ function PaletteRow({ palette, folders, onDelete, onDownload, onRename, onMove, 
           onCancel={() => setEditing(false)}
         />
       )}
-    </>
+    </div>
   )
 }
 
@@ -405,7 +479,7 @@ function PaletteRow({ palette, folders, onDelete, onDownload, onRename, onMove, 
 // Folder section (user palettes, with drag-to-move support)
 // ─────────────────────────────────────────────────────────────────────────────
 
-function FolderSection({ folderName, label, palettes, folders, allFolders, onPaletteAction, onDeleteFolder, onDropPalette }) {
+function FolderSection({ folderName, label, palettes, folders, allFolders, onPaletteAction, onDeleteFolder, onDropPalette, viewMode = 'list' }) {
   const [open, setOpen]       = useState(true)
   const [dragOver, setDragOver] = useState(false)
 
@@ -470,7 +544,7 @@ function FolderSection({ folderName, label, palettes, folders, allFolders, onPal
       </div>
 
       {open && (
-        <div className="pal-folder-body">
+        <div className={`pal-folder-body pal-folder-body--${viewMode}`}>
           {palettes.map(p => (
             <PaletteRow
               key={p.path}
@@ -481,10 +555,11 @@ function FolderSection({ folderName, label, palettes, folders, allFolders, onPal
               onRename={onPaletteAction.rename}
               onMove={onPaletteAction.move}
               onColorsUpdated={onPaletteAction.colorsUpdated}
+              viewMode={viewMode}
             />
           ))}
           {palettes.length === 0 && (
-            <p style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--muted)', padding: '8px 4px' }}>
+            <p className="pal-folder-empty">
               empty folder — drag palettes here
             </p>
           )}
@@ -595,6 +670,7 @@ export function PalettesTab() {
   const [showLibrary, setShowLibrary]       = useState(false)
   const [showNewFolder, setShowNewFolder]   = useState(false)
   const [showHelp, setShowHelp]             = useState(false)
+  const [viewMode, setViewMode]             = useState('grid')
   const fileRef = useRef()
 
   const fetchPalettes = async () => {
@@ -635,8 +711,9 @@ export function PalettesTab() {
 
   const handleDelete = async (path) => {
     const res = await fetch(`${API}/palettes/${encodeURIComponent(path)}`, { method: 'DELETE' })
-    if (!res.ok) { setError(await res.text()); return }
+    if (!res.ok) { setError(await res.text()); return false }
     await fetchPalettes()
+    return true
   }
 
   const handleDownload = (path) => {
@@ -770,11 +847,12 @@ export function PalettesTab() {
         {/* ── Right panel ── */}
         <div className="palettes-right">
           <div className="palettes-toolbar">
-            <span className="section-label">loaded palettes</span>
+            <span className="section-label">{`loaded palettes${palettes.length > 0 ? ` · ${palettes.length}` : ''}`}</span>
             <div className="palettes-toolbar-right">
               <button className="palettes-new-folder-btn" onClick={() => setShowNewFolder(true)}>
                 <FolderPlus size={12} /> new folder
               </button>
+              <ViewToggle value={viewMode} onChange={setViewMode} />
               <button className="tab-help-btn" onClick={() => setShowHelp(true)} title="Help">
                 <Info size={15} />
               </button>
@@ -800,6 +878,7 @@ export function PalettesTab() {
               onPaletteAction={paletteActions}
               onDeleteFolder={() => {}}
               onDropPalette={() => {}}
+              viewMode={viewMode}
             />
           )}
 
@@ -815,6 +894,7 @@ export function PalettesTab() {
                 onPaletteAction={paletteActions}
                 onDeleteFolder={handleDeleteFolder}
                 onDropPalette={(palPath, targetFolder) => handleMove(palPath, targetFolder)}
+                viewMode={viewMode}
               />
               {userFolderGroups.map(fg => (
                 <FolderSection
@@ -827,6 +907,7 @@ export function PalettesTab() {
                   onPaletteAction={paletteActions}
                   onDeleteFolder={handleDeleteFolder}
                   onDropPalette={(palPath, targetFolder) => handleMove(palPath, targetFolder)}
+                  viewMode={viewMode}
                 />
               ))}
             </>
@@ -841,7 +922,7 @@ export function PalettesTab() {
                   {legacyPalettes.length}
                 </span>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <div className={`pal-folder-body pal-folder-body--${viewMode}`}>
                 {legacyPalettes.map(p => (
                   <PaletteRow
                     key={p.path}
@@ -852,6 +933,7 @@ export function PalettesTab() {
                     onRename={handleRename}
                     onMove={handleMove}
                     onColorsUpdated={handleColorsUpdated}
+                    viewMode={viewMode}
                   />
                 ))}
               </div>

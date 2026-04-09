@@ -46,6 +46,11 @@ _presets = _root / "presets"
 if _presets.exists():
     datas.append((str(_presets), "presets"))
 
+# Model data files used at runtime (for Oklab conversion/k-means extraction)
+_model_data = _root / "model" / "data"
+if _model_data.exists():
+    datas.append((str(_model_data), "model/data"))
+
 # ── scikit-learn (needs special collection) ───────────────────────────────────
 sklearn_datas, sklearn_binaries, sklearn_hiddenimports = collect_all("sklearn")
 

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "porypal"
-version = "3.1.3"
+version = "3.1.4"
 description = "Palette toolchain for Gen 3 Pokémon ROM hacking — extract, convert, and batch-process sprites for pokeemerald/pokefirered."
 readme = "readme.md"
 license = { file = "LICENSE" }

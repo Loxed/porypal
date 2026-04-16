@@ -19,6 +19,19 @@ def pil_to_b64(img: Image.Image) -> str:
     return base64.b64encode(buf.getvalue()).decode()
 
 
+def copy_without_transparency(img: Image.Image) -> Image.Image:
+    """
+    Return a copy of *img* without PNG transparency metadata.
+
+    This preserves palette indices and colors while making slot 0 render as a
+    visible color instead of being hidden by a tRNS chunk.
+    """
+    clone = img.copy()
+    clone.info = dict(getattr(img, "info", {}))
+    clone.info.pop("transparency", None)
+    return clone
+
+
 def make_pal_content(palette: Palette) -> str:
     """Serialise a Palette to JASC-PAL format."""
     buf = io.StringIO()

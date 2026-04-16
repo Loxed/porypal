@@ -16,7 +16,7 @@ from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
 from PIL import Image
 
-from server.helpers import pil_to_b64, is_4bpp_bytes, save_png
+from server.helpers import copy_without_transparency, pil_to_b64, is_4bpp_bytes, save_png
 from server.state import state
 
 router = APIRouter(prefix="/api/convert", tags=["convert"])
@@ -62,7 +62,7 @@ async def convert(
                     "colors_used": r.colors_used,
                     "used_indices": sorted(r.used_indices),
                     "colors": [c.to_hex() for c in r.palette.colors],
-                    "image": pil_to_b64(r.image.convert("RGBA")),
+                    "image": pil_to_b64(copy_without_transparency(r.image)),
                     "best": i in best,
                 }
                 for i, r in enumerate(results)
@@ -94,7 +94,8 @@ async def download_converted(
         results = state.image_manager.process_all_palettes([palette])
         result = results[0]
 
-        out_buf = io.BytesIO(save_png(result.image, preserve_4bpp=was_4bpp))
+        visible_result = copy_without_transparency(result.image)
+        out_buf = io.BytesIO(save_png(visible_result, preserve_4bpp=was_4bpp))
 
         stem = Path(file.filename).stem
         pal_stem = Path(palette_name).stem
@@ -151,7 +152,11 @@ async def download_all_converted(
         with zipfile.ZipFile(zip_buf, "w", zipfile.ZIP_DEFLATED) as zf:
             for r in results:
                 pal_stem = Path(r.palette.name).stem
-                zf.writestr(f"{stem}_{pal_stem}.png", save_png(r.image, preserve_4bpp=was_4bpp))
+                visible_result = copy_without_transparency(r.image)
+                zf.writestr(
+                    f"{stem}_{pal_stem}.png",
+                    save_png(visible_result, preserve_4bpp=was_4bpp),
+                )
         zip_buf.seek(0)
 
         return StreamingResponse(

@@ -52,7 +52,7 @@ from PIL import Image
 from model.image_manager import ImageManager
 from model.palette_extractor import PaletteExtractor
 from model.tileset_manager import TilesetManager
-from server.helpers import pil_to_b64, save_png
+from server.helpers import copy_without_transparency, pil_to_b64, save_png
 from server.preset_store import load_preset
 from server.state import state
 
@@ -216,8 +216,8 @@ def _run_convert_step(
     img: Image.Image,
     step: dict,
     extracted_palette: Any,
-) -> tuple[Image.Image, str]:
-    """Remap pixels to nearest palette. Returns (image, notes_str)."""
+) -> tuple[Image.Image, str, str | None]:
+    """Remap pixels to nearest palette. Returns (image, notes_str, palette_name)."""
     palette_source = step.get("palette_source", "loaded")
 
     if palette_source == "extracted":
@@ -255,7 +255,9 @@ def _run_convert_step(
             notes = f"conflict: {len(best)} palettes tied ({', '.join(tied)})"
         best.sort(key=lambda r: r.palette.name)
 
-    return best[0].image, notes
+    chosen = best[0]
+    visible_image = copy_without_transparency(chosen.image)
+    return visible_image, notes, chosen.palette.name
 
 
 # ---------------------------------------------------------------------------
@@ -322,15 +324,8 @@ async def preview_pipeline(
                     })
 
                 elif stype == "convert":
-                    img, notes = _run_convert_step(img, step, extracted_palette)
-                    if step.get("palette_source") == "extracted":
-                        label = "convert (extracted pal)"
-                    elif step.get("selected_palettes"):
-                        first = step["selected_palettes"][0].replace(".pal", "")
-                        rest  = len(step["selected_palettes"]) - 1
-                        label = f"convert → {first}" + (f" +{rest}" if rest else "")
-                    else:
-                        label = "convert"
+                    img, notes, applied_palette = _run_convert_step(img, step, extracted_palette)
+                    label = f"convert → {Path(applied_palette).stem}" if applied_palette else "convert"
                     previews.append({
                         "type":    "convert",
                         "label":   label,
@@ -387,7 +382,7 @@ def _execute_job(
         with _jobs_lock:
             _jobs[job_id]["current_file"] = filename
 
-        result: dict[str, str] = {"file": filename, "status": "ok", "notes": ""}
+        result = {"file": filename, "status": "ok", "notes": ""}
 
         try:
             img   = Image.open(io.BytesIO(raw_bytes)).copy()
@@ -404,7 +399,9 @@ def _execute_job(
                 elif stype == "tileset":
                     img = _run_tileset_step(img, step)
                 elif stype == "convert":
-                    img, notes = _run_convert_step(img, step, extracted_palette)
+                    img, notes, applied_palette = _run_convert_step(img, step, extracted_palette)
+                    if applied_palette:
+                        result["palette"] = applied_palette
                     if notes:
                         result["notes"] = notes
                         result["status"] = "conflict" if "conflict" in notes else "ok"

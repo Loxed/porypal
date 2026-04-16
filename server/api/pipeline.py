@@ -64,7 +64,7 @@ router = APIRouter(prefix="/api/pipeline", tags=["pipeline"])
 _jobs: dict[str, dict] = {}
 _jobs_lock = threading.Lock()
 
-PORYPAL_VERSION = "3.1.4"
+PORYPAL_VERSION = "3.2.0"
 
 DEFAULT_FILENAME_TEMPLATE = "<name>"
 DEFAULT_PALETTE_TEMPLATE  = "<name>_<cs>"

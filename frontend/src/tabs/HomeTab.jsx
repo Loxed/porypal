@@ -293,7 +293,7 @@ export function HomeTab({ onNavigate }) {
 
         <div className="home-hero">
           <div className="home-hero-top">
-            <p className="home-hero-eyebrow">v3.1 · Gen 3 ROM hacking</p>
+            <p className="home-hero-eyebrow">v3.2 · Gen 3 ROM hacking</p>
             
           </div>
           <div className="home-hero-title-row">
@@ -330,7 +330,7 @@ export function HomeTab({ onNavigate }) {
         </div> */}
 
         <div className="home-footer">
-          <span className="home-footer-left">porypal v3.1 · by prison_lox</span>
+          <span className="home-footer-left">porypal v3.2 · by prison_lox</span>
           <div className="home-footer-links">
             <a className="home-footer-link" href="https://github.com/loxed/porypal" target="_blank" rel="noopener noreferrer">github</a>
           </div>

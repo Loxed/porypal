@@ -7,6 +7,7 @@ Step types
 ----------
 extract  — k-means palette extraction; optionally saves .pal to palettes/user/
 tileset  — rearranges tiles according to a saved preset
+background — set or remove the detected background color
 convert  — remaps pixels to nearest palette colors
 
 Job lifecycle
@@ -45,11 +46,13 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
+import numpy as np
 from fastapi import APIRouter, BackgroundTasks, File, Form, HTTPException, UploadFile
 from fastapi.responses import StreamingResponse
 from PIL import Image
 
-from model.image_manager import ImageManager
+from model.image_manager import ImageManager, build_background_mask, detect_background_color
+from model.palette import Color
 from model.palette_extractor import PaletteExtractor
 from model.tileset_manager import TilesetManager
 from server.helpers import copy_without_transparency, pil_to_b64, save_png
@@ -65,6 +68,7 @@ PORYPAL_VERSION = "3.1.4"
 
 DEFAULT_FILENAME_TEMPLATE = "<name>"
 DEFAULT_PALETTE_TEMPLATE  = "<name>_<cs>"
+DEFAULT_BG_COLOR          = "#73C5A4"
 
 DEFAULT_FILENAME_TEMPLATE = "<name>"
 DEFAULT_PALETTE_TEMPLATE  = "<name>_<cs>"
@@ -212,6 +216,33 @@ def _run_tileset_step(img: Image.Image, step: dict) -> Image.Image:
         os.unlink(tmp_path)
 
 
+def _run_background_step(img: Image.Image, step: dict) -> Image.Image:
+    """Set or remove the detected background color."""
+    action = step.get("action", "set")
+    if action not in {"set", "remove"}:
+        raise ValueError(f"Unsupported background action: {action!r}")
+
+    rgba = np.array(img.convert("RGBA"))
+    source_bg = detect_background_color(img)
+    bg_mask = build_background_mask(img, source_bg)
+
+    if action == "remove":
+        rgba[bg_mask, 3] = 0
+        return Image.fromarray(rgba, "RGBA")
+
+    target_mode = step.get("target_mode", "default")
+    if target_mode == "default":
+        target = Color.from_hex(DEFAULT_BG_COLOR)
+    elif target_mode == "custom":
+        target = Color.from_hex(step.get("target_color", DEFAULT_BG_COLOR))
+    else:
+        raise ValueError(f"Unsupported background target mode: {target_mode!r}")
+
+    rgba[bg_mask, :3] = np.array(target.to_tuple(), dtype=np.uint8)
+    rgba[bg_mask, 3] = 255
+    return Image.fromarray(rgba, "RGBA")
+
+
 def _run_convert_step(
     img: Image.Image,
     step: dict,
@@ -333,6 +364,16 @@ async def preview_pipeline(
                         "palette": None,
                         "error":   notes or None,
                     })
+                    
+                elif stype == "background":
+                    img = _run_background_step(img, step)
+                    previews.append({
+                        "type":    "background",
+                        "label":   f"background → {step.get('action', 'set')}",
+                        "image":   pil_to_b64(img),
+                        "palette": None,
+                        "error":   None,
+                    })
 
                 else:
                     previews.append({
@@ -374,6 +415,7 @@ def _execute_job(
     pal_dir     = work_dir / "palettes"
     sprites_dir.mkdir()
     pal_dir.mkdir()
+    force_png_output = any(step.get("type") == "background" for step in steps)
 
     with _jobs_lock:
         _jobs[job_id].update({"work_dir": str(work_dir), "total": len(file_data)})
@@ -387,7 +429,7 @@ def _execute_job(
         try:
             img   = Image.open(io.BytesIO(raw_bytes)).copy()
             stem  = Path(filename).stem
-            ext   = Path(filename).suffix or ".png"
+            ext   = ".png" if force_png_output else (Path(filename).suffix or ".png")
             extracted_palette = None
 
             for step in steps:
@@ -396,6 +438,8 @@ def _execute_job(
                     img, extracted_palette = _run_extract_step(
                         img, stem, step, pal_dir, palette_template
                     )
+                elif stype == "background":
+                    img = _run_background_step(img, step)
                 elif stype == "tileset":
                     img = _run_tileset_step(img, step)
                 elif stype == "convert":

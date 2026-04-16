@@ -97,6 +97,7 @@
 
 /* left accent bar by type */
 .step--extract { border-left: 3px solid #58a6ff; }
+.step--background { border-left: 3px solid #ef9f27; }
 .step--tileset { border-left: 3px solid #d2a8ff; }
 .step--convert { border-left: 3px solid #3fb950; }
 
@@ -128,6 +129,7 @@
   padding: 2px 6px; border-radius: 3px; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.04em;
 }
 .step-badge.step--extract { background: rgba(88,166,255,0.15); color: #58a6ff; }
+.step-badge.step--background { background: rgba(239,159,39,0.15); color: #ef9f27; }
 .step-badge.step--tileset { background: rgba(210,168,255,0.15); color: #d2a8ff; }
 .step-badge.step--convert { background: rgba(63,185,80,0.15);  color: #3fb950; }
 
@@ -237,7 +239,7 @@
 
 /* ── Add step row ── */
 .add-step-row {
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
   padding: 10px 0; border-top: 1px dashed var(--border);
 }
 .add-step-label { font-family: var(--mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
@@ -248,6 +250,7 @@
   cursor: pointer; transition: all 0.1s;
 }
 .add-step-btn--extract:hover { border-color: #58a6ff; color: #58a6ff; background: rgba(88,166,255,0.07); }
+.add-step-btn--background:hover { border-color: #ef9f27; color: #ef9f27; background: rgba(239,159,39,0.07); }
 .add-step-btn--tileset:hover { border-color: #d2a8ff; color: #d2a8ff; background: rgba(210,168,255,0.07); }
 .add-step-btn--convert:hover { border-color: #3fb950; color: #3fb950; background: rgba(63,185,80,0.07); }
 

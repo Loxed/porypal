@@ -4,9 +4,12 @@ import { useFetch } from '../hooks/useFetch'
 import { Trash2, ChevronUp, ChevronDown, Play, Download, X, AlertTriangle, Check, Loader, Info } from 'lucide-react'
 import { PalettePicker } from '../components/PalettePicker'
 import { Modal } from '../components/Modal'
+import { BgColorPicker } from '../components/BgColorPicker'
 
 const API = '/api'
 const PREVIEW_DEBOUNCE_MS = 1200
+const GBA_TRANSPARENT = '#73C5A4'
+const HEX_RE = /^#[0-9a-fA-F]{6}$/
 
 // ---------------------------------------------------------------------------
 // Defaults
@@ -27,10 +30,25 @@ const STEP_DEFAULTS = {
     selected_palettes: [],
     conflict_mode: 'auto_first',
   },
+  background: {
+    action: 'set',
+    target_mode: 'default',
+    target_color: GBA_TRANSPARENT,
+  },
 }
 
-const STEP_LABELS = { extract: 'Extract Palette', tileset: 'Change Tileset', convert: 'Apply Palette' }
-const STEP_COLORS = { extract: 'step--extract', tileset: 'step--tileset', convert: 'step--convert' }
+const STEP_LABELS = {
+  extract: 'Extract Palette',
+  tileset: 'Change Tileset',
+  convert: 'Apply Palette',
+  background: 'Background Operations',
+}
+const STEP_COLORS = {
+  extract: 'step--extract',
+  tileset: 'step--tileset',
+  convert: 'step--convert',
+  background: 'step--background',
+}
 
 let _stepCounter = 0
 const makeStep = (type) => ({ id: `step_${++_stepCounter}`, type, config: { ...STEP_DEFAULTS[type] } })
@@ -53,7 +71,7 @@ function HelpModal({ onClose }) {
           <span className="help-step-num">2</span>
           <div>
             <strong>Assemble steps in order</strong>
-            <p>Combine Extract, Change Tileset, and Apply Palette steps. Reorder them until the preview matches your intended output.</p>
+            <p>Combine Extract, Background, Change Tileset, and Apply Palette steps. Reorder them until the preview matches your intended output.</p>
           </div>
         </div>
         <div className="help-step">
@@ -77,6 +95,10 @@ function HelpModal({ onClose }) {
 function validateStep(step, index, allSteps) {
   if (step.type === 'tileset' && !step.config.preset_id)
     return 'Select a preset'
+  if (step.type === 'background') {
+    if (step.config.action === 'set' && step.config.target_mode === 'custom' && !HEX_RE.test(step.config.target_color))
+      return 'Enter a valid custom bg color'
+  }
   if (step.type === 'convert') {
     if (step.config.palette_source === 'loaded' && step.config.selected_palettes.length === 0)
       return 'Select at least one palette'
@@ -131,6 +153,55 @@ function ExtractConfig({ config, onChange }) {
           save to palettes/user/
         </label>
       </div>
+    </div>
+  )
+}
+
+function BackgroundConfig({ config, onChange }) {
+  const set = (k, v) => onChange({ ...config, [k]: v })
+
+  const handleTargetChange = ({ color, mode }) => {
+    onChange({
+      ...config,
+      target_mode: mode === 'custom' ? 'custom' : 'default',
+      target_color: color,
+    })
+  }
+
+  return (
+    <div className="step-config">
+      <div className="step-config-row">
+        <label className="step-config-label">action</label>
+        <div className="step-toggle-row">
+          <button
+            className={`step-toggle ${config.action === 'set' ? 'active' : ''}`}
+            onClick={() => set('action', 'set')}
+          >
+            set
+          </button>
+          <button
+            className={`step-toggle ${config.action === 'remove' ? 'active' : ''}`}
+            onClick={() => set('action', 'remove')}
+          >
+            remove
+          </button>
+        </div>
+      </div>
+
+      {config.action === 'set' ? (
+        <div className="step-config-row step-config-row--col" style={{ width: '100%' }}>
+          <label className="step-config-label" style={{ width: 'auto' }}>target bg</label>
+          <BgColorPicker
+            color={config.target_color}
+            mode={config.target_mode}
+            onChange={handleTargetChange}
+          />
+        </div>
+      ) : (
+        <div className="step-config-hint-block">
+          auto-detects the current background and removes it
+        </div>
+      )}
     </div>
   )
 }
@@ -242,6 +313,7 @@ function StepCard({ step, index, total, allSteps, onChange, onMove, onDelete, pa
       {expanded && (
         <div className="step-card-body">
           {step.type === 'extract' && <ExtractConfig config={step.config} onChange={c => onChange(index, c)} />}
+          {step.type === 'background' && <BackgroundConfig config={step.config} onChange={c => onChange(index, c)} />}
           {step.type === 'tileset' && <TilesetConfig config={step.config} onChange={c => onChange(index, c)} presets={presets} />}
           {step.type === 'convert' && (
             <ConvertConfig config={step.config} onChange={c => onChange(index, c)}
@@ -766,6 +838,7 @@ export function BatchTab() {
               <button className="add-step-btn add-step-btn--extract" onClick={() => addStep('extract')}>+ extract palettes</button>
               <button className="add-step-btn add-step-btn--tileset" onClick={() => addStep('tileset')}>+ change tileset</button>
               <button className="add-step-btn add-step-btn--convert" onClick={() => addStep('convert')}>+ apply palette</button>
+              <button className="add-step-btn add-step-btn--background" onClick={() => addStep('background')}>+ edit background</button>
             </div>
           )}
 

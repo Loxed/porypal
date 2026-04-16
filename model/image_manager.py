@@ -25,6 +25,59 @@ from model.palette_extractor import rgb_to_oklab
 SUPPORTED_FORMATS = {".png", ".jpg", ".jpeg", ".gif", ".bmp"}
 
 
+def detect_background_color(img: Image.Image) -> Color | None:
+    """
+    Detect the sprite's background/transparent color.
+
+    Priority matches Apply Palette: first alpha-transparent pixel, otherwise the
+    most common edge pixel.
+    """
+    pixels = np.array(img.convert("RGBA"))  # shape (H, W, 4)
+
+    transparent_mask = pixels[:, :, 3] < 255
+    if transparent_mask.any():
+        y, x = np.argwhere(transparent_mask)[0]
+        r, g, b, _ = pixels[y, x]
+        c = Color(int(r), int(g), int(b))
+        logging.debug(f"Transparent color (alpha): {c.to_hex()}")
+        return c
+
+    h, w = pixels.shape[:2]
+    edges = np.concatenate([
+        pixels[0, :, :3],
+        pixels[-1, :, :3],
+        pixels[:, 0, :3],
+        pixels[:, -1, :3],
+    ])
+    unique, counts = np.unique(edges.reshape(-1, 3), axis=0, return_counts=True)
+    most_common = unique[counts.argmax()]
+    c = Color(int(most_common[0]), int(most_common[1]), int(most_common[2]))
+    logging.debug(f"Transparent color (edge): {c.to_hex()}")
+    return c
+
+
+def build_background_mask(img: Image.Image, background_color: Color | None) -> np.ndarray:
+    """
+    Return a boolean mask for pixels treated as background by Apply Palette.
+
+    Background is any alpha-transparent pixel plus any opaque pixel that exactly
+    matches the detected/explicit background RGB color.
+    """
+    pixels = np.array(img.convert("RGBA"))  # shape (H, W, 4)
+    rgb = pixels[:, :, :3]
+    alpha = pixels[:, :, 3]
+
+    bg_mask = alpha < 255
+    if background_color is not None:
+        tr, tg, tb = background_color.to_tuple()
+        bg_mask = bg_mask | (
+            (rgb[:, :, 0] == tr) &
+            (rgb[:, :, 1] == tg) &
+            (rgb[:, :, 2] == tb)
+        )
+    return bg_mask
+
+
 class ConversionResult:
     """Holds one palette's conversion of the loaded image."""
 
@@ -82,30 +135,7 @@ class ImageManager:
         Find the background/transparent color.
         Priority: alpha channel first, then most common edge pixel.
         """
-        pixels = np.array(img)  # shape (H, W, 4)
-
-        # 1. Any pixel with alpha < 255?
-        transparent_mask = pixels[:, :, 3] < 255
-        if transparent_mask.any():
-            y, x = np.argwhere(transparent_mask)[0]
-            r, g, b, _ = pixels[y, x]
-            c = Color(int(r), int(g), int(b))
-            logging.debug(f"Transparent color (alpha): {c.to_hex()}")
-            return c
-
-        # 2. Most common edge pixel
-        h, w = pixels.shape[:2]
-        edges = np.concatenate([
-            pixels[0, :, :3],
-            pixels[-1, :, :3],
-            pixels[:, 0, :3],
-            pixels[:, -1, :3],
-        ])
-        unique, counts = np.unique(edges.reshape(-1, 3), axis=0, return_counts=True)
-        most_common = unique[counts.argmax()]
-        c = Color(int(most_common[0]), int(most_common[1]), int(most_common[2]))
-        logging.debug(f"Transparent color (edge): {c.to_hex()}")
-        return c
+        return detect_background_color(img)
 
     # ---------- Convert ----------
 
@@ -132,17 +162,8 @@ class ImageManager:
         opaque = palette.opaque_colors or palette.colors
 
         rgb = pixels[:, :, :3]   # (H, W, 3)
-        alpha = pixels[:, :, 3]  # (H, W)
 
-        # Build the bg mask: alpha-transparent OR exact match to detected bg color
-        bg_mask = alpha < 255
-        if self._transparent_color:
-            tr, tg, tb = self._transparent_color.to_tuple()
-            bg_mask = bg_mask | (
-                (rgb[:, :, 0] == tr) &
-                (rgb[:, :, 1] == tg) &
-                (rgb[:, :, 2] == tb)
-            )
+        bg_mask = build_background_mask(img, self._transparent_color)
 
         # Convert palette opaque colors to Oklab
         palette_rgb = np.array([c.to_tuple() for c in opaque], dtype=np.uint8)  # (N, 3)

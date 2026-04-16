@@ -400,6 +400,8 @@ const TOKEN_HINT = {
   '<palette>': 'palette (apply step)',
 }
 
+const TEMPLATE_EDITOR_OPEN_KEY = 'porypal.pipeline.naming_open'
+
 function TemplateField({ label, value, onChange, placeholder, hint }) {
   return (
     <div className="field" style={{ flex: 1, minWidth: 0 }}>
@@ -418,10 +420,25 @@ function TemplateField({ label, value, onChange, placeholder, hint }) {
 }
 
 function TemplateEditor({ filenameTemplate, paletteTemplate, onChangeFilename, onChangePalette }) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(() => {
+    try {
+      const cached = localStorage.getItem(TEMPLATE_EDITOR_OPEN_KEY)
+      return cached == null ? true : cached === 'true'
+    } catch {
+      return true
+    }
+  })
 
   const filenamePreview = filenameTemplate.replace('<name>', 'porygon').replace('<cs>', 'oklab').replace('<palette>', 'normal') || 'porygon'
   const palettePreview  = paletteTemplate.replace('<name>', 'porygon').replace('<cs>', 'oklab').replace('<palette>', 'normal') || 'porygon_oklab'
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(TEMPLATE_EDITOR_OPEN_KEY, String(open))
+    } catch {
+      // Ignore storage failures and just keep the in-memory state.
+    }
+  }, [open])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>

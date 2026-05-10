@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './TilesetTab.css'
 import { DropZone } from '../components/DropZone'
 import { Modal } from '../components/Modal'
@@ -23,6 +23,100 @@ function useDebounce(value, delay) {
     return () => clearTimeout(t)
   }, [value, delay])
   return d
+}
+
+function getSlotKey(row, col) {
+  return `${row}:${col}`
+}
+
+function cacheSlots(slots, cols, rows) {
+  const next = new Map()
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols; col += 1) {
+      next.set(getSlotKey(row, col), slots[row * cols + col] ?? null)
+    }
+  }
+  return next
+}
+
+function mergeSlotsIntoCache(cache, slots, cols, rows) {
+  const next = new Map(cache)
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols; col += 1) {
+      next.set(getSlotKey(row, col), slots[row * cols + col] ?? null)
+    }
+  }
+  return next
+}
+
+function slotsFromCache(cache, cols, rows) {
+  const next = Array(cols * rows).fill(null)
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols; col += 1) {
+      next[row * cols + col] = cache.get(getSlotKey(row, col)) ?? null
+    }
+  }
+  return next
+}
+
+function clampNumber(value, min, max) {
+  return Math.min(max, Math.max(min, value))
+}
+
+function NumberStepper({ value, min, max, onChange, className = 'field-input' }) {
+  const [draft, setDraft] = useState(String(value))
+
+  useEffect(() => {
+    setDraft(String(value))
+  }, [value])
+
+  const applyValue = (nextValue) => {
+    if (Number.isNaN(nextValue)) return
+    const clamped = clampNumber(nextValue, min, max)
+    setDraft(String(clamped))
+    onChange(clamped)
+  }
+
+  return (
+    <div className="number-stepper">
+      <input
+        type="number"
+        className={className}
+        min={min}
+        max={max}
+        value={draft}
+        onChange={e => {
+          const nextDraft = e.target.value
+          setDraft(nextDraft)
+          if (nextDraft === '') return
+          applyValue(Number(nextDraft))
+        }}
+        onBlur={() => {
+          if (draft === '') {
+            setDraft(String(value))
+            return
+          }
+          applyValue(Number(draft))
+        }}
+      />
+      <button
+        type="button"
+        className="number-stepper-btn number-stepper-btn--left"
+        onClick={() => applyValue(value + 1)}
+        aria-label="Increase value"
+      >
+        +
+      </button>
+      <button
+        type="button"
+        className="number-stepper-btn number-stepper-btn--right"
+        onClick={() => applyValue(value - 1)}
+        aria-label="Decrease value"
+      >
+        -
+      </button>
+    </div>
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -115,23 +209,23 @@ function SourceSheet({ b64, sourceW, sourceH, tileW, tileH, selectedTile, onTile
 // ---------------------------------------------------------------------------
 // Output slot grid
 // ---------------------------------------------------------------------------
-function OutputGrid({ slots, setSlots, cols, rows, tiles, selectedTile, setSelectedTile, slotLabels }) {
+function OutputGrid({ slots, setVisibleSlots, cols, rows, tiles, selectedTile, setSelectedTile, slotLabels }) {
   const handleSlotClick = (idx) => {
     if (selectedTile !== null) {
-      setSlots(prev => { const s = [...prev]; s[idx] = selectedTile; return s })
+      setVisibleSlots(prev => { const s = [...prev]; s[idx] = selectedTile; return s })
       setSelectedTile(null)
     } else if (slots[idx] != null) {
       setSelectedTile(slots[idx])
-      setSlots(prev => { const s = [...prev]; s[idx] = null; return s })
+      setVisibleSlots(prev => { const s = [...prev]; s[idx] = null; return s })
     }
   }
   const clearSlot = (e, idx) => {
     e.stopPropagation()
-    setSlots(prev => { const s = [...prev]; s[idx] = null; return s })
+    setVisibleSlots(prev => { const s = [...prev]; s[idx] = null; return s })
   }
   const canPlace = selectedTile !== null
   return (
-    <div className="output-grid" style={{ '--cols': cols }}>
+    <div className="output-grid" style={{ '--cols': cols, '--rows': rows }}>
       {Array.from({ length: cols * rows }).map((_, idx) => {
         const tileIdx = slots[idx]
         const hasTile = tileIdx != null
@@ -208,6 +302,7 @@ export function TilesetTab() {
   const [downloadError, setDownloadError] = useState(null)
   const [downloading, setDownloading]     = useState(false)
   const { loading, error, run }           = useFetch()
+  const slotCacheRef                      = useRef(cacheSlots(Array(9).fill(null), 9, 1))
 
   // Debounce everything that triggers a re-slice
   const dInW  = useDebounce(inTileW,  500)
@@ -227,7 +322,26 @@ export function TilesetTab() {
     if (file) doSlice(file, dInW, dInH, dOutW, dOutH)
   }, [dInW, dInH, dOutW, dOutH])
 
-  const resetSlots = (c, r) => setSlots(Array(c * r).fill(null))
+  const resetSlots = (c, r) => {
+    const nextSlots = Array(c * r).fill(null)
+    slotCacheRef.current = cacheSlots(nextSlots, c, r)
+    setSlots(nextSlots)
+  }
+
+  const setVisibleSlots = (updater, nextCols = cols, nextRows = rows) => {
+    setSlots(prev => {
+      const nextSlots = typeof updater === 'function' ? updater(prev) : updater
+      slotCacheRef.current = mergeSlotsIntoCache(slotCacheRef.current, nextSlots, nextCols, nextRows)
+      return nextSlots
+    })
+  }
+
+  const resizeLayout = (nextCols, nextRows) => {
+    slotCacheRef.current = mergeSlotsIntoCache(slotCacheRef.current, slots, cols, rows)
+    setCols(nextCols)
+    setRows(nextRows)
+    setSlots(slotsFromCache(slotCacheRef.current, nextCols, nextRows))
+  }
 
   // ---------------------------------------------------------------------------
   // Slice on the backend so paletted PNG metadata can be preserved
@@ -256,8 +370,32 @@ export function TilesetTab() {
     doSlice(f, inTileW, inTileH, outTileW, outTileH)
   }
 
-  const handleColsChange = (v) => { setCols(v); resetSlots(v, rows) }
-  const handleRowsChange = (v) => { setRows(v); resetSlots(cols, v) }
+  const handleColsChange = (v) => resizeLayout(v, rows)
+  const handleRowsChange = (v) => resizeLayout(cols, v)
+  const handleTransposeLayout = () => {
+    const nextCols = rows
+    const nextRows = cols
+    const transposeGrid = (items) => {
+      const next = Array(nextCols * nextRows).fill(null)
+      for (let row = 0; row < rows; row += 1) {
+        for (let col = 0; col < cols; col += 1) {
+          next[col * nextCols + row] = items[row * cols + col] ?? null
+        }
+      }
+      return next
+    }
+
+    const nextSlots = transposeGrid(slots)
+    slotCacheRef.current = cacheSlots(nextSlots, nextCols, nextRows)
+    setSlots(nextSlots)
+    setSlotLabels(prev => (
+      prev.length === cols * rows
+        ? transposeGrid(prev)
+        : prev
+    ))
+    setCols(nextCols)
+    setRows(nextRows)
+  }
 
   // Sync outTileW/H when in changes (unless user has already diverged them)
   const handleInTileW = (v) => {
@@ -277,8 +415,10 @@ export function TilesetTab() {
     setInTileW(p.tile_w);   setInTileH(p.tile_h)
     setOutTileW(p.out_tile_w ?? p.tile_w)
     setOutTileH(p.out_tile_h ?? p.tile_h)
+    const presetSlots = p.slots?.length === p.cols * p.rows ? p.slots : Array(p.cols * p.rows).fill(null)
     setCols(p.cols);         setRows(p.rows)
-    setSlots(p.slots?.length === p.cols * p.rows ? p.slots : Array(p.cols * p.rows).fill(null))
+    slotCacheRef.current = cacheSlots(presetSlots, p.cols, p.rows)
+    setSlots(presetSlots)
     setSlotLabels(p.slot_labels || [])
     setActivePresetId(id)
     if (file) doSlice(file, p.tile_w, p.tile_h, p.out_tile_w ?? p.tile_w, p.out_tile_h ?? p.tile_h)
@@ -364,20 +504,26 @@ export function TilesetTab() {
           {/* Tile dimensions */}
           <div className="tile-dim-grid">
             <span className="tile-dim-label">input tile</span>
-            <input type="number" className="field-input" min={1} max={512}
-              value={inTileW} onChange={e => handleInTileW(Number(e.target.value))}/>
+            <NumberStepper min={1} max={512} value={inTileW} onChange={handleInTileW} />
             <span className="tile-dim-sep">×</span>
-            <input type="number" className="field-input" min={1} max={512}
-              value={inTileH} onChange={e => handleInTileH(Number(e.target.value))}/>
+            <NumberStepper min={1} max={512} value={inTileH} onChange={handleInTileH} />
 
             <span className="tile-dim-label">output tile</span>
-            <input type="number" className={`field-input ${needsScale ? 'field-input--accent' : ''}`}
-              min={1} max={512}
-              value={outTileW} onChange={e => setOutTileW(Number(e.target.value))}/>
+            <NumberStepper
+              min={1}
+              max={512}
+              className={`field-input ${needsScale ? 'field-input--accent' : ''}`}
+              value={outTileW}
+              onChange={setOutTileW}
+            />
             <span className="tile-dim-sep">×</span>
-            <input type="number" className={`field-input ${needsScale ? 'field-input--accent' : ''}`}
-              min={1} max={512}
-              value={outTileH} onChange={e => setOutTileH(Number(e.target.value))}/>
+            <NumberStepper
+              min={1}
+              max={512}
+              className={`field-input ${needsScale ? 'field-input--accent' : ''}`}
+              value={outTileH}
+              onChange={setOutTileH}
+            />
           </div>
 
           {/* Quick scale buttons — only shown when tiles differ */}
@@ -399,17 +545,18 @@ export function TilesetTab() {
           {/* Cols / rows */}
           <div className="tile-dim-grid">
             <span className="tile-dim-label">cols</span>
-            <input type="number" className="field-input" min={1} max={32}
-              value={cols} onChange={e => handleColsChange(Number(e.target.value))}/>
+            <NumberStepper min={1} max={32} value={cols} onChange={handleColsChange} />
             <span className="tile-dim-sep"/>
             <span/>
 
             <span className="tile-dim-label">rows</span>
-            <input type="number" className="field-input" min={1} max={32}
-              value={rows} onChange={e => handleRowsChange(Number(e.target.value))}/>
+            <NumberStepper min={1} max={32} value={rows} onChange={handleRowsChange} />
             <span className="tile-dim-sep"/>
             <span/>
           </div>
+          <button className="btn-secondary tileset-transpose-btn" onClick={handleTransposeLayout}>
+            transpose layout
+          </button>
 
           {/* Presets */}
           <div className="preset-section">
@@ -478,13 +625,15 @@ export function TilesetTab() {
                 </div>
               )}
               <div className="tileset-output-stack">
-                <OutputGrid
-                  slots={slots} setSlots={setSlots}
-                  cols={cols} rows={rows}
-                  tiles={result.tiles}
-                  selectedTile={selectedTile} setSelectedTile={setSelectedTile}
-                  slotLabels={slotLabels}
-                />
+                <div className="tileset-grid-frame">
+                  <OutputGrid
+                    slots={slots} setVisibleSlots={setVisibleSlots}
+                    cols={cols} rows={rows}
+                    tiles={result.tiles}
+                    selectedTile={selectedTile} setSelectedTile={setSelectedTile}
+                    slotLabels={slotLabels}
+                  />
+                </div>
                 <button
                   className="btn-primary tileset-download-btn"
                   disabled={slots.every(s => s == null) || !outputName.trim() || downloading}

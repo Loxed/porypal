@@ -143,6 +143,90 @@
     "2026-04-12": {
       "count": 1,
       "uniques": 1
+    },
+    "2026-04-13": {
+      "count": 14,
+      "uniques": 13
+    },
+    "2026-04-14": {
+      "count": 3,
+      "uniques": 3
+    },
+    "2026-04-15": {
+      "count": 9,
+      "uniques": 5
+    },
+    "2026-04-16": {
+      "count": 34,
+      "uniques": 18
+    },
+    "2026-04-17": {
+      "count": 8,
+      "uniques": 4
+    },
+    "2026-04-18": {
+      "count": 2,
+      "uniques": 2
+    },
+    "2026-04-19": {
+      "count": 2,
+      "uniques": 2
+    },
+    "2026-04-20": {
+      "count": 10,
+      "uniques": 7
+    },
+    "2026-04-21": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-04-22": {
+      "count": 8,
+      "uniques": 5
+    },
+    "2026-04-23": {
+      "count": 48,
+      "uniques": 14
+    },
+    "2026-04-24": {
+      "count": 5,
+      "uniques": 5
+    },
+    "2026-04-25": {
+      "count": 37,
+      "uniques": 28
+    },
+    "2026-04-26": {
+      "count": 5,
+      "uniques": 2
+    },
+    "2026-04-27": {
+      "count": 17,
+      "uniques": 11
+    },
+    "2026-04-28": {
+      "count": 6,
+      "uniques": 3
+    },
+    "2026-04-29": {
+      "count": 6,
+      "uniques": 4
+    },
+    "2026-04-30": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-05-01": {
+      "count": 42,
+      "uniques": 12
+    },
+    "2026-05-02": {
+      "count": 2,
+      "uniques": 2
+    },
+    "2026-05-03": {
+      "count": 5,
+      "uniques": 3
     }
   },
   "views": {
@@ -289,14 +373,98 @@
     "2026-04-12": {
       "count": 3,
       "uniques": 2
+    },
+    "2026-04-13": {
+      "count": 1,
+      "uniques": 1
+    },
+    "2026-04-14": {
+      "count": 3,
+      "uniques": 2
+    },
+    "2026-04-15": {
+      "count": 25,
+      "uniques": 5
+    },
+    "2026-04-16": {
+      "count": 7,
+      "uniques": 2
+    },
+    "2026-04-17": {
+      "count": 31,
+      "uniques": 9
+    },
+    "2026-04-18": {
+      "count": 4,
+      "uniques": 2
+    },
+    "2026-04-19": {
+      "count": 4,
+      "uniques": 3
+    },
+    "2026-04-20": {
+      "count": 2,
+      "uniques": 2
+    },
+    "2026-04-21": {
+      "count": 7,
+      "uniques": 6
+    },
+    "2026-04-22": {
+      "count": 1,
+      "uniques": 1
+    },
+    "2026-04-23": {
+      "count": 5,
+      "uniques": 3
+    },
+    "2026-04-24": {
+      "count": 2,
+      "uniques": 2
+    },
+    "2026-04-25": {
+      "count": 3,
+      "uniques": 2
+    },
+    "2026-04-26": {
+      "count": 10,
+      "uniques": 5
+    },
+    "2026-04-27": {
+      "count": 9,
+      "uniques": 4
+    },
+    "2026-04-28": {
+      "count": 4,
+      "uniques": 2
+    },
+    "2026-04-29": {
+      "count": 3,
+      "uniques": 2
+    },
+    "2026-04-30": {
+      "count": 4,
+      "uniques": 3
+    },
+    "2026-05-01": {
+      "count": 5,
+      "uniques": 3
+    },
+    "2026-05-02": {
+      "count": 8,
+      "uniques": 3
+    },
+    "2026-05-03": {
+      "count": 3,
+      "uniques": 2
     }
   },
   "releases": {
-    "porypal-linux.zip": 4,
+    "porypal-linux.zip": 5,
     "porypal-macos.zip": 3,
-    "porypal-windows.zip": 26,
+    "porypal-windows.zip": 27,
     "porypal_1.zip": 7,
     "Porypal.2.0-Windows.zip": 291
   },
-  "last_updated": "2026-04-13T10:43:49.963141"
+  "last_updated": "2026-05-04T11:04:28.945043"
 }

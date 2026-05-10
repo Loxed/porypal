@@ -4,7 +4,7 @@ import { DropZone } from '../components/DropZone'
 import { Modal } from '../components/Modal'
 import { useFetch } from '../hooks/useFetch'
 import { downloadBlob } from '../utils'
-import { Info, X, Save, Download } from 'lucide-react'
+import { Info, X, Save, Download, FlipHorizontal2, FlipVertical2, RotateCwSquare, RotateCcwSquare } from 'lucide-react'
 import { PresetList } from '../components/PresetList'
 
 const API = '/api'
@@ -61,6 +61,79 @@ function slotsFromCache(cache, cols, rows) {
 
 function clampNumber(value, min, max) {
   return Math.min(max, Math.max(min, value))
+}
+
+function remapGrid(items, cols, rows, nextCols, nextRows, mapper) {
+  const next = Array(nextCols * nextRows).fill(null)
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols; col += 1) {
+      const target = mapper(row, col)
+      if (!target) continue
+      const { row: nextRow, col: nextCol } = target
+      next[nextRow * nextCols + nextCol] = items[row * cols + col] ?? null
+    }
+  }
+  return next
+}
+
+function reorderRowsFlat(items, cols, rows, from, to) {
+  const gridRows = Array.from({ length: rows }, (_, row) => items.slice(row * cols, (row + 1) * cols))
+  const [picked] = gridRows.splice(from, 1)
+  gridRows.splice(to, 0, picked)
+  return gridRows.flat()
+}
+
+function reorderColsFlat(items, cols, rows, from, to) {
+  const next = Array(cols * rows).fill(null)
+  const order = Array.from({ length: cols }, (_, col) => col)
+  const [picked] = order.splice(from, 1)
+  order.splice(to, 0, picked)
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols; col += 1) {
+      next[row * cols + col] = items[row * cols + order[col]] ?? null
+    }
+  }
+  return next
+}
+
+function swapRowsFlat(items, cols, rows, first, second) {
+  const next = [...items]
+  for (let col = 0; col < cols; col += 1) {
+    const firstIdx = first * cols + col
+    const secondIdx = second * cols + col
+    ;[next[firstIdx], next[secondIdx]] = [next[secondIdx], next[firstIdx]]
+  }
+  return next
+}
+
+function swapColsFlat(items, cols, rows, first, second) {
+  const next = [...items]
+  for (let row = 0; row < rows; row += 1) {
+    const firstIdx = row * cols + first
+    const secondIdx = row * cols + second
+    ;[next[firstIdx], next[secondIdx]] = [next[secondIdx], next[firstIdx]]
+  }
+  return next
+}
+
+function flipRowFlat(items, cols, rowIndex) {
+  const next = [...items]
+  for (let col = 0; col < Math.floor(cols / 2); col += 1) {
+    const leftIdx = rowIndex * cols + col
+    const rightIdx = rowIndex * cols + (cols - col - 1)
+    ;[next[leftIdx], next[rightIdx]] = [next[rightIdx], next[leftIdx]]
+  }
+  return next
+}
+
+function flipColFlat(items, cols, rows, colIndex) {
+  const next = [...items]
+  for (let row = 0; row < Math.floor(rows / 2); row += 1) {
+    const topIdx = row * cols + colIndex
+    const bottomIdx = (rows - row - 1) * cols + colIndex
+    ;[next[topIdx], next[bottomIdx]] = [next[bottomIdx], next[topIdx]]
+  }
+  return next
 }
 
 function NumberStepper({ value, min, max, onChange, className = 'field-input' }) {
@@ -209,44 +282,194 @@ function SourceSheet({ b64, sourceW, sourceH, tileW, tileH, selectedTile, onTile
 // ---------------------------------------------------------------------------
 // Output slot grid
 // ---------------------------------------------------------------------------
-function OutputGrid({ slots, setVisibleSlots, cols, rows, tiles, selectedTile, setSelectedTile, slotLabels }) {
+function OutputGrid({
+  slots, setVisibleSlots, cols, rows, tiles, selectedTile, setSelectedTile, slotLabels,
+  pendingRowAction, pendingColAction, onStartRowAction, onStartColAction, onCompleteRowAction, onCompleteColAction,
+  onReorderRows, onReorderCols, onFlipRow, onFlipCol,
+}) {
+  const [hoveredRow, setHoveredRow] = useState(null)
+  const [hoveredCol, setHoveredCol] = useState(null)
+  const [dragState, setDragState] = useState(null)
+  const [dragTarget, setDragTarget] = useState(null)
+  const [isPainting, setIsPainting] = useState(false)
+  const placeTileAt = (idx) => {
+    if (selectedTile == null) return
+    setVisibleSlots(prev => {
+      if (prev[idx] === selectedTile) return prev
+      const next = [...prev]
+      next[idx] = selectedTile
+      return next
+    })
+  }
   const handleSlotClick = (idx) => {
-    if (selectedTile !== null) {
-      setVisibleSlots(prev => { const s = [...prev]; s[idx] = selectedTile; return s })
-      setSelectedTile(null)
-    } else if (slots[idx] != null) {
+    if (selectedTile == null && slots[idx] != null) {
       setSelectedTile(slots[idx])
       setVisibleSlots(prev => { const s = [...prev]; s[idx] = null; return s })
     }
   }
+  useEffect(() => {
+    const handleMouseUp = () => setIsPainting(false)
+    window.addEventListener('mouseup', handleMouseUp)
+    return () => window.removeEventListener('mouseup', handleMouseUp)
+  }, [])
   const clearSlot = (e, idx) => {
     e.stopPropagation()
     setVisibleSlots(prev => { const s = [...prev]; s[idx] = null; return s })
   }
   const canPlace = selectedTile !== null
+  const previewSlots = dragState && dragTarget != null && dragState.index !== dragTarget
+    ? (dragState.axis === 'row'
+      ? reorderRowsFlat(slots, cols, rows, dragState.index, dragTarget)
+      : reorderColsFlat(slots, cols, rows, dragState.index, dragTarget))
+    : slots
+  const previewLabels = dragState && dragTarget != null && dragState.index !== dragTarget && slotLabels?.length === cols * rows
+    ? (dragState.axis === 'row'
+      ? reorderRowsFlat(slotLabels, cols, rows, dragState.index, dragTarget)
+      : reorderColsFlat(slotLabels, cols, rows, dragState.index, dragTarget))
+    : slotLabels
   return (
-    <div className="output-grid" style={{ '--cols': cols, '--rows': rows }}>
-      {Array.from({ length: cols * rows }).map((_, idx) => {
-        const tileIdx = slots[idx]
-        const hasTile = tileIdx != null
-        const label   = slotLabels?.[idx] ?? String(idx)
-        return (
-          <div
-            key={idx}
-            className={`output-slot ${hasTile ? 'filled' : 'empty'} ${canPlace && !hasTile ? 'droppable' : ''}`}
-            onClick={() => handleSlotClick(idx)}
-          >
-            {hasTile && tiles?.[tileIdx]
-              ? <img src={`data:image/png;base64,${tiles[tileIdx]}`} alt={label} className="slot-img" draggable={false}/>
-              : <span className="slot-plus">+</span>
-            }
-            <span className="slot-label">{label}</span>
-            {hasTile && (
-              <button className="slot-clear" onClick={e => clearSlot(e, idx)}><X size={9}/></button>
-            )}
-          </div>
-        )
-      })}
+    <div className="output-grid-shell" style={{ '--cols': cols, '--rows': rows }}>
+      {cols > 1 && (
+        <div className="output-col-actions">
+          {Array.from({ length: cols }).map((_, col) => {
+            const isArmed = pendingColAction?.index === col
+            const isDropTarget = dragState?.axis === 'col' && dragTarget === col && dragState.index !== col
+            return (
+              <div
+                key={col}
+                className={`axis-action axis-action--col ${isArmed ? 'armed' : ''} ${pendingColAction ? 'targeting' : ''} ${isDropTarget ? 'drop-target' : ''}`}
+                onMouseEnter={() => setHoveredCol(col)}
+                onMouseLeave={() => setHoveredCol(prev => (prev === col ? null : prev))}
+                onDragOver={(e) => {
+                  if (dragState?.axis !== 'col') return
+                  e.preventDefault()
+                  setDragTarget(col)
+                }}
+                onDrop={(e) => {
+                  if (dragState?.axis !== 'col') return
+                  e.preventDefault()
+                  onReorderCols(dragState.index, col)
+                  setDragState(null)
+                  setDragTarget(null)
+                }}
+              >
+                <button
+                  type="button"
+                  className="axis-action-target"
+                  onClick={() => pendingColAction ? onCompleteColAction(col) : null}
+                  draggable={!pendingColAction}
+                  onDragStart={() => {
+                    setDragState({ axis: 'col', index: col })
+                    setDragTarget(col)
+                  }}
+                  onDragEnd={() => {
+                    setDragState(null)
+                    setDragTarget(null)
+                  }}
+                >
+                  {pendingColAction ? (isArmed ? pendingColAction.type : 'to') : `c${col + 1}`}
+                </button>
+                {!pendingColAction && (
+                  <div className={`axis-action-menu ${dragState ? 'hidden' : ''}`}>
+                    <button type="button" className="axis-action-btn" onClick={() => onStartColAction('duplicate', col)}>duplicate</button>
+                    <button type="button" className="axis-action-btn" onClick={() => onStartColAction('swap', col)}>swap</button>
+                    <button type="button" className="axis-action-btn" onClick={() => onFlipCol(col)}>flip</button>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {rows > 1 && (
+        <div className="output-row-actions">
+          {Array.from({ length: rows }).map((_, row) => {
+            const isArmed = pendingRowAction?.index === row
+            const isDropTarget = dragState?.axis === 'row' && dragTarget === row && dragState.index !== row
+            return (
+              <div
+                key={row}
+                className={`axis-action axis-action--row ${isArmed ? 'armed' : ''} ${pendingRowAction ? 'targeting' : ''} ${isDropTarget ? 'drop-target' : ''}`}
+                onMouseEnter={() => setHoveredRow(row)}
+                onMouseLeave={() => setHoveredRow(prev => (prev === row ? null : prev))}
+                onDragOver={(e) => {
+                  if (dragState?.axis !== 'row') return
+                  e.preventDefault()
+                  setDragTarget(row)
+                }}
+                onDrop={(e) => {
+                  if (dragState?.axis !== 'row') return
+                  e.preventDefault()
+                  onReorderRows(dragState.index, row)
+                  setDragState(null)
+                  setDragTarget(null)
+                }}
+              >
+                <button
+                  type="button"
+                  className="axis-action-target"
+                  onClick={() => pendingRowAction ? onCompleteRowAction(row) : null}
+                  draggable={!pendingRowAction}
+                  onDragStart={() => {
+                    setDragState({ axis: 'row', index: row })
+                    setDragTarget(row)
+                  }}
+                  onDragEnd={() => {
+                    setDragState(null)
+                    setDragTarget(null)
+                  }}
+                >
+                  {pendingRowAction ? (isArmed ? pendingRowAction.type : 'to') : `r${row + 1}`}
+                </button>
+                {!pendingRowAction && (
+                  <div className={`axis-action-menu ${dragState ? 'hidden' : ''}`}>
+                    <button type="button" className="axis-action-btn" onClick={() => onStartRowAction('duplicate', row)}>duplicate</button>
+                    <button type="button" className="axis-action-btn" onClick={() => onStartRowAction('swap', row)}>swap</button>
+                    <button type="button" className="axis-action-btn" onClick={() => onFlipRow(row)}>flip</button>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      <div className="output-grid" style={{ '--cols': cols, '--rows': rows }}>
+        {Array.from({ length: cols * rows }).map((_, idx) => {
+          const tileIdx = previewSlots[idx]
+          const hasTile = tileIdx != null
+          const label   = previewLabels?.[idx] ?? String(idx)
+          const row     = Math.floor(idx / cols)
+          const col     = idx % cols
+          return (
+            <div
+              key={idx}
+              className={`output-slot ${hasTile ? 'filled' : 'empty'} ${canPlace && !hasTile ? 'droppable' : ''} ${hoveredRow === row || hoveredCol === col ? 'axis-hovered' : ''} ${dragState?.axis === 'row' && dragTarget === row ? 'axis-previewed' : ''} ${dragState?.axis === 'col' && dragTarget === col ? 'axis-previewed' : ''}`}
+              onClick={() => handleSlotClick(idx)}
+              onMouseDown={(e) => {
+                if (e.button !== 0 || selectedTile == null) return
+                e.preventDefault()
+                placeTileAt(idx)
+                setIsPainting(true)
+              }}
+              onMouseEnter={() => {
+                if (!isPainting || selectedTile == null) return
+                placeTileAt(idx)
+              }}
+            >
+              {hasTile && tiles?.[tileIdx]
+                ? <img src={`data:image/png;base64,${tiles[tileIdx]}`} alt={label} className="slot-img" draggable={false}/>
+                : <span className="slot-plus">+</span>
+              }
+              <span className="slot-label">{label}</span>
+              {hasTile && (
+                <button className="slot-clear" onClick={e => clearSlot(e, idx)}><X size={9}/></button>
+              )}
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -301,6 +524,8 @@ export function TilesetTab() {
   const [defaultIds, setDefaultIds]       = useState(new Set())
   const [downloadError, setDownloadError] = useState(null)
   const [downloading, setDownloading]     = useState(false)
+  const [pendingRowAction, setPendingRowAction] = useState(null)
+  const [pendingColAction, setPendingColAction] = useState(null)
   const { loading, error, run }           = useFetch()
   const slotCacheRef                      = useRef(cacheSlots(Array(9).fill(null), 9, 1))
 
@@ -322,6 +547,14 @@ export function TilesetTab() {
     if (file) doSlice(file, dInW, dInH, dOutW, dOutH)
   }, [dInW, dInH, dOutW, dOutH])
 
+  useEffect(() => {
+    if (pendingRowAction && pendingRowAction.index >= rows) setPendingRowAction(null)
+  }, [rows, pendingRowAction])
+
+  useEffect(() => {
+    if (pendingColAction && pendingColAction.index >= cols) setPendingColAction(null)
+  }, [cols, pendingColAction])
+
   const resetSlots = (c, r) => {
     const nextSlots = Array(c * r).fill(null)
     slotCacheRef.current = cacheSlots(nextSlots, c, r)
@@ -341,6 +574,25 @@ export function TilesetTab() {
     setCols(nextCols)
     setRows(nextRows)
     setSlots(slotsFromCache(slotCacheRef.current, nextCols, nextRows))
+  }
+
+  const applyLayoutChange = (transformSlots, options = {}) => {
+    const nextCols = options.nextCols ?? cols
+    const nextRows = options.nextRows ?? rows
+    const nextSlots = transformSlots(slots)
+    slotCacheRef.current = cacheSlots(nextSlots, nextCols, nextRows)
+    setSlots(nextSlots)
+    setPendingRowAction(null)
+    setPendingColAction(null)
+    if (options.transformLabels) {
+      setSlotLabels(prev => (
+        prev.length === cols * rows
+          ? options.transformLabels(prev)
+          : prev
+      ))
+    }
+    if (nextCols !== cols) setCols(nextCols)
+    if (nextRows !== rows) setRows(nextRows)
   }
 
   // ---------------------------------------------------------------------------
@@ -375,26 +627,107 @@ export function TilesetTab() {
   const handleTransposeLayout = () => {
     const nextCols = rows
     const nextRows = cols
-    const transposeGrid = (items) => {
-      const next = Array(nextCols * nextRows).fill(null)
-      for (let row = 0; row < rows; row += 1) {
-        for (let col = 0; col < cols; col += 1) {
-          next[col * nextCols + row] = items[row * cols + col] ?? null
-        }
-      }
-      return next
-    }
+    const transposeGrid = items => remapGrid(items, cols, rows, nextCols, nextRows, (row, col) => ({ row: col, col: row }))
+    applyLayoutChange(transposeGrid, { nextCols, nextRows, transformLabels: transposeGrid })
+  }
 
-    const nextSlots = transposeGrid(slots)
-    slotCacheRef.current = cacheSlots(nextSlots, nextCols, nextRows)
-    setSlots(nextSlots)
-    setSlotLabels(prev => (
-      prev.length === cols * rows
-        ? transposeGrid(prev)
-        : prev
-    ))
-    setCols(nextCols)
-    setRows(nextRows)
+  const handleFlipHorizontal = () => {
+    const flip = items => remapGrid(items, cols, rows, cols, rows, (row, col) => ({ row, col: cols - col - 1 }))
+    applyLayoutChange(flip, { transformLabels: flip })
+  }
+
+  const handleFlipVertical = () => {
+    const flip = items => remapGrid(items, cols, rows, cols, rows, (row, col) => ({ row: rows - row - 1, col }))
+    applyLayoutChange(flip, { transformLabels: flip })
+  }
+
+  const handleRotateClockwise = () => {
+    const nextCols = rows
+    const nextRows = cols
+    const rotate = items => remapGrid(items, cols, rows, nextCols, nextRows, (row, col) => ({ row: col, col: rows - row - 1 }))
+    applyLayoutChange(rotate, { nextCols, nextRows, transformLabels: rotate })
+  }
+
+  const handleRotateCounterClockwise = () => {
+    const nextCols = rows
+    const nextRows = cols
+    const rotate = items => remapGrid(items, cols, rows, nextCols, nextRows, (row, col) => ({ row: cols - col - 1, col: row }))
+    applyLayoutChange(rotate, { nextCols, nextRows, transformLabels: rotate })
+  }
+
+  const runRowAction = (type, from, to) => {
+    const transform = (items) => {
+      if (type === 'duplicate') {
+        const next = [...items]
+        for (let col = 0; col < cols; col += 1) {
+          next[to * cols + col] = items[from * cols + col] ?? null
+        }
+        return next
+      }
+      return swapRowsFlat(items, cols, rows, from, to)
+    }
+    applyLayoutChange(transform, { transformLabels: transform })
+  }
+
+  const runColAction = (type, from, to) => {
+    const transform = (items) => {
+      if (type === 'duplicate') {
+        const next = [...items]
+        for (let row = 0; row < rows; row += 1) {
+          next[row * cols + to] = items[row * cols + from] ?? null
+        }
+        return next
+      }
+      return swapColsFlat(items, cols, rows, from, to)
+    }
+    applyLayoutChange(transform, { transformLabels: transform })
+  }
+
+  const handleReorderRows = (from, to) => {
+    if (from === to) return
+    const reorder = items => reorderRowsFlat(items, cols, rows, from, to)
+    applyLayoutChange(reorder, { transformLabels: reorder })
+  }
+
+  const handleReorderCols = (from, to) => {
+    if (from === to) return
+    const reorder = items => reorderColsFlat(items, cols, rows, from, to)
+    applyLayoutChange(reorder, { transformLabels: reorder })
+  }
+
+  const handleFlipRow = (rowIndex) => {
+    const flip = items => flipRowFlat(items, cols, rowIndex)
+    applyLayoutChange(flip, { transformLabels: flip })
+  }
+
+  const handleFlipCol = (colIndex) => {
+    const flip = items => flipColFlat(items, cols, rows, colIndex)
+    applyLayoutChange(flip, { transformLabels: flip })
+  }
+
+  const handleStartRowAction = (type, index) => {
+    setPendingColAction(null)
+    setPendingRowAction({ type, index })
+  }
+
+  const handleStartColAction = (type, index) => {
+    setPendingRowAction(null)
+    setPendingColAction({ type, index })
+  }
+
+  const handleCompleteRowAction = (targetIndex) => {
+    if (!pendingRowAction) return
+    runRowAction(pendingRowAction.type, pendingRowAction.index, targetIndex)
+  }
+
+  const handleCompleteColAction = (targetIndex) => {
+    if (!pendingColAction) return
+    runColAction(pendingColAction.type, pendingColAction.index, targetIndex)
+  }
+
+  const handleCancelAxisAction = () => {
+    setPendingRowAction(null)
+    setPendingColAction(null)
   }
 
   // Sync outTileW/H when in changes (unless user has already diverged them)
@@ -554,9 +887,25 @@ export function TilesetTab() {
             <span className="tile-dim-sep"/>
             <span/>
           </div>
-          <button className="btn-secondary tileset-transpose-btn" onClick={handleTransposeLayout}>
-            transpose layout
-          </button>
+          <div className="layout-tools-section">
+            <p className="section-label">layout tools</p>
+            <div className="layout-tool-grid">
+              <button className="btn-secondary layout-tool-wide" onClick={handleTransposeLayout}>Transpose</button>
+              <button className="btn-secondary layout-tool-icon-btn" onClick={handleFlipHorizontal} title="Flip horizontally">
+                <FlipHorizontal2 size={20} />⠀Flip H
+              </button>
+              <button className="btn-secondary layout-tool-icon-btn" onClick={handleFlipVertical} title="Flip vertically">
+                <FlipVertical2 size={20} />⠀Flip V
+              </button>
+              <button className="btn-secondary layout-tool-icon-btn" onClick={handleRotateClockwise} title="Rotate clockwise">
+                <RotateCwSquare size={20} />⠀Rot CW
+              </button>
+              <button className="btn-secondary layout-tool-icon-btn" onClick={handleRotateCounterClockwise} title="Rotate counterclockwise">
+                <RotateCcwSquare size={20} />⠀Rot CCW
+              </button>
+            </div>
+            <span className="tileset-field-hint">grid operations live directly on the output surface</span>
+          </div>
 
           {/* Presets */}
           <div className="preset-section">
@@ -620,8 +969,17 @@ export function TilesetTab() {
             <>
               {selectedTile !== null && (
                 <div className="place-hint">
-                  tile {selectedTile} selected — click a slot to place it
+                  tile {selectedTile} selected — click or drag across slots to paint
                   <button className="btn-ghost" onClick={() => setSelectedTile(null)}>cancel</button>
+                </div>
+              )}
+              {(pendingRowAction || pendingColAction) && (
+                <div className="place-hint">
+                  {pendingRowAction
+                    ? `${pendingRowAction.type} row ${pendingRowAction.index + 1} — click a target row`
+                    : `${pendingColAction.type} col ${pendingColAction.index + 1} — click a target col`
+                  }
+                  <button className="btn-ghost" onClick={handleCancelAxisAction}>cancel</button>
                 </div>
               )}
               <div className="tileset-output-stack">
@@ -632,6 +990,16 @@ export function TilesetTab() {
                     tiles={result.tiles}
                     selectedTile={selectedTile} setSelectedTile={setSelectedTile}
                     slotLabels={slotLabels}
+                    pendingRowAction={pendingRowAction}
+                    pendingColAction={pendingColAction}
+                    onStartRowAction={handleStartRowAction}
+                    onStartColAction={handleStartColAction}
+                    onCompleteRowAction={handleCompleteRowAction}
+                    onCompleteColAction={handleCompleteColAction}
+                    onReorderRows={handleReorderRows}
+                    onReorderCols={handleReorderCols}
+                    onFlipRow={handleFlipRow}
+                    onFlipCol={handleFlipCol}
                   />
                 </div>
                 <button

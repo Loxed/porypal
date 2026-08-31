@@ -675,6 +675,34 @@
     "2026-08-23": {
       "count": 2,
       "uniques": 1
+    },
+    "2026-08-24": {
+      "count": 3,
+      "uniques": 2
+    },
+    "2026-08-25": {
+      "count": 1,
+      "uniques": 1
+    },
+    "2026-08-26": {
+      "count": 1,
+      "uniques": 1
+    },
+    "2026-08-27": {
+      "count": 8,
+      "uniques": 6
+    },
+    "2026-08-28": {
+      "count": 5,
+      "uniques": 5
+    },
+    "2026-08-29": {
+      "count": 2,
+      "uniques": 1
+    },
+    "2026-08-30": {
+      "count": 0,
+      "uniques": 0
     }
   },
   "views": {
@@ -1353,14 +1381,42 @@
     "2026-08-23": {
       "count": 10,
       "uniques": 7
+    },
+    "2026-08-24": {
+      "count": 3,
+      "uniques": 2
+    },
+    "2026-08-25": {
+      "count": 11,
+      "uniques": 5
+    },
+    "2026-08-26": {
+      "count": 10,
+      "uniques": 7
+    },
+    "2026-08-27": {
+      "count": 7,
+      "uniques": 5
+    },
+    "2026-08-28": {
+      "count": 16,
+      "uniques": 4
+    },
+    "2026-08-29": {
+      "count": 8,
+      "uniques": 7
+    },
+    "2026-08-30": {
+      "count": 6,
+      "uniques": 5
     }
   },
   "releases": {
     "porypal-linux.zip": 28,
     "porypal-macos.zip": 17,
-    "porypal-windows.zip": 117,
+    "porypal-windows.zip": 124,
     "porypal_1.zip": 10,
     "Porypal.2.0-Windows.zip": 295
   },
-  "last_updated": "2026-08-24T09:44:18.202773"
+  "last_updated": "2026-08-31T16:42:42.833728"
 }

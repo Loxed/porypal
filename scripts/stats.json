@@ -799,6 +799,50 @@
     "2026-09-23": {
       "count": 6,
       "uniques": 6
+    },
+    "2026-09-24": {
+      "count": 1,
+      "uniques": 1
+    },
+    "2026-09-25": {
+      "count": 2,
+      "uniques": 2
+    },
+    "2026-09-26": {
+      "count": 2,
+      "uniques": 2
+    },
+    "2026-09-27": {
+      "count": 3,
+      "uniques": 3
+    },
+    "2026-09-28": {
+      "count": 8,
+      "uniques": 6
+    },
+    "2026-09-29": {
+      "count": 11,
+      "uniques": 7
+    },
+    "2026-09-30": {
+      "count": 3,
+      "uniques": 3
+    },
+    "2026-10-01": {
+      "count": 2,
+      "uniques": 2
+    },
+    "2026-10-02": {
+      "count": 0,
+      "uniques": 0
+    },
+    "2026-10-03": {
+      "count": 4,
+      "uniques": 4
+    },
+    "2026-10-04": {
+      "count": 3,
+      "uniques": 2
     }
   },
   "views": {
@@ -1601,14 +1645,58 @@
     "2026-09-23": {
       "count": 8,
       "uniques": 5
+    },
+    "2026-09-24": {
+      "count": 7,
+      "uniques": 5
+    },
+    "2026-09-25": {
+      "count": 12,
+      "uniques": 6
+    },
+    "2026-09-26": {
+      "count": 18,
+      "uniques": 13
+    },
+    "2026-09-27": {
+      "count": 14,
+      "uniques": 7
+    },
+    "2026-09-28": {
+      "count": 33,
+      "uniques": 13
+    },
+    "2026-09-29": {
+      "count": 13,
+      "uniques": 7
+    },
+    "2026-09-30": {
+      "count": 8,
+      "uniques": 6
+    },
+    "2026-10-01": {
+      "count": 5,
+      "uniques": 3
+    },
+    "2026-10-02": {
+      "count": 8,
+      "uniques": 5
+    },
+    "2026-10-03": {
+      "count": 12,
+      "uniques": 7
+    },
+    "2026-10-04": {
+      "count": 24,
+      "uniques": 7
     }
   },
   "releases": {
-    "porypal-linux.zip": 33,
-    "porypal-macos.zip": 20,
-    "porypal-windows.zip": 153,
+    "porypal-linux.zip": 35,
+    "porypal-macos.zip": 21,
+    "porypal-windows.zip": 160,
     "porypal_1.zip": 10,
     "Porypal.2.0-Windows.zip": 295
   },
-  "last_updated": "2026-09-28T17:20:56.081428"
+  "last_updated": "2026-10-05T17:53:32.096983"
 }
